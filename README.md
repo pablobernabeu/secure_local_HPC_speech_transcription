@@ -1399,7 +1399,7 @@ If you use this workflow in your research, please cite:
 
 ```bibtex
 @software{speech_transcription_workflow,
-  title={Enhanced Speech Transcription and Speaker Diarisation Workflow},
+  title={Secure and Scalable Speech Transcription for Local and HPC},
   author={Pablo Bernabeu},
   year={2025},
   url={https://github.com/pablobernabeu/secure_local_HPC_speech_transcription}
