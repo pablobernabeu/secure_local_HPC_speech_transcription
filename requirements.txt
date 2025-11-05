@@ -1,0 +1,116 @@
+# ===================================================================
+# Consolidated Requirements for Speech Transcription Python Project
+# ===================================================================
+
+# Core Dependencies
+# -----------------
+
+# Deep Learning Framework
+torch>=2.0.0
+torchvision>=0.15.0
+torchaudio>=2.0.0
+
+# Speech Recognition and Processing
+openai-whisper>=20231117
+transformers[torch]>=4.30.0
+huggingface_hub>=0.15.0
+
+# Audio Processing and Analysis
+librosa>=0.10.0
+soundfile>=0.12.0
+scipy>=1.10.0
+numpy>=1.24.0
+
+# Enhanced Name Masking
+names-dataset>=3.0.0
+
+# Advanced Audio Processing
+# -------------------------
+
+# Speaker Diarization (Optional - for --speaker-attribution flag)
+# Setup: Run 'python setup_pyannote.py' for guided configuration
+# Requires: HuggingFace token with model access
+# See: PYANNOTE_SETUP_GUIDE.md for detailed instructions
+pyannote.audio>=3.1.0
+speechbrain>=0.5.14
+
+# Audio Enhancement and Preprocessing
+noisereduce>=3.0.0
+audiomentations>=0.33.0
+
+# Additional Audio Format Support
+pydub>=0.25.1
+ffmpeg-python>=0.2.0
+imageio-ffmpeg>=0.4.8
+
+# Data Handling and Utilities
+# ---------------------------
+
+# Data Processing
+pandas>=2.0.0
+numpy>=1.24.0
+
+# File and Path Handling
+pathlib2>=2.3.7
+
+# Configuration and Logging
+pyyaml>=6.0
+configparser>=5.3.0
+
+# Progress Bars and UI
+tqdm>=4.65.0
+
+# Document Processing
+python-docx>=0.8.11
+
+# Scientific Computing and Analysis
+# ---------------------------------
+
+# Machine Learning and Clustering
+scikit-learn>=1.3.0
+
+# Visualization and Plotting
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Performance and Monitoring
+# --------------------------
+
+# System Resource Monitoring
+psutil>=5.8.0
+memory_profiler>=0.61.0
+
+# Development and Testing
+# -----------------------
+
+# Testing Framework
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# Code Formatting and Linting
+black>=23.0.0
+flake8>=6.0.0
+
+# Type Checking (Optional)
+mypy>=1.0.0
+
+# ===================================================================
+# Installation Notes:
+# 
+# 1. Install core dependencies first:
+#    pip install torch torchvision torchaudio
+#    pip install openai-whisper transformers
+#
+# 2. For GPU support, ensure CUDA toolkit is installed
+#
+# 3. Some audio processing libraries may require system dependencies:
+#    - FFmpeg for audio/video processing
+#    - PortAudio for real-time audio
+#
+# 4. Optional dependencies can be installed selectively:
+#    pip install -r requirements.txt
+#
+# 5. For HPC environments, load appropriate modules first:
+#    module load Python/3.11.3-GCCcore-12.3.0
+#    module load CUDA/12.1.1
+# ===================================================================
