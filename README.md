@@ -1303,7 +1303,7 @@ To add a new version:
 
 ## Example Transcript
 
-An example transcript is available in the `example_output/transcripts/` directory, demonstrating the system's output format and capabilities. This transcript contains a transcription of the podcast episode ["Behind the curtains: Methods used to investigate conceptual processing"](https://open.spotify.com/episode/56mb7N81kp3VPzhcijQXi0?si=m9cBWQ3rSHayTQAigEyOXQ) from Codex Mentis. The example showcases:
+Example transcripts are available in the `example_output/transcripts/` directory, demonstrating the system's output format and capabilities. These transcripts contain transcriptions of the first four episodes of the podcast [Codex Mentis](https://open.spotify.com/show/4QXENVjprdaGkTvOexGvD3?si=cf4ad95b9acc4b4d). The examples showcase:
 
 - Clean transcript formatting with proper line breaks
 - Metadata header including processing date, model used and system version
@@ -1311,13 +1311,11 @@ An example transcript is available in the `example_output/transcripts/` director
 - Repetition removal and quality improvements
 - Professional text formatting suitable for research documentation
 
-The audio file was processed using the following command to demonstrate multiple features:
+The audio files were processed using the following command to demonstrate multiple features:
 
 ```bash
-./hpc/submit_transcription.sh --single-file "audio_input/Behind the curtains_ Methods used to investigate conceptual processing.wav" --language english --enhance-audio --fix-spurious-repetitions --mask-personal-names --save-name-masking-logs --time-limit 06:00:00
+./hpc/submit_transcription.sh --language english --enhance-audio --fix-spurious-repetitions --mask-personal-names --save-name-masking-logs --time-limit 06:00:00
 ```
-
-You can view this example to understand the expected output quality before processing your own audio files.
 
 ## Technical Details
 
