@@ -14,13 +14,13 @@ Speaker attribution setup is now **integrated into the main setup**:
 
 ```bash
 # Local/Development
-python scripts/install_requirements.py
+python setup/install_requirements.py
 # OR
 ./setup_environment.sh
 
 # HPC (IMPORTANT: Activate environment first!)
 source activate_project_env.sh
-python scripts/install_requirements.py
+python setup/install_requirements.py
 ```
 
 When prompted during installation, choose "yes" to set up speaker attribution. The wizard guides you through everything automatically.
@@ -31,7 +31,7 @@ If you skipped speaker attribution during initial setup:
 
 **Local/Development:**
 ```bash
-python scripts/setup_pyannote.py
+python setup/setup_pyannote.py
 ```
 
 **HPC (CRITICAL: Activate environment first!):**
@@ -40,7 +40,7 @@ python scripts/setup_pyannote.py
 source activate_project_env.sh
 
 # Now run setup
-python scripts/setup_pyannote.py
+python setup/setup_pyannote.py
 ```
 
 **⚠️ HPC IMPORTANT:** Always activate `activate_project_env.sh` before running any setup scripts. This ensures:
@@ -81,13 +81,13 @@ source activate_project_env.sh
 source activate_project_env.sh
 
 # 2. Run setup
-python scripts/setup_pyannote.py
+python setup/setup_pyannote.py
 ```
 
 **Wrong workflow (will fill personal space):**
 ```bash
 # ❌ DON'T DO THIS - skips environment activation
-python scripts/setup_pyannote.py
+python setup/setup_pyannote.py
 ```
 
 **Check installation location:**
@@ -454,7 +454,7 @@ module list
    ```bash
    # Interactive session
    srun --time=1:00:00 --mem=8G bash
-   python scripts/setup_pyannote.py
+   python setup/setup_pyannote.py
    ```
 
 2. **Use token file, not environment variables:**
@@ -521,7 +521,7 @@ python transcription.py input.wav \
 ### HPC Batch Processing
 
 ```bash
-bash HPC_scripts/submit_transcription.sh \
+bash hpc/submit_transcription.sh \
   --speaker-attribution \
   --audio-dir audio_input/ \
   --output-dir transcriptions/
@@ -581,7 +581,7 @@ Let's start with the first agenda item...
 
 1. **Run diagnostics:**
    ```bash
-   python scripts/setup_pyannote.py  # Will identify issues
+   python setup/setup_pyannote.py  # Will identify issues
    ```
 
 2. **Check logs:**
@@ -672,7 +672,7 @@ Yes, any HuggingFace token with read access works.
 
 ```bash
 # Setup
-python scripts/setup_pyannote.py
+python setup/setup_pyannote.py
 
 # Test
 python -c "from pyannote.audio import Pipeline; print('OK')"
@@ -692,4 +692,5 @@ python transcription.py input.wav --speaker-attribution
 
 ---
 
-**Need help?** Run `python scripts/setup_pyannote.py` and it will guide you through troubleshooting.
+**Need help?** Run `python setup/setup_pyannote.py` and it will guide you through troubleshooting.
+

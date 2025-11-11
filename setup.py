@@ -1,5 +1,5 @@
 """
-Setup script for the Children's Speech Transcription Pipeline.
+Setup script for the Speech Transcription System.
 """
 
 from setuptools import setup, find_packages
@@ -13,41 +13,38 @@ long_description = (this_directory / "README.md").read_text(encoding='utf-8')
 requirements = (this_directory / "requirements.txt").read_text().strip().split('\n')
 
 setup(
-    name="lift-speech_transcription",
+    name="speech-transcription-system",
     version="1.0.0",
-    author="LiFT Speech Transcription Team",
-    description="Children's speech transcription using fine-tuned Whisper model",
+    author="Pablo Bernabeu",
+    description="Production-grade speech transcription with audio enhancement, speaker attribution, and privacy protection",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/LiFT_speech_transcription",
+    url="https://github.com/pablobernabeu/speech_transcription",
     packages=find_packages(),
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Science/Research",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
         "Topic :: Multimedia :: Sound/Audio :: Speech",
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
     ],
-    python_requires=">=3.8",
+    python_requires=">=3.11",
     install_requires=requirements,
     entry_points={
         "console_scripts": [
-            "lift-transcribe=cli:main",
+            "transcribe=transcription:main",
         ],
     },
     include_package_data=True,
     package_data={
-        "": ["*.md", "*.txt"],
+        "": ["*.md", "*.txt", "*.csv"],
     },
-    keywords="speech recognition, children speech, whisper, transcription, audio processing",
+    keywords="speech recognition, whisper, transcription, audio processing, speaker diarization, privacy protection",
     project_urls={
-        "Bug Reports": "https://github.com/yourusername/LiFT_speech_transcription/issues",
-        "Source": "https://github.com/yourusername/LiFT_speech_transcription",
-        "Documentation": "https://github.com/yourusername/LiFT_speech_transcription/wiki",
+        "Bug Reports": "https://github.com/pablobernabeu/speech_transcription/issues",
+        "Source": "https://github.com/pablobernabeu/speech_transcription",
     },
 )

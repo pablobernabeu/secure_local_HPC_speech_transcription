@@ -1,7 +1,7 @@
 
 # Secure and Scalable Speech Transcription for Local and HPC
 
-Production-grade automated speech transcription system with audio enhancement, speaker identification and comprehensive text processing. Designed for high-performance computing environments with GPU acceleration and SLURM job scheduling.
+Production-grade automated speech transcription system with audio enhancement, speaker identification and comprehensive text processing. Designed for high-performance computing (HPC) environments with GPU (Graphics Processing Unit) acceleration and SLURM (Simple Linux Utility for Resource Management) job scheduling.
 
 ## Overview
 
@@ -23,14 +23,14 @@ This system provides end-to-end speech processing capabilities including audio e
 
    - Default: OpenAI Whisper Large v3 model
    - Optional: Custom HuggingFace models (e.g., other Whisper variants)
-   - GPU-accelerated inference with automatic fallback to CPU
+   - GPU-accelerated inference with automatic fallback to CPU (Central Processing Unit)
    - Automatic model caching and optimisation
    - Robust error handling and fallback mechanisms
 
 3. **Text Processing Subsystem**
 
    - **Automatic Quality Improvements**: Intelligent detection and correction of transcription artifacts
-     - Massive repetition removal (handles AI-generated artifacts like repeated sentences)
+     - Massive repetition removal (handles AI (Artificial Intelligence)-generated artifacts like repeated sentences)
      - Punctuation spacing fixes (proper spacing before/after punctuation marks)
      - Enhanced name masking with context awareness to prevent false positives
    - Unicode artifact removal and emoji filtering
@@ -56,9 +56,9 @@ This system provides end-to-end speech processing capabilities including audio e
   - Python 3.13 has limited package availability (avoid for production)
   - Python 3.11 supported but 3.12 preferred for stability
 - **PyTorch 2.5.1+cpu** (stable, torchcodec-compatible)
-  - Avoid PyTorch 2.7+ on CPU-only systems (ABI compatibility issues)
-- CUDA-compatible GPU (recommended) or CPU-only mode
-- 32GB RAM minimum for batch processing
+  - Avoid PyTorch 2.7+ on CPU-only systems (ABI (Application Binary Interface) compatibility issues)
+- CUDA (Compute Unified Device Architecture)-compatible GPU (recommended) or CPU-only mode
+- 32GB RAM (Random Access Memory) minimum for batch processing
 - SLURM job scheduler (for HPC environments)
 
 ### Tested Package Versions (HPC Production)
@@ -98,8 +98,8 @@ git clone <repository-url>
 cd speech_transcription
 
 # Run one-time setup (creates venv, installs packages, caches models)
-chmod +x scripts/setup_environment.sh
-./scripts/setup_environment.sh
+chmod +x setup/setup_environment.sh
+./setup/setup_environment.sh
 ```
 
 **HPC (CRITICAL - Read Carefully!):**
@@ -115,7 +115,7 @@ cd speech_transcription
 source activate_project_env.sh
 
 # Now run setup
-python scripts/install_requirements.py
+python setup/install_requirements.py
 ```
 
 **⚠️ HPC IMPORTANT:** Always activate `activate_project_env.sh` before any setup or package installation. This ensures:
@@ -134,7 +134,7 @@ The setup script will:
 
 The setup script now **includes an optional step for speaker attribution**. When prompted during setup, you can:
 - Choose "yes" to set up pyannote immediately (guided setup)
-- Choose "no" to skip and run `python scripts/setup_pyannote.py` later
+- Choose "no" to skip and run `python setup/setup_pyannote.py` later
 
 **⏱️ Total setup time:** 15-30 minutes (including optional speaker attribution)
 
@@ -155,10 +155,10 @@ source activate_project_env.sh
 **For HPC Production Use (Recommended):**
 ```bash
 # Multiple files (batch)
-./HPC_scripts/submit_transcription.sh --mask-personal-names
+./hpc/submit_transcription.sh --mask-personal-names
 
 # Single file with custom name
-./HPC_scripts/submit_transcription.sh --single-file audio_input/interview.wav --output-name "client_call" --mask-personal-names
+./hpc/submit_transcription.sh --single-file audio_input/interview.wav --output-name "client_call" --mask-personal-names
 ```
 
 **For Local Testing/Development:**
@@ -186,31 +186,37 @@ The simplest way to process multiple audio files:
 ```bash
 # Place audio files (.wav, .mp3, .m4a, .flac, .ogg, .aac) in audio_input/ directory
 # Submit batch job with name masking enabled
-HPC_scripts/submit_transcription.sh --mask-personal-names
+hpc/submit_transcription.sh --mask-personal-names
 
 # Submit batch job with repetition fixing for cleaner transcripts
-HPC_scripts/submit_transcription.sh --fix-spurious-repetitions
+hpc/submit_transcription.sh --fix-spurious-repetitions
 
 # Submit batch job with both name masking and repetition fixing
-HPC_scripts/submit_transcription.sh --mask-personal-names --fix-spurious-repetitions
+hpc/submit_transcription.sh --mask-personal-names --fix-spurious-repetitions
 
 # Submit batch job with name masking and save logs and enhanced audio
-HPC_scripts/submit_transcription.sh --mask-personal-names --save-name-masking-logs --save-enhanced-audio
+hpc/submit_transcription.sh --mask-personal-names --save-name-masking-logs --save-enhanced-audio
 
 # Submit batch job with multilingual name masking (all languages)
-HPC_scripts/submit_transcription.sh --mask-personal-names
+hpc/submit_transcription.sh --mask-personal-names
 
 # Submit batch job with specific languages for targeted masking
-HPC_scripts/submit_transcription.sh --mask-personal-names --languages-for-name-masking english spanish
+hpc/submit_transcription.sh --mask-personal-names --languages-for-name-masking english spanish
 
 # Submit batch job with Chinese and Hindi for Asian content
-HPC_scripts/submit_transcription.sh --mask-personal-names --languages-for-name-masking chinese hindi
+hpc/submit_transcription.sh --mask-personal-names --languages-for-name-masking chinese hindi
 
 # Submit batch job with Facebook first names + specific language surnames
-HPC_scripts/submit_transcription.sh --mask-personal-names --use-facebook-names-for-masking --languages-for-name-masking english french
+hpc/submit_transcription.sh --mask-personal-names --use-facebook-names-for-masking --languages-for-name-masking english french
+
+# Submit batch job with custom time limit for long audio files (6 hours per file)
+hpc/submit_transcription.sh --mask-personal-names --time-limit 06:00:00
+
+# Submit batch job with custom memory allocation (64GB per job)
+hpc/submit_transcription.sh --mask-personal-names --memory 64G
 
 # Submit batch job without name masking
-HPC_scripts/submit_transcription.sh
+hpc/submit_transcription.sh
 ```
 
 The system automatically:
@@ -226,13 +232,22 @@ Process a specific audio file with optional custom output naming:
 
 ```bash
 # Basic single file transcription
-HPC_scripts/submit_transcription.sh --single-file audio_input/interview.wav --force-english --mask-personal-names
+hpc/submit_transcription.sh --single-file audio_input/interview.wav --force-english --mask-personal-names
 
 # Single file with custom output name
-HPC_scripts/submit_transcription.sh --single-file audio_input/recording_2024_10_03.wav --output-name "client_interview_oct" --mask-personal-names
+hpc/submit_transcription.sh --single-file audio_input/recording_2024_10_03.wav --output-name "client_interview_oct" --mask-personal-names
+
+# Single file with custom time limit for very long audio (10 hours)
+hpc/submit_transcription.sh --single-file audio_input/long_interview.wav --time-limit 10:00:00 --mask-personal-names
+
+# Single file with speaker attribution and high memory (128GB)
+hpc/submit_transcription.sh --single-file audio_input/meeting.wav --speaker-attribution --memory 128G
+
+# Single file with both custom time and memory
+hpc/submit_transcription.sh --single-file audio_input/conference.wav --time-limit 08:00:00 --memory 64G --mask-personal-names
 
 # Single file without name masking
-HPC_scripts/submit_transcription.sh --single-file audio_input/myfile.mp3 --force-english
+hpc/submit_transcription.sh --single-file audio_input/myfile.mp3 --force-english
 ```
 
 **Single File Mode Features:**
@@ -295,13 +310,13 @@ For **production use on HPC clusters** (submits to SLURM queue with proper resou
 
 ```bash
 # Single file via HPC job system (recommended)
-./HPC_scripts/submit_transcription.sh --single-file audio_input/interview.wav --force-english --mask-personal-names
+./hpc/submit_transcription.sh --single-file audio_input/interview.wav --force-english --mask-personal-names
 
 # Single file with repetition fixing for cleaner transcripts
-./HPC_scripts/submit_transcription.sh --single-file audio_input/interview.wav --fix-spurious-repetitions --mask-personal-names
+./hpc/submit_transcription.sh --single-file audio_input/interview.wav --fix-spurious-repetitions --mask-personal-names
 
 # Single file with custom output name via HPC
-./HPC_scripts/submit_transcription.sh --single-file audio_input/recording.wav --output-name "client_interview_oct" --mask-personal-names
+./hpc/submit_transcription.sh --single-file audio_input/recording.wav --output-name "client_interview_oct" --mask-personal-names
 ```
 
 **When to use HPC single file:**
@@ -328,7 +343,7 @@ For direct SLURM submission (requires manual array size):
 AUDIO_COUNT=$(find audio_input \( -name "*.wav" -o -name "*.WAV" \) -type f | wc -l)
 
 # Submit with correct array size
-sbatch --array=1-$AUDIO_COUNT HPC_scripts/batch_transcription.sh --mask-personal-names
+sbatch --array=1-$AUDIO_COUNT hpc/batch_transcription.sh --mask-personal-names
 ```
 
 ## Monitoring Jobs
@@ -359,10 +374,12 @@ output/
 
 **Note:** When speaker attribution is enabled, you get **both** regular and speaker-attributed versions. This gives you flexibility to use whichever format suits your needs.
 
+**Example Output:** A complete example transcript is available in `example_output/transcripts/`, showing a real transcription of the Codex Mentis podcast episode ["Behind the curtains: Methods used to investigate conceptual processing"](https://open.spotify.com/episode/56mb7N81kp3VPzhcijQXi0?si=m9cBWQ3rSHayTQAigEyOXQ). This demonstrates the system's output format, metadata headers, name masking and text processing quality.
+
 ## Processing Pipeline
 
 1. **Audio Enhancement**: Signal conditioning and noise reduction
-2. **Transcription**: ML-based speech-to-text conversion
+2. **Transcription**: ML (Machine Learning)-based speech-to-text conversion
 3. **Automatic Quality Improvements**:
    - **Repetition Detection**: Removes conspicuous repetitions typically caused by AI transcription glitches (e.g., sentences repeated 80+ times)
    - **Optional Repetition Fixing**: Additional filtering with `--fix-spurious-repetitions` flag to remove subtle repetitive patterns and artifacts introduced by Whisper models
@@ -388,17 +405,17 @@ output/
 
 ## Command Line Options
 
-Both `transcription.py` and `HPC_scripts/submit_transcription.sh` support the same options:
+Both `transcription.py` and `hpc/submit_transcription.sh` support the same options:
 
 ```bash
 # Direct Python execution
 python transcription.py <audio_file> [options]
 
 # HPC batch submission (batch mode - all files in audio_input/)
-HPC_scripts/submit_transcription.sh [options]
+hpc/submit_transcription.sh [options]
 
 # HPC single file submission (specify which file to process)
-HPC_scripts/submit_transcription.sh --single-file <audio_file> [options]
+hpc/submit_transcription.sh --single-file <audio_file> [options]
 ```
 
 ### Available Options
@@ -408,6 +425,8 @@ HPC_scripts/submit_transcription.sh --single-file <audio_file> [options]
 | `--model MODEL` | HuggingFace model ID (default: openai/whisper-large-v3) |
 | `--output-name <name>` | Custom name for output files (without extension) |
 | `--language LANG` | Specify transcription language (e.g., `english`, `spanish`, `french`). Default: auto-detect language |
+| `--time-limit HH:MM:SS` | **HPC only**: Set maximum time per audio file in SLURM format (e.g., `04:30:00` for 4.5 hours). Applies to both GPU and CPU modes. Default: 2h (GPU), 8h (CPU). **Important**: In batch mode, this is the time limit **per audio file**, not for all files combined. |
+| `--memory <size>` | **HPC only**: Memory allocation per job (e.g., `16G`, `32G`, `64G`, `128G`). Applies to both GPU and CPU modes. Default: 16G (GPU), 32G (CPU). Higher memory may be needed for very long audio files or when using speaker attribution. |
 | `--enhance-audio` | Enable audio enhancement for better transcription quality (disabled by default) |
 | `--mask-personal-names` | Enable personal name masking (OFF by default) |
 | `--fix-spurious-repetitions` | Remove spurious repetitions introduced by Whisper models (OFF by default) |
@@ -419,26 +438,26 @@ HPC_scripts/submit_transcription.sh --single-file <audio_file> [options]
 | `--exclude-common-english-words-from-name-masking` | Exclude common English words (e.g., "will", "long", "art", "hall") from name masking database. **Default: ON when `--language english` is specified, OFF otherwise.** Prevents false positives where common words are incorrectly masked as names. |
 | `--exclude-names-from-masking "name1,name2,..."` | Comma-separated list of specific names to exclude from masking (case-insensitive). Useful for preserving public figures, celebrities or specific participants. Example: `--exclude-names-from-masking "Einstein,Darwin,Newton"` |
 | `--exclude-names-file path/to/file.txt` | Path to file containing names to exclude from masking (one name per line, case-insensitive). Can be combined with `--exclude-names-from-masking`. |
-| `--speaker-attribution` | Enable speaker diarisation (attribution) using pyannote/speaker-diarization-3.1 (OFF by default). Requires HuggingFace token. **Produces two versions:** base transcript + speaker-attributed transcript. **Note:** Accuracy strongly depends on recording quality, number of speakers, and degree of similarity across speakers. |
+| `--speaker-attribution` | Enable speaker diarisation (attribution) using pyannote/speaker-diarization-3.1 (OFF by default). Requires HuggingFace token. **Produces two versions:** base transcript + speaker-attributed transcript. **Note:** Accuracy strongly depends on recording quality, number of speakers and degree of similarity across speakers. |
 | `-h, --help` | Show help message |
 
 **Note:** The `--single-file` option is only available for HPC scripts, not for direct Python execution.
 
-### scripts/download_model.py
+### setup/download_model.py
 
 Pre-downloads models to avoid network timeouts during batch processing. Should be run on login node before submitting batch jobs.
 
 ```bash
 # Download default models (openai/whisper-large-v3 + pyannote/speaker-diarization-3.1)
-python scripts/download_model.py
+python setup/download_model.py
 
 # Download specific models (note: model names use American spelling)
-python scripts/download_model.py --model "openai/whisper-medium" --diarisation-model "pyannote/speaker-diarization"
+python setup/download_model.py --model "openai/whisper-medium" --diarisation-model "pyannote/speaker-diarization"
 ```
 
 **Usage in workflow:**
 
-1. Run `python scripts/download_model.py` on login node to cache models
+1. Run `python setup/download_model.py` on login node to cache models
 2. Submit batch jobs with confidence that models are already downloaded
 
 This solves the common issue where batch jobs fail due to model download timeouts or network connectivity problems.
@@ -451,16 +470,16 @@ This solves the common issue where batch jobs fail due to model download timeout
 
 ```bash
 # For batch processing with English language
-HPC_scripts/submit_transcription.sh --language english
+hpc/submit_transcription.sh --language english
 
 # For single files with Spanish language
-HPC_scripts/submit_transcription.sh --single-file "audio_input/Interview 1.WAV" --language spanish
+hpc/submit_transcription.sh --single-file "audio_input/Interview 1.WAV" --language spanish
 
 # For automatic language detection (default behaviour)
-HPC_scripts/submit_transcription.sh
+hpc/submit_transcription.sh
 ```
 
-**Supported languages:** `english`, `spanish`, `french`, `german`, `italian`, `portuguese`, `chinese`, `japanese`, `korean`, `arabic`, and many others supported by Whisper.
+**Supported languages:** `english`, `spanish`, `french`, `german`, `italian`, `portuguese`, `chinese`, `japanese`, `korean`, `arabic` and many others supported by Whisper.
 
 This allows the model to transcribe in the specified language or automatically detect the language when no `--language` argument is provided.
 
@@ -481,10 +500,10 @@ This allows the model to transcribe in the specified language or automatically d
 python transcription.py "audio_input/interview.wav" --fix-spurious-repetitions
 
 # For batch processing
-HPC_scripts/submit_transcription.sh --fix-spurious-repetitions
+hpc/submit_transcription.sh --fix-spurious-repetitions
 
 # Combined with other options
-HPC_scripts/submit_transcription.sh --mask-personal-names --fix-spurious-repetitions --force-english
+hpc/submit_transcription.sh --mask-personal-names --fix-spurious-repetitions --force-english
 ```
 
 **How it works:**
@@ -499,6 +518,72 @@ HPC_scripts/submit_transcription.sh --mask-personal-names --fix-spurious-repetit
 - ✅ Technical or challenging content where models struggle
 - ✅ When you notice repetitive artifacts in initial transcriptions
 - ❌ High-quality, short audio files (may not be necessary)
+
+### Custom Time Limits
+
+**Problem:** Some audio files may be very long or processing may take longer than expected, causing jobs to timeout before completion.
+
+**Solution:** Use the `--time-limit` argument to specify a custom maximum time *per audio file* in SLURM format:
+
+```bash
+# For batch processing with 6 hour limit per file
+hpc/submit_transcription.sh --time-limit 06:00:00 --mask-personal-names
+
+# For single long file with 10 hour limit
+hpc/submit_transcription.sh --single-file audio_input/long_interview.wav --time-limit 10:00:00
+
+# For short files with 1 hour limit
+hpc/submit_transcription.sh --time-limit 01:00:00 --language english
+```
+
+**Default time limits** (when `--time-limit` not specified):
+- **GPU mode**: 2 hours per file
+- **CPU mode**: 8 hours per file (automatically used when GPU unavailable)
+
+**When to use custom time limits:**
+- ✅ Very long audio files (>2 hours of recording)
+- ✅ Processing repeatedly times out with default limits
+- ✅ Complex audio requiring extra processing time
+- ✅ When using speaker attribution on long files
+- ❌ Short audio files (<30 minutes) - defaults are sufficient
+
+**Format:** Use SLURM time format `HH:MM:SS`:
+- `01:30:00` = 1.5 hours
+- `04:00:00` = 4 hours
+
+### Custom Memory Allocation
+
+**Problem:** Very long audio files, speaker attribution, or complex processing may require more memory than the default allocation.
+
+**Solution:** Use the `--memory` argument to specify a custom memory allocation per job:
+
+```bash
+# For batch processing with 64GB memory per job
+hpc/submit_transcription.sh --memory 64G --mask-personal-names
+
+# For speaker attribution with high memory requirements
+hpc/submit_transcription.sh --single-file audio_input/long_meeting.wav --speaker-attribution --memory 128G
+
+# For standard processing with custom memory
+hpc/submit_transcription.sh --memory 32G --language english
+```
+
+**Default memory limits** (when `--memory` not specified):
+- **GPU mode**: 16G per job
+- **CPU mode**: 32G per job (automatically used when GPU unavailable)
+
+**When to use custom memory:**
+- ✅ Very long audio files (>4 hours of recording)
+- ✅ Using speaker attribution (especially with multiple speakers)
+- ✅ Jobs fail with "out of memory" errors
+- ✅ Processing high-quality/high-bitrate audio
+- ❌ Short audio files (<1 hour) - defaults are sufficient
+
+**Format:** Use SLURM memory format with unit suffix:
+- `16G` = 16 gigabytes
+- `32G` = 32 gigabytes
+- `64G` = 64 gigabytes
+- `128G` = 128 gigabytes
 
 ### Speaker Attribution
 
@@ -526,7 +611,7 @@ HPC_scripts/submit_transcription.sh --mask-personal-names --fix-spurious-repetit
 
 **Quick Setup:**
 ```bash
-python scripts/setup_pyannote.py  # Interactive setup wizard (10-15 minutes)
+python setup/setup_pyannote.py  # Interactive setup wizard (10-15 minutes)
 ```
 
 **Usage:**
@@ -535,10 +620,10 @@ python scripts/setup_pyannote.py  # Interactive setup wizard (10-15 minutes)
 python transcription.py "interview.wav" --speaker-attribution
 
 # For batch processing
-HPC_scripts/submit_transcription.sh --speaker-attribution
+hpc/submit_transcription.sh --speaker-attribution
 
 # Combined with other options
-HPC_scripts/submit_transcription.sh --mask-personal-names --speaker-attribution --language english
+hpc/submit_transcription.sh --mask-personal-names --speaker-attribution --language english
 ```
 
 ⚠️ **Accuracy Factors:**
@@ -608,7 +693,7 @@ By default, when name masking is enabled, the system tracks which names were rep
 ```bash
 # Save name masking logs
 python transcription.py "interview.wav" --mask-personal-names --save-name-masking-logs
-HPC_scripts/submit_transcription.sh --mask-personal-names --save-name-masking-logs
+hpc/submit_transcription.sh --mask-personal-names --save-name-masking-logs
 ```
 
 ### Enhanced Audio Files
@@ -630,7 +715,7 @@ By default, the system enhances audio for better transcription but doesn't save 
 ```bash
 # Save enhanced audio files
 python transcription.py "interview.wav" --save-enhanced-audio
-HPC_scripts/submit_transcription.sh --save-enhanced-audio
+hpc/submit_transcription.sh --save-enhanced-audio
 ```
 
 **Note:** Both features are OFF by default to conserve storage space and focus on essential transcription output.
@@ -677,7 +762,7 @@ python transcription.py interview.wav --mask-personal-names --languages-for-name
 python transcription.py interview.wav --mask-personal-names --languages-for-name-masking chinese hindi
 
 # HPC batch with language selection
-HPC_scripts/submit_transcription.sh --mask-personal-names --languages-for-name-masking english french german
+hpc/submit_transcription.sh --mask-personal-names --languages-for-name-masking english french german
 ```
 
 ### Language Selection Examples
@@ -776,7 +861,7 @@ python transcription.py interview.wav --mask-personal-names --language english -
 # Output: "will continue" → "[NAME] continue" (filtering disabled)
 
 # HPC batch processing with automatic filtering
-HPC_scripts/submit_transcription.sh --mask-personal-names --language english
+hpc/submit_transcription.sh --mask-personal-names --language english
 ```
 
 #### Filtered Words
@@ -817,7 +902,7 @@ python transcription.py interview.wav --mask-personal-names \
   --exclude-names-from-masking "Einstein,Darwin,Newton"
 
 # HPC batch processing
-HPC_scripts/submit_transcription.sh --mask-personal-names \
+hpc/submit_transcription.sh --mask-personal-names \
   --exclude-names-from-masking "Einstein,Curie"
 ```
 
@@ -827,7 +912,7 @@ python transcription.py interview.wav --mask-personal-names \
   --exclude-names-file excluded_names.txt
 
 # HPC batch processing
-HPC_scripts/submit_transcription.sh --mask-personal-names \
+hpc/submit_transcription.sh --mask-personal-names \
   --exclude-names-file excluded_names.txt
 ```
 
@@ -869,7 +954,7 @@ Audio enhancement is **optional** and disabled by default for faster processing.
 python transcription.py "audio_input/noisy_interview.wav" --enhance-audio --mask-personal-names
 
 # For batch processing with audio enhancement
-HPC_scripts/submit_transcription.sh --enhance-audio --mask-personal-names
+hpc/submit_transcription.sh --enhance-audio --mask-personal-names
 
 # Save enhanced audio files for inspection or reuse
 python transcription.py "audio_input/interview.wav" --enhance-audio --save-enhanced-audio
@@ -922,7 +1007,7 @@ The system includes optional comprehensive names databases sourced from Facebook
 python transcription.py interview.wav --mask-personal-names
 
 # HPC batch with curated names (recommended)
-HPC_scripts/submit_transcription.sh --mask-personal-names
+hpc/submit_transcription.sh --mask-personal-names
 
 # Enable Facebook FIRST NAMES only (surnames remain curated)
 python transcription.py interview.wav --mask-personal-names --use-facebook-names-for-masking
@@ -934,10 +1019,10 @@ python transcription.py interview.wav --mask-personal-names --use-facebook-surna
 python transcription.py interview.wav --mask-personal-names --use-facebook-names-for-masking --use-facebook-surnames-for-masking
 
 # HPC batch with Facebook first names only
-HPC_scripts/submit_transcription.sh --mask-personal-names --use-facebook-names-for-masking
+hpc/submit_transcription.sh --mask-personal-names --use-facebook-names-for-masking
 
 # HPC batch with both Facebook databases
-HPC_scripts/submit_transcription.sh --mask-personal-names --use-facebook-names-for-masking --use-facebook-surnames-for-masking
+hpc/submit_transcription.sh --mask-personal-names --use-facebook-names-for-masking --use-facebook-surnames-for-masking
 ```
 
 ### When to Use Facebook Names Database
@@ -1012,16 +1097,16 @@ Process ALL audio files in the `audio_input/` directory:
 
 ```bash
 # Processes all files with default settings
-HPC_scripts/submit_transcription.sh
+hpc/submit_transcription.sh
 
 # With name masking enabled
-HPC_scripts/submit_transcription.sh --mask-personal-names
+hpc/submit_transcription.sh --mask-personal-names
 
 # Force English-only transcription
-HPC_scripts/submit_transcription.sh --language english --mask-personal-names
+hpc/submit_transcription.sh --language english --mask-personal-names
 
 # Combine multiple options
-HPC_scripts/submit_transcription.sh --mask-personal-names --language english --fix-spurious-repetitions
+hpc/submit_transcription.sh --mask-personal-names --language english --fix-spurious-repetitions
 ```
 
 The system automatically detects all audio files and creates appropriate job arrays.
@@ -1032,10 +1117,10 @@ Process one specific audio file:
 
 ```bash
 # Using submit_transcription.sh (recommended)
-HPC_scripts/submit_transcription.sh --single-file audio_input/interview.wav --mask-personal-names
+hpc/submit_transcription.sh --single-file audio_input/interview.wav --mask-personal-names
 
 # With custom output name
-HPC_scripts/submit_transcription.sh --single-file audio_input/recording.wav --output-name "client_meeting" --mask-personal-names
+hpc/submit_transcription.sh --single-file audio_input/recording.wav --output-name "client_meeting" --mask-personal-names
 ```
 
 ### Common Issues
@@ -1063,7 +1148,7 @@ The system implements comprehensive error handling including:
 
    - Ensure audio files are in `audio_input/` directory
    - Check file extensions (`.wav`, `.mp3`, `.m4a`, etc.)
-   - Use `HPC_scripts/submit_transcription.sh` to auto-detect files
+   - Use `hpc/submit_transcription.sh` to auto-detect files
 
 2. **Model download failures**
 
@@ -1095,13 +1180,12 @@ The system implements comprehensive error handling including:
 ### Core Processing Scripts
 
 - **transcription.py**: Main transcription engine with enhanced metadata, language forcing and name masking
-- **scripts/download_model.py**: Downloads and caches HuggingFace models locally to prevent batch job timeouts
+- **setup/download_model.py**: Downloads and caches HuggingFace models locally to prevent batch job timeouts
 
 ### Environment Setup Scripts
 
-- **scripts/setup_environment.sh**: One-time environment setup for new users (creates virtual environment, installs dependencies)
-- **activate_project_env.sh**: Activates project environment for interactive use
-- **activate_project_env_single.sh**: Alternative environment activation (purges modules first)
+- **setup/setup_environment.sh**: One-time environment setup for new users (creates virtual environment, installs dependencies)
+- **activate_project_env_arc.sh**: Activates project environment for Oxford ARC HPC cluster (sets up directory paths and environment variables)
 
 ### Testing and Development Scripts
 
@@ -1118,37 +1202,47 @@ The system implements comprehensive error handling including:
 ├── transcription.py              # Main processing script
 ├── setup.py                      # Package configuration
 ├── requirements.txt              # Python dependencies
+├── versions.csv                  # Version tracking (version, date, summary, details)
 ├── hf_token.txt                  # HuggingFace authentication token
 │
-├── scripts/                      # Utility and setup scripts
-│   ├── download_model.py         # Model pre-download utility
+├── setup/                        # Installation and configuration scripts
 │   ├── install_requirements.py   # Dependency installer
-│   ├── setup_pyannote.py         # Speaker diarization setup
 │   ├── setup_environment.sh      # Environment setup
+│   ├── setup_pyannote.py         # Speaker diarization setup
+│   ├── download_model.py         # Model pre-download utility
+│   ├── Dockerfile                # Docker container definition
+│   ├── docker-entrypoint.sh      # Container entry point
+│   └── README.md                 # Setup documentation
+│
+├── hpc/                          # HPC cluster scripts and templates
+│   ├── batch_transcription.sh    # SLURM batch job script
+│   ├── submit_batch.sh           # Batch job submission
+│   ├── submit_transcription.sh   # Enhanced job submission script
 │   ├── setup_arc_structure.sh    # ARC directory structure setup
 │   ├── verify_arc_upload.sh      # File upload verification
-│   └── README.md                 # Scripts documentation
-│
-├── HPC_scripts/                  # HPC cluster scripts (SLURM)
-│   ├── batch_transcription.sh    # SLURM batch job script
-│   ├── submit_transcription.sh   # Job submission script
+│   ├── activate_env_template.sh  # Environment activation template
+│   ├── HPC_SETUP_GUIDE.md        # HPC setup documentation
 │   └── README.md                 # HPC-specific documentation
 │
-├── src/                          # Core library modules
-│   ├── transcription_pipeline.py # Core transcription logic
-│   ├── audio_processor.py        # Audio processing utilities
-│   ├── utils.py                  # General utilities
-│   ├── audio_enhancer.py         # Audio enhancement tools
-│   ├── enhanced_audio_processor.py # Advanced audio processing
-│   ├── enhanced_speaker_attribution.py # Speaker identification
-│   └── enhanced_text_processing_v2.py # Text post-processing
+├── data/                         # Data files
+│   └── curated_names.csv         # Multilingual name database
+│
+├── example_output/               # Example transcription output
+│   └── transcripts/              # Sample transcript files
+│       ├── Behind the curtains_...transcript.txt  # Example text output
+│       └── Behind the curtains_...transcript.docx # Example Word output
+│
 ├── tests/                        # Unit tests
 │   └── test_transcription.py
+│
 ├── audio_input/                  # Source audio files (.wav/.mp3/.m4a/.flac/.ogg/.aac)
-├── docker_container/             # Docker deployment files
-│   ├── Dockerfile
-│   └── docker-entrypoint.sh
-├── config.csv                    # Configuration file
+│
+├── output/                       # Generated output files
+│   ├── transcripts/              # Transcription output (.txt and .docx)
+│   └── enhanced_audio/           # Enhanced audio files (if saved)
+│
+├── name_masking_logs/            # Name masking logs (if saved)
+│
 ├── DEPLOYMENT_GUIDE.md           # Deployment instructions
 ├── DOCUMENTATION_INDEX.md        # Documentation overview
 ├── OPEN_SOURCE_SUMMARY.md        # Open source information
@@ -1164,7 +1258,7 @@ The system implements comprehensive error handling including:
 
 2. **Resource Management**
 
-   - Use `HPC_scripts/submit_transcription.sh` for automatic job sizing
+   - Use `hpc/submit_transcription.sh` for automatic job sizing
    - Monitor GPU usage with `nvidia-smi`
    - Check disk space before large batch jobs
 
@@ -1175,17 +1269,55 @@ The system implements comprehensive error handling including:
 
 ## Version History
 
-Current version implements:
+The transcription system maintains version information in `versions.csv`, which tracks all releases with version numbers, dates, summaries and detailed change descriptions. Each transcript file includes the version used for processing in its header.
+
+**Current Version: 1.0.0** (2025-11-06)
+
+This initial release implements:
 
 - **Enhanced Quality Control**: Automatic detection and correction of transcription artifacts
   - Massive repetition removal for AI-generated glitches
   - Punctuation spacing corrections
   - Context-aware name masking to prevent false positives
+- **Core Transcription Features**: OpenAI Whisper Large v3 with GPU/CPU support
+- **Audio Enhancement**: Spectral noise reduction and dynamic range compression
+- **Privacy Protection**: Multilingual name masking (1,793+ curated names, optional Facebook database)
+- **Speaker Attribution**: pyannote-based speaker diarization
+- **Dual Output Formats**: Plain text (.txt) and formatted Word (.docx) documents with underscores replaced by colons in document titles
+- **HPC Support**: SLURM job scheduling with batch and single-file processing
 - Simplified batch submission workflow
-- Dynamic audio file detection
-- Standard CLI argument conventions
+- Standard Command-Line Interface (CLI) argument conventions
 - Comprehensive error handling and logging
-- Support for both default and custom models
+
+### Updating Version Information
+
+To add a new version:
+
+1. Open `versions.csv` in the project root
+2. Add a new row with:
+   - **version**: Version number (e.g., "1.1.0")
+   - **date**: Release date in YYYY-MM-DD format
+   - **summary**: Brief description of changes
+   - **details**: Comprehensive change details
+3. The system automatically uses the latest version (by date) in all new transcripts
+
+## Example Transcript
+
+An example transcript is available in the `example_output/transcripts/` directory, demonstrating the system's output format and capabilities. This transcript contains a transcription of the podcast episode ["Behind the curtains: Methods used to investigate conceptual processing"](https://open.spotify.com/episode/56mb7N81kp3VPzhcijQXi0?si=m9cBWQ3rSHayTQAigEyOXQ) from Codex Mentis. The example showcases:
+
+- Clean transcript formatting with proper line breaks
+- Metadata header including processing date, model used and system version
+- Name masking in action (personal names replaced with [NAME] placeholder)
+- Repetition removal and quality improvements
+- Professional text formatting suitable for research documentation
+
+The audio file was processed using the following command to demonstrate multiple features:
+
+```bash
+./hpc/submit_transcription.sh --single-file "audio_input/Behind the curtains_ Methods used to investigate conceptual processing.wav" --language english --enhance-audio --fix-spurious-repetitions --mask-personal-names --save-name-masking-logs --time-limit 06:00:00
+```
+
+You can view this example to understand the expected output quality before processing your own audio files.
 
 ## Technical Details
 
@@ -1203,12 +1335,16 @@ The system is built around key processing functions:
 
 ### Internal Architecture
 
-The system uses modular Python components:
+The system is implemented as a monolithic Python script, `transcription.py`, which integrates all core components:
 
-- `src/audio_processor.py`: Audio enhancement and conditioning
-- `src/transcription_pipeline.py`: ML model integration and inference
-- `src/utils.py`: Text processing and output formatting
-- `transcription.py`: Main CLI interface and workflow orchestration
+- **Audio Enhancement**: Spectral noise reduction, dynamic range compression and signal amplification (integrated in )
+- **ML Model Integration**: Direct integration with HuggingFace Transformers for Whisper model inference
+- **Text Processing**: Comprehensive cleaning, spelling corrections and privacy protection
+- **Speaker Attribution**: pyannote.audio integration for speaker diarization
+- **Output Generation**: Dual format generation for TXT and DOCX files
+- **CLI Interface**: Main workflow orchestration via `transcription.py`
+
+This monolithic architecture ensures simplicity, maintainability and ease of deployment without external module dependencies.
 
 
 
@@ -1220,24 +1356,38 @@ This workflow is designed to be easily deployable across different HPC environme
 
 #### 1. HPC Cluster Deployment
 
-For SLURM-based HPC environments with GPU acceleration:
+**For Oxford ARC Users:**
+
+The repository includes a production-ready environment activation script:
 
 ```bash
-# Use anonymised templates in anon_HPC_scripts/
-cp anon_HPC_scripts/batch_transcription_template.sh HPC_scripts/batch_transcription.sh
-cp anon_HPC_scripts/activate_env_template.sh activate_project_env.sh
-cp anon_HPC_scripts/submit_batch_template.sh submit_batch.sh
+# Already included - just use it
+source activate_project_env_arc.sh
+```
 
-# Configure for your environment
-# Edit paths, SLURM accounts and module names as needed
+This script automatically handles Oxford ARC's architecture (personal space `$HOME` + project space `$DATA`).
+
+**For Other HPC Environments:**
+
+Customize the generic template for your cluster:
+
+```bash
+# Create your own activation script from template
+cp hpc/activate_env_template.sh activate_project_env_custom.sh
+
+# Edit the file to set your paths and modules
+nano activate_project_env_custom.sh
 ```
 
 **Setup Steps:**
 
-1. Update `YOUR_SLURM_ACCOUNT` in batch scripts
-2. Set `YOUR_PROJECT_DIRECTORY` in environment scripts
-3. Adjust Python module versions for your cluster
-4. Configure GPU partition and resource limits
+1. **Environment activation script:**
+   - Oxford ARC: Use `activate_project_env_arc.sh` as-is
+   - Other HPC: Customize `activate_env_template.sh` with your paths
+2. **Batch script configuration:**
+   - Update `YOUR_SLURM_ACCOUNT` in `hpc/batch_transcription.sh`
+   - Adjust Python module versions for your cluster
+   - Configure GPU partition and resource limits
 
 #### 2. Docker Container Deployment
 
@@ -1273,7 +1423,7 @@ For direct installation on local systems:
 
 ```bash
 # Clone repository
-git clone https://github.com/pablobernabeu/secure_local_HPC_speech_transcription.git
+git clone https://github.com/your-username/speech_transcription.git
 cd speech_transcription
 
 # Install dependencies
@@ -1285,15 +1435,24 @@ python transcription.py audio_file.wav --mask-personal-names --force-english
 
 ### Configuration Templates
 
-The `anon_HPC_scripts/` directory contains anonymised versions of HPC-specific scripts:
+The `hpc/` directory contains SLURM job scripts and templates for HPC deployment:
 
-- `batch_transcription_template.sh` - SLURM batch processing template
+**Production Scripts (Oxford ARC):**
+- `batch_transcription.sh` - SLURM batch job script
+- `submit_batch.sh` - Batch submission script
+- `submit_transcription.sh` - Enhanced job submission script
+- `setup_arc_structure.sh` - ARC directory setup
+- `verify_arc_upload.sh` - Upload verification
+
+**Generic Templates:**
 - `activate_env_template.sh` - Environment activation template
-- `submit_batch_template.sh` - Job submission template
-- `single_file_transcription_template.sh` - Single file processing template
-- `download_model_template.py` - Model download template
 - `HPC_SETUP_GUIDE.md` - Comprehensive setup documentation
-- `README_template.md` - Template documentation
+
+The `setup/` directory contains installation and configuration tools:
+- `Dockerfile` - Docker container definition
+- `docker-entrypoint.sh` - Container entry point script
+- `install_requirements.py` - Dependency installer
+- `setup_environment.sh` - Environment setup script
 
 ### Customization Guide
 
@@ -1390,7 +1549,7 @@ docker run --gpus all \
 
 ```bash
 # Configure for your environment first
-sbatch HPC_scripts/batch_transcription.sh
+sbatch hpc/batch_transcription.sh
 ```
 
 ### Citation
@@ -1398,11 +1557,11 @@ sbatch HPC_scripts/batch_transcription.sh
 If you use this workflow in your research, please cite:
 
 ```bibtex
-@software{secure_local_HPC_speech_transcription,
-  title={Secure and Scalable Speech Transcription for Local and HPC},
+@software{speech_transcription_workflow,
+  title={Enhanced Speech Transcription and Speaker Diarisation Workflow},
   author={Pablo Bernabeu},
   year={2025},
-  url={https://github.com/pablobernabeu/secure_local_HPC_speech_transcription}
+  url={https://github.com/pablobernabeu/speech_transcription}
 }
 ```
 
@@ -1417,3 +1576,4 @@ For issues and questions:
 - Check the HPC_SETUP_GUIDE.md for detailed setup instructions
 - Review Docker logs for container troubleshooting
 - Submit issues on GitHub for community support
+

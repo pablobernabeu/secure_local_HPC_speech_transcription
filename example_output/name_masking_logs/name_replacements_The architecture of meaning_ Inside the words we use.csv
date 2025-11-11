@@ -1,0 +1,3 @@
+filename,order,original,replacement,context_sentence
+The architecture of meaning_ Inside the words we use.wav,1,Pablo,[NAME],"Take, for example, a 2022 PhD thesis by Pablo Bernabeu, which is one of the key sources informing this deep dive."
+The architecture of meaning_ Inside the words we use.wav,2,"Bernabeu,","[SURNAME],","Take, for example, a 2022 PhD thesis by Pablo Bernabeu, which is one of the key sources informing this deep dive."

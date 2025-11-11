@@ -1029,8 +1029,11 @@ def create_word_document(text_content, output_path, input_file, mask_names=False
         else:
             filename = os.path.splitext(os.path.basename(input_file))[0]
 
+        # Replace underscores with colons in the title
+        title_text = filename.replace('_', ':')
+        
         # Add title with filename (size 15 equivalent to heading level 1)
-        title = doc.add_heading(filename, 0)
+        title = doc.add_heading(title_text, 0)
         title.alignment = 1  # Center alignment
 
         # Add metadata section (same as TXT file but without the removed Features line)
@@ -1044,6 +1047,11 @@ def create_word_document(text_content, output_path, input_file, mask_names=False
             input_filename = os.path.basename(input_file)
         doc.add_paragraph(f"Input file: {input_filename}")
         doc.add_paragraph(f"Processed: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        
+        # Get and add version
+        version = get_latest_version()
+        doc.add_paragraph(f"Transcription system version: {version}")
+        
         if model_name:
             doc.add_paragraph(f"Model: {model_name}")
         
@@ -1212,6 +1220,33 @@ def perform_speaker_diarization(audio_path):
         print(f"   Continuing without speaker attribution...")
         return None
 
+def get_latest_version():
+    """
+    Read the latest version from versions.csv based on date.
+    
+    Returns:
+        str: Version string (e.g., "1.0.0") or "Unknown" if file not found
+    """
+    try:
+        versions_file = Path(__file__).parent / "versions.csv"
+        if not versions_file.exists():
+            return "Unknown"
+        
+        with open(versions_file, 'r', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            versions = list(reader)
+            
+            if not versions:
+                return "Unknown"
+            
+            # Sort by date (newest first) and return the version number
+            versions.sort(key=lambda x: x['date'], reverse=True)
+            return versions[0]['version']
+    
+    except Exception as e:
+        print(f"Warning: Could not read version from versions.csv: {e}")
+        return "Unknown"
+
 def save_transcript_file(output_file, formatted_text, base_name, input_file, 
                         original_filename, model, language, mask_names, fix_repetitions,
                         use_facebook_names, use_facebook_surnames, enhance_audio_enabled, 
@@ -1237,8 +1272,10 @@ def save_transcript_file(output_file, formatted_text, base_name, input_file,
     with open(output_file, 'w', encoding='utf-8') as f:
         # Add title with filename
         display_filename = Path(original_filename).stem if original_filename else base_name
-        f.write(f"{display_filename}\n")
-        f.write(f"{'='*len(display_filename)}\n\n")
+        # Replace underscores with colons in the title
+        title = display_filename.replace('_', ':')
+        f.write(f"{title}\n")
+        f.write(f"{'='*len(title)}\n\n")
         
         # Show original filename with extension
         if original_filename:
@@ -1247,6 +1284,11 @@ def save_transcript_file(output_file, formatted_text, base_name, input_file,
             input_filename = Path(input_file).name
         f.write(f"Input file: {input_filename}\n")
         f.write(f"Processed: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        
+        # Get and write version
+        version = get_latest_version()
+        f.write(f"Transcription system version: {version}\n")
+        
         if model:
             f.write(f"Model: {model}\n")
         

@@ -1,0 +1,6 @@
+filename,order,original,replacement,context_sentence
+The modular mini-grammar_ Building testable and reproducible artificial languages using FAIR principles.wav,1,Pablo,[NAME],Pablo Bernabeu and his colleagues.
+The modular mini-grammar_ Building testable and reproducible artificial languages using FAIR principles.wav,2,Bernabeu,[SURNAME],Pablo Bernabeu and his colleagues.
+The modular mini-grammar_ Building testable and reproducible artificial languages using FAIR principles.wav,3,Morgan,[SURNAME],Or Morgan Short et al.
+The modular mini-grammar_ Building testable and reproducible artificial languages using FAIR principles.wav,4,Bernabeu,[SURNAME],"Okay, let's pivot now and really get into the weeds of this R-based workflow that Bernabeu and colleagues developed."
+The modular mini-grammar_ Building testable and reproducible artificial languages using FAIR principles.wav,5,Bernabeu,[SURNAME],"So taking this all together, this deep dive really highlights how a structured, meticulously documented, open-source approach, like the one developed by Bernabeu and colleagues using R and OpenSesame, can fundamentally elevate the reliability of research, especially in complex fields like cognitive science."

@@ -9,19 +9,20 @@ All scripts are already uploaded to your ARC account in the following structure:
 ```
 ~/speech_transcription/
 ├── activate_project_env_arc.sh    # Environment activation
-├── scripts/
+├── hpc/                           # HPC cluster scripts
 │   ├── submit_transcription.sh    # Job submission script
+│   ├── submit_batch.sh            # Batch submission script
 │   ├── batch_transcription.sh     # SLURM batch script
-│   ├── transcription.py           # Main transcription engine
-│   ├── batch_processor_with_masking.py
-│   ├── enhanced_speaker_attribution.py
-│   ├── clean_transcription.py
-│   ├── download_model.py
-│   ├── config.py
-│   └── create_config.py
+│   ├── setup_arc_structure.sh     # Directory setup script
+│   ├── verify_arc_upload.sh       # Upload verification script
+│   └── README.md                  # HPC documentation
+├── setup/                         # Installation scripts
+│   ├── install_requirements.py    # Dependency installer
+│   ├── setup_pyannote.py          # Speaker diarization setup
+│   ├── download_model.py          # Model downloader
+│   └── setup_environment.sh       # Environment setup
 ├── data/
-│   ├── curated_names.csv          # 1,728 names database
-│   └── config.csv
+│   └── curated_names.csv          # Names database
 └── configs/
     └── requirements.txt
 
@@ -68,7 +69,7 @@ From your `~/speech_transcription` directory:
 Process all files in `audio_input/`:
 
 ```bash
-cd ~/speech_transcription/scripts
+cd ~/speech_transcription/hpc
 ./submit_transcription.sh --mask-names --save-name-masking-logs --force-english --fix-repetitions
 ```
 
@@ -77,7 +78,7 @@ cd ~/speech_transcription/scripts
 Process one specific file:
 
 ```bash
-cd ~/speech_transcription/scripts
+cd ~/speech_transcription/hpc
 ./submit_transcription.sh --single-file audio_input/interview.wav --output-name "client_call" --mask-personal-names
 ```
 
@@ -189,3 +190,4 @@ For issues:
 2. Verify environment activation: `which python` should show conda environment path
 3. Check available disk space: `quota -s`
 4. Review job status: `squeue -u $USER`
+
