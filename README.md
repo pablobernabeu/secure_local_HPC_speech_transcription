@@ -179,6 +179,8 @@ This project was developed by Dr Pablo Bernabeu at the Department of Education a
 
 ## Citation
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17593181.svg)](https://doi.org/10.5281/zenodo.17593181)
+
 If you use this workflow in your research, please cite:
 
 ```bib
