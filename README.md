@@ -181,11 +181,23 @@ This project was developed by Dr Pablo Bernabeu at the Department of Education a
 
 If you use this workflow in your research, please cite:
 
-```bibtex
-@software{speech_transcription_workflow,
-  title={Enhanced Speech Transcription and Speaker Diarisation Workflow},
-  author={Pablo Bernabeu},
-  year={2025},
-  url={https://github.com/pablobernabeu/secure_local_HPC_speech_transcription}
-}
+```cff
+cff-version: "1.2.0"
+message: "If you use this software, please cite it as below."
+title: "Secure and Scalable Speech Transcription for Local and HPC"
+authors:
+  - given-names: "Pablo"
+    family-names: "Bernabeu"
+    affiliation: "Department of Education, University of Oxford"
+date-released: "2025-11-12"
+version: "1.0.0"
+url: "https://github.com/pablobernabeu/secure_local_HPC_speech_transcription"
+abstract: "A production-ready local transcription workflow leveraging OpenAI's Whisper models that addresses the limitations of cloud-based solutions through complete data sovereignty, unlimited scale, reproducible processing and advanced quality control, while maintaining GDPR compliance."
+preferred-citation: |
+  @software{secure_local_HPC_speech_transcription,
+    title={Secure and Scalable Speech Transcription for Local and HPC},
+    author={Pablo Bernabeu},
+    year={2025},
+    url={https://github.com/pablobernabeu/secure_local_HPC_speech_transcription}
+  }
 ```
