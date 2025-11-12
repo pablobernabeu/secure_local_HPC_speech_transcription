@@ -11,7 +11,7 @@ This system provides end-to-end speech processing capabilities including audio e
 - OpenAI Whisper Large v3 transcription with GPU acceleration
 - Automatic audio enhancement and noise reduction
 - Multilingual personal name masking (1,793+ curated names, optional Facebook database with 730K+ names)
-- Speaker attribution (diarization) for multi-speaker recordings
+- Speaker attribution (diarisation) for multi-speaker recordings
 - HPC batch processing with SLURM job scheduling
 - Dual output formats (plain text and Microsoft Word)
 
@@ -141,7 +141,7 @@ Both `transcription.py` and `hpc/submit_transcription.sh` support the same optio
 | `--exclude-common-english-words-from-name-masking` | Exclude common English words from masking (auto-enabled for English) |
 | `--exclude-names-from-masking "name1,name2"` | Comma-separated list of names to exclude |
 | `--exclude-names-file path/to/file.txt` | File with names to exclude (one per line) |
-| `--speaker-attribution` | Enable speaker diarization (OFF by default, requires HuggingFace token) |
+| `--speaker-attribution` | Enable speaker diarisation (OFF by default, requires HuggingFace token) |
 | `-h, --help` | Show help message |
 
 **Note:** The `--single-file` option is only available for HPC scripts.
@@ -170,7 +170,7 @@ output/
   - Multilingual Name Masking
   - Optional Output Features
 - **[docs/hpc_usage.md](docs/hpc_usage.md)** - HPC cluster usage guide with SLURM job management
-- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Common errors, solutions, and known issues
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Common errors, solutions and known issues
 - **[PYANNOTE_SETUP_GUIDE.md](PYANNOTE_SETUP_GUIDE.md)** - Speaker attribution setup guide
 
 ## Licence
