@@ -4,9 +4,9 @@ title: "Secure and Scalable Speech Transcription for Local and HPC"
 authors:
   - given-names: "Pablo"
     family-names: "Bernabeu"
-    affiliation: "GitHub: pablobernabeu"
-date-released: "2025-01-01"
-version: "0.1.0"
+    affiliation: "Department of Education, University of Oxford"
+date-released: "2025-11-12"
+version: "1.0.0"
 url: "https://github.com/pablobernabeu/secure_local_HPC_speech_transcription"
 abstract: "A production-ready local transcription workflow leveraging OpenAI's Whisper models that addresses the limitations of cloud-based solutions through complete data sovereignty, unlimited scale, reproducible processing and advanced quality control, while maintaining GDPR compliance."
 preferred-citation: |
