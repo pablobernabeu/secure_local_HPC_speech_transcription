@@ -186,7 +186,7 @@ This project was developed by Dr Pablo Bernabeu at the Department of Education a
 If you use this workflow in your research, please cite:
 
 ```bib
-@software{speech_transcription_workflow,
+@software{secure_local_HPC_speech_transcription,
   title={Enhanced Speech Transcription and Speaker Diarisation Workflow},
   author={Pablo Bernabeu},
   year={2025},
