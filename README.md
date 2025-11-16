@@ -1,5 +1,5 @@
 
-# Secure and Scalable Speech Transcription for Local and HPC
+# Secure and scalable speech transcription for local and HPC
 
 Production-grade automated speech transcription system with audio enhancement, speaker identification and comprehensive text processing. Designed for high-performance computing (HPC) environments with GPU (Graphics Processing Unit) acceleration and SLURM (Simple Linux Utility for Resource Management) job scheduling.
 
@@ -187,7 +187,7 @@ If you use this workflow in your research, please cite:
 
 ```bib
 @software{secure_local_HPC_speech_transcription,
-  title={Enhanced Speech Transcription and Speaker Diarisation Workflow},
+  title={Secure and scalable speech transcription for local and HPC},
   author={Pablo Bernabeu},
   year={2025},
   doi={10.5281/zenodo.17593181},
