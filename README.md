@@ -190,7 +190,7 @@ If you use this workflow in your research, please cite:
   title={Secure and scalable speech transcription for local and HPC},
   author={Pablo Bernabeu},
   year={2025},
-  doi={10.5281/zenodo.17624811},
+  doi={10.5281/zenodo.17624830},
   url={https://doi.org/10.5281/zenodo.17624830}
 }
 ```
