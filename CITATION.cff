@@ -7,8 +7,8 @@ authors:
     affiliation: "Department of Education, University of Oxford"
 date-released: "2025-11-12"
 version: "1.0.0"
-doi: "10.5281/zenodo.17624811"
-url: "https://doi.org/10.5281/zenodo.17624811"
+doi: "10.5281/zenodo.17624830"
+url: "https://doi.org/10.5281/zenodo.17624830"
 abstract: "A production-ready local transcription workflow leveraging OpenAI's Whisper models that addresses the limitations of cloud-based solutions through complete data sovereignty, unlimited scale, reproducible processing and advanced quality control, while maintaining GDPR compliance."
 preferred-citation: |
   @software{secure_local_HPC_speech_transcription,
@@ -16,7 +16,7 @@ preferred-citation: |
     author={Pablo Bernabeu},
     year={2025},
     doi={10.5281/zenodo.17624811},
-    url={https://doi.org/10.5281/zenodo.17624811}
+    url={https://doi.org/10.5281/zenodo.17624830}
   }
 keywords:
   - speech transcription
