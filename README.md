@@ -185,12 +185,18 @@ This project was developed by Dr Pablo Bernabeu at the Department of Education a
 
 If you use this workflow in your research, please cite:
 
-```bib
-@software{secure_local_HPC_speech_transcription,
-  title={Secure and scalable speech transcription for local and HPC},
-  author={Pablo Bernabeu},
-  year={2025},
-  doi={10.5281/zenodo.17624830},
-  url={https://doi.org/10.5281/zenodo.17624830}
+> Bernabeu, P. (2025). *Secure and scalable speech transcription for local and HPC* (Version 1.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.17624830
+
+The recommended BibTeX entry is:
+
+```text
+@misc{secure_local_HPC_speech_transcription,
+  author    = {Bernabeu, Pablo},
+  title     = {Secure and scalable speech transcription for local and {HPC}},
+  year      = {2025},
+  publisher = {Zenodo},
+  version   = {1.0.0},
+  doi       = {10.5281/zenodo.17624830},
+  url       = {https://doi.org/10.5281/zenodo.17624830}
 }
 ```
