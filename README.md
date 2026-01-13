@@ -3,6 +3,8 @@
 
 Production-grade automated speech transcription system with audio enhancement, speaker identification and comprehensive text processing. Designed for high-performance computing (HPC) environments with GPU (Graphics Processing Unit) acceleration and SLURM (Simple Linux Utility for Resource Management) job scheduling.
 
+![Beyond the cloud: Reclaiming data sovereignty in speech transcription](docs/Beyond%20the%20cloud_%20Reclaiming%20data%20sovereignty%20in%20speech%20transcription.png)
+
 ## Overview
 
 This system provides end-to-end speech processing capabilities including audio enhancement, machine learning-based transcription, text cleaning and privacy protection. The pipeline supports batch processing with parallel job execution for efficient processing of large audio datasets.
