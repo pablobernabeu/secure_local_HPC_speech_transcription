@@ -621,8 +621,9 @@ def create_enhanced_name_masker(use_facebook_names=False, use_facebook_surnames=
                 # Mask any capitalised word found in the name database, wherever it
                 # falls in the sentence. Position is not checked, so a capitalised
                 # common word at the start of a sentence (e.g. "Will you...") is kept
-                # only if the common-English-word filter has removed it from the
-                # database (--exclude-common-english-words-from-name-masking).
+                # only if it has been removed from the database, either by the
+                # common-English-word filter (--exclude-common-english-words-from-name-masking)
+                # or through the user's excluded names (--exclude-names-from-masking/-file).
                 should_mask = is_capitalized and (is_first_name or is_surname)
 
                 # Check for title + name combinations
