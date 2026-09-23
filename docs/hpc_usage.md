@@ -49,7 +49,7 @@ hpc/submit_transcription.sh --mask-personal-names --fix-spurious-repetitions
 # Submit batch job with name masking and save logs and enhanced audio
 hpc/submit_transcription.sh --mask-personal-names --save-name-masking-logs --save-enhanced-audio
 
-# Submit batch job with multilingual name masking (all languages)
+# Submit batch job with multilingual name masking (the six default languages)
 hpc/submit_transcription.sh --mask-personal-names
 
 # Submit batch job with specific languages for targeted masking

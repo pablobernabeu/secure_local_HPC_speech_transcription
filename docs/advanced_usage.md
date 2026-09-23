@@ -152,8 +152,11 @@ The system includes a comprehensive multilingual name database loaded from `data
 Use the `--languages-for-name-masking` argument to select specific languages for the curated database:
 
 ```bash
-# Use all languages (default behaviour)
+# Use the default languages: English, Chinese, French, German, Hindi and Spanish
 python transcription.py interview.wav --mask-personal-names
+
+# Use all nine supported languages
+python transcription.py interview.wav --mask-personal-names --languages-for-name-masking english chinese french german hindi spanish italian arabic polynesian
 
 # Use only English names
 python transcription.py interview.wav --mask-personal-names --languages-for-name-masking english
@@ -170,7 +173,7 @@ hpc/submit_transcription.sh --mask-personal-names --languages-for-name-masking e
 
 ### Language Selection Examples
 
-#### All Languages (Default):
+#### Default Languages (English, Chinese, French, German, Hindi and Spanish):
 ```
 Input:  "Hello Maria Rodriguez, this is John Smith and Wei Chen speaking with Raj Patel and François Dubois."
 Output: "Hello [NAME] [SURNAME], this is [NAME] [SURNAME] and [SURNAME] [SURNAME] speaking with [NAME] [SURNAME] and François [SURNAME]."
@@ -196,7 +199,7 @@ Output: "[SURNAME] [SURNAME] and [SURNAME] [SURNAME] were talking to [NAME] [SUR
 - Minimizing false positives for particular language contexts
 - Working with specialised international content
 
-**✅ Use all languages (default) when:**
+**✅ Use the default languages, or all nine, when:**
 - Processing diverse international content
 - Uncertain about speaker backgrounds
 - Maximum name coverage is needed
@@ -460,7 +463,7 @@ Output:  "[NAME] meeting will begin soon. [NAME] you for joining, [NAME]."
 
 #### Recommendation
 
-**For most users:** Stick with the default curated database (1,793 names across 9 languages) for better balance of privacy protection and readability. The curated database provides comprehensive coverage for English, Chinese, French, German, Hindi, Spanish, Italian, Arabic and Polynesian names whilst minimising false positives. Only enable the Facebook database when comprehensive global name coverage beyond these languages is absolutely essential and you can invest time in manual quality review.
+**For most users:** Stick with the curated database (1,793 names across nine languages, six of which are selected by default) for better balance of privacy protection and readability. The curated database provides comprehensive coverage for English, Chinese, French, German, Hindi, Spanish, Italian, Arabic and Polynesian names whilst minimising false positives. Only enable the Facebook database when comprehensive global name coverage beyond these languages is absolutely essential and you can invest time in manual quality review.
 
 ## Optional Output Features
 
