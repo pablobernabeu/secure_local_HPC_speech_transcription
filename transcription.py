@@ -613,26 +613,18 @@ def create_enhanced_name_masker(use_facebook_names=False, use_facebook_surnames=
                 # Check if word is capitalized
                 is_capitalized = word[0].isupper() if word else False
                 
-                # Check if it's at the start of a sentence (excluding titles/pronouns)
-                is_sentence_start = word_idx == 0
-                
-                # Check if it's a name (requires capitalization, but be careful at sentence start)
+                # Look the word up in the name and title sets
                 is_first_name = clean_word in first_names
                 is_surname = clean_word in surnames
                 is_title = clean_word in titles
                 
-                # Only mask if:
-                # 1. It's capitalized AND in the database, AND
-                # 2. Either it's NOT at sentence start, OR it appears multiple times capitalized
+                # Mask any capitalised word found in the name database, wherever it
+                # falls in the sentence. Position is not checked, so a capitalised
+                # common word at the start of a sentence (e.g. "Will you...") is kept
+                # only if the common-English-word filter has removed it from the
+                # database (--exclude-common-english-words-from-name-masking).
                 should_mask = is_capitalized and (is_first_name or is_surname)
-                
-                # Special handling: if at sentence start, only mask if it's uncommon or appears mid-sentence too
-                # This prevents masking "Will you..." but allows masking repeated names
-                if should_mask and is_sentence_start:
-                    # Keep common words at sentence start (they're likely not names)
-                    # The filter already removed most common words, but double-check context
-                    should_mask = True  # Trust the filtered database
-                
+
                 # Check for title + name combinations
                 if is_title and word_idx + 1 < len(words):
                     next_word = re.sub(r'[^\w]', '', words[word_idx + 1].lower())
@@ -1674,7 +1666,7 @@ def main():
                        help='Use Facebook global surnames database (980K+ surnames, may cause false positives). Default: use curated basic surnames only.')
     parser.add_argument('--languages-for-name-masking', type=str, nargs='*', 
                        default=['english', 'chinese', 'french', 'german', 'hindi', 'spanish'],
-                       help='Languages to include in curated names database. Supported: english, chinese, french, german, hindi, spanish. Default: all languages.')
+                       help='Languages to include in curated names database. Supported: english, chinese, french, german, hindi, spanish, italian, arabic, polynesian. Default: english, chinese, french, german, hindi, spanish.')
     parser.add_argument('--exclude-common-english-words-from-name-masking', action='store_true', default=None,
                        help='Exclude common English words (e.g., "will", "long", "art") from name masking. Default: ON when --language english, otherwise OFF.')
     parser.add_argument('--exclude-names-from-masking', type=str, default=None,

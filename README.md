@@ -143,7 +143,7 @@ Both `transcription.py` and `hpc/submit_transcription.sh` support the same optio
 | `--save-enhanced-audio` | Save enhanced audio files (OFF by default) |
 | `--use-facebook-names-for-masking` | Use Facebook first names database (~730K names, OFF by default) |
 | `--use-facebook-surnames-for-masking` | Use Facebook surnames database (~980K surnames, OFF by default) |
-| `--languages-for-name-masking LANG ...` | Select languages for name database (default: all 9 languages) |
+| `--languages-for-name-masking LANG ...` | Select languages for the curated name database. Supported: `english`, `chinese`, `french`, `german`, `hindi`, `spanish`, `italian`, `arabic`, `polynesian`. Default: the first six (`italian`, `arabic` and `polynesian` must be requested explicitly) |
 | `--exclude-common-english-words-from-name-masking` | Exclude common English words from masking (auto-enabled for English) |
 | `--exclude-names-from-masking "name1,name2"` | Comma-separated list of names to exclude |
 | `--exclude-names-file path/to/file.txt` | File with names to exclude (one per line) |
