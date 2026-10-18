@@ -1,0 +1,2 @@
+condition,n_shared,n_baseline_only,n_condition_only,macro_baseline_shared,macro_condition_shared,macro_gain_shared,micro_baseline_shared,micro_condition_shared,micro_gain_shared,macro_baseline_all,macro_condition_all,macro_gain_all
+whisper_norm,11653,990,0,0.306127,0.285246,0.068211,0.200911,0.159947,0.203889,0.324347,0.285246,0.120553

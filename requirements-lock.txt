@@ -1,0 +1,212 @@
+# pip freeze of the environment the ARC result jobs run in.
+#
+# Taken on 2026-09-26, read-only, the way every job script sets it up: by
+# sourcing activate_project_env_arc.sh and running `python -m pip freeze`.
+# That is the conda environment /data/educ-lift/educ1242/
+# speech_transcription_env, Python 3.12.12, with PYTHONUSERBASE pointed at
+# the environment's own .python_user directory.
+#
+# Sourcing the activation script matters. Without it, Python on ARC also
+# loads the account's ~/.local user site, which holds torch 2.8.0+cpu and
+# transformers 4.56.2 and shadows the environment (ISSUES.md, DEPS-02). The
+# first version of this file was taken that way and recorded those versions
+# by mistake. The jobs run torch 2.5.1+cu121, torchaudio 2.5.1+cu121,
+# transformers 4.57.1, pyannote.audio 3.4.0 and numpy 2.3.3.
+#
+# Limits. The environment was changed in place during the project, and the
+# GPU submit scripts used to reinstall torch at run time (SHELL-01; removed,
+# jobs now stop at a preflight gate instead), so this is the environment as
+# it stands, not a guarantee of what every past job ran. Each job records
+# its own `pip list` and nvidia-smi output under <report dir>/environment/
+# (hpc/common/arc_common.sh), and `python -m preflight --lock
+# requirements-lock.txt` checks an environment against this file.
+#
+# Installing it needs Linux and
+# `--extra-index-url https://download.pytorch.org/whl/cu121` for the
+# +cu121 builds.
+#
+# gliner, the optional NER stage, is not in this environment. Re-running the
+# NER masking arms locally with gliner 0.2.28 and the model revision pinned
+# in ner_masking.py reproduces the committed report CSVs byte for byte and
+# every number in the summary JSONs; the summaries gain a `ner` block
+# (model, revision, threshold, labels, gliner version, call counts). Where
+# the committed NER results were first made is not recorded (ISSUES.md).
+
+accelerate==1.11.0
+aiohappyeyeballs==2.6.1
+aiohttp==3.13.1
+aiosignal==1.4.0
+alembic==1.17.0
+antlr4-python3-runtime==4.9.3
+anyio==4.13.0
+asteroid-filterbanks==0.4.0
+attrs==25.4.0
+audiomentations==0.43.1
+audioread==3.0.1
+bibtexparser==1.4.4
+black==25.9.0
+certifi==2025.10.5
+cffi==2.0.0
+charset-normalizer==3.4.4
+click==8.3.0
+colorlog==6.10.1
+configparser==7.2.0
+contourpy==1.3.3
+coverage==7.11.0
+cycler==0.12.1
+datasets==4.8.5
+decorator==5.2.1
+dill==0.4.1
+docopt==0.6.2
+einops==0.8.1
+ffmpeg-python==0.2.0
+filelock==3.29.0
+flake8==7.3.0
+fonttools==4.60.1
+frozenlist==1.8.0
+fsspec==2026.4.0
+future==1.0.0
+greenlet==3.2.4
+h11==0.16.0
+hf-xet==1.1.10
+httpcore==1.0.9
+httpx==0.28.1
+huggingface-hub==0.35.3
+HyperPyYAML==1.2.2
+idna==3.11
+imageio-ffmpeg==0.6.0
+iniconfig==2.3.0
+Jinja2==3.1.6
+jiwer==4.0.0
+joblib==1.5.2
+julius==0.2.7
+kiwisolver==1.4.9
+lazy_loader==0.4
+librosa==0.11.0
+lightning==2.5.5
+lightning-utilities==0.15.2
+llvmlite==0.45.1
+lxml==6.0.2
+Mako==1.3.10
+markdown-it-py==4.0.0
+MarkupSafe==3.0.3
+matplotlib==3.10.7
+mccabe==0.7.0
+mdurl==0.1.2
+memory-profiler==0.61.0
+more-itertools==10.8.0
+mpmath==1.3.0
+msgpack==1.1.2
+multidict==6.7.0
+multiprocess==0.70.19
+mypy==1.18.2
+mypy_extensions==1.1.0
+names-dataset==3.3.1
+networkx==3.6.1
+noisereduce==3.0.3
+numba==0.62.1
+numpy==2.3.3
+numpy-minmax==0.5.0
+numpy-rms==0.6.0
+nvidia-cublas-cu11==11.11.3.6
+nvidia-cublas-cu12==12.1.3.1
+nvidia-cuda-cupti-cu11==11.8.87
+nvidia-cuda-cupti-cu12==12.1.105
+nvidia-cuda-nvrtc-cu11==11.8.89
+nvidia-cuda-nvrtc-cu12==12.1.105
+nvidia-cuda-runtime-cu11==11.8.89
+nvidia-cuda-runtime-cu12==12.1.105
+nvidia-cudnn-cu11==9.1.0.70
+nvidia-cudnn-cu12==9.1.0.70
+nvidia-cufft-cu11==10.9.0.58
+nvidia-cufft-cu12==11.0.2.54
+nvidia-curand-cu11==10.3.0.86
+nvidia-curand-cu12==10.3.2.106
+nvidia-cusolver-cu11==11.4.1.48
+nvidia-cusolver-cu12==11.4.5.107
+nvidia-cusparse-cu11==11.7.5.86
+nvidia-cusparse-cu12==12.1.0.106
+nvidia-nccl-cu11==2.21.5
+nvidia-nccl-cu12==2.21.5
+nvidia-nvjitlink-cu12==12.9.86
+nvidia-nvtx-cu11==11.8.86
+nvidia-nvtx-cu12==12.1.105
+omegaconf==2.3.0
+openai-whisper==20250625
+optuna==4.5.0
+packaging==25.0
+pandas==2.3.3
+pathlib2==2.3.7.post1
+pathspec==0.12.1
+pillow==11.3.0
+platformdirs==4.5.0
+pluggy==1.6.0
+pooch==1.8.2
+primePy==1.3
+propcache==0.4.1
+protobuf==6.33.0
+psutil==7.1.1
+pyannote.audio==3.4.0
+pyannote.core==5.0.0
+pyannote.database==5.1.3
+pyannote.metrics==3.2.1
+pyannote.pipeline==3.0.1
+pyarrow==24.0.0
+pycodestyle==2.14.0
+pycountry==24.6.1
+pycparser==2.23
+pydub==0.25.1
+pyflakes==3.4.0
+Pygments==2.19.2
+pyparsing==3.2.5
+pytest==8.4.2
+pytest-cov==7.0.0
+python-dateutil==2.9.0.post0
+python-docx==1.2.0
+python-stretch==0.3.1
+pytokens==0.2.0
+pytorch-lightning==2.5.5
+pytorch-metric-learning==2.9.0
+pytz==2025.2
+PyYAML==6.0.3
+RapidFuzz==3.14.5
+regex==2025.10.23
+requests==2.32.5
+rich==14.2.0
+ruamel.yaml==0.18.15
+ruamel.yaml.clib==0.2.14
+safetensors==0.6.2
+scikit-learn==1.7.2
+scipy==1.16.2
+seaborn==0.13.2
+semver==3.0.4
+sentencepiece==0.2.1
+setuptools==70.2.0
+shellingham==1.5.4
+six==1.17.0
+sortedcontainers==2.4.0
+soundfile==0.13.1
+soxr==0.5.0.post1
+speechbrain==1.0.3
+SQLAlchemy==2.0.44
+sympy==1.13.1
+tabulate==0.9.0
+tensorboardX==2.6.4
+threadpoolctl==3.6.0
+tiktoken==0.12.0
+tokenizers==0.22.1
+torch==2.5.1+cu121
+torch-audiomentations==0.12.0
+torch_pitch_shift==1.2.5
+torchaudio==2.5.1+cu121
+torchmetrics==1.8.2
+tqdm==4.67.1
+transformers==4.57.1
+triton==3.1.0
+typer==0.20.0
+typing_extensions==4.15.0
+tzdata==2025.2
+urllib3==2.5.0
+wheel==0.45.1
+xxhash==3.7.0
+yarl==1.22.0

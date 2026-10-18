@@ -5,19 +5,16 @@ authors:
   - given-names: "Pablo"
     family-names: "Bernabeu"
     affiliation: "Department of Education, University of Oxford"
-date-released: "2025-11-12"
-version: "1.0.0"
-doi: "10.5281/zenodo.17624830"
-url: "https://doi.org/10.5281/zenodo.17624830"
-abstract: "A production-ready local transcription workflow leveraging OpenAI's Whisper models that addresses the limitations of cloud-based solutions through complete data sovereignty, unlimited scale, reproducible processing and advanced quality control, while maintaining GDPR compliance."
-preferred-citation: |
-  @software{secure_local_HPC_speech_transcription,
-    title={Secure and scalable speech transcription for local and HPC},
-    author={Pablo Bernabeu},
-    year={2025},
-    doi={10.5281/zenodo.17624830},
-    url={https://doi.org/10.5281/zenodo.17624830}
-  }
+date-released: "2026-10-18"
+version: "2.0.0"
+# The software is MIT. The manuscript, docs/, output/ and example_output/
+# are CC BY 4.0 (LICENSE-docs.md); CFF reads a list of licences as a
+# choice between them, so only the software's is given here.
+license: MIT
+doi: "10.5281/zenodo.23442766"
+url: "https://doi.org/10.5281/zenodo.23442766"
+repository-code: "https://github.com/pablobernabeu/secure_local_HPC_speech_transcription"
+abstract: "A local transcription workflow built on OpenAI's Whisper models, for research recordings that cannot be sent to a cloud service. It keeps custody of the audio, runs on a laptop or a Slurm cluster, and adds speaker diarisation, name masking and a measured layer of defensive post-processing. Keeping custody is not de-identification: the masking and voice-anonymisation features are documented as bounded, with the measurements behind that in the accompanying paper."
 keywords:
   - speech transcription
   - speaker diarisation

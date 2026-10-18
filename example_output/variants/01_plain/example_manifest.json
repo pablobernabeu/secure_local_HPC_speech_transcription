@@ -1,0 +1,65 @@
+{
+  "manifest_version": 1,
+  "generated_at": "2026-09-27T12:00:00",
+  "provenance": {
+    "asr_model": "openai/whisper-large-v3",
+    "asr_model_revision": "06f233fe06e710322aca913c1bc4249a0d71fce1",
+    "language": "english",
+    "language_requested": "english",
+    "language_detected": null,
+    "language_assumed": false,
+    "name_masking": true,
+    "repetition_fix": true,
+    "speaker_attribution": false,
+    "timestamps": false,
+    "timestamped_artefacts_written": false,
+    "redacted_timestamps_only": false,
+    "audio_enhancement": false,
+    "name_masking_settings": {
+      "languages": [
+        "arabic",
+        "chinese",
+        "english",
+        "french",
+        "german",
+        "hindi",
+        "italian",
+        "polynesian",
+        "spanish"
+      ],
+      "use_facebook_names": false,
+      "use_facebook_surnames": false,
+      "exclude_common_words": true,
+      "excluded_names": {
+        "count": 0,
+        "sha256": null
+      }
+    },
+    "diarization_settings": null,
+    "software": {
+      "version": "2.0.0",
+      "packages": {
+        "python": "3.12.12",
+        "transformers": "4.57.1",
+        "torch": "2.5.1+cu121",
+        "pyannote.audio": "3.4.0",
+        "gliner": null
+      },
+      "git_commit": null,
+      "git_dirty": null
+    }
+  },
+  "artefacts": [
+    {
+      "path": "example_transcript.txt",
+      "bytes": 2716,
+      "sha256": "fd4ca7c5b760b2293ec073cdc42880d7fe662784a8a5fab813f1d5f1bcb7a8ce"
+    }
+  ],
+  "input_audio": {
+    "name": "example.wav",
+    "bytes": 44,
+    "sha256": "ba584a378b11d9e9c98736fd8c256fe1453a84ee4139416d24b07acff424f0fb"
+  },
+  "manifest_sha256": "9ef15ec10ea3ac09705c315d908d6d54368ddc5d4368c0c115a57ddb799f9a8f"
+}

@@ -1,37 +1,72 @@
 #!/bin/bash
-
-# Auto-submit transcription jobs - automatically detects number of audio files
-# Usage: ./submit_transcription.sh [transcription_options...]
-# 
-# Batch mode (default):
-#   ./submit_transcription.sh --language english --mask-personal-names
+# =============================================================================
+# submit_transcription.sh  -  submit transcription jobs to Oxford ARC
 #
-# Single file mode:
-#   ./submit_transcription.sh --single-file audio_input/myfile.wav --language english --mask-personal-names
-#   ./submit_transcription.sh --single-file audio_input/myfile.wav --output-name "interview_2024" --mask-personal-names
+# Counts the recordings to transcribe, freezes that list, and submits one
+# array task per recording (or a single job for one file) running
+# hpc/batch_transcription.sh. Run it on the login node; it only submits.
 #
-# Options:
-#   --single-file <path>     Specify exact file to transcribe
-#   --output-name <name>     Custom name for output files (without extension)
+# Usage (from anywhere; the script finds the repository root itself):
+#
+#   # Batch mode: every recording in the input directory
+#   hpc/submit_transcription.sh --language english --mask-personal-names
+#
+#   # Single file
+#   hpc/submit_transcription.sh --single-file audio_input/myfile.wav \
+#       --output-name "interview_2024" --mask-personal-names
+#
+# Input directory (batch mode): $TRANSCRIPTION_AUDIO_DIR if set, otherwise
+# $DATA/speech_transcription_env/audio_input, which is where
+# ARC_USAGE_GUIDE.md tells users to copy recordings and where the worker has
+# always looked. The sorted file list is written to
+# logs/filelist_<timestamp>_<pid>.txt at submission and each array task reads
+# its entry from that frozen list, so adding or removing recordings while
+# tasks are queued cannot shift which file a task transcribes. The list names
+# every recording, which may identify participants, so it is written
+# owner-only and .gitignore's logs/* rule keeps it out of commits.
+#
+# HPC-specific options:
+#   --single-file <path>     transcribe exactly this file
+#   --output-name <name>     base name for the output files
+#   --time-limit HH:MM:SS    wall-clock limit per task (default 08:00:00)
+#   --memory <size>          memory per task (default 32G)
+#
+# Every other option is passed to transcription.py unchanged, so it accepts
+# the same options as `python transcription.py --help` (VALID_ARGS below;
+# tests/test_audit_shell_transcription_wrapper.py keeps the two in step).
+#
+# The worker runs on CPU (it sets CUDA_VISIBLE_DEVICES="" for stability), so
+# no GPU is requested. An earlier version probed sinfo for GPUs and printed
+# "GPU-accelerated" without ever requesting one, and treated the
+# cluster-qualified job ID ("<id>;htc") as a failure and submitted a second,
+# duplicate array.
+# =============================================================================
 
-echo "🎤 AUTO-SUBMIT TRANSCRIPTION JOBS"
-echo "================================="
+set -euo pipefail
 
-# Create logs directory if it doesn't exist
-LOGS_DIR="$HOME/speech_transcription/logs"
-if [ ! -d "$LOGS_DIR" ]; then
-    mkdir -p "$LOGS_DIR"
-    echo "📁 Created logs directory: $LOGS_DIR"
-fi
+echo "🎤 SUBMIT TRANSCRIPTION JOBS"
+echo "============================"
 
-# Define valid arguments
-VALID_ARGS=(
+# The repository root is the parent of this script's directory. sbatch is run
+# from there, so SLURM_SUBMIT_DIR in the worker is the repository root and
+# the worker's relative log paths (logs/...) resolve where this script
+# creates them, whatever the clone directory is called.
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+LOGS_DIR="$REPO_DIR/logs"
+
+# Options this wrapper accepts. The HPC-only ones are consumed here; every
+# other one is forwarded to transcription.py, whose argparse defines them.
+HPC_ARGS=(
     "--single-file"
     "--output-name"
     "--time-limit"
     "--memory"
+)
+VALID_ARGS=(
+    "${HPC_ARGS[@]}"
     "--model"
     "--language"
+    "--original-filename"
     "--enhance-audio"
     "--mask-personal-names"
     "--fix-spurious-repetitions"
@@ -41,19 +76,35 @@ VALID_ARGS=(
     "--use-facebook-surnames-for-masking"
     "--languages-for-name-masking"
     "--exclude-common-english-words-from-name-masking"
+    "--no-exclude-common-english-words-from-name-masking"
     "--exclude-names-from-masking"
     "--exclude-names-file"
     "--speaker-attribution"
+    "--diarization-model-path"
+    "--diarisation-model-path"
+    "--diarization-config"
+    "--diarisation-config"
+    "--vad-onset"
+    "--vad-onset-threshold"
+    "--vad-offset"
+    "--vad-offset-threshold"
+    "--num-speakers"
+    "--min-speakers"
+    "--max-speakers"
+    "--timestamps"
+    "--redacted-timestamps-only"
+    "--source-audio"
+    "--source-derivation"
+    "--review-flag-zero-duration"
+    "--review-repeated-passage-words"
+    "--review-repeated-passage-window"
     "-h"
     "--help"
 )
 
-# Function to check if argument is valid
 is_valid_arg() {
-    local arg="$1"
-    # Extract just the flag part (before any =)
-    local flag="${arg%%=*}"
-    
+    local flag="${1%%=*}"   # accept --flag=value as well as --flag value
+    local valid
     for valid in "${VALID_ARGS[@]}"; do
         if [[ "$flag" == "$valid" ]]; then
             return 0
@@ -62,359 +113,249 @@ is_valid_arg() {
     return 1
 }
 
-# Parse arguments for single-file mode
+usage() {
+    cat <<'EOF'
+Usage: hpc/submit_transcription.sh [options]
+
+HPC-specific options:
+  --single-file <path>       Transcribe exactly this file (otherwise: batch mode)
+  --output-name <name>       Base name for output files (single-file mode)
+  --time-limit HH:MM:SS      Wall-clock limit per task (default: 08:00:00)
+  --memory <size>            Memory per task (default: 32G), e.g. 16G, 64G
+
+Batch mode reads $TRANSCRIPTION_AUDIO_DIR, or by default
+$DATA/speech_transcription_env/audio_input.
+
+Every other option is passed to transcription.py unchanged; see
+`python transcription.py --help`. Common ones:
+  --model <model>                     HuggingFace model ID
+  --language <lang>                   Transcription language (english, spanish, ...)
+  --mask-personal-names               Enable name masking
+  --speaker-attribution               Enable speaker diarisation
+  --num-speakers N                    Exact speaker count, with --speaker-attribution
+  --diarization-model-path <path>     Local pyannote pipeline (offline use)
+  --timestamps                        Write timestamped .json/.vtt as well
+  --exclude-names-from-masking "A, B" Names to leave unmasked
+
+Examples:
+  hpc/submit_transcription.sh --mask-personal-names --language english
+  hpc/submit_transcription.sh --single-file audio_input/file.wav --time-limit 04:00:00 --memory 64G
+EOF
+}
+
+# -----------------------------------------------------------------------------
+# Parse arguments. Values are kept as separate array elements end to end, so
+# a value containing spaces, commas or quotes reaches Python exactly as typed
+# and is never re-parsed by the shell.
+# -----------------------------------------------------------------------------
 SINGLE_FILE=""
 OUTPUT_NAME=""
 TIME_LIMIT=""
 MEMORY=""
-TRANSCRIPTION_ARGS=""
+TRANSCRIPTION_ARGS=()
+
+need_value() {  # need_value <flag> <remaining arg count>
+    if [[ "$2" -lt 2 ]]; then
+        echo "❌ ERROR: $1 needs a value" >&2
+        exit 1
+    fi
+}
 
 while [[ $# -gt 0 ]]; do
-    case $1 in
+    case "$1" in
         --single-file)
-            SINGLE_FILE="$2"
-            shift 2
-            ;;
+            need_value "$1" $#; SINGLE_FILE="$2"; shift 2 ;;
         --output-name)
-            OUTPUT_NAME="$2"
-            shift 2
-            ;;
+            need_value "$1" $#; OUTPUT_NAME="$2"; shift 2 ;;
         --time-limit)
-            TIME_LIMIT="$2"
-            shift 2
-            ;;
+            need_value "$1" $#; TIME_LIMIT="$2"; shift 2 ;;
         --memory)
-            MEMORY="$2"
-            shift 2
-            ;;
+            need_value "$1" $#; MEMORY="$2"; shift 2 ;;
         -h|--help)
-            shift 2
-            ;;
-        -h|--help)
-            echo "Usage: ./submit_transcription.sh [options]"
-            echo ""
-            echo "HPC-specific options:"
-            echo "  --single-file <path>       Specify exact file to transcribe"
-            echo "  --output-name <name>       Custom name for output files"
-            echo "  --time-limit HH:MM:SS      Maximum time per audio file (default: 2h GPU, 8h CPU)"
-            echo "  --memory <size>            Memory allocation per job (default: 16G GPU, 32G CPU)"
-            echo "                             Examples: 16G, 32G, 64G, 128G"
-            echo ""
-            echo "Transcription options:"
-            echo "  --model <model>                    HuggingFace model ID"
-            echo "  --language <lang>                  Transcription language (english, spanish, etc.)"
-            echo "  --enhance-audio                    Enable audio enhancement"
-            echo "  --mask-personal-names              Enable name masking"
-            echo "  --fix-spurious-repetitions         Remove repetitive patterns"
-            echo "  --save-name-masking-logs           Save detailed masking logs"
-            echo "  --save-enhanced-audio              Save enhanced audio files"
-            echo "  --speaker-attribution              Enable speaker diarization"
-            echo "  --exclude-names-from-masking <names>  Comma-separated names to exclude"
-            echo "  --exclude-names-file <file>        File with names to exclude"
-            echo "  --languages-for-name-masking <langs>  Languages for name database"
-            echo "  --use-facebook-names-for-masking   Use Facebook first names database"
-            echo "  --use-facebook-surnames-for-masking  Use Facebook surnames database"
-            echo ""
-            echo "Examples:"
-            echo "  ./submit_transcription.sh --mask-personal-names --language english"
-            echo "  ./submit_transcription.sh --single-file audio_input/file.wav --time-limit 04:00:00 --memory 64G"
+            usage
             exit 0
             ;;
-        --*)
-            # Check if this is a valid argument
-            if ! is_valid_arg "$1"; then
-                echo "❌ ERROR: Unknown argument: $1"
-                echo ""
-                echo "Valid arguments are:"
-                for arg in "${VALID_ARGS[@]}"; do
-                    echo "  $arg"
-                done
-                echo ""
-                echo "Run './hpc/submit_transcription.sh --help' for usage information."
+        --single-file=*|--output-name=*|--time-limit=*|--memory=*)
+            # Split --flag=value and re-read it. Without this the =-form fell
+            # through to the forwarding arm below: it bypassed the batch-mode
+            # --output-name check, so every array task wrote the same output
+            # name, and --time-limit/--memory never reached sbatch.
+            if [[ -z "${1#*=}" ]]; then
+                echo "❌ ERROR: ${1%%=*} needs a value" >&2
                 exit 1
             fi
-            TRANSCRIPTION_ARGS="$TRANSCRIPTION_ARGS $1"
+            set -- "${1%%=*}" "${1#*=}" "${@:2}"
+            continue
+            ;;
+        --*)
+            if ! is_valid_arg "$1"; then
+                echo "❌ ERROR: Unknown argument: $1" >&2
+                echo "" >&2
+                echo "Valid arguments are:" >&2
+                printf '  %s\n' "${VALID_ARGS[@]}" >&2
+                echo "" >&2
+                echo "Run 'hpc/submit_transcription.sh --help' for usage information." >&2
+                exit 1
+            fi
+            TRANSCRIPTION_ARGS+=("$1")
             shift
             ;;
         *)
-            # Non-flag argument (likely a value for a previous flag)
-            TRANSCRIPTION_ARGS="$TRANSCRIPTION_ARGS $1"
+            # A value for the preceding transcription.py option
+            # (e.g. the 2 in --num-speakers 2).
+            TRANSCRIPTION_ARGS+=("$1")
             shift
             ;;
     esac
 done
 
-# Check for single-file mode
-if [ -n "$SINGLE_FILE" ]; then
+mkdir -p "$LOGS_DIR"
+
+# Arguments for the worker: the HPC-only ones it needs, then everything for
+# transcription.py.
+WORKER_ARGS=()
+if [[ -n "$OUTPUT_NAME" ]]; then
+    WORKER_ARGS+=(--output-name "$OUTPUT_NAME")
+fi
+
+# -----------------------------------------------------------------------------
+# Decide what to transcribe
+# -----------------------------------------------------------------------------
+if [[ -n "$SINGLE_FILE" ]]; then
     echo "📄 SINGLE FILE MODE"
-    echo "=================="
-    
-    # Validate the specified file exists
-    if [ ! -f "$SINGLE_FILE" ]; then
-        echo "❌ ERROR: Specified file not found: $SINGLE_FILE"
+    if [[ ! -f "$SINGLE_FILE" ]]; then
+        echo "❌ ERROR: Specified file not found: $SINGLE_FILE" >&2
         exit 1
     fi
-    
-    # Check if it's a supported audio format
     case "${SINGLE_FILE,,}" in
-        *.wav|*.mp3|*.m4a|*.flac|*.ogg|*.aac)
-            echo "✅ File found: $(basename "$SINGLE_FILE")"
-            echo "   Format: $(echo "$SINGLE_FILE" | sed 's/.*\.//' | tr '[:lower:]' '[:upper:]')"
-            echo "   Size: $(ls -lh "$SINGLE_FILE" | awk '{print $5}')"
-            ;;
+        *.wav|*.mp3|*.m4a|*.flac|*.ogg|*.aac) ;;
         *)
-            echo "❌ ERROR: Unsupported audio format: $SINGLE_FILE"
-            echo "Supported formats: WAV, MP3, M4A, FLAC, OGG, AAC"
+            echo "❌ ERROR: Unsupported audio format: $SINGLE_FILE" >&2
+            echo "Supported formats: WAV, MP3, M4A, FLAC, OGG, AAC" >&2
             exit 1
             ;;
     esac
-    
-    # Set up single file processing
+    # Resolved now, relative to where the user ran this, because the job
+    # runs from the repository root.
+    SINGLE_FILE="$(cd "$(dirname "$SINGLE_FILE")" && pwd)/$(basename "$SINGLE_FILE")"
+    echo "✅ File: $SINGLE_FILE ($(du -h "$SINGLE_FILE" | cut -f1))"
     AUDIO_COUNT=1
     BATCH_MODE=false
-    
-    # Add custom arguments for single file mode
-    if [ -n "$OUTPUT_NAME" ]; then
-        TRANSCRIPTION_ARGS="$TRANSCRIPTION_ARGS --output-name \"$OUTPUT_NAME\""
-        echo "📝 Custom output name: $OUTPUT_NAME"
-    fi
-    
-    # Pass single-file to batch script (but batch script won't pass it to Python)
-    TRANSCRIPTION_ARGS="$TRANSCRIPTION_ARGS --single-file \"$SINGLE_FILE\""
-    
+    WORKER_ARGS+=(--single-file "$SINGLE_FILE")
 else
     echo "📁 BATCH MODE"
-    echo "============"
+    if [[ -n "$OUTPUT_NAME" ]]; then
+        echo "❌ ERROR: --output-name applies to one file; use it with --single-file" >&2
+        exit 1
+    fi
+    if [[ -n "${TRANSCRIPTION_AUDIO_DIR:-}" ]]; then
+        AUDIO_INPUT_DIR="$TRANSCRIPTION_AUDIO_DIR"
+    elif [[ -n "${DATA:-}" ]]; then
+        AUDIO_INPUT_DIR="$DATA/speech_transcription_env/audio_input"
+    else
+        echo "❌ ERROR: \$DATA is not set, so there is no default input directory." >&2
+        echo "   Set TRANSCRIPTION_AUDIO_DIR to the directory holding the recordings." >&2
+        exit 1
+    fi
+    if [[ ! -d "$AUDIO_INPUT_DIR" ]]; then
+        echo "❌ ERROR: Audio input directory not found: $AUDIO_INPUT_DIR" >&2
+        echo "   Copy recordings there, or set TRANSCRIPTION_AUDIO_DIR." >&2
+        exit 1
+    fi
+    AUDIO_INPUT_DIR="$(cd "$AUDIO_INPUT_DIR" && pwd)"
+
+    # Freeze the list now. NUL-delimited, so any file name survives, and
+    # case-insensitive, so Interview.Wav is counted and processed alike.
+    # Owner-only (umask 077 in a subshell), because the recording names can
+    # identify participants and logs/ is often group-readable.
+    FILE_LIST="$LOGS_DIR/filelist_$(date +%Y%m%d_%H%M%S)_$$.txt"
+    (
+        umask 077
+        find "$AUDIO_INPUT_DIR" -type f \( -iname "*.wav" -o -iname "*.mp3" \
+            -o -iname "*.m4a" -o -iname "*.flac" -o -iname "*.ogg" -o -iname "*.aac" \) \
+            -print0 | LC_ALL=C sort -z > "$FILE_LIST"
+    )
+    AUDIO_COUNT="$(tr -cd '\0' < "$FILE_LIST" | wc -c | tr -d ' ')"
+
+    if [[ "$AUDIO_COUNT" -eq 0 ]]; then
+        rm -f "$FILE_LIST"
+        echo "❌ ERROR: No audio files found in $AUDIO_INPUT_DIR" >&2
+        echo "Supported formats: WAV, MP3, M4A, FLAC, OGG, AAC" >&2
+        exit 1
+    fi
+    echo "✅ Found $AUDIO_COUNT audio files in $AUDIO_INPUT_DIR"
+    echo "   Frozen list: $FILE_LIST"
+    echo ""
+    echo "📄 Files to be processed (array task: file):"
+    tr '\0' '\n' < "$FILE_LIST" | nl
     BATCH_MODE=true
-
-    # Define audio input directory (relative to current working directory)
-    AUDIO_INPUT_DIR="./audio_input"
-    
-    # Check if audio directory exists
-    if [ ! -d "$AUDIO_INPUT_DIR" ]; then
-        echo "❌ ERROR: Audio input directory not found: $AUDIO_INPUT_DIR"
-        echo "Make sure your audio files are in the correct location."
-        echo "Expected: $(pwd)/audio_input"
-        exit 1
-    fi
-    
-    # Count audio files
-    echo "📁 Scanning for audio files..."
-    AUDIO_COUNT=$(find "$AUDIO_INPUT_DIR" -type f \( -iname "*.wav" -o -iname "*.mp3" -o -iname "*.m4a" -o -iname "*.flac" -o -iname "*.ogg" -o -iname "*.aac" \) | wc -l)
-    
-    if [ "$AUDIO_COUNT" -eq 0 ]; then
-        echo "❌ ERROR: No audio files found in $AUDIO_INPUT_DIR"
-        echo "Supported formats: WAV, MP3, M4A, FLAC, OGG, AAC"
-        exit 1
-    fi
-    
-    echo "✅ Found $AUDIO_COUNT audio files"
-    
-    # List the files that will be processed (with proper space handling)
-    echo ""
-    echo "📄 Files to be processed:"
-    find "$AUDIO_INPUT_DIR" -type f \( -iname "*.wav" -o -iname "*.mp3" -o -iname "*.m4a" -o -iname "*.flac" -o -iname "*.ogg" -o -iname "*.aac" \) -print0 | sort -z | tr '\0' '\n' | nl
+    WORKER_ARGS+=(--file-list "$FILE_LIST")
 fi
 
+WORKER_ARGS+=("${TRANSCRIPTION_ARGS[@]}")
+
+TIME="${TIME_LIMIT:-08:00:00}"
+MEM="${MEMORY:-32G}"
+
 echo ""
-if [ "$BATCH_MODE" = true ]; then
-    echo "⚙️  Batch Job Configuration:"
-    echo "   Files: $AUDIO_COUNT"
+echo "⚙️  Job configuration:"
+if [[ "$BATCH_MODE" == true ]]; then
     echo "   Array range: 1-$AUDIO_COUNT"
-else
-    echo "⚙️  Single File Job Configuration:"
-    echo "   File: $(basename \"$SINGLE_FILE\")"
-    if [ -n "$OUTPUT_NAME" ]; then
-        echo "   Output name: $OUTPUT_NAME"
-    fi
 fi
-echo "   Time limit: 2 hours per task"
-echo "   Memory: 16GB per task"
-echo "   GPU: 1 per task"
-if [ -n "$TRANSCRIPTION_ARGS" ]; then
-    echo "   Options: $TRANSCRIPTION_ARGS"
-    # Check if name masking is enabled
-    if [[ "$TRANSCRIPTION_ARGS" == *"--mask-personal-names"* ]]; then
-        echo "   🎭 Enhanced name masking: Will install global names database (730K+ names)"
-    fi
+echo "   Time limit:  $TIME per task"
+echo "   Memory:      $MEM per task"
+echo "   Device:      CPU (the worker does not use a GPU)"
+if [[ ${#TRANSCRIPTION_ARGS[@]} -gt 0 ]]; then
+    printf '   Options:    '
+    printf ' [%s]' "${TRANSCRIPTION_ARGS[@]}"
+    printf '\n'
 else
-    echo "   Options: None (basic transcription)"
+    echo "   Options:     none (basic transcription)"
+fi
+
+# -----------------------------------------------------------------------------
+# Submit. No eval: the argument array is passed to sbatch as is.
+# -----------------------------------------------------------------------------
+SBATCH_ARGS=(--time="$TIME" --mem="$MEM" --parsable)
+if [[ "$BATCH_MODE" == true ]]; then
+    SBATCH_ARGS+=(--array="1-$AUDIO_COUNT")
 fi
 
 echo ""
-echo "🚀 Submitting job..."
+echo "🚀 Submitting..."
+cd "$REPO_DIR"
+SUBMIT_RC=0
+SUBMIT_OUT="$(sbatch "${SBATCH_ARGS[@]}" hpc/batch_transcription.sh "${WORKER_ARGS[@]}" 2>&1)" \
+    || SUBMIT_RC=$?
 
-# Set time limits based on user input or defaults
-if [ -n "$TIME_LIMIT" ]; then
-    GPU_TIME="$TIME_LIMIT"
-    CPU_TIME="$TIME_LIMIT"
-    echo "⏱️  Using custom time limit: $TIME_LIMIT (applies to both GPU and CPU modes)"
-else
-    GPU_TIME="02:00:00"
-    CPU_TIME="08:00:00"
+# --parsable prints "<jobid>" or, with --clusters, "<jobid>;<cluster>".
+JOB_ID_NUM="${SUBMIT_OUT%%;*}"
+if [[ $SUBMIT_RC -ne 0 || ! "$JOB_ID_NUM" =~ ^[0-9]+$ ]]; then
+    echo "❌ Failed to submit job (sbatch exit $SUBMIT_RC)" >&2
+    echo "   sbatch said: $SUBMIT_OUT" >&2
+    echo "" >&2
+    echo "💡 Troubleshooting:" >&2
+    echo "   - Check SLURM configuration: sacctmgr show qos" >&2
+    echo "   - Try manual submission: sbatch hpc/batch_transcription.sh --single-file <file>" >&2
+    exit 1
 fi
 
-# Set memory based on user input or defaults
-if [ -n "$MEMORY" ]; then
-    GPU_MEMORY="$MEMORY"
-    CPU_MEMORY="$MEMORY"
-    echo "💾 Using custom memory: $MEMORY (applies to both GPU and CPU modes)"
+if [[ "$BATCH_MODE" == true ]]; then
+    echo "✅ Job array submitted: $JOB_ID_NUM (tasks 1-$AUDIO_COUNT)"
 else
-    GPU_MEMORY="16G"
-    CPU_MEMORY="32G"
+    echo "✅ Job submitted: $JOB_ID_NUM ($(basename "$SINGLE_FILE"))"
 fi
-# Check GPU availability first
-echo "Checking GPU availability..."
-GPU_AVAILABLE=$(sinfo -N -o "%N %G" 2>/dev/null | grep -c "gpu" || echo "0")
-echo "   DEBUG: GPU check returned: '$GPU_AVAILABLE'"
-
-if [ "$GPU_AVAILABLE" -gt 0 ] 2>/dev/null; then
-    echo "✅ Found $GPU_AVAILABLE GPU nodes available"
-    echo "Attempting GPU job submission..."
-    
-    # Submit job based on mode
-    if [ "$BATCH_MODE" = true ]; then
-        # Batch mode: submit job array
-        eval "JOB_ID=\$(sbatch \
-            --array=1-$AUDIO_COUNT \
-            --time=$GPU_TIME \
-            --mem=$GPU_MEMORY \
-            --parsable \
-            hpc/batch_transcription.sh \
-            $TRANSCRIPTION_ARGS 2>&1)"
-    else
-        # Single file mode: submit single job (no array)
-        eval "JOB_ID=\$(sbatch \
-            --time=$GPU_TIME \
-            --mem=$GPU_MEMORY \
-            --parsable \
-            hpc/batch_transcription.sh \
-            $TRANSCRIPTION_ARGS 2>&1)"
-    fi
-    
-    if [[ $JOB_ID =~ ^[0-9]+$ ]]; then
-        echo "✅ GPU job submitted successfully!"
-        GPU_MODE=true
-    else
-        echo "⚠️  GPU job submission failed: $JOB_ID"
-        echo "Falling back to CPU-only mode..."
-        
-        # Fallback CPU submission
-        if [ "$BATCH_MODE" = true ]; then
-            eval "JOB_ID=\$(sbatch \
-                --array=1-$AUDIO_COUNT \
-                --time=$CPU_TIME \
-                --mem=$CPU_MEMORY \
-                --parsable \
-                hpc/batch_transcription.sh \
-                $TRANSCRIPTION_ARGS)"
-        else
-            eval "JOB_ID=\$(sbatch \
-                --time=$CPU_TIME \
-                --mem=$CPU_MEMORY \
-                --parsable \
-                hpc/batch_transcription.sh \
-                $TRANSCRIPTION_ARGS)"
-        fi
-        GPU_MODE=false
-    fi
-else
-    echo "⚠️  No GPU nodes available, using CPU-only mode"
-    if [ "$BATCH_MODE" = true ]; then
-        echo "   Note: This will be significantly slower for large batches"
-        echo "   Submitting array job for $AUDIO_COUNT files..."
-        eval "JOB_ID=\$(sbatch \
-            --array=1-$AUDIO_COUNT \
-            --time=$CPU_TIME \
-            --mem=$CPU_MEMORY \
-            --parsable \
-            hpc/batch_transcription.sh \
-            $TRANSCRIPTION_ARGS 2>&1)"
-    else
-        echo "   Submitting single file job..."
-        eval "JOB_ID=\$(sbatch \
-            --time=$CPU_TIME \
-            --mem=$CPU_MEMORY \
-            --parsable \
-            hpc/batch_transcription.sh \
-            $TRANSCRIPTION_ARGS 2>&1)"
-    fi
-    GPU_MODE=false
-fi
-
-# Check if job was submitted successfully
+# The worker logs to logs/transcription_%A_%a.out; for a job that is not an
+# array Slurm fills %a with a placeholder number, hence the wildcard.
+LOG_FILES="transcription_${JOB_ID_NUM}_*.out"
 echo ""
-echo "📊 Submission result: '$JOB_ID'"
-
-# Extract just the numeric job ID (parsable format is "jobid;cluster")
-JOB_ID_NUM=$(echo "$JOB_ID" | cut -d';' -f1)
-
-if [[ ! $JOB_ID_NUM =~ ^[0-9]+$ ]]; then
-    echo "❌ Failed to submit job"
-    echo "   Error details: $JOB_ID"
-    echo ""
-    echo "💡 Troubleshooting:"
-    echo "   - Check logs directory exists: ls -la ~/speech_transcription/logs/"
-    echo "   - Check SLURM configuration: sacctmgr show qos"
-    echo "   - Try manual submission: sbatch hpc/batch_transcription.sh --language english"
-    exit 1
-fi
-
-if [ $? -eq 0 ] && [[ $JOB_ID_NUM =~ ^[0-9]+$ ]]; then
-    if [ "$BATCH_MODE" = true ]; then
-        echo "✅ Job array submitted successfully!"
-        echo "   Job ID: $JOB_ID_NUM"
-        echo "   Tasks: $AUDIO_COUNT (1-$AUDIO_COUNT)"
-        LOG_FILES="transcription_${JOB_ID_NUM}_*.out"
-    else
-        echo "✅ Single job submitted successfully!"
-        echo "   Job ID: $JOB_ID_NUM"
-        echo "   File: $(basename \"$SINGLE_FILE\")"
-        if [ -n "$OUTPUT_NAME" ]; then
-            echo "   Output name: $OUTPUT_NAME"
-        fi
-        LOG_FILES="transcription_${JOB_ID_NUM}.out"
-    fi
-    
-    if [ "$GPU_MODE" = true ]; then
-        echo "   Mode: GPU-accelerated 🚀"
-        if [ -n "$TIME_LIMIT" ]; then
-            echo "   Time: $TIME_LIMIT per task (custom)"
-        else
-            echo "   Time: 2 hours per task (default)"
-        fi
-        if [ -n "$MEMORY" ]; then
-            echo "   Memory: $MEMORY per task (custom)"
-        else
-            echo "   Memory: 16G per task (default)"
-        fi
-    else
-        echo "   Mode: CPU-only ⚠️  (slower but functional)"
-        if [ -n "$TIME_LIMIT" ]; then
-            echo "   Time: $TIME_LIMIT per task (custom)"
-        else
-            echo "   Time: 8 hours per task (default)"
-        fi
-        if [ -n "$MEMORY" ]; then
-            echo "   Memory: $MEMORY per task (custom)"
-        else
-            echo "   Memory: 32G per task (default)"
-        fi
-    fi
-    echo ""
-    echo "📊 Monitor your job(s):"
-    echo "   squeue -u \$USER -j $JOB_ID_NUM"
-    echo "   tail -f ~/speech_transcription/logs/$LOG_FILES"
-    echo ""
-    echo "📁 Results will be saved to:"
-    if [ -n "$OUTPUT_NAME" ]; then
-        echo "   output/transcripts/${OUTPUT_NAME}_transcript.txt"
-        echo "   output/transcripts/${OUTPUT_NAME}_transcript.docx"
-    else
-        echo "   output/transcripts/{filename}_transcript.txt"
-        echo "   output/transcripts/{filename}_transcript.docx"
-    fi
+echo "📊 Monitor:"
+echo "   squeue -M htc -u \$USER -j $JOB_ID_NUM"
+echo "   tail -f $LOGS_DIR/$LOG_FILES"
+echo ""
+echo "📁 Results will be saved under $REPO_DIR/output/transcripts/ as"
+if [[ -n "$OUTPUT_NAME" ]]; then
+    echo "   ${OUTPUT_NAME}_transcript.txt / .docx"
 else
-    echo "❌ Failed to submit job"
-    exit 1
+    echo "   <recording name>_transcript.txt / .docx"
 fi

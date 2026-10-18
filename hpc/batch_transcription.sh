@@ -1,8 +1,38 @@
 #!/bin/bash
-
-# ARC-compatible batch transcription script with CPU processing
-# Adapted for Oxford ARC HPC cluster environment
-# Modified to use virtual environment directories in $DATA
+# =============================================================================
+# batch_transcription.sh  -  one transcription task on Oxford ARC (CPU)
+#
+# Normally submitted by hpc/submit_transcription.sh, which freezes the list
+# of recordings and passes it here. Each array task transcribes one entry of
+# that list with transcription.py and writes to output/transcripts/ in the
+# repository.
+#
+# Arguments (all others are passed to transcription.py unchanged):
+#   --file-list <path>     NUL-delimited list written at submission; this task
+#                          transcribes entry $SLURM_ARRAY_TASK_ID (1-based).
+#                          Failed tasks can be retried against the same list,
+#                          e.g. sbatch --array=7,23 hpc/batch_transcription.sh
+#                          --file-list logs/filelist_<...>.txt <same options>
+#   --single-file <path>   transcribe exactly this file
+#   --output-name <name>   base name for the output files
+#   --mask-names, --force-english, --fix-repetitions
+#                          older spellings of --mask-personal-names,
+#                          --language english and --fix-spurious-repetitions
+#
+# Submitted directly with neither --file-list nor --single-file, it falls back
+# to listing $DATA/speech_transcription_env/audio_input at run time, which is
+# not stable if files change while tasks are queued; prefer the wrapper.
+#
+# Submit from the repository root (the wrapper does this), so that
+# SLURM_SUBMIT_DIR is the repository and the log paths below resolve there.
+#
+# The job runs on CPU: CUDA_VISIBLE_DEVICES is emptied before Python starts
+# and no GPU is requested. Before transcribing it runs `python -m preflight`
+# (without --gpu-required) and stops with exit 2 on a FAIL. Slurm's --time is
+# the only time limit; there is no internal timeout. The time and memory
+# below apply to a direct sbatch; the wrapper overrides them (default
+# 08:00:00 and 32G).
+# =============================================================================
 
 #SBATCH --job-name=transcription
 #SBATCH --output=logs/transcription_%A_%a.out
@@ -12,336 +42,185 @@
 #SBATCH --time=10:00:00
 #SBATCH --mem=40G
 #SBATCH --cpus-per-task=4
-# GPU disabled - using CPU-only PyTorch for stability
-# #SBATCH --gres=gpu:1
+
+set -euo pipefail
 
 echo "🎤 ARC SPEECH TRANSCRIPTION JOB"
 echo "==============================="
 echo "Job started at: $(date)"
-echo "Running on node: $SLURM_NODENAME"
-echo "Job ID: $SLURM_JOB_ID"
-echo "Task ID: $SLURM_ARRAY_TASK_ID"
-echo "Cluster: $SLURM_CLUSTER_NAME"
+echo "Running on node: ${SLURM_NODENAME:-$(hostname)}"
+echo "Job ID: ${SLURM_JOB_ID:-n/a}"
+echo "Task ID: ${SLURM_ARRAY_TASK_ID:-n/a}"
+echo "Cluster: ${SLURM_CLUSTER_NAME:-n/a}"
 echo ""
 
-# Check GPU availability
-if nvidia-smi &> /dev/null; then
-    echo "🚀 GPU Information:"
-    nvidia-smi --query-gpu=name,memory.total,compute_cap --format=csv,noheader,nounits
-    echo ""
-else
-    echo "⚠️  Warning: No GPU detected"
-    echo ""
-fi
-
-# Parse command line arguments for options
-MASK_NAMES=""
-MODEL=""
-FORCE_ENGLISH=""
-FIX_REPETITIONS=""
-SAVE_NAME_MASKING_LOGS=""
-SAVE_ENHANCED_AUDIO=""
+# -----------------------------------------------------------------------------
+# Arguments. Kept as an array so values with spaces or quotes reach Python
+# exactly as given.
+# -----------------------------------------------------------------------------
 SINGLE_FILE=""
+FILE_LIST=""
 OUTPUT_NAME=""
-TRANSCRIPTION_ARGS=""
+TRANSCRIPTION_ARGS=()
 
 while [[ $# -gt 0 ]]; do
-    case $1 in
-        --mask-names|--mask-personal-names)
-            MASK_NAMES="--mask-personal-names"
-            TRANSCRIPTION_ARGS="$TRANSCRIPTION_ARGS --mask-personal-names"
-            shift
-            ;;
-        --model)
-            MODEL="--model $2"
-            TRANSCRIPTION_ARGS="$TRANSCRIPTION_ARGS --model $2"
-            shift 2
-            ;;
-        --force-english|--language)
-            # Handle both --force-english (legacy) and --language arguments
-            if [ "$1" = "--force-english" ]; then
-                FORCE_ENGLISH="--language english"
-                TRANSCRIPTION_ARGS="$TRANSCRIPTION_ARGS --language english"
-                shift
-            else
-                FORCE_ENGLISH="--language $2"
-                TRANSCRIPTION_ARGS="$TRANSCRIPTION_ARGS --language $2"
-                shift 2
-            fi
-            ;;
-        --fix-repetitions|--fix-spurious-repetitions)
-            FIX_REPETITIONS="--fix-spurious-repetitions"
-            TRANSCRIPTION_ARGS="$TRANSCRIPTION_ARGS --fix-spurious-repetitions"
-            shift
-            ;;
-        --save-name-masking-logs)
-            SAVE_NAME_MASKING_LOGS="--save-name-masking-logs"
-            TRANSCRIPTION_ARGS="$TRANSCRIPTION_ARGS --save-name-masking-logs"
-            shift
-            ;;
-        --save-enhanced-audio)
-            SAVE_ENHANCED_AUDIO="--save-enhanced-audio"
-            TRANSCRIPTION_ARGS="$TRANSCRIPTION_ARGS --save-enhanced-audio"
-            shift
-            ;;
-        --single-file)
-            SINGLE_FILE="$2"
-            shift 2
-            ;;
-        --output-name)
-            OUTPUT_NAME="$2"
-            shift 2
-            ;;
-        *)
-            TRANSCRIPTION_ARGS="$TRANSCRIPTION_ARGS $1"
-            shift
-            ;;
+    case "$1" in
+        --single-file=*|--file-list=*|--output-name=*)
+            # Split --flag=value and re-read it, so the =-form is consumed
+            # here instead of reaching transcription.py unexamined.
+            set -- "${1%%=*}" "${1#*=}" "${@:2}"; continue ;;
+        --single-file)  SINGLE_FILE="${2:?--single-file needs a value}"; shift 2 ;;
+        --file-list)    FILE_LIST="${2:?--file-list needs a value}"; shift 2 ;;
+        --output-name)  OUTPUT_NAME="${2:?--output-name needs a value}"; shift 2 ;;
+        --mask-names)   TRANSCRIPTION_ARGS+=(--mask-personal-names); shift ;;
+        --force-english) TRANSCRIPTION_ARGS+=(--language english); shift ;;
+        --fix-repetitions) TRANSCRIPTION_ARGS+=(--fix-spurious-repetitions); shift ;;
+        *)              TRANSCRIPTION_ARGS+=("$1"); shift ;;
     esac
 done
 
-# Set default model if not specified
-if [ -z "$MODEL" ]; then
-    MODEL="--model openai/whisper-large-v3"
-fi
-
 echo "🎯 Processing configuration:"
-echo "  Model: ${MODEL#--model }"
-[ -n "$MASK_NAMES" ] && echo "  Mask names: enabled" || echo "  Mask names: disabled"
-[ -n "$FORCE_ENGLISH" ] && echo "  Force English: enabled" || echo "  Force English: disabled"
-[ -n "$FIX_REPETITIONS" ] && echo "  Fix repetitions: enabled"
-[ -n "$SAVE_NAME_MASKING_LOGS" ] && echo "  Save masking logs: enabled"
-[ -n "$SAVE_ENHANCED_AUDIO" ] && echo "  Save enhanced audio: enabled"
-[ -n "$SINGLE_FILE" ] && echo "  Single file mode: $SINGLE_FILE"
-[ -n "$OUTPUT_NAME" ] && echo "  Output name: $OUTPUT_NAME"
+[[ -n "$SINGLE_FILE" ]] && echo "  Single file: $SINGLE_FILE"
+[[ -n "$FILE_LIST" ]] && echo "  File list:   $FILE_LIST"
+[[ -n "$OUTPUT_NAME" ]] && echo "  Output name: $OUTPUT_NAME"
+if [[ ${#TRANSCRIPTION_ARGS[@]} -gt 0 ]]; then
+    printf '  Options:    '
+    printf ' [%s]' "${TRANSCRIPTION_ARGS[@]}"
+    printf '\n'
+fi
 echo ""
 
-# Environment Setup
+# -----------------------------------------------------------------------------
+# Environment
+# -----------------------------------------------------------------------------
 echo "🔧 STEP 1: Setting up environment..."
-module purge
-
-# Load required modules
-if module load Anaconda3 &> /dev/null; then
-    echo "   ✅ Anaconda3 loaded"
-fi
-
-# DO NOT load CUDA - causes conflicts with CPU-only PyTorch
-# if module load CUDA/11.8.0 &> /dev/null; then
-#     echo "   🚀 CUDA 11.8.0 loaded"
-# elif module load CUDA &> /dev/null; then
-#     echo "   🚀 CUDA loaded"
-# fi
-echo "   ⚠️  CUDA not loaded (using CPU-only PyTorch)"
-
-# Load FFmpeg for audio format support
-if module load FFmpeg &> /dev/null; then
-    echo "   🎵 FFmpeg loaded (for M4A, MP3, etc.)"
-fi
-
-echo "   📦 Modules loaded:"
-module list 2>&1 | grep -E "(Anaconda|FFmpeg)" | sed 's/^/      /'
-
-# Environment Activation and Directory Setup
-echo ""
-echo "📦 STEP 2: Activating environment and setting up directories..."
-
-# Source the activation script from personal space
-ACTIVATION_SCRIPT="$HOME/speech_transcription/activate_project_env_arc.sh"
-
-if [ -f "$ACTIVATION_SCRIPT" ]; then
-    source "$ACTIVATION_SCRIPT"
-    echo "   ✅ Environment activated via $ACTIVATION_SCRIPT"
-    echo "   🐍 Python version: $(python --version)"
-else
-    echo "   ❌ Error: Activation script not found at $ACTIVATION_SCRIPT"
-    echo "   💡 Expected location: ~/speech_transcription/activate_project_env_arc.sh"
+# The repository is where sbatch was run from. The clone directory can have
+# any name, so it is not hard-coded.
+REPO_DIR="${SLURM_SUBMIT_DIR:-$(pwd)}"
+if [[ ! -f "$REPO_DIR/transcription.py" ]]; then
+    echo "   ❌ transcription.py not found in $REPO_DIR" >&2
+    echo "   💡 Submit from the repository root (hpc/submit_transcription.sh does)." >&2
     exit 1
 fi
+# Modules, activation and the move into the repository are shared with every
+# job (hpc/common/arc_common.sh). CUDA is deliberately not loaded: the job
+# runs CPU-only. FFmpeg is loaded for M4A, MP3 and the other compressed
+# formats. Model weights come from the HF_HOME the activation script sets;
+# the helper unsets the deprecated TRANSFORMERS_CACHE, which would override it.
+# shellcheck source=common/arc_common.sh
+source "$REPO_DIR/hpc/common/arc_common.sh" || exit 1
+arc_activate "$REPO_DIR" --module FFmpeg || exit 1
+echo "   📂 Working directory: $REPO_DIR"
+echo "   🐍 Python: $(python --version 2>&1)"
 
-# Define environment path (already set by activation script, but define for clarity)
-CONDA_ENV_PATH="$DATA/speech_transcription_env"
-
-# Set up directories within the virtual environment
-AUDIO_INPUT_DIR="$CONDA_ENV_PATH/audio_input"
-OUTPUT_BASE_DIR="$CONDA_ENV_PATH/output"
-TRANSCRIPTIONS_DIR="$OUTPUT_BASE_DIR/transcriptions"
-ENHANCED_AUDIO_DIR="$OUTPUT_BASE_DIR/enhanced_audio"
-MODELS_CACHE_DIR="$CONDA_ENV_PATH/models_cache"
-
-# Create directories if they don't exist
-mkdir -p "$AUDIO_INPUT_DIR"
-mkdir -p "$TRANSCRIPTIONS_DIR"
-mkdir -p "$ENHANCED_AUDIO_DIR"
-mkdir -p "$MODELS_CACHE_DIR"
-
-echo "   📁 Working directories:"
-echo "      • Audio input: $AUDIO_INPUT_DIR"
-echo "      • Transcriptions: $TRANSCRIPTIONS_DIR"
-echo "      • Enhanced audio: $ENHANCED_AUDIO_DIR"
-echo "      • Models cache: $MODELS_CACHE_DIR"
-
-# Verify directories were created successfully
-for dir in "$AUDIO_INPUT_DIR" "$TRANSCRIPTIONS_DIR" "$ENHANCED_AUDIO_DIR" "$MODELS_CACHE_DIR"; do
-    if [ ! -d "$dir" ]; then
-        echo "   ❌ Failed to create directory: $dir"
+# -----------------------------------------------------------------------------
+# Choose the recording
+# -----------------------------------------------------------------------------
+echo ""
+echo "🔍 STEP 2: Selecting the recording..."
+if [[ -n "$SINGLE_FILE" ]]; then
+    AUDIO_FILE="$SINGLE_FILE"
+else
+    if [[ -z "${SLURM_ARRAY_TASK_ID:-}" ]]; then
+        echo "   ❌ Neither --single-file nor an array task: nothing to select." >&2
         exit 1
     fi
-done
-
-# Set environment variables for the Python script
-export MODELS_CACHE_DIR
-export TRANSFORMERS_CACHE="$MODELS_CACHE_DIR"
-export HF_HOME="$MODELS_CACHE_DIR"
-
-# Change to the project directory (where transcription.py is located)
-PROJECT_DIR="$HOME/speech_transcription"
-if [ -d "$PROJECT_DIR" ]; then
-    cd "$PROJECT_DIR"
-    echo "   📂 Working directory: $PROJECT_DIR"
-else
-    echo "   ❌ Project directory not found: $PROJECT_DIR"
-    echo "   💡 Expected location: ~/speech_transcription/"
-    exit 1
-fi
-
-# Find audio files in the project space audio_input directory (multiple formats supported)
-echo ""
-echo "🔍 STEP 3: Finding audio files..."
-mapfile -t audio_files < <(find "$AUDIO_INPUT_DIR" \( -name "*.wav" -o -name "*.WAV" -o -name "*.mp3" -o -name "*.MP3" -o -name "*.m4a" -o -name "*.M4A" -o -name "*.flac" -o -name "*.FLAC" -o -name "*.ogg" -o -name "*.OGG" -o -name "*.aac" -o -name "*.AAC" \) -type f | sort)
-
-if [ ${#audio_files[@]} -eq 0 ]; then
-    echo "   ❌ No audio files found in $AUDIO_INPUT_DIR"
-    echo "   🎵 Supported formats: WAV, MP3, M4A, FLAC, OGG, AAC"
-    echo "   💡 Please copy your audio files to: $AUDIO_INPUT_DIR"
-    exit 1
-fi
-
-# Select file for this array task or use single file mode
-if [ -n "$SINGLE_FILE" ]; then
-    # Single file mode - construct proper path
-    # If SINGLE_FILE is absolute, use it as-is
-    # If relative, check both personal space and project space
-    if [[ "$SINGLE_FILE" = /* ]]; then
-        # Absolute path - use as-is
-        AUDIO_FILE="$SINGLE_FILE"
-    elif [ -f "$SINGLE_FILE" ]; then
-        # Relative path exists in current directory (personal space)
-        AUDIO_FILE="$(realpath "$SINGLE_FILE")"
+    if [[ -n "$FILE_LIST" ]]; then
+        if [[ ! -f "$FILE_LIST" ]]; then
+            echo "   ❌ File list not found: $FILE_LIST" >&2
+            exit 1
+        fi
+        mapfile -d '' -t audio_files < "$FILE_LIST"
+        # The array was sized from this list at submission, so its highest
+        # index can be no larger than the list; a larger one means the job
+        # and the list do not belong together. The task count is not
+        # compared: a retry of failed tasks against the same list
+        # (sbatch --array=7,23 ... --file-list <same list>) has fewer tasks
+        # but the same index-to-file mapping, which is why the list is kept
+        # (audit finding SHELL-R2).
+        if [[ "${SLURM_ARRAY_TASK_MAX:-}" =~ ^[0-9]+$ ]] \
+              && (( SLURM_ARRAY_TASK_MAX > ${#audio_files[@]} )); then
+            echo "   ❌ The array reaches task ${SLURM_ARRAY_TASK_MAX} but $FILE_LIST lists only ${#audio_files[@]} files." >&2
+            exit 1
+        fi
     else
-        # Try in project DATA audio_input directory
-        AUDIO_FILE="$AUDIO_INPUT_DIR/$(basename "$SINGLE_FILE")"
+        AUDIO_INPUT_DIR="${DATA:?DATA is not set}/speech_transcription_env/audio_input"
+        echo "   ⚠️  No --file-list: listing $AUDIO_INPUT_DIR now, which is only safe if it does not change while tasks are queued."
+        mapfile -d '' -t audio_files < <(find "$AUDIO_INPUT_DIR" -type f \( -iname "*.wav" \
+            -o -iname "*.mp3" -o -iname "*.m4a" -o -iname "*.flac" -o -iname "*.ogg" \
+            -o -iname "*.aac" \) -print0 | LC_ALL=C sort -z)
     fi
-    echo "   📁 Single file mode: $(basename "$AUDIO_FILE")"
-    echo "   🎵 File format: ${AUDIO_FILE##*.}"
-else
-    # Array mode - select file based on task ID (SLURM_ARRAY_TASK_ID is 1-based)
     TASK_INDEX=$((SLURM_ARRAY_TASK_ID - 1))
-    if [ $TASK_INDEX -ge ${#audio_files[@]} ]; then
-        echo "   ❌ Task index $TASK_INDEX exceeds available files (${#audio_files[@]})"
+    if (( TASK_INDEX < 0 || TASK_INDEX >= ${#audio_files[@]} )); then
+        echo "   ❌ Task $SLURM_ARRAY_TASK_ID is outside the ${#audio_files[@]} listed files" >&2
         exit 1
     fi
-    
     AUDIO_FILE="${audio_files[$TASK_INDEX]}"
-    echo "   📁 Processing file $SLURM_ARRAY_TASK_ID/${#audio_files[@]}: $(basename "$AUDIO_FILE")"
-    echo "   🎵 File format: ${AUDIO_FILE##*.}"
+    echo "   📁 Task $SLURM_ARRAY_TASK_ID/${#audio_files[@]}"
 fi
 
-# Verify file exists and is readable
-if [ ! -f "$AUDIO_FILE" ]; then
-    echo "   ❌ Audio file not found: $AUDIO_FILE"
+if [[ ! -f "$AUDIO_FILE" ]]; then
+    echo "   ❌ Audio file not found: $AUDIO_FILE" >&2
     exit 1
 fi
+echo "   🎵 $(basename "$AUDIO_FILE") (${AUDIO_FILE##*.}, $(du -h "$AUDIO_FILE" | cut -f1))"
 
-echo "   📊 File size: $(du -h "$AUDIO_FILE" | cut -f1)"
-
-# Verify Python environment and packages
-echo ""
-echo "🔍 STEP 4: Verifying environment..."
-
-# Quick version check - skip heavy imports that may hang
-timeout 10 python --version
-if [ $? -eq 0 ]; then
-    echo "   ✅ Python accessible"
+if [[ -n "$OUTPUT_NAME" ]]; then
+    TRANSCRIPTION_ARGS+=(--output-name "$OUTPUT_NAME")
+    BASE_NAME="$OUTPUT_NAME"
 else
-    echo "   ❌ Python not accessible"
-    exit 1
+    BASE_NAME="$(basename "$AUDIO_FILE")"
+    BASE_NAME="${BASE_NAME%.*}"
 fi
 
-# Skip detailed package verification to avoid hanging
-# The transcription script will fail fast if packages are missing
-echo "   ⏭️  Skipping detailed package check (will verify during transcription)"
-
-# Run transcription with modified paths
+# -----------------------------------------------------------------------------
+# Transcribe
+# -----------------------------------------------------------------------------
 echo ""
-echo "🎤 STEP 5: Running speech transcription..."
-
-# Check if the main transcription script exists
-TRANSCRIPTION_SCRIPT="transcription.py"
-if [ ! -f "$TRANSCRIPTION_SCRIPT" ]; then
-    echo "   ❌ Transcription script not found: $TRANSCRIPTION_SCRIPT"
-    echo "   📂 Current directory: $(pwd)"
-    echo "   📋 Available files:"
-    ls -la *.py 2>/dev/null | head -5 || echo "      No Python files found"
-    exit 1
+echo "🎤 STEP 3: Running speech transcription (CPU)..."
+printf '   Command: python -u transcription.py %q' "$AUDIO_FILE"
+if [[ ${#TRANSCRIPTION_ARGS[@]} -gt 0 ]]; then
+    printf ' %q' "${TRANSCRIPTION_ARGS[@]}"
 fi
+printf '\n\n'
 
-# Construct command with proper paths
-echo "   📋 Running transcription..."
-echo "   📁 Audio: $(basename "$AUDIO_FILE")"
-echo "   📤 Output: ./output/transcripts/"
-
-# Add output-name to transcription args if specified
-if [ -n "$OUTPUT_NAME" ]; then
-    TRANSCRIPTION_ARGS="$TRANSCRIPTION_ARGS --output-name \"$OUTPUT_NAME\""
-fi
-
-echo "   ⚙️  Options: $TRANSCRIPTION_ARGS"
-echo ""
-
-# Run with timeout to prevent jobs hanging (3 hours = 10800 seconds)
-echo "🔄 Starting transcription (this may take a while)..."
-echo "   🐛 Debug: Command to execute:"
-echo "   python $TRANSCRIPTION_SCRIPT $AUDIO_FILE $TRANSCRIPTION_ARGS"
-echo ""
-
-# Force CPU-only mode - prevent ANY GPU/CUDA usage
+# Keep Python off any GPU the node may have: the environment is used here
+# with CPU PyTorch for stability.
 export CUDA_VISIBLE_DEVICES=""
 export PYTORCH_CUDA_ALLOC_CONF=""
 export TORCH_DEVICE="cpu"
-
-# Skip import test - just run transcription with unbuffered output
-# The transcription script will fail fast if imports are broken
 export PYTHONUNBUFFERED=1
-echo "   ⚡ Starting Python script (strict CPU-only mode)..."
-timeout 10800 python -u "$TRANSCRIPTION_SCRIPT" "$AUDIO_FILE" $TRANSCRIPTION_ARGS 2>&1
-TRANSCRIPTION_EXIT_CODE=$?
 
-echo ""
-echo "   🐛 Debug: Python exit code: $TRANSCRIPTION_EXIT_CODE"
+# The CPU preflight, run with the GPU already hidden so it checks the job as
+# it will run: a FAIL (no torch, transformers below its floor, a package
+# loaded from outside the environment) stops the task with exit 2 in
+# seconds instead of partway through a long recording. A missing GPU is only
+# a warning here, since none is wanted.
+arc_preflight || exit 2
+
+# No in-script timeout: Slurm enforces the --time the task was granted and
+# records TIMEOUT itself. A fixed timeout here used to cut 8-10 h allocations
+# to 3 h.
+TRANSCRIPTION_EXIT_CODE=0
+python -u transcription.py "$AUDIO_FILE" "${TRANSCRIPTION_ARGS[@]}" 2>&1 \
+    || TRANSCRIPTION_EXIT_CODE=$?
 
 echo ""
 echo "📊 TRANSCRIPTION RESULTS"
 echo "========================"
-
-if [ $TRANSCRIPTION_EXIT_CODE -eq 0 ]; then
+if [[ $TRANSCRIPTION_EXIT_CODE -eq 0 ]]; then
     echo "✅ SUCCESS: Transcription completed"
-    
-    # Show output files (works with any input format)
-    BASE_NAME=$(basename "$AUDIO_FILE")
-    BASE_NAME="${BASE_NAME%.*}"  # Remove any extension
-    
-    echo "   📄 Output files created:"
-    if [ -f "$TRANSCRIPTIONS_DIR/${BASE_NAME}_transcription.txt" ]; then
-        echo "      • ${BASE_NAME}_transcription.txt ($(du -h "$TRANSCRIPTIONS_DIR/${BASE_NAME}_transcription.txt" | cut -f1))"
+    echo "   📄 Output files in $REPO_DIR/output/transcripts/:"
+    shopt -s nullglob
+    outputs=(output/transcripts/"${BASE_NAME}"_*)
+    shopt -u nullglob
+    if [[ ${#outputs[@]} -eq 0 ]]; then
+        echo "      (none found for ${BASE_NAME}_*)"
+    else
+        for f in "${outputs[@]}"; do
+            echo "      • $(basename "$f") ($(du -h "$f" | cut -f1))"
+        done
     fi
-    if [ -f "$TRANSCRIPTIONS_DIR/${BASE_NAME}_transcription.docx" ]; then
-        echo "      • ${BASE_NAME}_transcription.docx ($(du -h "$TRANSCRIPTIONS_DIR/${BASE_NAME}_transcription.docx" | cut -f1))"
-    fi
-    if [ -f "$ENHANCED_AUDIO_DIR/${BASE_NAME}_enhanced.wav" ]; then
-        echo "      • ${BASE_NAME}_enhanced.wav ($(du -h "$ENHANCED_AUDIO_DIR/${BASE_NAME}_enhanced.wav" | cut -f1))"
-    fi
-    
-elif [ $TRANSCRIPTION_EXIT_CODE -eq 124 ]; then
-    echo "❌ TIMEOUT: Transcription exceeded 3 hour limit"
 else
     echo "❌ FAILURE: Transcription failed with exit code $TRANSCRIPTION_EXIT_CODE"
 fi
@@ -352,9 +231,6 @@ echo "=============="
 echo "Job completed at: $(date)"
 echo "File processed: $(basename "$AUDIO_FILE")"
 echo "Exit code: $TRANSCRIPTION_EXIT_CODE"
-echo "Node: $SLURM_NODENAME"
-echo "Job ID: $SLURM_JOB_ID"
-echo "Task ID: $SLURM_ARRAY_TASK_ID"
-echo "Working directory: $CONDA_ENV_PATH"
+echo "Job ID: ${SLURM_JOB_ID:-n/a}   Task ID: ${SLURM_ARRAY_TASK_ID:-n/a}"
 
-exit $TRANSCRIPTION_EXIT_CODE
+exit "$TRANSCRIPTION_EXIT_CODE"

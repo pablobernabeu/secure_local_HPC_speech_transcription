@@ -1,0 +1,500 @@
+audio_id,ref_duration_s,pred_start_s,pred_end_s,start_error_s,end_error_s,abs_start_error_s,abs_end_error_s,n_chunks,hypothesis
+AMI_EN2002a_H00_MEE073_0019663_0019800,1.37,0.0,0.16,0.0,1.21,0.0,1.21,1,Amen.
+AMI_EN2002a_H02_FEO072_0122308_0122345,0.37,0.0,0.38,0.0,-0.01,0.0,0.01,1,Mm-hmm.
+AMI_EN2002a_H01_FEO070_0121416_0121534,1.18,0.0,1.18,0.0,0.0,0.0,0.0,1,"Yeah, we're going to meet up."
+AMI_EN2002a_H02_FEO072_0035713_0035849,1.36,0.16,1.36,0.16,0.0,0.16,0.0,1,"I mean, we're not even there yet."
+AMI_EN2002a_H01_FEO070_0087278_0087307,0.29,0.0,0.2,0.0,0.09,0.0,0.09,1,Yeah.
+AMI_EN2002a_H01_FEO070_0071598_0071661,0.63,0.0,0.64,0.0,-0.01,0.0,0.01,1,"Yeah, yeah."
+AMI_EN2002a_H03_MEE071_0187312_0187486,1.74,0.0,1.74,0.0,0.0,0.0,0.0,1,Monday afternoon
+AMI_EN2002a_H03_MEE071_0028789_0028885,0.96,0.2,0.96,0.2,0.0,0.2,0.0,1,I'm going to use my pen.
+AMI_EN2002a_H00_MEE073_0187025_0187110,0.85,0.0,0.86,0.0,-0.01,0.0,0.01,1,"Yeah, yeah."
+AMI_EN2002a_H02_FEO072_0160522_0160577,0.55,0.0,0.56,0.0,-0.01,0.0,0.01,1,Everything?
+AMI_EN2002a_H03_MEE071_0085470_0085653,1.83,0.0,1.18,0.0,0.65,0.0,0.65,1,"Yeah, that's what we need, yeah."
+AMI_EN2002a_H03_MEE071_0189592_0189678,0.86,0.0,0.86,0.0,0.0,0.0,0.0,1,"Three's good though, yeah."
+AMI_EN2002a_H00_MEE073_0128003_0128125,1.22,0.0,1.22,0.0,0.0,0.0,0.0,1,Okay.
+AMI_EN2002a_H03_MEE071_0002779_0002990,2.11,0.0,2.12,0.0,-0.01,0.0,0.01,1,"Ja, ihr wisst doch."
+AMI_EN2002a_H00_MEE073_0119394_0119408,0.14,0.0,0.12,0.0,0.02,0.0,0.02,1,Thank you.
+AMI_EN2002a_H02_FEO072_0159403_0159664,2.61,0.0,2.62,0.0,-0.01,0.0,0.01,1,"We can always decide then, I mean, you know."
+AMI_EN2002a_H03_MEE071_0150042_0150192,1.5,0.0,1.5,0.0,0.0,0.0,0.0,1,"You saw it, yeah."
+AMI_EN2002a_H00_MEE073_0064658_0064727,0.69,0.0,0.7,0.0,-0.01,0.0,0.01,1,"Yeah, true."
+AMI_EN2002a_H02_FEO072_0147125_0147573,4.48,0.0,4.48,0.0,0.0,0.0,0.0,1,"Oh, damn."
+AMI_EN2002a_H02_FEO072_0185987_0186047,0.6,0.0,0.6,0.0,0.0,0.0,0.0,1,I mean...
+AMI_EN2002a_H00_MEE073_0073617_0073677,0.6,0.0,0.6,0.0,0.0,0.0,0.0,1,Thank you.
+AMI_EN2002a_H01_FEO070_0099998_0100130,1.32,0.0,1.32,0.0,0.0,0.0,0.0,1,"Oh, I don't know."
+AMI_EN2002a_H03_MEE071_0074938_0074967,0.29,0.0,0.18,0.0,0.11,0.0,0.11,1,Yeah.
+AMI_EN2002a_H00_MEE073_0202622_0202650,0.28,0.0,0.28,0.0,0.0,0.0,0.0,1,I think
+AMI_EN2002a_H00_MEE073_0183644_0183749,1.05,0.0,0.38,0.0,0.67,0.0,0.67,1,That's cool.
+AMI_EN2002a_H03_MEE071_0104146_0104463,3.17,0.0,3.18,0.0,-0.01,0.0,0.01,2,"So even if it doesn't work, you can jiggery-pugger it around and make it work."
+AMI_EN2002a_H00_MEE073_0098487_0098500,0.13,0.0,0.12,0.0,0.01,0.0,0.01,1,We'll be right back.
+AMI_EN2002a_H00_MEE073_0208960_0209241,2.8099,0.0,2.82,0.0,-0.0101,0.0,0.0101,1,but most will probably want to go with default.
+AMI_EN2002a_H02_FEO072_0064139_0064653,5.14,0.0,4.38,0.0,0.76,0.0,0.76,1,you open the window you read through it you might click on you know close it again straight away
+AMI_EN2002a_H00_MEE073_0002644_0002707,0.63,0.0,0.2,0.0,0.43,0.0,0.43,1,Okay.
+AMI_EN2002a_H00_MEE073_0031789_0031923,1.34,0.0,1.34,0.0,0.0,0.0,0.0,1,Yeah.
+AMI_EN2002a_H01_FEO070_0114347_0114848,5.01,0.0,5.02,0.0,-0.01,0.0,0.01,1,"I mean, if you already started on doing stuff, I guess we can..."
+AMI_EN2002a_H01_FEO070_0188690_0188709,0.19,0.0,0.2,0.0,-0.01,0.0,0.01,1,No.
+AMI_EN2002a_H00_MEE073_0076136_0076219,0.83,0.0,0.84,0.0,-0.01,0.0,0.01,1,Mm-hmm.
+AMI_EN2002a_H01_FEO070_0200554_0200596,0.42,0.0,0.42,0.0,0.0,0.0,0.0,1,I don't know.
+AMI_EN2002a_H01_FEO070_0001232_0001522,2.9,0.0,2.9,0.0,0.0,0.0,0.0,1,So what do we need to talk about it?
+AMI_EN2002a_H02_FEO072_0032731_0033237,5.06,0.0,5.06,0.0,0.0,0.0,0.0,2,"We're not actually sure what the user wants with it, but it's interesting, so why not give it to him?"
+AMI_EN2002a_H00_MEE073_0063079_0063650,5.71,0.0,5.72,0.0,-0.01,0.0,0.01,2,"probably just two or three of whatever they're looking at, like dialogue acts to whatever, characterizations."
+AMI_EN2002a_H03_MEE071_0117355_0118027,6.72,0.0,6.72,0.0,0.0,0.0,0.0,2,"I mean, this week's only two days old. Well, whatever it was last week, then..."
+AMI_EN2002a_H02_FEO072_0018003_0018170,1.67,0.0,0.94,0.0,0.73,0.0,0.73,1,That's a good point.
+AMI_EN2002a_H03_MEE071_0205035_0205114,0.7899,0.0,0.2,0.0,0.5899,0.0,0.5899,1,Thumb.
+AMI_EN2002a_H00_MEE073_0089197_0089641,4.44,0.0,4.44,0.0,0.0,0.0,0.0,2,"Actually, is the code accessible, like the GUI stuff that you've done?"
+AMI_EN2002a_H00_MEE073_0161524_0161669,1.45,0.0,1.46,0.0,-0.01,0.0,0.01,1,Won't be the whole thing.
+AMI_EN2002a_H00_MEE073_0047814_0048253,4.39,0.0,4.38,0.0,0.01,0.0,0.01,2,"So it'll be a choice from the menu. Yeah, exactly."
+AMI_EN2002a_H03_MEE071_0066991_0067105,1.14,0.0,1.14,0.0,0.0,0.0,0.0,1,Mzele style.
+AMI_EN2002a_H02_FEO072_0142569_0142648,0.79,0.0,0.8,0.0,-0.01,0.0,0.01,1,"Yeah, just in case."
+AMI_EN2002a_H00_MEE073_0046605_0046933,3.28,0.0,3.28,0.0,0.0,0.0,0.0,1,"Well, it might come to us as we start playing with it."
+AMI_EN2002a_H00_MEE073_0110118_0110150,0.32,0.0,0.32,0.0,0.0,0.0,0.0,1,Okay.
+AMI_EN2002a_H00_MEE073_0150408_0150546,1.38,0.0,1.38,0.0,0.0,0.0,0.0,1,"Okay, yeah."
+AMI_EN2002a_H01_FEO070_0127448_0127916,4.68,0.0,4.68,0.0,0.0,0.0,0.0,1,Okay.
+AMI_EN2002a_H01_FEO070_0144667_0144693,0.26,0.0,0.26,0.0,0.0,0.0,0.0,1,Yeah.
+AMI_EN2002a_H00_MEE073_0207817_0207928,1.11,0.0,1.12,0.0,-0.01,0.0,0.01,1,No?
+AMI_EN2002a_H01_FEO070_0069723_0070329,6.06,0.0,6.06,0.0,0.0,0.0,0.0,2,"Yeah, change the contents of the same window, like from transcription to summary."
+AMI_EN2002a_H03_MEE071_0193221_0193326,1.05,0.0,1.06,0.0,-0.01,0.0,0.01,1,"Yeah, somebody announced it."
+AMI_EN2002a_H02_FEO072_0039859_0039955,0.96,0.0,0.96,0.0,0.0,0.0,0.0,1,Yeah?
+AMI_EN2002a_H00_MEE073_0093398_0093531,1.33,0.0,1.34,0.0,-0.01,0.0,0.01,1,"Okay, yeah, yeah, okay, right."
+AMI_EN2002a_H01_FEO070_0193805_0193935,1.3,0.0,1.3,0.0,0.0,0.0,0.0,1,into what?
+AMI_EN2002a_H03_MEE071_0094395_0094434,0.39,0.0,0.24,0.0,0.15,0.0,0.15,1,Okay.
+AMI_EN2002a_H01_FEO070_0175999_0176266,2.67,0.0,2.68,0.0,-0.01,0.0,0.01,1,Maybe you should make it exist then.
+AMI_EN2002a_H02_FEO072_0059290_0059432,1.42,0.0,0.3,0.0,1.12,0.0,1.12,1,No.
+AMI_EN2002a_H00_MEE073_0002820_0003016,1.96,0.0,1.96,0.0,0.0,0.0,0.0,1,I'm sorry.
+AMI_EN2002a_H02_FEO072_0186866_0187030,1.64,0.0,0.56,0.0,1.08,0.0,1.08,1,"Well, Monday."
+AMI_EN2002a_H03_MEE071_0073007_0073095,0.88,0.0,0.88,0.0,0.0,0.0,0.0,1,Which is going to get...
+AMI_EN2002a_H01_FEO070_0097561_0097613,0.52,0.0,0.52,0.0,0.0,0.0,0.0,1,I don't know.
+AMI_EN2002a_H03_MEE071_0175667_0176204,5.37,0.0,4.0,0.0,1.37,0.0,1.37,1,"That's quite sly, really."
+AMI_EN2002a_H02_FEO072_0029777_0029908,1.31,0.0,1.32,0.0,-0.01,0.0,0.01,1,"Yeah, that's true, yeah."
+AMI_EN2002a_H00_MEE073_0199994_0200131,1.37,0.0,1.38,0.0,-0.01,0.0,0.01,1,for the weekend.
+AMI_EN2002a_H01_FEO070_0166778_0167381,6.03,0.0,6.02,0.0,0.01,0.0,0.01,1,"The progress report is June 23rd, February."
+AMI_EN2002a_H02_FEO072_0058529_0058566,0.37,0.0,0.38,0.0,-0.01,0.0,0.01,1,Does it?
+AMI_EN2002a_H03_MEE071_0125645_0125768,1.23,0.0,1.22,0.0,0.01,0.0,0.01,1,"That's pretty bizarre, isn't it?"
+AMI_EN2002a_H00_MEE073_0160782_0161336,5.54,0.0,5.54,0.0,0.0,0.0,0.0,1,"Well, it'll be, you know, still a limited version of, you know, the next query search."
+AMI_EN2002a_H01_FEO070_0129698_0129718,0.2,0.0,0.2,0.0,0.0,0.0,0.0,1,Yeah.
+AMI_EN2002a_H00_MEE073_0044106_0044434,3.28,0.0,3.28,0.0,0.0,0.0,0.0,1,So it'll be like all the cases of that topic
+AMI_EN2002a_H00_MEE073_0193562_0193757,1.95,0.0,1.96,0.0,-0.01,0.0,0.01,1,whether he was going to get us access into that.
+AMI_EN2002a_H03_MEE071_0087802_0087921,1.19,0.0,1.2,0.0,-0.01,0.0,0.01,1,a prototype of the GUI.
+AMI_EN2002a_H03_MEE071_0143627_0144045,4.18,0.0,4.18,0.0,0.0,0.0,0.0,3,commenting it out one bit at a time and running it. Does it work? Yeah. Yeah.
+AMI_EN2002a_H03_MEE071_0058505_0058736,2.31,0.0,2.32,0.0,-0.01,0.0,0.01,1,unless you can't hear it properly or something.
+AMI_EN2002a_H00_MEE073_0085585_0085608,0.23,0.0,0.24,0.0,-0.01,0.0,0.01,1,Yeah.
+AMI_EN2002a_H02_FEO072_0005142_0005935,7.93,0.0,7.94,0.0,-0.01,0.0,0.01,2,We've got a browser which comes up automatically with the transcription box and the topics.
+AMI_EN2002a_H01_FEO070_0196589_0196765,1.76,0.0,1.76,0.0,0.0,0.0,0.0,1,So what time do we say?
+AMI_EN2002a_H02_FEO072_0048635_0049016,3.81,0.0,3.82,0.0,-0.01,0.0,0.01,1,"Yeah, but then there's the problem with a lot of windows popping up again."
+AMI_EN2002a_H03_MEE071_0116852_0117355,5.03,0.0,4.88,0.0,0.15,0.0,0.15,2,I actually haven't done anything this week because this week's been manic.
+AMI_EN2002a_H03_MEE071_0192791_0192913,1.22,0.0,1.22,0.0,0.0,0.0,0.0,1,You do need to have a key for it.
+AMI_EN2002a_H03_MEE071_0103583_0103622,0.3901,0.0,0.4,0.0,-0.0099,0.0,0.0099,1,اے لئے
+AMI_EN2002a_H02_FEO072_0198137_0198165,0.28,0.0,0.28,0.0,0.0,0.0,0.0,1,Ugh.
+AMI_EN2002a_H01_FEO070_0152324_0152410,0.86,0.0,0.86,0.0,0.0,0.0,0.0,1,That's nice.
+AMI_EN2002a_H01_FEO070_0075387_0075484,0.97,0.0,0.98,0.0,-0.01,0.0,0.01,1,"I guess that, yeah."
+AMI_EN2002a_H03_MEE071_0140573_0140597,0.24,0.0,0.24,0.0,0.0,0.0,0.0,1,Mm-hmm.
+AMI_EN2002a_H00_MEE073_0105210_0105236,0.26,0.0,0.26,0.0,0.0,0.0,0.0,1,Mm-hmm.
+AMI_EN2002a_H01_FEO070_0194776_0194820,0.44,0.0,0.44,0.0,0.0,0.0,0.0,1,Hmm.
+AMI_EN2002a_H00_MEE073_0203466_0203610,1.44,0.0,1.44,0.0,0.0,0.0,0.0,1,I think...
+AMI_EN2002a_H01_FEO070_0086888_0087101,2.13,0.0,2.14,0.0,-0.01,0.0,0.01,1,So I guess that's what we need to aim for.
+AMI_EN2002a_H03_MEE071_0033274_0033321,0.47,0.0,0.38,0.0,0.09,0.0,0.09,1,"Yeah, yeah."
+AMI_EN2002a_H02_FEO072_0140326_0140557,2.31,0.0,2.16,0.0,0.15,0.0,0.15,1,"you know, whatever you want to do, then just send me an email."
+AMI_EN2002a_H00_MEE073_0077098_0077878,7.8,0.0,7.8,0.0,0.0,0.0,0.0,2,"have all these sort of using the same window. And so we can put a lot of, and probably mutually distinct"
+AMI_EN2002a_H01_FEO070_0099449_0099697,2.48,0.0,2.48,0.0,0.0,0.0,0.0,1,I can tell you what I've done in SB2.
+AMI_EN2002a_H00_MEE073_0190013_0190197,1.84,0.0,1.84,0.0,0.0,0.0,0.0,1,or three-thirty
+AMI_EN2002a_H01_FEO070_0077778_0077821,0.43,0.0,0.42,0.0,0.01,0.0,0.01,1,Exclusions.
+AMI_EN2002a_H00_MEE073_0067707_0067992,2.85,0.0,2.86,0.0,-0.01,0.0,0.01,1,"Oh, you should be able to."
+AMI_EN2002a_H02_FEO072_0134568_0134611,0.43,0.0,0.44,0.0,-0.01,0.0,0.01,1,So.
+AMI_EN2002a_H00_MEE073_0038530_0038786,2.56,0.0,2.56,0.0,0.0,0.0,0.0,1,have a right click for these various things.
+AMI_EN2002a_H03_MEE071_0075205_0075352,1.47,0.0,0.3,0.0,1.17,0.0,1.17,1,Yeah.
+AMI_EN2002a_H00_MEE073_0150091_0150100,0.09,0.0,0.06,0.0,0.03,0.0,0.03,1,Thank you.
+AMI_EN2002a_H02_FEO072_0022916_0023124,2.08,0.0,2.08,0.0,0.0,0.0,0.0,1,"That's true, yeah. It's more intuitive, really, isn't it?"
+AMI_EN2002a_H01_FEO070_0198865_0198885,0.2,0.0,0.2,0.0,0.0,0.0,0.0,1,What?
+AMI_EN2002a_H00_MEE073_0103624_0103767,1.43,0.0,1.44,0.0,-0.01,0.0,0.01,1,But I found some code for it.
+AMI_EN2002a_H00_MEE073_0206079_0206202,1.23,0.0,1.24,0.0,-0.01,0.0,0.01,1,You can have it.
+AMI_EN2002a_H02_FEO072_0136115_0136646,5.31,0.0,5.32,0.0,-0.01,0.0,0.01,2,"just that it, you know, you define a search object and then you search that string."
+AMI_EN2002a_H02_FEO072_0018296_0018364,0.68,0.0,0.68,0.0,0.0,0.0,0.0,1,Nothing else.
+AMI_EN2002a_H00_MEE073_0187767_0188059,2.92,0.0,2.92,0.0,0.0,0.0,0.0,1,"No, in between those, you know, like one or three years."
+AMI_EN2002a_H02_FEO072_0022415_0022683,2.68,0.0,2.68,0.0,0.0,0.0,0.0,1,"It's more obvious, isn't it, what you can do?"
+AMI_EN2002a_H03_MEE071_0189678_0189903,2.25,0.0,1.58,0.0,0.67,0.0,0.67,1,"But we have, so whatever."
+AMI_EN2002a_H02_FEO072_0049016_0049385,3.69,0.0,3.7,0.0,-0.01,0.0,0.01,1,"And they pop up without you even being quite sure what it is, you know what I mean?"
+AMI_EN2002a_H00_MEE073_0194872_0194961,0.89,0.0,0.9,0.0,-0.01,0.0,0.01,1,Is there a printer in there too?
+AMI_EN2002a_H01_FEO070_0085882_0086008,1.26,0.0,1.26,0.0,0.0,0.0,0.0,1,Yeah.
+AMI_EN2002a_H00_MEE073_0063989_0064004,0.15,0.0,0.16,0.0,-0.01,0.0,0.01,1,Mm-hmm.
+AMI_EN2002a_H02_FEO072_0084417_0084676,2.59,0.0,2.6,0.0,-0.01,0.0,0.01,1,"It's not, it's not going to be a lot more work."
+AMI_EN2002a_H03_MEE071_0000540_0000872,3.32,0.0,1.16,0.0,2.16,0.0,2.16,1,"Look at all this stuff, man."
+AMI_EN2002a_H02_FEO072_0188099_0188231,1.32,0.0,1.32,0.0,0.0,0.0,0.0,1,Three o'clock.
+AMI_EN2002a_H00_MEE073_0092786_0092813,0.27,0.0,0.28,0.0,-0.01,0.0,0.01,1,Okay.
+AMI_EN2002a_H01_FEO070_0136122_0136155,0.33,0.0,0.24,0.0,0.09,0.0,0.09,1,Okay.
+AMI_EN2002a_H02_FEO072_0050418_0050450,0.32,0.0,0.32,0.0,0.0,0.0,0.0,1,Hmm.
+AMI_EN2002a_H00_MEE073_0072576_0072925,3.49,0.0,3.5,0.0,-0.01,0.0,0.01,1,I don't even have two of them checked.
+AMI_EN2002a_H03_MEE071_0099650_0099878,2.28,0.0,0.52,0.0,1.76,0.0,1.76,1,Yeah.
+AMI_EN2002a_H00_MEE073_0116734_0116804,0.7,0.0,0.7,0.0,0.0,0.0,0.0,1,Yeah.
+AMI_EN2002a_H03_MEE071_0096253_0096476,2.23,0.0,2.24,0.0,-0.01,0.0,0.01,1,the M browser for meeting.
+AMI_EN2002a_H02_FEO072_0075637_0075770,1.33,0.0,1.32,0.0,0.01,0.0,0.01,1,"Yeah, you can minimize them."
+AMI_EN2002a_H00_MEE073_0087767_0087797,0.3,0.0,0.3,0.0,0.0,0.0,0.0,1,Mm-hmm.
+AMI_EN2002a_H02_FEO072_0132517_0132635,1.18,0.0,1.18,0.0,0.0,0.0,0.0,1,"And then, yeah."
+AMI_EN2002a_H02_FEO072_0084151_0084417,2.66,0.0,2.66,0.0,0.0,0.0,0.0,1,"I'm pretty much getting there anyway, to be honest."
+AMI_EN2002a_H00_MEE073_0174020_0174401,3.81,0.0,3.82,0.0,-0.01,0.0,0.01,1,It's a semblance of reality.
+AMI_EN2002a_H03_MEE071_0144630_0144709,0.79,0.0,0.72,0.0,0.07,0.0,0.07,1,"Good fun, eh?"
+AMI_EN2002a_H03_MEE071_0166387_0166559,1.72,0.0,1.72,0.0,0.0,0.0,0.0,1,Um...
+AMI_EN2002a_H02_FEO072_0173753_0173939,1.86,0.0,1.86,0.0,0.0,0.0,0.0,1,That does not exist.
+AMI_EN2002a_H01_FEO070_0130605_0130633,0.28,0.0,0.28,0.0,0.0,0.0,0.0,1,Okay.
+AMI_EN2002a_H03_MEE071_0146177_0146599,4.22,0.0,2.64,0.0,1.58,0.0,1.58,1,I'm still at the bottom of the mountain
+AMI_EN2002a_H01_FEO070_0193935_0194028,0.93,0.0,0.3,0.0,0.63,0.0,0.63,1,Okay.
+AMI_EN2002a_H02_FEO072_0016434_0016638,2.04,0.0,2.04,0.0,0.0,0.0,0.0,1,We could put it on the right click.
+AMI_EN2002a_H01_FEO070_0109961_0110119,1.58,0.0,0.22,0.0,1.36,0.0,1.36,1,Okay.
+AMI_EN2002a_H01_FEO070_0149397_0149437,0.4,0.0,0.4,0.0,0.0,0.0,0.0,1,I don't know.
+AMI_EN2002a_H02_FEO072_0062566_0062624,0.58,0.0,0.58,0.0,0.0,0.0,0.0,1,Um...
+AMI_EN2002a_H00_MEE073_0074785_0074815,0.3,0.0,0.3,0.0,0.0,0.0,0.0,1,Mm-hmm.
+AMI_EN2002a_H01_FEO070_0161641_0161676,0.35,0.0,0.24,0.0,0.11,0.0,0.11,1,Yeah.
+AMI_EN2002a_H02_FEO072_0068028_0068145,1.17,0.0,1.16,0.0,0.01,0.0,0.01,1,I'm sure.
+AMI_EN2002a_H00_MEE073_0099664_0099913,2.49,0.0,2.5,0.0,-0.01,0.0,0.01,1,Right.
+AMI_EN2002a_H03_MEE071_0146123_0146177,0.54,0.1,0.54,0.1,0.0,0.1,0.0,1,Yes.
+AMI_EN2002a_H01_FEO070_0160316_0160588,2.72,0.0,2.72,0.0,0.0,0.0,0.0,1,Yeah.
+AMI_EN2002a_H00_MEE073_0048608_0048638,0.3,0.0,0.3,0.0,0.0,0.0,0.0,1,yeah
+AMI_EN2002a_H01_FEO070_0134237_0134277,0.4,0.0,0.4,0.0,0.0,0.0,0.0,1,Okay.
+AMI_EN2002a_H03_MEE071_0183594_0183865,2.71,0.0,0.72,0.0,1.99,0.0,1.99,1,Next week sometime.
+AMI_EN2002a_H00_MEE073_0068297_0068321,0.24,0.0,0.24,0.0,0.0,0.0,0.0,1,Amen.
+AMI_EN2002a_H00_MEE073_0101489_0101940,4.51,0.0,4.52,0.0,-0.01,0.0,0.01,2,Like the inverted file stuff and the next search query and all that.
+AMI_EN2002a_H02_FEO072_0174331_0175377,10.46,0.0,10.46,0.0,0.0,0.0,0.0,3,"It's actually, all these things are nicked from, you know, all these drop-down menus and tick boxes are nicked from Google online."
+AMI_EN2002a_H01_FEO070_0187192_0187214,0.22,0.0,0.22,0.0,0.0,0.0,0.0,1,just
+AMI_EN2002a_H02_FEO072_0075770_0075825,0.55,0.0,0.56,0.0,-0.01,0.0,0.01,1,"Yeah, yeah."
+AMI_EN2002a_H00_MEE073_0127277_0127378,1.01,0.0,1.0,0.0,0.01,0.0,0.01,1,Hmm.
+AMI_EN2002a_H00_MEE073_0056259_0056297,0.38,0.0,0.38,0.0,0.0,0.0,0.0,1,Mm-hmm.
+AMI_EN2002a_H01_FEO070_0199647_0200193,5.46,0.0,5.46,0.0,0.0,0.0,0.0,1,"It shouldn't be any... Well, it's supposed to be next week."
+AMI_EN2002a_H02_FEO072_0212007_0212165,1.58,0.0,1.58,0.0,0.0,0.0,0.0,1,with having me here today.
+AMI_EN2002a_H01_FEO070_0206263_0206578,3.15,0.0,3.16,0.0,-0.01,0.0,0.01,1,I don't know if there was something.
+AMI_EN2002a_H00_MEE073_0066473_0066660,1.87,0.0,1.88,0.0,-0.01,0.0,0.01,1,"For something like that, choose one side."
+AMI_EN2002a_H01_FEO070_0004829_0004932,1.03,0.0,0.26,0.0,0.77,0.0,0.77,1,Okay.
+AMI_EN2002a_H03_MEE071_0022508_0022651,1.43,0.0,1.44,0.0,-0.01,0.0,0.01,1,"It's more idiot proof, isn't it?"
+AMI_EN2002a_H00_MEE073_0119651_0119724,0.73,0.0,0.74,0.0,-0.01,0.0,0.01,1,Yeah.
+AMI_EN2002a_H00_MEE073_0146201_0146304,1.03,0.0,1.04,0.0,-0.01,0.0,0.01,1,Thank you.
+AMI_EN2002a_H02_FEO072_0124283_0124371,0.88,0.12,0.88,0.12,0.0,0.12,0.0,1,Den kunde stanna.
+AMI_EN2002a_H00_MEE073_0150752_0150839,0.87,0.0,0.88,0.0,-0.01,0.0,0.01,1,If you want to.
+AMI_EN2002a_H02_FEO072_0184062_0184390,3.28,0.0,3.28,0.0,0.0,0.0,0.0,1,"Oh, yeah."
+AMI_EN2002a_H03_MEE071_0131951_0132084,1.33,0.0,0.22,0.0,1.11,0.0,1.11,1,Yeah.
+AMI_EN2002a_H03_MEE071_0202399_0202522,1.23,0.0,1.24,0.0,-0.01,0.0,0.01,1,"It was a little bit bizarre, really."
+AMI_EN2002a_H01_FEO070_0117803_0118064,2.61,0.0,0.84,0.0,1.77,0.0,1.77,1,Well.
+AMI_EN2002a_H00_MEE073_0162239_0162386,1.47,0.0,1.48,0.0,-0.01,0.0,0.01,1,What else was there?
+AMI_EN2002a_H02_FEO072_0095076_0095254,1.78,0.0,1.78,0.0,0.0,0.0,0.0,1,04-555-60.
+AMI_EN2002a_H03_MEE071_0121604_0121626,0.22,0.12,0.22,0.12,0.0,0.12,0.0,1,Yeah.
+AMI_EN2002a_H00_MEE073_0051759_0051779,0.1999,0.02,0.2,0.02,-0.0001,0.02,0.0001,1,Yeah.
+AMI_EN2002a_H02_FEO072_0196080_0196423,3.43,0.0,2.68,0.0,0.75,0.0,0.75,1,I've got it on my computer.
+AMI_EN2002a_H02_FEO072_0131325_0132073,7.48,0.0,7.48,0.0,0.0,0.0,0.0,2,"Yeah, so I don't know if you've looked at the search query language, but it's like a dollar a text, say."
+AMI_EN2002a_H00_MEE073_0120585_0120701,1.16,0.0,1.16,0.0,0.0,0.0,0.0,1,"Yeah, that's fun."
+AMI_EN2002a_H00_MEE073_0148873_0148924,0.51,0.0,0.52,0.0,-0.01,0.0,0.01,1,Hmm.
+AMI_EN2002a_H02_FEO072_0067298_0067356,0.58,0.0,0.58,0.0,0.0,0.0,0.0,1,That's right.
+AMI_EN2002a_H03_MEE071_0057088_0057255,1.67,0.0,1.68,0.0,-0.01,0.0,0.01,1,"But at the moment, no."
+AMI_EN2002a_H02_FEO072_0178441_0178929,4.88,0.0,4.88,0.0,0.0,0.0,0.0,2,and then we could discuss at next meeting which options we really want to include.
+AMI_EN2002a_H00_MEE073_0161948_0161979,0.31,0.0,0.32,0.0,-0.01,0.0,0.01,1,Mm-hmm.
+AMI_EN2002a_H02_FEO072_0014755_0015291,5.36,0.0,5.36,0.0,0.0,0.0,0.0,1,That would be a bit annoying if you have left click for one thing and double click for something else.
+AMI_EN2002a_H01_FEO070_0035950_0035983,0.33,0.0,0.34,0.0,-0.01,0.0,0.01,1,Yeah.
+AMI_EN2002a_H03_MEE071_0209866_0209900,0.34,0.0,0.34,0.0,0.0,0.0,0.0,1,to us.
+AMI_EN2002a_H03_MEE071_0118821_0118966,1.45,0.0,0.44,0.0,1.01,0.0,1.01,1,That's right.
+AMI_EN2002a_H00_MEE073_0002707_0002820,1.13,0.0,1.14,0.0,-0.01,0.0,0.01,1,Sounds like you've done some stuff.
+AMI_EN2002a_H02_FEO072_0061802_0062025,2.23,0.0,2.22,0.0,0.01,0.0,0.01,1,That's what I feel as well.
+AMI_EN2002a_H03_MEE071_0067517_0067620,1.03,0.0,1.04,0.0,-0.01,0.0,0.01,1,Does anybody know how to do that?
+AMI_EN2002a_H02_FEO072_0056175_0056388,2.13,0.0,2.14,0.0,-0.01,0.0,0.01,1,"Yeah, single channel, the single channel files."
+AMI_EN2002a_H03_MEE071_0145209_0145714,5.05,0.0,5.04,0.0,0.01,0.0,0.01,2,"So basically, we've got to go and do some work, really. I think that's the answer to that, isn't it?"
+AMI_EN2002a_H01_FEO070_0054823_0054883,0.6,0.0,0.6,0.0,0.0,0.0,0.0,1,Obviously.
+AMI_EN2002a_H00_MEE073_0158434_0159102,6.68,0.0,6.68,0.0,0.0,0.0,0.0,1,"We'll probably get some work done over the weekend, so I don't know if after D&LG or something, maybe just have a little quick little update and just."
+AMI_EN2002a_H03_MEE071_0051484_0051863,3.79,0.0,3.68,0.0,0.11,0.0,0.11,1,Tror jeg jeg hadde vunnet
+AMI_EN2002a_H02_FEO072_0135004_0135028,0.24,0.0,0.24,0.0,0.0,0.0,0.0,1,I've been
+AMI_EN2002a_H00_MEE073_0107605_0107634,0.29,0.0,0.3,0.0,-0.01,0.0,0.01,1,Hmm.
+AMI_EN2002a_H01_FEO070_0115338_0115519,1.81,0.0,1.8,0.0,0.01,0.0,0.01,1,Yeah.
+AMI_EN2002a_H02_FEO072_0082966_0083521,5.55,0.0,5.56,0.0,-0.01,0.0,0.01,2,"And it kind of just, it just develops. I'm not aiming for anything."
+AMI_EN2002a_H00_MEE073_0146826_0146838,0.12,0.0,0.12,0.0,0.0,0.0,0.0,1,Mm-hmm.
+AMI_EN2002a_H00_MEE073_0111840_0111900,0.6,0.0,0.6,0.0,0.0,0.0,0.0,1,That's a good idea.
+AMI_EN2002a_H00_MEE073_0105376_0105513,1.37,0.0,0.5,0.0,0.87,0.0,0.87,1,Yeah.
+AMI_EN2002a_H00_MEE073_0072925_0072957,0.32,0.0,0.32,0.0,0.0,0.0,0.0,1,Yeah.
+AMI_EN2002a_H02_FEO072_0204855_0204937,0.82,0.0,0.62,0.0,0.2,0.0,0.2,1,Let's meet Monday.
+AMI_EN2002a_H02_FEO072_0082025_0082238,2.13,0.0,2.12,0.0,0.01,0.0,0.01,1,What kind of prototype could we produce?
+AMI_EN2002a_H00_MEE073_0033330_0033354,0.24,0.0,0.24,0.0,0.0,0.0,0.0,1,Right.
+AMI_EN2002a_H03_MEE071_0073445_0073665,2.2,0.0,2.2,0.0,0.0,0.0,0.0,2,"and you're always forever going, oh, get out of the way."
+AMI_EN2002a_H00_MEE073_0179495_0179561,0.66,0.0,0.66,0.0,0.0,0.0,0.0,1,"Yeah, totally."
+AMI_EN2002a_H00_MEE073_0101940_0101963,0.23,0.0,0.24,0.0,-0.01,0.0,0.01,1,Mm-hmm.
+AMI_EN2002a_H03_MEE071_0177739_0177765,0.26,0.04,0.26,0.04,0.0,0.04,0.0,1,Yeah.
+AMI_EN2002a_H01_FEO070_0115829_0115980,1.51,0.0,1.52,0.0,-0.01,0.0,0.01,1,meet up and see what we can do.
+AMI_EN2002a_H02_FEO072_0087635_0087724,0.89,0.0,0.9,0.0,-0.01,0.0,0.01,1,"All right, let's see."
+AMI_EN2002a_H03_MEE071_0059679_0060216,5.37,0.0,4.38,0.0,0.99,0.0,0.99,1,"Yeah, because otherwise it will increase the amount of data we need by a lot, won't it?"
+AMI_EN2002a_H02_FEO072_0019685_0019789,1.04,0.0,1.04,0.0,0.0,0.0,0.0,1,"If it just, yeah."
+AMI_EN2002a_H02_FEO072_0082427_0082876,4.49,0.0,4.34,0.0,0.15,0.0,0.15,1,"Because I'm just, you know, I go into the lab and I say, right, what am I going to change today?"
+AMI_EN2002a_H01_FEO070_0201020_0201252,2.32,0.0,2.32,0.0,0.0,0.0,0.0,1,but I think I'm in all other classes.
+AMI_EN2002a_H02_FEO072_0128090_0128300,2.1,0.0,2.1,0.0,0.0,0.0,0.0,1,"But, you know, you could have a look at it."
+AMI_EN2002a_H00_MEE073_0019485_0019663,1.78,0.0,0.18,0.0,1.6,0.0,1.6,1,Yeah.
+AMI_EN2002a_H00_MEE073_0048253_0048275,0.22,0.0,0.22,0.0,0.0,0.0,0.0,1,No.
+AMI_EN2002a_H02_FEO072_0129792_0130668,8.76,0.0,8.76,0.0,0.0,0.0,0.0,1,"It does an NXT search for the string, I don't know, transcript or text or whatever."
+AMI_EN2002a_H03_MEE071_0130698_0131380,6.82,0.0,6.82,0.0,0.0,0.0,0.0,4,"for, and it just has an open variable, transcript this, whatever, find everything that's got that, and then load it."
+AMI_EN2002a_H00_MEE073_0209873_0210490,6.17,0.0,6.18,0.0,-0.01,0.0,0.01,1,"Yeah, exactly. And just the other comment about whether you want to do both speaker characterization and topic segmentation."
+AMI_EN2002a_H03_MEE071_0189903_0190011,1.08,0.0,1.08,0.0,0.0,0.0,0.0,1,What was your...
+AMI_EN2002a_H00_MEE073_0192373_0192682,3.09,0.0,3.1,0.0,-0.01,0.0,0.01,1,"Yeah, we can look now afterwards."
+AMI_EN2002a_H01_FEO070_0169920_0170266,3.46,0.0,3.46,0.0,0.0,0.0,0.0,1,Just looking at my own deadlines.
+AMI_EN2002a_H01_FEO070_0149292_0149397,1.05,0.0,1.06,0.0,-0.01,0.0,0.01,1,Um...
+AMI_EN2002a_H01_FEO070_0209487_0209690,2.03,0.0,2.04,0.0,-0.01,0.0,0.01,1,"Well, that was what they said, I guess."
+AMI_EN2002a_H00_MEE073_0127378_0127795,4.17,0.0,4.18,0.0,-0.01,0.0,0.01,1,"Well, they did say it wasn't the most efficient."
+AMI_EN2002a_H01_FEO070_0109386_0109613,2.27,0.0,2.0,0.0,0.27,0.0,0.27,1,Okay.
+AMI_EN2002a_H01_FEO070_0081037_0081143,1.06,0.74,1.06,0.74,0.0,0.74,0.0,1,Yeah.
+AMI_EN2002a_H01_FEO070_0115519_0115636,1.17,0.0,1.18,0.0,-0.01,0.0,0.01,1,"Should we, I don't know."
+AMI_EN2002a_H00_MEE073_0194295_0194371,0.76,0.32,0.76,0.32,0.0,0.32,0.0,1,Printed.
+AMI_EN2002a_H02_FEO072_0155035_0155705,6.7,0.94,6.7,0.94,0.0,0.94,0.0,2,"Well, I'm not doing any background reading, so, you know. Yeah."
+AMI_EN2002a_H01_FEO070_0214159_0214237,0.78,0.0,0.78,0.0,0.0,0.0,0.0,1,Yeah.
+AMI_EN2002a_H02_FEO072_0038753_0038786,0.33,0.0,0.34,0.0,-0.01,0.0,0.01,1,Wait.
+AMI_EN2002a_H02_FEO072_0149932_0150211,2.79,0.0,2.8,0.0,-0.01,0.0,0.01,1,You do.
+AMI_EN2002a_H01_FEO070_0192775_0192809,0.34,0.0,0.34,0.0,0.0,0.0,0.0,1,Yeah.
+AMI_EN2002a_H00_MEE073_0000665_0000685,0.2,0.0,0.2,0.0,0.0,0.0,0.0,1,Mm-hmm.
+AMI_EN2002a_H02_FEO072_0083521_0083648,1.27,0.0,1.28,0.0,-0.01,0.0,0.01,1,Do we want to aim for something?
+AMI_EN2002a_H02_FEO072_0164485_0164537,0.52,0.0,0.52,0.0,0.0,0.0,0.0,1,"you know,"
+AMI_EN2002a_H02_FEO072_0095493_0095832,3.39,0.0,3.4,0.0,-0.01,0.0,0.01,1,And then there's a folder in LSST.
+AMI_EN2002a_H02_FEO072_0078225_0078273,0.48,0.0,0.48,0.0,0.0,0.0,0.0,1,So
+AMI_EN2002a_H02_FEO072_0068145_0068259,1.14,0.0,1.14,0.0,0.0,0.0,0.0,1,I'm sure you can do anything
+AMI_EN2002a_H00_MEE073_0002147_0002311,1.64,0.0,0.56,0.0,1.08,0.0,1.08,1,Not a lot.
+AMI_EN2002a_H01_FEO070_0105200_0105244,0.44,0.0,0.44,0.0,0.0,0.0,0.0,1,Yeah.
+AMI_EN2002a_H01_FEO070_0204058_0204082,0.24,0.0,0.24,0.0,0.0,0.0,0.0,1,What?
+AMI_EN2002a_H01_FEO070_0100130_0101160,10.3,0.0,10.3,0.0,0.0,0.0,0.0,1,"I started browsing a bit, just trying to see if there's anything out there to use."
+AMI_EN2002a_H01_FEO070_0131966_0131987,0.21,0.0,0.22,0.0,-0.01,0.0,0.01,1,Yeah.
+AMI_EN2002a_H03_MEE071_0056580_0057088,5.08,0.0,5.08,0.0,0.0,0.0,0.0,2,"Probably not, but we might need them for this fluencies. If we try to do it in audio."
+AMI_EN2002a_H00_MEE073_0031923_0031949,0.26,0.0,0.26,0.0,0.0,0.0,0.0,1,Yeah.
+AMI_EN2002a_H01_FEO070_0106017_0106053,0.36,0.0,0.36,0.0,0.0,0.0,0.0,1,I don't know.
+AMI_EN2002a_H00_MEE073_0037629_0037844,2.15,0.0,2.16,0.0,-0.01,0.0,0.01,1,Is that just from the main window?
+AMI_EN2002a_H00_MEE073_0116848_0117033,1.85,0.0,1.86,0.0,-0.01,0.0,0.01,1,"Yeah, exactly, exactly."
+AMI_EN2002a_H02_FEO072_0120083_0120184,1.01,0.0,1.0,0.0,0.01,0.0,0.01,1,She's so stupid.
+AMI_EN2002a_H00_MEE073_0104872_0105003,1.31,0.0,1.32,0.0,-0.01,0.0,0.01,1,Messing around still.
+AMI_EN2002a_H02_FEO072_0035475_0035713,2.38,0.0,2.38,0.0,0.0,0.0,0.0,1,"Yeah, I mean, that's still another level further."
+AMI_EN2002a_H01_FEO070_0192242_0192775,5.33,0.0,5.32,0.0,0.01,0.0,0.01,1,"We can go look, we can look now afterwards."
+AMI_EN2002a_H01_FEO070_0104072_0104133,0.6099,0.0,0.62,0.0,-0.0101,0.0,0.0101,1,or whatever.
+AMI_EN2002a_H02_FEO072_0181211_0181306,0.95,0.0,0.96,0.0,-0.01,0.0,0.01,1,"No, already what?"
+AMI_EN2002a_H03_MEE071_0109230_0110041,8.11,0.0,8.1,0.0,0.01,0.0,0.01,3,"So it'll come up on the screen. But at the moment, I haven't managed to put it into a vector or whatever in Java to play with it."
+AMI_EN2002a_H03_MEE071_0211382_0211679,2.97,0.0,2.98,0.0,-0.01,0.0,0.01,1,Yeah.
+AMI_EN2002a_H01_FEO070_0163914_0163954,0.4,0.0,0.4,0.0,0.0,0.0,0.0,1,you know
+AMI_EN2002a_H03_MEE071_0137664_0137928,2.64,0.0,2.64,0.0,0.0,0.0,0.0,2,So did you have to write it in the way that they wrote it? Is that what you did?
+AMI_EN2002a_H02_FEO072_0015291_0015579,2.88,0.0,2.88,0.0,0.0,0.0,0.0,3,I think so yeah when you left click it
+AMI_EN2002a_H02_FEO072_0097001_0097137,1.36,0.0,1.36,0.0,0.0,0.0,0.0,1,对不对
+AMI_EN2002a_H01_FEO070_0049626_0050203,5.77,0.0,5.78,0.0,-0.01,0.0,0.01,1,"But if you do double click on something, don't you expect something to happen then?"
+AMI_EN2002a_H03_MEE071_0096861_0096996,1.35,0.0,1.36,0.0,-0.01,0.0,0.01,1,It's just pure chaos.
+AMI_EN2002a_H02_FEO072_0092557_0092632,0.75,0.0,0.76,0.0,-0.01,0.0,0.01,1,Hey.
+AMI_EN2002a_H00_MEE073_0029867_0029948,0.81,0.0,0.82,0.0,-0.01,0.0,0.01,1,Hmm.
+AMI_EN2002a_H01_FEO070_0116842_0116961,1.19,0.0,1.2,0.0,-0.01,0.0,0.01,1,"Yeah, exactly."
+AMI_EN2002a_H02_FEO072_0199278_0199452,1.74,0.0,1.74,0.0,0.0,0.0,0.0,1,Maybe it doesn't happen at all.
+AMI_EN2002a_H02_FEO072_0187030_0187079,0.49,0.0,0.5,0.0,-0.01,0.0,0.01,1,What did you say?
+AMI_EN2002a_H01_FEO070_0088004_0088628,6.24,0.0,6.24,0.0,0.0,0.0,0.0,2,"Well, I guess, I mean, that was probably our intention, but we might not have written it down."
+AMI_EN2002a_H02_FEO072_0166411_0166436,0.25,0.0,0.24,0.0,0.01,0.0,0.01,1,Thank you.
+AMI_EN2002a_H03_MEE071_0138536_0138580,0.44,0.0,0.44,0.0,0.0,0.0,0.0,1,you think
+AMI_EN2002a_H00_MEE073_0212989_0213023,0.34,0.0,0.34,0.0,0.0,0.0,0.0,1,Okay.
+AMI_EN2002a_H03_MEE071_0068404_0068460,0.56,0.2,0.56,0.2,0.0,0.2,0.0,1,I don't know.
+AMI_EN2002a_H02_FEO072_0097408_0097519,1.11,0.0,1.12,0.0,-0.01,0.0,0.01,1,I've got folders and everything.
+AMI_EN2002a_H03_MEE071_0083778_0083904,1.26,0.0,1.26,0.0,0.0,0.0,0.0,1,Um...
+AMI_EN2002a_H00_MEE073_0189596_0189653,0.57,0.0,0.56,0.0,0.01,0.0,0.01,1,That's right.
+AMI_EN2002a_H03_MEE071_0174256_0174363,1.07,0.0,1.06,0.0,0.01,0.0,0.01,1,Yeah.
+AMI_EN2002a_H03_MEE071_0050456_0050574,1.18,0.0,1.18,0.0,0.0,0.0,0.0,2,"C'est un tas de gîtes. Oui, c'est vrai."
+AMI_EN2002a_H01_FEO070_0113394_0114347,9.53,0.0,9.54,0.0,-0.01,0.0,0.01,2,"Yeah, I guess, I mean, it was a good point you had that like collaborating with foul things"
+AMI_EN2002a_H00_MEE073_0212592_0212738,1.46,0.0,0.4,0.0,1.06,0.0,1.06,1,Okay.
+AMI_EN2002a_H01_FEO070_0070629_0070651,0.22,0.0,0.22,0.0,0.0,0.0,0.0,1,Mm-hmm.
+AMI_EN2002a_H01_FEO070_0170294_0170594,3.0,0.0,3.0,0.0,0.0,0.0,0.0,1,Jag vet inte.
+AMI_EN2002a_H02_FEO072_0022683_0022781,0.98,0.0,0.26,0.0,0.72,0.0,0.72,1,Yeah.
+AMI_EN2002a_H02_FEO072_0098772_0098929,1.57,0.0,1.58,0.0,-0.01,0.0,0.01,1,Someone else want to talk about their stuff?
+AMI_EN2002a_H02_FEO072_0119940_0120083,1.43,0.0,1.44,0.0,-0.01,0.0,0.01,1,I'm like...
+AMI_EN2002a_H01_FEO070_0072719_0072746,0.27,0.0,0.28,0.0,-0.01,0.0,0.01,1,Yeah.
+AMI_EN2002a_H03_MEE071_0085653_0085983,3.3,0.0,3.3,0.0,0.0,0.0,0.0,1,Something just slightly more than just that on its own.
+AMI_EN2002a_H00_MEE073_0160605_0160782,1.77,0.0,1.78,0.0,-0.01,0.0,0.01,1,Couldn't be that hard.
+AMI_EN2002a_H02_FEO072_0136646_0136971,3.25,0.0,3.26,0.0,-0.01,0.0,0.01,1,I had to figure out how to do the same thing for the summary
+AMI_EN2002a_H02_FEO072_0149401_0149436,0.35,0.0,0.24,0.0,0.11,0.0,0.11,1,No.
+AMI_EN2002a_H00_MEE073_0144115_0144133,0.18,0.02,0.18,0.02,0.0,0.02,0.0,1,Yeah.
+AMI_EN2002a_H00_MEE073_0183976_0184292,3.16,0.0,0.48,0.0,2.68,0.0,2.68,1,In the morning.
+AMI_EN2002a_H01_FEO070_0102868_0102901,0.33,0.0,0.32,0.0,0.01,0.0,0.01,1,Yeah.
+AMI_EN2002a_H02_FEO072_0122509_0122961,4.52,0.0,4.52,0.0,0.0,0.0,0.0,1,"Well, the browser as I use it now, or as, you know..."
+AMI_EN2002a_H02_FEO072_0032239_0032507,2.68,0.0,2.68,0.0,0.0,0.0,0.0,1,"I mean, the speaker characterisation is a bit like you said."
+AMI_EN2002a_H01_FEO070_0139311_0139346,0.35,0.0,0.2,0.0,0.15,0.0,0.15,1,Yeah.
+AMI_EN2002a_H00_MEE073_0146004_0146201,1.97,0.0,1.98,0.0,-0.01,0.0,0.01,1,"Ha, ha, ha, ha, ha, ha."
+AMI_EN2002a_H03_MEE071_0091941_0092409,4.68,0.0,4.68,0.0,0.0,0.0,0.0,1,"they're not down to default, they're only default, then only you can read them by default."
+AMI_EN2002a_H03_MEE071_0064841_0064862,0.21,0.0,0.22,0.0,-0.01,0.0,0.01,1,Yeah.
+AMI_EN2002a_H01_FEO070_0014258_0014411,1.53,0.0,1.54,0.0,-0.01,0.0,0.01,1,Can you use double click?
+AMI_EN2002a_H00_MEE073_0079573_0079603,0.3,0.0,0.3,0.0,0.0,0.0,0.0,1,Hmm.
+AMI_EN2002a_H03_MEE071_0088721_0088976,2.55,0.0,0.26,0.0,2.29,0.0,2.29,1,Yeah.
+AMI_EN2002a_H00_MEE073_0184576_0184735,1.59,0.0,1.6,0.0,-0.01,0.0,0.01,1,Yeah.
+AMI_EN2002a_H01_FEO070_0204860_0204894,0.34,0.0,0.34,0.0,0.0,0.0,0.0,1,"uh,"
+AMI_EN2002a_H03_MEE071_0212600_0212704,1.04,0.0,1.04,0.0,0.0,0.0,0.0,2,signing off isn't it
+AMI_EN2002a_H02_FEO072_0029908_0029948,0.4,0.0,0.24,0.0,0.16,0.0,0.16,1,Yeah.
+AMI_EN2002a_H01_FEO070_0192986_0193020,0.34,0.0,0.34,0.0,0.0,0.0,0.0,1,Okay.
+AMI_EN2002a_H01_FEO070_0015240_0015280,0.4,0.0,0.4,0.0,0.0,0.0,0.0,1,I don't know.
+AMI_EN2002a_H02_FEO072_0077312_0077525,2.13,0.0,1.92,0.0,0.21,0.0,0.21,1,"Yeah, they're definitely going to be in the same window, yeah."
+AMI_EN2002a_H01_FEO070_0168780_0168818,0.38,0.0,0.38,0.0,0.0,0.0,0.0,1,Yes.
+AMI_EN2002a_H01_FEO070_0204224_0204578,3.54,0.0,1.5,0.0,2.04,0.0,2.04,1,"Yeah, we will probably have you."
+AMI_EN2002a_H01_FEO070_0129035_0129151,1.16,0.68,1.16,0.68,0.0,0.68,0.0,1,Okay.
+AMI_EN2002a_H02_FEO072_0091452_0091735,2.83,0.0,2.84,0.0,-0.01,0.0,0.01,1,"I don't know if it's readable at the moment, but you can sure have a look."
+AMI_EN2002a_H02_FEO072_0134323_0134367,0.44,0.0,0.44,0.0,0.0,0.0,0.0,1,Vaguely.
+AMI_EN2002a_H01_FEO070_0066792_0066942,1.5,0.0,1.5,0.0,0.0,0.0,0.0,1,Tabs are nice.
+AMI_EN2002a_H03_MEE071_0176204_0176314,1.1,0.0,1.1,0.0,0.0,0.0,0.0,1,Yeah.
+AMI_EN2002a_H03_MEE071_0014216_0014251,0.35,0.0,0.36,0.0,-0.01,0.0,0.01,1,one.
+AMI_EN2002a_H01_FEO070_0186513_0186630,1.17,0.0,1.18,0.0,-0.01,0.0,0.01,1,"Um, yeah."
+AMI_EN2002a_H00_MEE073_0145873_0145886,0.13,0.0,0.1,0.0,0.03,0.0,0.03,1,We'll find out.
+AMI_EN2002a_H01_FEO070_0187051_0187192,1.41,0.0,1.4,0.0,0.01,0.0,0.01,1,"Next, yeah, this money."
+AMI_EN2002a_H03_MEE071_0092409_0092544,1.35,0.0,1.36,0.0,-0.01,0.0,0.01,1,"You can see them, but you can't read them."
+AMI_EN2002a_H01_FEO070_0181391_0181684,2.93,0.0,2.94,0.0,-0.01,0.0,0.01,1,just like accessing the corpus and stuff.
+AMI_EN2002a_H01_FEO070_0122391_0122418,0.27,0.0,0.28,0.0,-0.01,0.0,0.01,1,Yeah.
+AMI_EN2002a_H01_FEO070_0088628_0088867,2.39,0.0,2.4,0.0,-0.01,0.0,0.01,1,"So I guess, I don't know."
+AMI_EN2002a_H00_MEE073_0047355_0047814,4.59,0.0,4.6,0.0,-0.01,0.0,0.01,2,"you know, have the menu on, right-click, but instead of, like, have a default double-click,"
+AMI_EN2002a_H00_MEE073_0151060_0151220,1.6,0.0,1.6,0.0,0.0,0.0,0.0,2,You have some time. Why not?
+AMI_EN2002a_H01_FEO070_0134560_0135831,12.71,0.0,12.72,0.0,-0.01,0.0,0.01,2,"When you, like, is there an open thingy or what do you, like, what did you do to, like, how did you figure out that this uses NXT search, like, is it?"
+AMI_EN2002a_H00_MEE073_0188196_0188212,0.16,0.02,0.16,0.02,0.0,0.02,0.0,1,Sure.
+AMI_EN2002a_H00_MEE073_0019845_0020242,3.97,0.0,3.98,0.0,-0.01,0.0,0.01,1,to just have sort of the same sort of idiom throughout.
+AMI_EN2002a_H03_MEE071_0103977_0104086,1.0899,0.0,0.42,0.0,0.6699,0.0,0.6699,1,All right.
+AMI_EN2002a_H02_FEO072_0137932_0138302,3.7,0.0,3.7,0.0,0.0,0.0,0.0,1,"Yeah, just search for specific strings."
+AMI_EN2002a_H00_MEE073_0116472_0116734,2.62,0.0,2.62,0.0,0.0,0.0,0.0,1,You made me cry.
+AMI_EN2002a_H02_FEO072_0039120_0039859,7.39,0.0,7.4,0.0,-0.01,0.0,0.01,2,where you want to somehow be able to click on a topic and it pops up with all the meetings that contain that.
+AMI_EN2002a_H00_MEE073_0108264_0108284,0.2,0.0,0.2,0.0,0.0,0.0,0.0,1,Yeah.
+AMI_EN2002a_H03_MEE071_0137198_0137323,1.25,0.0,1.26,0.0,-0.01,0.0,0.01,1,"I see, I see."
+AMI_EN2002a_H02_FEO072_0141071_0141221,1.5,0.0,1.5,0.0,0.0,0.0,0.0,1,Oh yeah.
+AMI_EN2002a_H01_FEO070_0107249_0107771,5.22,0.0,5.22,0.0,0.0,0.0,0.0,1,extracting things from the XML files and stuff to be able to do the indexing.
+AMI_EN2002a_H02_FEO072_0101518_0101603,0.85,0.0,0.86,0.0,-0.01,0.0,0.01,1,"The search, okay."
+AMI_EN2002a_H02_FEO072_0211713_0211898,1.85,0.0,1.86,0.0,-0.01,0.0,0.01,1,"I think we need to tick the OK box, right?"
+AMI_EN2002a_H02_FEO072_0036132_0036419,2.87,0.0,2.88,0.0,-0.01,0.0,0.01,1,you have to first define what happens when you click on a user.
+AMI_EN2002a_H03_MEE071_0114890_0115025,1.35,0.0,1.2,0.0,0.15,0.0,0.15,1,You should share as much as possible.
+AMI_EN2002a_H01_FEO070_0200193_0200308,1.15,0.0,1.16,0.0,-0.01,0.0,0.01,1,It's week six next week.
+AMI_EN2002a_H03_MEE071_0036443_0036813,3.7,0.0,3.7,0.0,0.0,0.0,0.0,2,We have to have a speaker characterisation for this before we cross any of the other bridges.
+AMI_EN2002a_H00_MEE073_0114223_0114256,0.33,0.0,0.22,0.0,0.11,0.0,0.11,1,Yeah.
+AMI_EN2002a_H03_MEE071_0096603_0096861,2.58,0.0,2.58,0.0,0.0,0.0,0.0,1,I hope you never have to look in my directory
+AMI_EN2002a_H01_FEO070_0067488_0067598,1.1,0.0,1.1,0.0,0.0,0.0,0.0,1,"No sé qué decir, es"
+AMI_EN2002a_H02_FEO072_0117565_0117771,2.06,0.0,2.06,0.0,0.0,0.0,0.0,1,This week's only two days old.
+AMI_EN2002a_H01_FEO070_0157437_0157493,0.56,0.0,0.56,0.0,0.0,0.0,0.0,1,I don't know.
+AMI_EN2002a_H03_MEE071_0115275_0115326,0.51,0.0,0.5,0.0,0.01,0.0,0.01,1,Yeah.
+AMI_EN2002a_H00_MEE073_0040582_0040671,0.89,0.0,0.88,0.0,0.01,0.0,0.01,1,"So, yeah."
+AMI_EN2002a_H03_MEE071_0006823_0006855,0.32,0.0,0.32,0.0,0.0,0.0,0.0,1,Right.
+AMI_EN2002a_H01_FEO070_0098148_0098191,0.43,0.0,0.44,0.0,-0.01,0.0,0.01,1,Hmm.
+AMI_EN2002a_H02_FEO072_0063271_0063546,2.75,0.0,2.06,0.0,0.69,0.0,0.69,1,"Two or three maybe, but yeah."
+AMI_EN2002a_H00_MEE073_0061525_0062063,5.38,0.0,5.38,0.0,0.0,0.0,0.0,3,"I think we probably need that, though, to have the full flexibility we need to have out there. But, yeah."
+AMI_EN2002a_H02_FEO072_0150541_0150591,0.5,0.0,0.5,0.0,0.0,0.0,0.0,1,I mean...
+AMI_EN2002a_H00_MEE073_0159510_0159565,0.55,0.0,0.56,0.0,-0.01,0.0,0.01,1,"Yeah, exactly."
+AMI_EN2002a_H00_MEE073_0150288_0150408,1.2,0.0,1.2,0.0,0.0,0.0,0.0,1,These can be changed as well.
+AMI_EN2002a_H01_FEO070_0204578_0204860,2.82,0.0,2.82,0.0,0.0,0.0,0.0,1,last week
+AMI_EN2002a_H03_MEE071_0132084_0132683,5.99,0.0,6.0,0.0,-0.01,0.0,0.01,1,"Yeah, because that's the guy who declares a variable, doesn't he?"
+AMI_EN2002a_H02_FEO072_0168151_0168188,0.37,0.0,0.18,0.0,0.19,0.0,0.19,1,Amen.
+AMI_EN2002a_H01_FEO070_0067089_0067346,2.57,0.0,2.58,0.0,-0.01,0.0,0.01,1,Yeah.
+AMI_EN2002a_H00_MEE073_0018189_0018372,1.83,0.0,1.84,0.0,-0.01,0.0,0.01,1,Thank you.
+AMI_EN2002a_H02_FEO072_0067093_0067298,2.05,0.0,1.0,0.0,1.05,0.0,1.05,1,"Yeah, yeah, yeah."
+AMI_EN2002a_H02_FEO072_0005935_0006681,7.46,0.0,7.46,0.0,0.0,0.0,0.0,3,"And then when you go on the menu, you can select a summarization box, which pops up, and an audio player."
+AMI_EN2002a_H00_MEE073_0202392_0202622,2.3,0.0,0.3,0.0,2.0,0.0,2.0,1,"Thanks, Adam."
+AMI_EN2002a_H00_MEE073_0209577_0209692,1.15,0.0,1.16,0.0,-0.01,0.0,0.01,1,Yeah.
+AMI_EN2002a_H00_MEE073_0092251_0092382,1.31,0.0,1.32,0.0,-0.01,0.0,0.01,1,No?
+AMI_EN2002a_H00_MEE073_0153025_0153272,2.47,0.0,2.48,0.0,-0.01,0.0,0.01,1,Is that informatics course?
+AMI_EN2002a_H02_FEO072_0172851_0172894,0.43,0.0,0.28,0.0,0.15,0.0,0.15,1,No.
+AMI_EN2002a_H01_FEO070_0101288_0101585,2.97,0.0,2.98,0.0,-0.01,0.0,0.01,1,"Yeah, searching, yeah, oh yeah."
+AMI_EN2002a_H01_FEO070_0170266_0170294,0.28,0.0,0.16,0.0,0.12,0.0,0.12,1,Sí.
+AMI_EN2002a_H03_MEE071_0091051_0091082,0.31,0.0,0.32,0.0,-0.01,0.0,0.01,1,Yeah.
+AMI_EN2002a_H03_MEE071_0192913_0192972,0.59,0.0,0.6,0.0,-0.01,0.0,0.01,1,"Like, that's the thing."
+AMI_EN2002a_H02_FEO072_0094325_0094677,3.52,0.0,3.52,0.0,0.0,0.0,0.0,2,A4 555
+AMI_EN2002a_H03_MEE071_0068785_0069057,2.72,0.0,2.72,0.0,0.0,0.0,0.0,1,"Yeah, sometimes it's a bit of a cripple."
+AMI_EN2002a_H00_MEE073_0072507_0072576,0.69,0.0,0.7,0.0,-0.01,0.0,0.01,1,or check marks.
+AMI_EN2002a_H02_FEO072_0190375_0190467,0.92,0.0,0.92,0.0,0.0,0.0,0.0,1,That's going to be tight.
+AMI_EN2002a_H02_FEO072_0177779_0177840,0.61,0.0,0.62,0.0,-0.01,0.0,0.01,1,So.
+AMI_EN2002a_H00_MEE073_0050787_0050871,0.84,0.0,0.84,0.0,0.0,0.0,0.0,1,"Well, then they close it."
+AMI_EN2002a_H01_FEO070_0054629_0054823,1.94,0.0,1.94,0.0,0.0,0.0,0.0,1,"Yeah, what you're clicking on."
+AMI_EN2002a_H03_MEE071_0118367_0118669,3.02,0.0,3.02,0.0,0.0,0.0,0.0,3,it's been all a bit manic but I was yeah
+AMI_EN2002a_H02_FEO072_0054942_0055367,4.25,0.0,4.24,0.0,0.01,0.0,0.01,1,"Yeah, another thing..."
+AMI_EN2002a_H00_MEE073_0030633_0030899,2.66,0.0,2.66,0.0,0.0,0.0,0.0,1,"I mean, speaker characterization tied into, I don't know,"
+AMI_EN2002a_H02_FEO072_0035849_0036132,2.83,0.0,2.84,0.0,-0.01,0.0,0.01,1,It doesn't even pop up the speaker characterization yet.
+AMI_EN2002a_H02_FEO072_0093953_0094325,3.72,0.0,3.72,0.0,0.0,0.0,0.0,1,"Nå, härifrån"
+AMI_EN2002a_H00_MEE073_0067992_0068134,1.42,0.0,1.42,0.0,0.0,0.0,0.0,1,"Yeah, for sure."
+AMI_EN2002a_H02_FEO072_0078405_0078674,2.69,0.0,2.7,0.0,-0.01,0.0,0.01,1,"Yeah, do you want to do that with some reason?"
+AMI_EN2002a_H00_MEE073_0043260_0043622,3.62,0.0,3.62,0.0,0.0,0.0,0.0,2,"I mean, that's kind of a typical kind of action that would happen."
+AMI_EN2002a_H00_MEE073_0190345_0190549,2.04,0.0,2.04,0.0,0.0,0.0,0.0,1,"than be necessarily, necessarily short."
+AMI_EN2002a_H00_MEE073_0210766_0210858,0.92,0.0,0.92,0.0,0.0,0.0,0.0,1,Nothing terribly exciting.
+AMI_EN2002a_H01_FEO070_0050347_0050518,1.71,0.0,1.72,0.0,-0.01,0.0,0.01,1,I don't know.
+AMI_EN2002a_H02_FEO072_0101898_0101931,0.33,0.0,0.22,0.0,0.11,0.0,0.11,1,Okay.
+AMI_EN2002a_H02_FEO072_0067015_0067093,0.78,0.0,0.78,0.0,0.0,0.0,0.0,1,that's true
+AMI_EN2002a_H03_MEE071_0119388_0119603,2.15,0.0,2.14,0.0,0.01,0.0,0.01,1,"which is only a page long, but it's quite difficult to write a page."
+AMI_EN2002a_H01_FEO070_0118861_0118884,0.23,0.0,0.24,0.0,-0.01,0.0,0.01,1,Yeah.
+AMI_EN2002a_H00_MEE073_0121856_0122358,5.02,0.0,5.02,0.0,0.0,0.0,0.0,2,"you know, hopefully have something by next week that we can sort of try integrating into the GUI."
+AMI_EN2002a_H02_FEO072_0030101_0030163,0.62,0.0,0.62,0.0,0.0,0.0,0.0,1,"Yeah, that's true."
+AMI_EN2002a_H01_FEO070_0052162_0052255,0.9299,0.0,0.94,0.0,-0.0101,0.0,0.0101,1,Yeah.
+AMI_EN2002a_H01_FEO070_0071903_0072556,6.53,0.0,6.54,0.0,-0.01,0.0,0.01,2,"No, no, it could be like transcription summary, like two letters and you just press on whichever you want."
+AMI_EN2002a_H03_MEE071_0074777_0074938,1.61,0.0,1.62,0.0,-0.01,0.0,0.01,1,"You do, yeah."
+AMI_EN2002a_H02_FEO072_0152802_0153029,2.27,0.0,1.64,0.0,0.63,0.0,0.63,1,That's in two weeks.
+AMI_EN2002a_H02_FEO072_0140684_0140767,0.83,0.0,0.84,0.0,-0.01,0.0,0.01,1,I can explain it.
+AMI_EN2002a_H00_MEE073_0096758_0096773,0.15,0.0,0.16,0.0,-0.01,0.0,0.01,1,Mm-hmm.
+AMI_EN2002a_H02_FEO072_0052354_0053059,7.0501,0.0,7.06,0.0,-0.0099,0.0,0.0099,2,"but yeah, but I don't, I don't, I really don't see anything obvious that, that."
+AMI_EN2002a_H00_MEE073_0161669_0161948,2.79,0.0,2.8,0.0,-0.01,0.0,0.01,1,Like we can just decide sort of things that we do want to do.
+AMI_EN2002a_H00_MEE073_0183577_0183644,0.67,0.0,0.66,0.0,0.01,0.0,0.01,1,Yeah.
+AMI_EN2002a_H00_MEE073_0110391_0110413,0.22,0.0,0.22,0.0,0.0,0.0,0.0,1,Right.
+AMI_EN2002a_H00_MEE073_0093727_0093779,0.52,0.0,0.52,0.0,0.0,0.0,0.0,1,Okay.
+AMI_EN2002a_H02_FEO072_0146751_0146953,2.02,0.0,2.02,0.0,0.0,0.0,0.0,1,I don't actually have that much to do at the moment.
+AMI_EN2002a_H01_FEO070_0115980_0116747,7.67,0.0,7.68,0.0,-0.01,0.0,0.01,3,"I mean, I don't know, see what you've done and see what we need, when we know more of what we need, maybe."
+AMI_EN2002a_H01_FEO070_0080591_0080613,0.22,0.0,0.22,0.0,0.0,0.0,0.0,1,Yeah.
+AMI_EN2002a_H03_MEE071_0191580_0192089,5.09,0.0,5.1,0.0,-0.01,0.0,0.01,1,"There's computer rooms in here, the MSC computer lab is in here."
+AMI_EN2002a_H00_MEE073_0093531_0093627,0.96,0.0,0.96,0.0,0.0,0.0,0.0,1,"Yeah, right, okay."
+AMI_EN2002a_H03_MEE071_0050717_0050901,1.84,0.0,1.84,0.0,0.0,0.0,0.0,1,It's still coming up.
+AMI_EN2002a_H00_MEE073_0018590_0018598,0.08,0.0,0.08,0.0,0.0,0.0,0.0,1,Yeah.
+AMI_EN2002a_H00_MEE073_0092565_0092653,0.88,0.0,0.88,0.0,0.0,0.0,0.0,1,"Okay, all right."
+AMI_EN2002a_H01_FEO070_0197137_0197220,0.83,0.0,0.84,0.0,-0.01,0.0,0.01,1,"Yeah, yeah."
+AMI_EN2002a_H01_FEO070_0172494_0172917,4.23,0.0,4.24,0.0,-0.01,0.0,0.01,1,"Wasn't like what you had now, wasn't that pretty much what we agreed on?"
+AMI_EN2002a_H00_MEE073_0164731_0165115,3.84,0.0,3.84,0.0,0.0,0.0,0.0,1,"Yeah, it'll get behind schedule pretty quick."
+AMI_EN2002a_H02_FEO072_0163891_0164297,4.06,0.0,4.06,0.0,0.0,0.0,0.0,1,It's just that I think we need to set ourselves some milestones because otherwise...
+AMI_EN2002a_H00_MEE073_0175200_0175308,1.08,0.6,1.08,0.6,0.0,0.6,0.0,1,Thank you.
+AMI_EN2002a_H00_MEE073_0159385_0159414,0.29,0.0,0.16,0.0,0.13,0.0,0.13,1,Yeah.
+AMI_EN2002a_H00_MEE073_0141020_0141277,2.57,0.0,1.72,0.0,0.85,0.0,0.85,1,Thank you.
+AMI_EN2002a_H03_MEE071_0074139_0074158,0.19,0.0,0.2,0.0,-0.01,0.0,0.01,1,Right.
+AMI_EN2002a_H00_MEE073_0078191_0078214,0.23,0.0,0.14,0.0,0.09,0.0,0.09,1,Yeah.
+AMI_EN2002a_H03_MEE071_0068026_0068178,1.52,0.0,1.52,0.0,0.0,0.0,0.0,3,that but yeah
+AMI_EN2002a_H01_FEO070_0029782_0030242,4.6,0.0,4.6,0.0,0.0,0.0,0.0,1,I don't really know how to involve the speaking characters into the browsing.
+AMI_EN2002a_H01_FEO070_0037627_0037643,0.16,0.0,0.16,0.0,0.0,0.0,0.0,1,Yeah.
+AMI_EN2002a_H01_FEO070_0163331_0163394,0.63,0.0,0.64,0.0,-0.01,0.0,0.01,1,Hmm.
+AMI_EN2002a_H00_MEE073_0182452_0182497,0.45,0.0,0.46,0.0,-0.01,0.0,0.01,1,Yeah.
+AMI_EN2002a_H02_FEO072_0011582_0012313,7.31,0.0,7.32,0.0,-0.01,0.0,0.01,2,Or we can put an extra few buttons next to the Summarize button so that you're actually in the transcription box
+AMI_EN2002a_H01_FEO070_0104133_0104149,0.1601,0.0,0.16,0.0,0.0001,0.0,0.0001,1,Yeah.
+AMI_EN2002a_H00_MEE073_0156164_0156246,0.82,0.0,0.82,0.0,0.0,0.0,0.0,1,Yeah.
+AMI_EN2002a_H01_FEO070_0076235_0076263,0.28,0.0,0.28,0.0,0.0,0.0,0.0,1,Mm-hmm.
+AMI_EN2002a_H01_FEO070_0047866_0047894,0.28,0.0,0.28,0.0,0.0,0.0,0.0,1,Yep.
+AMI_EN2002a_H03_MEE071_0182306_0182820,5.14,0.0,1.72,0.0,3.42,0.0,3.42,1,You can take us for a tutorial sometime.
+AMI_EN2002a_H00_MEE073_0159611_0159627,0.16,0.0,0.16,0.0,0.0,0.0,0.0,1,Yeah.
+AMI_EN2002a_H00_MEE073_0118415_0118429,0.14,0.0,0.14,0.0,0.0,0.0,0.0,1,Right.
+AMI_EN2002a_H00_MEE073_0147120_0147459,3.39,0.0,3.24,0.0,0.15,0.0,0.15,1,"Yeah, seriously."
+AMI_EN2002a_H03_MEE071_0202522_0202670,1.48,0.0,1.48,0.0,0.0,0.0,0.0,1,They didn't really know what was going on.
+AMI_EN2002a_H00_MEE073_0050172_0050199,0.27,0.0,0.26,0.0,0.01,0.0,0.01,1,Mm-hmm.
+AMI_EN2002a_H00_MEE073_0200383_0200410,0.27,0.0,0.26,0.0,0.01,0.0,0.01,1,I don't know.
+AMI_EN2002a_H00_MEE073_0181685_0181742,0.57,0.0,0.12,0.0,0.45,0.0,0.45,1,Yeah.
+AMI_EN2002a_H03_MEE071_0167535_0167757,2.22,0.0,2.22,0.0,0.0,0.0,0.0,1,"So what's that, two weeks, basically."
+AMI_EN2002a_H00_MEE073_0199514_0199666,1.52,0.0,1.52,0.0,0.0,0.0,0.0,2,Sounds like me. I don't know.
+AMI_EN2002a_H02_FEO072_0143975_0144143,1.68,0.0,1.68,0.0,0.0,0.0,0.0,1,"Exactly, yes."
+AMI_EN2002a_H00_MEE073_0023804_0024042,2.38,0.0,2.38,0.0,0.0,0.0,0.0,1,but we're probably not going to be adding too many things.
+AMI_EN2002a_H02_FEO072_0100994_0101018,0.24,0.0,0.24,0.0,0.0,0.0,0.0,1,Mm-hmm.
+AMI_EN2002a_H03_MEE071_0212273_0212294,0.21,0.0,0.22,0.0,-0.01,0.0,0.01,1,Yeah.
+AMI_EN2002a_H01_FEO070_0140829_0140852,0.23,0.0,0.14,0.0,0.09,0.0,0.09,1,Yeah.
+AMI_EN2002a_H01_FEO070_0002801_0003073,2.72,0.0,2.72,0.0,0.0,0.0,0.0,1,All right.
+AMI_EN2002a_H02_FEO072_0176358_0176565,2.07,0.0,2.08,0.0,-0.01,0.0,0.01,1,"It's going to be a little difficult, more difficult."
+AMI_EN2002a_H00_MEE073_0056935_0057122,1.87,0.0,1.88,0.0,-0.01,0.0,0.01,1,"Well, yeah."
+AMI_EN2002a_H03_MEE071_0000361_0000468,1.07,0.0,1.08,0.0,-0.01,0.0,0.01,1,Yeah.
+AMI_EN2002a_H00_MEE073_0023492_0023804,3.12,0.0,3.12,0.0,0.0,0.0,0.0,1,Where's a menu type thing is more flexible that way.
+AMI_EN2002a_H03_MEE071_0021899_0021960,0.61,0.0,0.62,0.0,-0.01,0.0,0.01,1,Yeah.
+AMI_EN2002a_H03_MEE071_0168904_0169056,1.52,0.0,1.52,0.0,0.0,0.0,0.0,1,"Okay, so..."
+AMI_EN2002a_H02_FEO072_0023440_0023676,2.36,0.0,2.36,0.0,0.0,0.0,0.0,1,"Maybe, maybe."
+AMI_EN2002a_H00_MEE073_0212738_0212767,0.29,0.0,0.3,0.0,-0.01,0.0,0.01,1,Mm-hmm.
+AMI_EN2002a_H00_MEE073_0189286_0189383,0.97,0.0,0.98,0.0,-0.01,0.0,0.01,1,"Mm-hmm, after dinner."
+AMI_EN2002a_H01_FEO070_0103473_0103608,1.3499,0.0,1.36,0.0,-0.0101,0.0,0.0101,1,I haven't looked at it.
+AMI_EN2002a_H02_FEO072_0104071_0104139,0.68,0.0,0.44,0.0,0.24,0.0,0.24,1,"Oh, great."
+AMI_EN2002a_H00_MEE073_0171720_0171738,0.18,0.0,0.18,0.0,0.0,0.0,0.0,1,Yeah.
+AMI_EN2002a_H03_MEE071_0114572_0114667,0.95,0.0,0.96,0.0,-0.01,0.0,0.01,1,"Yeah, yeah."
+AMI_EN2002a_H00_MEE073_0165115_0165239,1.24,0.0,1.24,0.0,0.0,0.0,0.0,1,"Like you're saying, yeah."
+AMI_EN2002a_H00_MEE073_0150178_0150270,0.92,0.0,0.92,0.0,0.0,0.0,0.0,1,He's building up.
+AMI_EN2002a_H03_MEE071_0192089_0192700,6.11,0.0,4.24,0.0,1.87,0.0,1.87,1,"Well, if you find me, I'll let us all in there and we can all go in there."
+AMI_EN2002a_H00_MEE073_0150546_0150752,2.06,0.0,2.06,0.0,0.0,0.0,0.0,1,"I don't know, it doesn't matter."
+AMI_EN2002a_H02_FEO072_0205369_0205386,0.17,0.0,0.18,0.0,-0.01,0.0,0.01,1,Mm-hmm.
+AMI_EN2002a_H01_FEO070_0066942_0067089,1.47,0.0,1.48,0.0,-0.01,0.0,0.01,1,I like tabs.
+AMI_EN2002a_H03_MEE071_0134298_0134340,0.42,0.0,0.42,0.0,0.0,0.0,0.0,1,Martin
+AMI_EN2002a_H00_MEE073_0020242_0020267,0.25,0.0,0.26,0.0,-0.01,0.0,0.01,1,It's important.
+AMI_EN2002a_H00_MEE073_0030336_0030633,2.97,0.0,2.98,0.0,-0.01,0.0,0.01,2,"Yeah, like maybe tie that in with dialogue acts or something as well."
+AMI_EN2002a_H02_FEO072_0054861_0054942,0.81,0.0,0.82,0.0,-0.01,0.0,0.01,1,So...
+AMI_EN2002a_H00_MEE073_0042816_0043260,4.44,0.0,4.44,0.0,0.0,0.0,0.0,2,"Like if we have it so it's set up that if you double click and it goes to a default thing on the menu,"
+AMI_EN2002a_H03_MEE071_0057255_0057500,2.45,0.0,2.46,0.0,-0.01,0.0,0.01,1,but yeah.
+AMI_EN2002a_H00_MEE073_0031139_0031547,4.08,0.0,4.08,0.0,0.0,0.0,0.0,1,"like we have it, we're doing it, but how does it help the browsing?"
+AMI_EN2002a_H03_MEE071_0048657_0048693,0.36,0.08,0.36,0.08,0.0,0.08,0.0,1,Yeah.
+AMI_EN2002a_H02_FEO072_0015579_0016074,4.95,0.0,4.96,0.0,-0.01,0.0,0.01,1,"you can, for example, set the marker there so that the audio goes from there, I think."
+AMI_EN2002a_H00_MEE073_0199840_0199917,0.77,0.0,0.78,0.0,-0.01,0.0,0.01,1,Are you?
+AMI_EN2002a_H00_MEE073_0049157_0049197,0.4,0.0,0.4,0.0,0.0,0.0,0.0,1,Hmm.
+AMI_EN2002a_H00_MEE073_0148212_0148293,0.81,0.0,0.82,0.0,-0.01,0.0,0.01,1,That's what I got to work on.
+AMI_EN2002a_H02_FEO072_0069694_0069876,1.82,0.0,1.66,0.0,0.16,0.0,0.16,1,"But yeah, that might be an idea, yeah."
+AMI_EN2002a_H02_FEO072_0142648_0142769,1.21,0.0,1.22,0.0,-0.01,0.0,0.01,1,Exactly.
+AMI_EN2002a_H00_MEE073_0117533_0118031,4.98,0.0,4.98,0.0,0.0,0.0,0.0,4,"Yeah, I mean, between. It's been two days long. Well, probably it was last week. Yeah."
+AMI_EN2002a_H01_FEO070_0150022_0150349,3.27,0.0,3.28,0.0,-0.01,0.0,0.01,1,"Ha ha ha, oh, ha ha."
+AMI_EN2002a_H01_FEO070_0064834_0065636,8.02,0.0,8.02,0.0,0.0,0.0,0.0,3,"But couldn't we, I mean, you probably, I don't know if you wanna have the full transcription and the summary at the same time."
+AMI_EN2002a_H02_FEO072_0001521_0002417,8.96,0.0,4.64,0.0,4.32,0.0,4.32,1,"Well, shall we just go around and everyone says what they've been doing, how far they've got."
+AMI_EN2002a_H03_MEE071_0124483_0124642,1.59,0.0,1.6,0.0,-0.01,0.0,0.01,1,"So when it, when it."
+AMI_EN2002a_H00_MEE073_0164200_0164225,0.25,0.0,0.26,0.0,-0.01,0.0,0.01,1,Yeah.
+AMI_EN2002a_H00_MEE073_0103286_0103406,1.2001,0.0,1.2,0.0,0.0001,0.0,0.0001,1,I don't know.
+AMI_EN2002a_H01_FEO070_0116961_0116972,0.11,0.0,0.1,0.0,0.01,0.0,0.01,1,Thank you.
+AMI_EN2002a_H00_MEE073_0156712_0157002,2.9,0.0,0.22,0.0,2.68,0.0,2.68,1,Yeah.
+AMI_EN2002a_H00_MEE073_0089641_0090010,3.69,0.0,3.7,0.0,-0.01,0.0,0.01,1,like can we just like copy like the latest stuff out of your directory
+AMI_EN2002a_H03_MEE071_0101383_0101731,3.48,0.0,3.48,0.0,0.0,0.0,0.0,1,"Yeah, what was that?"

@@ -1,80 +1,109 @@
-# System Architecture
+# System architecture
 
-## Core Components
+The workflow is a set of top-level Python modules with one entry point,
+`transcription.py`, and an evaluation package that measures what it does.
+`transcription.py` holds the pipeline itself; the other modules each own
+one concern that the pipeline, the evaluation code or a user calls
+separately. The terms used here are defined in [glossary.md](glossary.md).
 
-1. **Audio Enhancement Pipeline**
+## Modules
 
-   - Spectral noise reduction using first 0.5s as noise reference
-   - Dynamic range compression (4:1 ratio above 0.1 threshold)
-   - Signal amplification (3.61x gain)
-   - 16kHz resampling for optimised speech recognition
-   - Automatic gain control and normalization
+| Module | Role |
+| --- | --- |
+| `transcription.py` | Command-line entry point (`main`) and the pipeline, `process_audio_file`: audio enhancement, speech recognition, the language gate, speaker attribution, text clean-up, name masking and every output file. Also installed as the `transcribe` command. |
+| `audio_io.py` | Decodes any supported recording to a 16 kHz mono array, with soundfile first and ffmpeg for compressed formats. `python -m audio_io` reports what the machine can decode. |
+| `confidence.py` | The review flags: heuristics that mark segments whose shape suggests hallucination or a decoding loop, written to `_review.json`. `python -m confidence` runs them on an existing transcript. |
+| `provenance.py` | Writes the run manifest (SHA-256 of every artefact, the input's digest and the run settings, with an HMAC when `TRANSCRIPTION_SIGNING_KEY` is set) and verifies it with `python -m provenance verify`. |
+| `ner_masking.py` | The optional named-entity stage of name masking, loaded offline at a pinned revision. Used through the Python API and the masking benchmark, not by the command line. |
+| `audio_redaction.py` | Silences or bleeps the spans of masked words in a recording, from a timestamped transcript. |
+| `voice_anonymisation.py` | Disguises a voice with the McAdams transformation. |
+| `preflight.py` | The environment check, `python -m preflight`, and the shared HuggingFace token lookup. |
+| `local_app/gui.py` | A Tk desktop front end that builds a `transcription.py` command and runs it in a subprocess. |
+| `evaluation/` | The benchmarks behind the manuscript: WER and the condition sweep, diarisation error, timestamps, masking, anonymisation, disfluency, determinism and the compute footprint. See [evaluation.md](evaluation.md) and [hpc/README.md](../hpc/README.md). |
+| `hpc/`, `setup/`, `tools/` | SLURM job scripts, installation and model-download scripts, and maintenance scripts. |
 
-2. **Transcription Engine**
+`setup.py` installs the top-level modules through `py_modules` and
+`evaluation` and `local_app` as packages; `transcription.py` imports
+`audio_io`, `confidence` and `provenance`, so all of them must be present
+for a run to write its review file and manifest.
 
-   - Default: OpenAI Whisper Large v3 model
-   - Optional: Custom HuggingFace models (e.g., other Whisper variants)
-   - GPU-accelerated inference with automatic fallback to CPU (Central Processing Unit)
-   - Automatic model caching and optimisation
-   - Robust error handling and fallback mechanisms
+## Processing stages
 
-3. **Text Processing Subsystem**
+`process_audio_file` runs these stages in order for one recording.
 
-   - **Automatic Quality Improvements**: Intelligent detection and correction of transcription artifacts
-     - Massive repetition removal (handles AI (Artificial Intelligence)-generated artifacts like repeated sentences)
-     - Punctuation spacing fixes (proper spacing before/after punctuation marks)
-     - Enhanced name masking with context awareness to prevent false positives
-   - Unicode artifact removal and emoji filtering
-   - Repetitive pattern detection and correction
-   - Comprehensive spelling correction database
-   - **Enhanced personal name masking**: Curated multilingual database with 1,793 names across 9 languages (English, Chinese, French, German, Hindi, Spanish, Italian, Arabic, Polynesian)
-     - Intelligent filtering prevents masking common English words (e.g., "The", "Okay", "Yeah", "Well", "But")
-     - Case-insensitive name detection for comprehensive coverage
-     - Surname-specific detection with [SURNAME] placeholder
-     - Optional Facebook database (730K+ first names, 980K+ surnames) for comprehensive global coverage with higher false positive rate
-   - Professional formatting and structure standardization
+1. Audio enhancement, only with `--enhance-audio`: decoding to 16 kHz
+   mono, amplification, spectral noise subtraction against a noise
+   profile taken from the first half second (which is assumed to hold no
+   speech), dynamic range compression and peak limiting. The enhanced audio goes to a temporary file, or to
+   `output/enhanced_audio/` with `--save-enhanced-audio`.
+2. Speaker diarisation, only with `--speaker-attribution`. The pipeline is
+   loaded from `--diarization-config`, then `--diarization-model-path`,
+   then the HuggingFace loader; if a named local pipeline fails, the Hub
+   is not tried. The recording is decoded with `audio_io` and handed to
+   pyannote as a waveform.
+3. Speech recognition with the Whisper model given by `--model`
+   (`openai/whisper-large-v3` by default), on a GPU when one is available.
+   Word timestamps are requested with `--timestamps` or
+   `--speaker-attribution`.
+4. The language gate. The transcript language is `--language` when given,
+   otherwise the language the model detected, otherwise English (recorded
+   as assumed). It decides which clean-text stages run in step 7 and, when
+   the common-word filter was not set explicitly, whether that filter is
+   on.
+5. Name masking set-up, only with `--mask-personal-names`: the curated
+   dictionary (or the Facebook lists), filtered and with exclusions
+   applied.
+6. Timestamped outputs, with `--timestamps` or `--speaker-attribution`:
+   the raw `_transcript.json` and `_transcript.vtt`, written from the
+   model output before any clean-up or masking; with masking, the
+   `_transcript_redacted` pair with the same timings and the names masked;
+   and `_review.json`.
+7. Text processing, applied to the plain transcript and, when speaker
+   labels were applied, to each speaker turn separately: removal of emoji
+   and symbol artefacts, the optional repetition repair
+   (`--fix-spurious-repetitions`), the eight clean-text stages of
+   `CLEAN_TEXT_STAGES` (the English-only ones skipped for other
+   languages), then name masking.
+8. The transcript as `.txt` and `.docx`, and with speaker labels a second
+   `_with_speakers` pair; with `--save-name-masking-logs`, the masking log.
+9. The manifest, `_manifest.json`, covering every artefact the run wrote.
 
-4. **Output Management**
-   - Dual format generation (plain text and Microsoft Word documents)
-   - Organized directory structure with preserved enhanced audio
-   - Comprehensive processing metadata and timestamps
+A run that could not produce something it was asked for, such as speaker
+labels when diarisation failed, writes what it can, lists what is
+missing and reports itself incomplete.
 
-## Processing Pipeline
+## Name masking
 
-1. **Audio Enhancement**: Signal conditioning and noise reduction
-2. **Transcription**: ML (Machine Learning)-based speech-to-text conversion
-3. **Automatic Quality Improvements**:
-   - **Repetition Detection**: Removes conspicuous repetitions typically caused by AI transcription glitches (e.g., sentences repeated 80+ times)
-   - **Optional Repetition Fixing**: Additional filtering with `--fix-spurious-repetitions` flag to remove subtle repetitive patterns and artifacts introduced by Whisper models
-   - **Punctuation Correction**: Fixes spacing issues around punctuation marks, quotation marks and parentheses
-   - **Smart Name Masking**: Production-grade privacy protection with global database (730K+ first names, 980K+ surnames)
-     - Intelligent filtering prevents masking common English words like "The", "Okay", "Yeah", "Well", "But"  
-     - Case-insensitive detection covers names regardless of capitalization
-     - Surname-specific detection with [SURNAME] placeholder
-     - Comprehensive exclusion list for conversation words, prepositions and common nouns
-4. **Text Processing**: Additional cleaning, correction and privacy protection
-5. **Output Generation**: Formatted document creation
+Masking works word by word, sentence by sentence. A word is masked when
+it is capitalised and is in the name dictionary, and replaced with
+`[SURNAME]` for a dictionary surname and `[NAME]` otherwise; an honorific
+followed by a capitalised dictionary name becomes `[TITLE]`. The
+capitalisation requirement is deliberate: it is what keeps ordinary
+lower-case words from being masked, and it is also why a name
+transcribed in lower case is not masked. The masker's `case_insensitive`
+parameter drops the requirement, but no command-line option sets it.
+The common-word filter removes from the dictionary names that are also
+common English words, and names shorter than three letters. The optional
+named-entity stage adds further masks and never removes one. Each
+masking-log row records which rule applied.
 
-## Configuration Parameters
+## Output artefacts
 
-| Parameter         | Default                   | Description                           |
-| ----------------- | ------------------------- | ------------------------------------- |
-| Model             | `openai/whisper-large-v3` | Default transcription model           |
-| Sampling Rate     | 16kHz                     | Audio processing frequency            |
-| Gain              | 3.61x                     | Signal amplification factor           |
-| Compression Ratio | 4:1                       | Dynamic range compression             |
-| Noise Alpha       | 2.0                       | Spectral subtraction coefficient      |
-| Name Masking      | Optional                  | Privacy protection for personal names |
+Every run writes `<name>_transcript.txt`, `<name>_transcript.docx` and
+`<name>_manifest.json` to `output/transcripts/`, where `<name>` is
+`--output-name` or the recording's name. The other artefacts are listed,
+with the options that produce them, in the README's output structure.
 
-## Internal Architecture
+## Enhancement parameters
 
-The system is implemented as a monolithic Python script, `transcription.py`, which integrates all core components:
+| Parameter | Value | Description |
+| --- | --- | --- |
+| Sampling rate | 16 kHz | Rate the audio is resampled to |
+| Noise reference | first 0.5 s | Segment used to estimate the noise spectrum |
+| Noise alpha | 2.0 | Spectral subtraction coefficient |
+| Compression | 4:1 above 0.1 | Dynamic range compression |
+| Gain | 3.61x | Amplification, applied first |
+| Peak limit | 0.95 | Level the output is scaled down to when it exceeds it |
 
-- **Audio Enhancement**: Spectral noise reduction, dynamic range compression and signal amplification
-- **ML Model Integration**: Direct integration with HuggingFace Transformers for Whisper model inference
-- **Text Processing**: Comprehensive cleaning, spelling corrections and privacy protection
-- **Speaker Attribution**: pyannote.audio integration for speaker diarization
-- **Output Generation**: Dual format generation for TXT and DOCX files
-- **CLI Interface**: Main workflow orchestration via `transcription.py`
-
-This monolithic architecture ensures simplicity, maintainability and ease of deployment without external module dependencies.
+These are the constants of `enhance_audio`, which calls them the
+'interview_clarity' preset. The source of their values is not recorded.

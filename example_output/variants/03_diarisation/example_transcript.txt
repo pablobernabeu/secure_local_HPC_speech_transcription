@@ -1,0 +1,14 @@
+example
+=======
+
+Input file: example.wav
+Processed: 2026-09-27 12:00:00
+Transcription system version: 2.0.0
+Model: openai/whisper-large-v3
+Language: English
+Edited to remove likely spurious repetitions.
+Privacy: Personal names masked using internal list (review recommended)
+=======
+
+You have been building a transcription workflow for research recordings. Thank you for joining us today, [TITLE] [SURNAME]. What problem were you trying to solve? Research interviews are full of personal information: names, places and details that could identify a participant. Uploading them to a cloud service moves that information outside the institution, which many ethics approvals do not allow. This workflow runs every step on hardware the institution controls, whether that is a laptop or a university cluster. Which models does it rely on? Speech is transcribed by Whisper through the Hugging Face transformers library, and speakers are told apart by a pyannote diarisation pipeline. The model weights are downloaded once, and after that a run needs no network connection. What happens to the text once the model has produced it? A series of clean-up stages removes stray characters, repairs spacing and punctuation, and can shorten the runaway repetitions that Whisper occasionally produces. Personal names are then replaced with placeholders, using a curated dictionary of first names and surnames. Does the masking find every name? No, and it matters to say so. A dictionary finds only the names it contains, and only when they are capitalised, so an unusual or lower-case name can slip through. Every masked transcript therefore recommends a review, and the paper reports how often names were missed. How far can a researcher trust the speaker labels? That depends on the recording. Overlapping speech, similar voices and distant microphones all make attribution harder, so the labels should be checked against the audio wherever exact attribution matters. The paper reports the error rates we measured on meeting recordings. What do the timestamped files contain? The JSON file keeps the timing of every segment and every word, and the caption file uses the same timings. Both are written before any clean-up, so they record exactly what the model produced, and with masking switched on a redacted copy of each is written beside them. A review file then points to segments worth checking by ear. And how would someone check a transcript months later? Each run writes a manifest that lists every file it produced with a digest of its contents, together with the settings and software versions. Checking the files against that manifest shows whether anything has changed since. Thank you, [NAME]. That was very clear.
+

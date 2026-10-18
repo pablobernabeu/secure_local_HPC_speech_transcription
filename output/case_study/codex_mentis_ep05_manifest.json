@@ -1,0 +1,132 @@
+{
+  "manifest_version": 1,
+  "generated_at": "2026-10-18T00:26:04",
+  "provenance": {
+    "asr_model": "openai/whisper-large-v3",
+    "asr_model_revision": "06f233fe06e710322aca913c1bc4249a0d71fce1",
+    "language": "english",
+    "language_requested": "english",
+    "language_detected": null,
+    "language_assumed": false,
+    "name_masking": true,
+    "repetition_fix": true,
+    "speaker_attribution": true,
+    "timestamps": true,
+    "timestamped_artefacts_written": true,
+    "redacted_timestamps_only": false,
+    "audio_enhancement": false,
+    "review_settings": {
+      "flag_zero_duration": true,
+      "repeated_passage_words": 8,
+      "repeated_passage_window_s": 60.0
+    },
+    "name_masking_settings": {
+      "languages": [
+        "arabic",
+        "chinese",
+        "english",
+        "french",
+        "german",
+        "hindi",
+        "italian",
+        "polynesian",
+        "spanish"
+      ],
+      "use_facebook_names": false,
+      "use_facebook_surnames": false,
+      "exclude_common_words": true,
+      "excluded_names": {
+        "count": 0,
+        "sha256": null
+      }
+    },
+    "diarization_settings": {
+      "source": "hf_loader",
+      "model_id": "pyannote/speaker-diarization-3.1",
+      "model_revision": "84fd25912480287da0247647c3d2b4853cb3ee5d",
+      "sub_model_revisions": {
+        "pyannote/segmentation-3.0": "e66f3d3b9eb0873085418a7b813d3b369bf160bb",
+        "pyannote/wespeaker-voxceleb-resnet34-LM": "837717ddb9ff5507820346191109dc79c958d614"
+      },
+      "model_path": null,
+      "config": null,
+      "num_speakers": null,
+      "min_speakers": null,
+      "max_speakers": null,
+      "vad_onset": null,
+      "vad_offset": null,
+      "error": null
+    },
+    "software": {
+      "version": "1.0.0+gfc652ab87144",
+      "packages": {
+        "python": "3.12.12",
+        "transformers": "4.57.1",
+        "torch": "2.5.1+cu121",
+        "pyannote.audio": "3.4.0",
+        "gliner": null
+      },
+      "git_commit": "fc652ab8714435260bdea037efcf83b277c22115",
+      "git_dirty": false
+    }
+  },
+  "artefacts": [
+    {
+      "path": "codex_mentis_ep05_review.json",
+      "bytes": 4996,
+      "sha256": "7d9fd3541196e36482d4ac80473cc628a36befe77dfe0fc64551ded5f30943de"
+    },
+    {
+      "path": "codex_mentis_ep05_transcript.docx",
+      "bytes": 49874,
+      "sha256": "f45190f71fb90f22a10ae4520a0b91a70fcd223182d429552861ce9e8a2311b6"
+    },
+    {
+      "path": "codex_mentis_ep05_transcript.json",
+      "bytes": 887602,
+      "sha256": "c4321e0f7226fd5fa081ccf904d885a522337c90afc7c8201dbce0f5e604ddf5"
+    },
+    {
+      "path": "codex_mentis_ep05_transcript.txt",
+      "bytes": 35397,
+      "sha256": "6cde46127f1d050d19bdfc68f3cc96ca1190b2cc4d2ac13bf0f844af2fdd38ae"
+    },
+    {
+      "path": "codex_mentis_ep05_transcript.vtt",
+      "bytes": 56350,
+      "sha256": "8c26af81268d8b957ad089020e84d867a29ca0e5f510f3d6986fb04abcefe5fa"
+    },
+    {
+      "path": "codex_mentis_ep05_transcript_redacted.json",
+      "bytes": 887610,
+      "sha256": "5d4b9170d496c4046ff384a1eae009ffaa78430b099147e82af026a0b8de89f4"
+    },
+    {
+      "path": "codex_mentis_ep05_transcript_redacted.vtt",
+      "bytes": 56352,
+      "sha256": "51347b17de252ee80c7929eae593e9106b7734887aeb2fe645cbcbe6f034c752"
+    },
+    {
+      "path": "codex_mentis_ep05_transcript_with_speakers.docx",
+      "bytes": 50783,
+      "sha256": "f379cb042942c9293d29abbbc045cd1c0f07ce223bc8b26c9d82a51014843b6b"
+    },
+    {
+      "path": "codex_mentis_ep05_transcript_with_speakers.txt",
+      "bytes": 38098,
+      "sha256": "e4dbcf43d4b5e9b5c735e6b2b67d77c67eaed37ba0d551a933e75a689198c83c"
+    }
+  ],
+  "input_audio": {
+    "name": "ep05_beyond-the-cloud-reclaiming-data-sovereignty-in-speech-trans_16k.wav",
+    "bytes": 62043798,
+    "sha256": "ee52c7baf4cfb0019530356189d9c54c288a9e6a9fb928cf2e8e5dd072009366"
+  },
+  "source_audio": {
+    "name": "ep05_beyond-the-cloud-reclaiming-data-sovereignty-in-speech-trans.m4a",
+    "bytes": 31357663,
+    "sha256": "a1f082338f01ccd36237b3bf5c87418b15f1b83e628049bb20c96f8d9a6a2448",
+    "derivation": "cached output of an earlier run of: /data/educ-lift/educ1242/speech_transcription_env/lib/python3.12/site-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v7.0.2 -nostdin -loglevel error -y -i /data/educ-lift/educ1242/codex_mentis/audio/ep05_beyond-the-cloud-reclaiming-data-sovereignty-in-speech-trans.m4a -ac 1 -ar 16000 -c:a pcm_s16le /data/educ-lift/educ1242/codex_mentis/audio/ep05_beyond-the-cloud-reclaiming-data-sovereignty-in-speech-trans_16k.wav"
+  },
+  "manifest_sha256": "36c1b33bbe59ff49463e6fd8aa36161feaf79f93e526d37d79529fb5d0359392"
+}

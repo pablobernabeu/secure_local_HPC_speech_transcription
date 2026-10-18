@@ -1,0 +1,33 @@
+{
+  "artefact": "normaliser_gain_ami.csv",
+  "artefact_sha256_lf": "3c9f73ec5308128661da863ec62c7acb48b726135f277355068ec66e9404439c",
+  "tool": "evaluation.condition_ci",
+  "arguments": {
+    "reports": "output/evaluation/sweep_reports_postfix_ami",
+    "baseline": "raw",
+    "baseline_file": null,
+    "primary_condition": "raw",
+    "prefix": "wer_report_ami_whisper-large-v3",
+    "bootstrap": 10000,
+    "seed": 42
+  },
+  "inputs": [
+    {
+      "path": "output/evaluation/sweep_reports_postfix_ami/wer_report_ami_whisper-large-v3.csv",
+      "sha256_lf": "69e53dbe4d65b2f284c32c1da99c4660ae12ea7ff40ad527cf68c2da8a601a8d"
+    },
+    {
+      "path": "output/evaluation/sweep_reports_postfix_ami/wer_report_ami_whisper-large-v3_whisper_norm.csv",
+      "sha256_lf": "ba027060ceea37be30f31dccc743c9bad813377fdd6535a358d7e7a6d1ff13c5"
+    }
+  ],
+  "run_metadata": {
+    "git_commit": "9507e0c79dc5af2dab9c6bea4d6970a0b63b5c29",
+    "git_dirty": false,
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "packages": {
+      "numpy": "2.3.2"
+    }
+  }
+}

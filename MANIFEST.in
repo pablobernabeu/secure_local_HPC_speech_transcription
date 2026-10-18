@@ -1,0 +1,4 @@
+include requirements.txt
+include requirements-dev.txt
+include versions.csv
+include data/curated_names.csv

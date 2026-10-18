@@ -1,0 +1,2 @@
+file,n,macro_wer,ci_lo,ci_hi,bootstrap,seed
+output/evaluation/wer_report.csv,2620,0.062132,0.057458,0.067001,10000,42

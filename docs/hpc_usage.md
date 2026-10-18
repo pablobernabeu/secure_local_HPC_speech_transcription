@@ -1,389 +1,180 @@
-# HPC Usage Guide
+# Transcribing on an HPC cluster
 
-## ARC HPC Scripts
+This page covers transcribing your own recordings with the SLURM scripts
+in `hpc/`. The Oxford ARC specifics (storage layout, first-time setup,
+the diarisation model cache) are in
+[ARC_USAGE_GUIDE.md](../ARC_USAGE_GUIDE.md); moving the scripts to another
+cluster is covered by [hpc/HPC_SETUP_GUIDE.md](../hpc/HPC_SETUP_GUIDE.md);
+and the evaluation jobs behind the manuscript are mapped in
+[hpc/README.md](../hpc/README.md).
 
-This guide covers usage of the transcription system on HPC (High-Performance Computing) clusters, with specific adaptations for the Oxford ARC HPC cluster environment.
+## How a submission works
 
-## Key Adaptations for ARC
+`hpc/submit_transcription.sh` runs on the login node and only submits. In
+batch mode it lists the recordings in the input directory, writes the
+sorted list to `logs/filelist_<timestamp>.txt`, and submits a job array
+with one task per recording. Each task runs `hpc/batch_transcription.sh`,
+which activates the environment, reads its own entry from that frozen
+list, runs `python -m preflight` and then `transcription.py` on the
+recording. Freezing the list means that adding or removing recordings
+while tasks are queued cannot change which file a task transcribes. A
+task whose preflight fails (no torch, transformers below its floor, a
+package loaded from outside the environment) stops with exit 2 before
+transcribing. A missing GPU is only a warning there, since none is used.
 
-### GPU Configuration
+The input directory is `$TRANSCRIPTION_AUDIO_DIR` when that variable is
+set, and `$DATA/speech_transcription_env/audio_input` otherwise. The
+wrapper stops with an error if neither is available or the directory
+holds no audio. It picks up `.wav`, `.mp3`, `.m4a`, `.flac`, `.ogg` and
+`.aac` files in any letter case.
 
-Based on the [ARC user guide GPU constraints](https://arc-user-guide.readthedocs.io/en/latest/job-scheduling.html#list-of-configured-gpu-related-constraints), these scripts implement:
+The worker runs on CPU only. It empties `CUDA_VISIBLE_DEVICES` before
+Python starts, loads no CUDA module and requests no GPU, so a GPU
+partition gives it nothing. The GPU jobs in `hpc/` are the evaluation
+jobs. Each task gets 4 CPUs, 08:00:00 of wall time and 32G of memory
+unless you pass `--time-limit` or `--memory`. `--time-limit` is the only
+time limit: the worker has no internal timeout, so the whole allocation is
+available to the transcription. The jobs go to the `htc` cluster's `short`
+partition, whose limit is 12 hours.
 
-- **Cluster targeting**: `--clusters=htc` (GPUs only available on HTC cluster)
-- **GPU resource requests**: `--gres=gpu:1`
-- **GPU generation constraints**: `--constraint='gpu_gen:Ampere|gpu_gen:Volta|gpu_gen:Turing'`
-- **GPU memory requirements**: `--constraint='gpu_mem:>=16GB'`
-
-### Available GPU Types on ARC
-
-According to ARC documentation:
-
-- **P100**: Pascal generation, 16GB memory
-- **V100**: Volta generation, 32GB memory
-- **RTX (Titan RTX)**: Turing generation, 24GB memory
-- **RTX8000**: Turing generation, 48GB memory
-- **A100**: Ampere generation, 40GB/80GB memory
-
-### Partition Strategy
-
-- **short**: Default partition (max 12 hours) for most transcription jobs
-- **medium**: For longer jobs (max 48 hours)
-- **interactive**: For testing and model downloads
-
-## Quick Start - Batch Processing
-
-The simplest way to process multiple audio files:
+## Batch mode
 
 ```bash
-# Place audio files (.wav, .mp3, .m4a, .flac, .ogg, .aac) in audio_input/ directory
-# Submit batch job with name masking enabled
-hpc/submit_transcription.sh --mask-personal-names
+# Every recording in the input directory, with name masking
+hpc/submit_transcription.sh --mask-personal-names --language english
 
-# Submit batch job with repetition fixing for cleaner transcripts
-hpc/submit_transcription.sh --fix-spurious-repetitions
+# Repetition fixing and a saved masking log as well
+hpc/submit_transcription.sh --mask-personal-names --fix-spurious-repetitions \
+    --save-name-masking-logs
 
-# Submit batch job with both name masking and repetition fixing
-hpc/submit_transcription.sh --mask-personal-names --fix-spurious-repetitions
+# Only the English and Spanish sections of the name dictionary
+hpc/submit_transcription.sh --mask-personal-names \
+    --languages-for-name-masking english spanish
 
-# Submit batch job with name masking and save logs and enhanced audio
-hpc/submit_transcription.sh --mask-personal-names --save-name-masking-logs --save-enhanced-audio
-
-# Submit batch job with multilingual name masking (the six default languages)
-hpc/submit_transcription.sh --mask-personal-names
-
-# Submit batch job with specific languages for targeted masking
-hpc/submit_transcription.sh --mask-personal-names --languages-for-name-masking english spanish
-
-# Submit batch job with Chinese and Hindi for Asian content
-hpc/submit_transcription.sh --mask-personal-names --languages-for-name-masking chinese hindi
-
-# Submit batch job with Facebook first names + specific language surnames
-hpc/submit_transcription.sh --mask-personal-names --use-facebook-names-for-masking --languages-for-name-masking english french
-
-# Submit batch job with custom time limit for long audio files (6 hours per file)
-hpc/submit_transcription.sh --mask-personal-names --time-limit 06:00:00
-
-# Submit batch job with custom memory allocation (64GB per job)
-hpc/submit_transcription.sh --mask-personal-names --memory 64G
-
-# Submit batch job without name masking
-hpc/submit_transcription.sh
+# A different input directory, longer tasks and more memory
+TRANSCRIPTION_AUDIO_DIR=/path/to/recordings \
+    hpc/submit_transcription.sh --time-limit 12:00:00 --memory 64G
 ```
 
-The system automatically:
+`--time-limit` takes SLURM's `HH:MM:SS` format and `--memory` a size with
+a unit, such as `16G` or `64G`. Both apply to every task in the array.
 
-- Detects all audio files in `audio_input/`
-- Determines the correct number of parallel jobs
-- Submits the SLURM job array
-- Processes files in parallel on available GPUs
-
-## Single File Processing with Custom Names
-
-Process a specific audio file with optional custom output naming:
+## A single recording
 
 ```bash
-# Basic single file transcription
-hpc/submit_transcription.sh --single-file audio_input/interview.wav --language english --mask-personal-names
-
-# Single file with custom output name
-hpc/submit_transcription.sh --single-file audio_input/recording_2024_10_03.wav --output-name "client_interview_oct" --mask-personal-names
-
-# Single file with custom time limit for very long audio (10 hours)
-hpc/submit_transcription.sh --single-file audio_input/long_interview.wav --time-limit 10:00:00 --mask-personal-names
-
-# Single file with speaker attribution and high memory (128GB)
-hpc/submit_transcription.sh --single-file audio_input/meeting.wav --speaker-attribution --memory 128G
-
-# Single file with both custom time and memory
-hpc/submit_transcription.sh --single-file audio_input/conference.wav --time-limit 08:00:00 --memory 64G --mask-personal-names
-
-# Single file without name masking
-hpc/submit_transcription.sh --single-file audio_input/myfile.mp3 --language english
+hpc/submit_transcription.sh --single-file /path/to/interview.wav \
+    --output-name "interview_2024" --mask-personal-names --language english
 ```
 
-**Single File Mode Features:**
-- **`--single-file <path>`**: Specify exact file to transcribe (supports all audio formats)
-- **`--output-name <name>`**: Custom name for output files (without extension)
-- **No array jobs**: Submits single SLURM job instead of job array
-- **Same processing**: Uses identical transcription pipeline as batch mode
-- **GPU acceleration**: Automatically uses GPU if available, falls back to CPU
+The path is resolved relative to the directory you run the command from.
+`--output-name` sets the base name of the output files and is accepted
+only with `--single-file`; in batch mode each recording keeps its own
+name.
 
-**Output files** will be named:
-- With custom name: `output/transcripts/{custom_name}_transcript.txt` and `.docx`
-- Without custom name: `output/transcripts/{original_filename}_transcript.txt` and `.docx`
+## Options
 
-## HPC Single File Processing (Recommended for Production)
+The wrapper consumes `--single-file`, `--output-name`, `--time-limit` and
+`--memory` itself and passes every other option to `transcription.py`
+unchanged, so the options are those listed by `python transcription.py
+--help` and in the [README](../README.md#command-line-options). It
+checks each option against that list before submitting, so a mistyped
+option fails at once and not hours later in the queue.
+`hpc/submit_transcription.sh --help` prints the wrapper's own summary.
 
-For **production use on HPC clusters** (submits to SLURM queue with proper resource allocation):
+## Outputs and logs
+
+The transcripts are written to `output/transcripts/` inside the
+repository: `<name>_transcript.txt` and `.docx` always, and the further
+files listed in the README's output structure when `--timestamps`,
+`--speaker-attribution` or `--mask-personal-names` ask for them. The
+masking logs, with `--save-name-masking-logs`, go to `name_masking_logs/`
+in the repository. These directories hold participants' speech and names
+and are ignored by git.
 
 ```bash
-# Single file via HPC job system (recommended)
-./hpc/submit_transcription.sh --single-file audio_input/interview.wav --language english --mask-personal-names
-
-# Single file with repetition fixing for cleaner transcripts
-./hpc/submit_transcription.sh --single-file audio_input/interview.wav --fix-spurious-repetitions --mask-personal-names
-
-# Single file with custom output name via HPC
-./hpc/submit_transcription.sh --single-file audio_input/recording.wav --output-name "client_interview_oct" --mask-personal-names
+squeue -M htc -u $USER
+tail -f logs/transcription_<job_id>_<task_id>.out
+sacct -M htc -j <job_id> --format=JobID,JobName,State,ExitCode,Elapsed
 ```
 
-**When to use HPC single file:**
-- ✅ **Production transcription on HPC clusters**
-- ✅ **Proper resource allocation** (GPU, memory, time limits)
-- ✅ **Queue management** (doesn't overwhelm cluster)
-- ✅ **Same environment as batch jobs** (consistent results)
-- ✅ **Full logging and monitoring**
+Each task writes `logs/transcription_<job_id>_<task_id>.out` and `.err`.
+A single-file submission is not an array, and SLURM fills the task field
+with a placeholder, so match it with `logs/transcription_<job_id>_*.out`.
+The wrapper prints the exact monitoring commands after it submits.
 
-## Advanced Batch Processing
+## Submitting the worker directly
 
-For direct SLURM submission (requires manual array size):
+`hpc/batch_transcription.sh` can be submitted on its own, from the
+repository root. With `--single-file <path>` it transcribes that file.
+As an array job without a file list it lists
+`$DATA/speech_transcription_env/audio_input` when the task starts, which
+is only safe if nothing is added or removed while tasks are queued:
 
 ```bash
-# Count audio files first
-AUDIO_COUNT=$(find audio_input \( -name "*.wav" -o -name "*.WAV" \) -type f | wc -l)
-
-# Submit with correct array size
-sbatch --array=1-$AUDIO_COUNT hpc/batch_transcription.sh --mask-personal-names
+N=$(find "$DATA/speech_transcription_env/audio_input" -type f \
+      \( -iname '*.wav' -o -iname '*.mp3' -o -iname '*.m4a' \
+         -o -iname '*.flac' -o -iname '*.ogg' -o -iname '*.aac' \) | wc -l)
+sbatch --array=1-$N hpc/batch_transcription.sh --mask-personal-names
 ```
 
-## Custom Time Limits
+A direct submission uses the worker's own settings, 10:00:00 and 40G.
+The wrapper is the safer route.
 
-**Problem:** Some audio files may be very long or processing may take longer than expected, causing jobs to timeout before completion.
+## First-time setup
 
-**Solution:** Use the `--time-limit` argument to specify a custom maximum time *per audio file* in SLURM format:
-
-```bash
-# For batch processing with 6 hour limit per file
-hpc/submit_transcription.sh --time-limit 06:00:00 --mask-personal-names
-
-# For single long file with 10 hour limit
-hpc/submit_transcription.sh --single-file audio_input/long_interview.wav --time-limit 10:00:00
-
-# For short files with 1 hour limit
-hpc/submit_transcription.sh --time-limit 01:00:00 --language english
-```
-
-**Default time limits** (when `--time-limit` not specified):
-- **GPU mode**: 2 hours per file
-- **CPU mode**: 8 hours per file (automatically used when GPU unavailable)
-
-**When to use custom time limits:**
-- ✅ Very long audio files (>2 hours of recording)
-- ✅ Processing repeatedly times out with default limits
-- ✅ Complex audio requiring extra processing time
-- ✅ When using speaker attribution on long files
-- ❌ Short audio files (<30 minutes) - defaults are sufficient
-
-**Format:** Use SLURM time format `HH:MM:SS`:
-- `01:30:00` = 1.5 hours
-- `04:00:00` = 4 hours
-- `06:00:00` = 6 hours
-- `10:00:00` = 10 hours
-
-## Custom Memory Allocation
-
-**Problem:** Very long audio files, speaker attribution, or complex processing may require more memory than the default allocation.
-
-**Solution:** Use the `--memory` argument to specify a custom memory allocation per job:
+On ARC, activate the project environment before installing anything, so
+that packages go to project storage and not to your home quota:
 
 ```bash
-# For batch processing with 64GB memory per job
-hpc/submit_transcription.sh --memory 64G --mask-personal-names
-
-# For speaker attribution with high memory requirements
-hpc/submit_transcription.sh --single-file audio_input/long_meeting.wav --speaker-attribution --memory 128G
-
-# For standard processing with custom memory
-hpc/submit_transcription.sh --memory 32G --language english
-```
-
-**Default memory limits** (when `--memory` not specified):
-- **GPU mode**: 16G per job
-- **CPU mode**: 32G per job (automatically used when GPU unavailable)
-
-**When to use custom memory:**
-- ✅ Very long audio files (>4 hours of recording)
-- ✅ Using speaker attribution (especially with multiple speakers)
-- ✅ Jobs fail with "out of memory" errors
-- ✅ Processing high-quality/high-bitrate audio
-- ❌ Short audio files (<1 hour) - defaults are sufficient
-
-**Format:** Use SLURM memory format with unit suffix:
-- `16G` = 16 gigabytes
-- `32G` = 32 gigabytes
-- `64G` = 64 gigabytes
-- `128G` = 128 gigabytes
-
-## Monitoring Jobs
-
-```bash
-# Check job status
-squeue --me
-
-# Check job status on HTC cluster specifically
-squeue --me --clusters=htc
-
-# Detailed job information
-sacct -j <job_id> --format=JobID,JobName,State,ExitCode,Start,End,Elapsed
-
-# View real-time logs
-tail -f transcription_<job_id>_<task_id>.out
-```
-
-## Environment Requirements
-
-### Prerequisites
-
-1. Conda environment created in `$DATA/speech_transcription_env`
-2. All dependencies installed (PyTorch with CUDA 11.8, transformers, etc.)
-3. Audio files placed in `audio_input/` directory
-
-### Module Loading
-
-Scripts automatically load appropriate modules:
-
-- Python 3.12 (recommended for production)
-- CUDA 11.8.0 or latest available
-- Falls back gracefully if specific versions unavailable
-
-## Resource Allocation
-
-### Default Settings
-
-- **Memory**: 32GB per job
-- **CPUs**: 4 cores per task
-- **GPU**: 1 GPU with >=16GB memory
-- **Time limit**: 12 hours (short partition)
-
-### GPU Memory Requirements
-
-Different models have different memory needs:
-
-- **whisper-base**: ~2GB GPU memory
-- **whisper-large-v3**: ~6-8GB GPU memory
-- **Custom models**: Variable, hence >=16GB constraint
-
-## Error Handling
-
-### Common Issues and Solutions
-
-1. **"No GPU detected"**
-
-   - Ensure job submitted to HTC cluster: `--clusters=htc`
-   - Check GPU constraints are properly applied
-
-2. **"Environment not found"**
-
-   - Verify conda environment exists in `$DATA/speech_transcription_env`
-   - Run setup script if needed
-
-3. **Module loading failures**
-
-   - Scripts fall back to default versions
-   - Check `module avail` for available versions
-
-4. **Timeout errors**
-   - Jobs may timeout based on partition limits
-   - Consider using custom time limits with `--time-limit`
-   - Use medium partition for longer jobs
-
-5. **Model download failures**
-
-   - Check internet connectivity
-   - Verify HuggingFace model name
-   - Pre-download models using `python setup/download_model.py`
-
-6. **Out of memory errors**
-   - Increase memory allocation with `--memory` flag
-   - Use CPU mode if GPU memory insufficient
-   - Process shorter audio segments
-
-### Job Monitoring
-
-Scripts provide comprehensive logging:
-
-- Environment verification
-- GPU detection and specs
-- Processing progress
-- Output file creation
-- Performance metrics
-
-## Performance Optimization
-
-### Tips for Better Performance
-
-1. **Pre-download models**: Run `python setup/download_model.py` on login node
-2. **Batch processing**: Use array jobs for multiple files
-3. **Resource matching**: Choose appropriate GPU generation for your needs
-4. **Storage location**: Use `$DATA` for large environments and cache
-
-### Expected Performance
-
-- **Single file**: ~40 minutes per hour of audio
-- **GPU acceleration**: 3-5x faster than CPU-only
-- **Batch efficiency**: Linear scaling with available resources
-
-## Initial Setup for HPC
-
-**HPC (CRITICAL - Read Carefully!):**
-
-```bash
-# Clone the repository
-git clone <repository-url>
-cd secure_local_HPC_speech_transcription
-
-# CRITICAL: Activate environment BEFORE running setup
-# This ensures packages install to project space, not your personal quota
-# Note: $DATA is an environment variable set by your HPC system
-source activate_project_env.sh
-
-# Now run setup
+source activate_project_env_arc.sh
 python setup/install_requirements.py
 ```
 
-**⚠️ HPC IMPORTANT:** Always activate `activate_project_env.sh` before any setup or package installation. This ensures:
-- Packages install to **project space** (`$DATA/speech_transcription_env/`, shared quota, typically ~200GB+)
-- NOT to **personal space** (`~/.local/`, your limited quota, typically ~20GB)
-- Correct Python environment and cache directories are used
+`setup/install_requirements.py` upgrades pip, installs
+`requirements.txt` into the active environment, checks that torch,
+transformers, librosa, soundfile and numpy import, and then offers to run
+the speaker-attribution wizard, `setup/setup_pyannote.py`, which can also
+be run later. It does not create an environment (it warns and asks before
+continuing outside one) and installs whatever torch build
+`requirements.txt` resolves to, with no CUDA index. To reproduce the
+environment behind the published results exactly, install
+`requirements-lock.txt` instead (it needs
+`--extra-index-url https://download.pytorch.org/whl/cu121`) and check it
+with `python -m preflight --lock requirements-lock.txt`. The jobs never
+install anything themselves, so the environment must be complete before
+the first submission. Speaker attribution on compute nodes, which have no
+internet access, also needs the model weights cached beforehand; see
+[ARC_USAGE_GUIDE.md](../ARC_USAGE_GUIDE.md#speaker-diarisation-on-arc)
+and [PYANNOTE_SETUP_GUIDE.md](../PYANNOTE_SETUP_GUIDE.md).
 
-The setup script will:
-
-- Create a Python virtual environment
-- Install all required packages with CUDA support
-- Set up proper cache directories for models
-- Optionally pre-cache Whisper models (~1.5GB download)
-- **Ask if you want to set up speaker attribution** (optional)
-- Verify all dependencies are working
-
-The setup script now **includes an optional step for speaker attribution**. When prompted during setup, you can:
-- Choose "yes" to set up pyannote immediately (guided setup)
-- Choose "no" to skip and run `python setup/setup_pyannote.py` later
-
-**⏱️ Total setup time:** 15-30 minutes (including optional speaker attribution)
-
-**📖 For detailed speaker attribution setup:** See [PYANNOTE_SETUP_GUIDE.md](../PYANNOTE_SETUP_GUIDE.md)
-
-### Environment Activation (Per Session)
-
-After initial setup, activate the environment for each session:
+To fetch the Whisper weights on the login node before a batch, so that no
+task waits on a download:
 
 ```bash
-source activate_project_env.sh
+python setup/download_model.py                               # openai/whisper-large-v3
+python setup/download_model.py --model openai/whisper-medium
 ```
 
-## Troubleshooting
+It downloads into `$HF_HOME`, which the activation script sets, and runs
+the model once on a second of silence to confirm it loads.
 
-### Debug Steps
+## When a task fails
 
-1. Check SLURM output files: `slurm-<jobid>_<taskid>.out`
-2. Verify GPU allocation: `scontrol show job <jobid>`
-3. Test environment manually: `srun -p interactive --gres=gpu:1 --pty /bin/bash`
-4. Check disk space: `df -h $DATA`
+Read the task's `.out` and `.err` files in `logs/` first. A task that
+stops at once with "transcription.py not found" or "Activation script not
+found" was submitted from outside the repository. "No audio files found"
+at submission means the input directory is empty or not the one you
+meant; the wrapper prints which directory it read. A task that ends in
+SLURM's `TIMEOUT` state needs a larger `--time-limit`, and one killed for
+memory a larger `--memory`. A task that exits 2 within seconds failed its
+preflight, and the report near the top of its `.out` names each failed
+check and its remedy. To run the same check by hand, run
+`source activate_project_env_arc.sh && python -m preflight` in an
+interactive session on a compute node (the
+[ARC user guide](https://arc-user-guide.readthedocs.io/) describes how to
+start one): the ARC login nodes cap virtual memory at 2 GB, under which
+the environment's CUDA build of torch cannot load, so there the check
+reports torch as broken.
 
-### Contact Support
-
-For ARC-specific issues, consult:
-
-- [ARC User Guide](https://arc-user-guide.readthedocs.io/)
-- [ARC Support](https://www.arc.ox.ac.uk/support)
+For the cluster itself, see the
+[ARC user guide](https://arc-user-guide.readthedocs.io/).

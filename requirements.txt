@@ -1,18 +1,40 @@
 # ===================================================================
-# Consolidated Requirements for Speech Transcription Python Project
+# Runtime and evaluation requirements (loose floors)
 # ===================================================================
+#
+# This file states what the code needs, as >= floors. It is not a record of
+# the environment that produced the committed results; that belongs in a
+# lock file taken from the ARC environment (requirements-lock.txt, audit
+# finding DEPS-01). Development tools (pytest, linters, mypy)
+# are in requirements-dev.txt.
+#
+# Every entry below is used somewhere in the repository. Packages that
+# nothing used at the time (openai-whisper, since restored for whisper_norm
+# below; torchvision, speechbrain, noisereduce,
+# audiomentations, pydub, ffmpeg-python, pandas, pathlib2, pyyaml,
+# configparser, tqdm, scikit-learn, matplotlib, seaborn, psutil,
+# memory_profiler) and a duplicate numpy line were removed (audit finding
+# DEPS-11). Libraries that pyannote.audio or transformers need themselves are
+# still installed by them.
 
 # Core Dependencies
 # -----------------
 
 # Deep Learning Framework
 torch>=2.0.0
-torchvision>=0.15.0
 torchaudio>=2.0.0
 
 # Speech Recognition and Processing
-openai-whisper>=20231117
-transformers[torch]>=4.30.0
+# 4.56.0 is the floor. WhisperGenerationMixin.detect_language, which the
+# post-processing language gate uses to decide whether a transcript is
+# English, needs 4.45; evaluation/benchmark_timestamps.py passes dtype= to
+# pipeline(), which is accepted only from 4.56 (audit finding DEPS-10).
+# preflight._TRANSFORMERS_FLOOR holds the same value. The ASR pipeline's own
+# return_language reporting is deliberately not used: between 4.48 and 5.6
+# the generation path strips the language token before the tokenizer sees
+# it, so that field is None on those versions. The ARC job environment runs
+# 4.57.1 (requirements-lock.txt).
+transformers[torch]>=4.56.0
 huggingface_hub>=0.15.0
 
 # Audio Processing and Analysis
@@ -21,96 +43,63 @@ soundfile>=0.12.0
 scipy>=1.10.0
 numpy>=1.24.0
 
-# Enhanced Name Masking
-names-dataset>=3.0.0
-
-# Advanced Audio Processing
-# -------------------------
-
-# Speaker Diarization (Optional - for --speaker-attribution flag)
-# Setup: Run 'python setup_pyannote.py' for guided configuration
-# Requires: HuggingFace token with model access
-# See: PYANNOTE_SETUP_GUIDE.md for detailed instructions
-pyannote.audio>=3.1.0
-speechbrain>=0.5.14
-
-# Audio Enhancement and Preprocessing
-noisereduce>=3.0.0
-audiomentations>=0.33.0
-
-# Additional Audio Format Support
-pydub>=0.25.1
-ffmpeg-python>=0.2.0
+# Compressed-format decoding (.m4a etc.) through a bundled ffmpeg
 imageio-ffmpeg>=0.4.8
 
-# Data Handling and Utilities
-# ---------------------------
-
-# Data Processing
-pandas>=2.0.0
-numpy>=1.24.0
-
-# File and Path Handling
-pathlib2>=2.3.7
-
-# Configuration and Logging
-pyyaml>=6.0
-configparser>=5.3.0
-
-# Progress Bars and UI
-tqdm>=4.65.0
+# Enhanced Name Masking
+names-dataset>=3.0.0
 
 # Document Processing
 python-docx>=0.8.11
 
-# Scientific Computing and Analysis
-# ---------------------------------
+# Speaker Diarization (optional at run time - for --speaker-attribution)
+# Setup: run 'python setup/setup_pyannote.py' for guided configuration.
+# Requires: HuggingFace token with model access.
+# See: PYANNOTE_SETUP_GUIDE.md for detailed instructions.
+# Capped below 4: the diarisation loader, the DER scripts and the fine-tuning
+# script target the 3.x API, and every committed result used 3.4.0
+# (requirements-lock.txt).
+pyannote.audio>=3.1.0,<4
 
-# Machine Learning and Clustering
-scikit-learn>=1.3.0
+# Evaluation / benchmarking
+jiwer>=3.0.0
+datasets>=2.14.0
+# The whisper_norm scoring condition loads openai-whisper's own English
+# spelling table (whisper/normalizers/english.json) and checks its SHA-256
+# before use, refusing to run without it; the pin is exact so the file, and
+# with it every whisper_norm number, cannot change under a re-install. It is
+# the version in the ARC job environment (requirements-lock.txt).
+openai-whisper==20250625
+# Only evaluation/finetune_pyannote_segmentation.py imports this.
+pytorch-lightning>=2.0
 
-# Visualization and Plotting
-matplotlib>=3.7.0
-seaborn>=0.12.0
+# Bibliography preprocessing (sentence-case enforcement for references.bib)
+# Capped below 2: tools/bib_sentencecase.py imports the 1.x modules
+# bibtexparser.bparser and bibtexparser.bwriter, which bibtexparser 2
+# replaces; the environment runs 1.4.4 (audit finding DEPS-10).
+bibtexparser>=1.4,<2
 
-# Performance and Monitoring
-# --------------------------
-
-# System Resource Monitoring
-psutil>=5.8.0
-memory_profiler>=0.61.0
-
-# Development and Testing
-# -----------------------
-
-# Testing Framework
-pytest>=7.4.0
-pytest-cov>=4.1.0
-
-# Code Formatting and Linting
-black>=23.0.0
-flake8>=6.0.0
-
-# Type Checking (Optional)
-mypy>=1.0.0
+# Optional: zero-shot NER for the second masking stage.
+# The name dictionary can only redact names it already holds, and recall on
+# names outside it is zero by construction. Installing this adds a small
+# CPU model that recognises people from context, raising recall at some cost
+# in precision (see docs and `python -m evaluation.benchmark_masking --ner`).
+# Deliberately left commented: it pulls a further model download, and the
+# workflow is fully functional without it.
+# gliner==0.2.28  (the version the committed NER results reproduce with)
 
 # ===================================================================
 # Installation Notes:
-# 
-# 1. Install core dependencies first:
-#    pip install torch torchvision torchaudio
-#    pip install openai-whisper transformers
 #
-# 2. For GPU support, ensure CUDA toolkit is installed
+# 1. For GPU support, install a CUDA build of torch and torchaudio together,
+#    at matching versions, from https://download.pytorch.org/whl/<cuda-tag>
+#    (`python -m preflight` prints the command for the installed torch).
 #
-# 3. Some audio processing libraries may require system dependencies:
-#    - FFmpeg for audio/video processing
-#    - PortAudio for real-time audio
+# 2. On ARC, the project runs a conda Python 3.12 environment; activate it
+#    with `source activate_project_env_arc.sh` before installing.
 #
-# 4. Optional dependencies can be installed selectively:
-#    pip install -r requirements.txt
-#
-# 5. For HPC environments, load appropriate modules first:
-#    module load Python/3.11.3-GCCcore-12.3.0
-#    module load CUDA/12.1.1
+# 3. The versions behind the committed results are recorded in
+#    requirements-lock.txt, a pip freeze of the ARC job environment (taken
+#    after sourcing activate_project_env_arc.sh, as the jobs do). Installing
+#    it needs Linux and --extra-index-url https://download.pytorch.org/whl/cu121.
 # ===================================================================

@@ -1,214 +1,167 @@
 # Troubleshooting
 
-## Known Issues to Avoid
+Start with `python -m preflight`. In a few seconds it checks the Python
+version, torch and CUDA, transformers, audio decoding including ffmpeg,
+pyannote and the HuggingFace token, and whether torch, transformers and
+pyannote load from the active environment, and it prints a remedy for
+each problem it finds. Add `--gpu-required` on a GPU node, or
+`--diarisation-required` when you need speaker attribution, to make those
+checks fail rather than warn. `--lock requirements-lock.txt` also compares
+every installed version with the lock. Every HPC job runs it before doing
+any work and stops with exit 2 (exit 4 in the case study) when it fails,
+so the report at the top of a failed job's log is the place to start. On
+ARC, run it on a compute node rather than a login node: the login nodes
+cap virtual memory at 2 GB, under which the environment's CUDA build of
+torch cannot load.
 
-### Python and Package Version Compatibility
+## Versions
 
-**Known Issues:**
-- ❌ Python 3.13 + PyTorch 2.5.1: No wheels available (torchvision 0.20.1 missing)
-- ❌ PyTorch 2.7.1+cpu on GPU nodes: Symbol mismatch with torchcodec (`undefined symbol: _ZNK3c107SymBool...`)
-- ❌ PyTorch 2.8.0+cpu: May have torchcodec compatibility issues on some systems
-- ❌ Pyannote 4.0.1: Requires PyTorch 2.8.0+ (incompatible with stable 2.5.1)
+`requirements.txt` gives the lowest versions the code supports: Python
+3.11 or later, transformers 4.56 or later (the language detection the
+post-processing relies on needs 4.45, and the timestamp benchmark's
+`pipeline(dtype=...)` needs 4.56) and pyannote.audio 3.1 or later, below 4.
+The environment that produced the published results is recorded in
+`requirements-lock.txt`, and each HPC job that writes results records
+the versions it ran with in an `environment/` subdirectory beside them.
+The committed diarisation results were produced with pyannote.audio
+3.4.0, the version recorded in `output/evaluation/der_summary.json`.
 
-**Recommended Versions (HPC Production):**
-- **Python**: 3.12.x (full wheel availability, production-stable)
-- **PyTorch**: 2.5.1+cpu (last stable version before breaking ABI changes)
-- **TorchVision**: 0.20.1+cpu
-- **TorchAudio**: 2.5.1+cpu
-- **Transformers**: 4.45.0+
-- **Pyannote.audio**: 3.1.0-3.3.x (NOT 4.x - requires torch>=2.8)
+pyannote.audio 4.x is not supported; install with
+`pip install "pyannote.audio>=3.1,<4"`. For GPU use, torch and torchaudio
+must be CUDA builds of matching versions; `python -m preflight` prints the
+install command for the torch it finds. Between transformers 4.48 and 5.6
+the ASR pipeline's own language report is always empty, which is why the
+workflow asks the model directly and why preflight flags those versions.
+The HPC jobs never install anything: repair the environment from a login
+node, ideally by installing `requirements-lock.txt`, and resubmit.
 
-**Why these specific versions?**
-- **Python 3.12**: Full wheel availability, production-stable
-- **PyTorch 2.5.1**: Last stable version before 2.7.x introduced breaking ABI changes
-- **TorchCodec compatibility**: PyTorch 2.5.1 works with transformers audio backend
-- **Pyannote 3.x**: Compatible with PyTorch 2.5.1 (v4.x requires torch>=2.8.0)
+## Audio files
 
-## Common Issues and Solutions
+On HPC, the wrapper reads recordings from `$TRANSCRIPTION_AUDIO_DIR`, or
+`$DATA/speech_transcription_env/audio_input` by default, and says which
+directory it read when it finds nothing. It picks up `.wav`, `.mp3`,
+`.m4a`, `.flac`, `.ogg` and `.aac` files in any letter case. Locally,
+`transcription.py` takes the path you give it.
 
-### 1. Audio File Issues
+A compressed file that will not decode usually means no ffmpeg is
+available: `python -m audio_io` reports what the current environment can
+read, and `python -m audio_io recording.m4a` tries one file. Installing
+`imageio-ffmpeg` (in the requirements) provides a bundled ffmpeg.
 
-**"Audio file not found" error**
-- Ensure audio files are in `audio_input/` directory
-- Check file extensions (`.wav`, `.mp3`, `.m4a`, etc.)
-- Use `hpc/submit_transcription.sh` to auto-detect files
+## Models and the cache
 
-**Supported audio formats:**
-- `.wav`, `.mp3`, `.m4a`, `.flac`, `.ogg`, `.aac`
+Model weights are cached under `HF_HOME` (by default
+`~/.cache/huggingface`). Set `HF_HOME` to a directory with enough space
+and use the same value for downloading and for every run; on ARC,
+`activate_project_env_arc.sh` sets it to
+`$DATA/speech_transcription_env/.huggingface_cache`. `TRANSFORMERS_CACHE`
+is deprecated and would override `HF_HOME` for some libraries, so leave
+it unset; the HPC jobs unset it.
 
-### 2. Model Download Issues
-
-**Model download failures**
-- Check internet connectivity
-- Verify HuggingFace model name
-- Use default model: `openai/whisper-large-v3`
-- Pre-download models: `python setup/download_model.py`
-
-**Timeout during batch processing:**
-- Run `python setup/download_model.py` on login node before submitting batch jobs
-- This caches models locally to avoid network timeouts
-
-### 3. GPU and Memory Issues
-
-**GPU memory errors**
-- Reduce batch size or use CPU processing
-- Check available GPU memory with `nvidia-smi`
-- Use `--memory` flag to increase allocation
-
-**"No GPU detected"**
-- Ensure job submitted to HTC cluster: `--clusters=htc`
-- Check GPU constraints are properly applied
-- Verify GPU availability: `nvidia-smi`
-
-**Out of memory errors**
-- Increase memory allocation with `--memory 64G` or `--memory 128G`
-- Use CPU mode if GPU memory insufficient
-- Process shorter audio segments
-
-### 4. SLURM Job Issues
-
-**SLURM job failures**
-- Check resource allocation in batch script
-- Verify account and partition settings
-- Monitor job logs for specific errors
-
-**Timeout errors**
-- Jobs may timeout based on partition limits
-- Use `--time-limit` flag to increase time allocation
-- Consider using medium partition for longer jobs
-
-**Job not starting:**
-- Check queue status: `squeue --me`
-- Verify partition availability
-- Check account quotas
-
-### 5. Environment Issues
-
-**"Environment not found"**
-- Verify conda environment exists in `$DATA/speech_transcription_env`
-- Run setup script: `python setup/install_requirements.py`
-- Activate environment: `source activate_project_env.sh`
-
-**Module loading failures**
-- Scripts fall back to default versions
-- Check `module avail` for available versions
-- Load specific modules manually if needed
-
-**Package installation to wrong location:**
-- Always activate `activate_project_env.sh` BEFORE installing packages
-- Packages should install to `$DATA` (project space), not `~/.local/` (personal quota)
-
-### 6. Processing Issues
-
-**Transcription quality issues:**
-- Enable audio enhancement: `--enhance-audio`
-- Use repetition fixing: `--fix-spurious-repetitions`
-- Specify language: `--language english` (or other language)
-- Try a different model if quality is poor
-
-**Name masking false positives:**
-- Use `--language english` to enable automatic common word filtering
-- Exclude specific names: `--exclude-names-from-masking "Name1,Name2"`
-- Use curated database instead of Facebook database (default behavior)
-
-**Speaker attribution not working:**
-- Verify pyannote setup: `python setup/setup_pyannote.py`
-- Check HuggingFace token is configured
-- See [PYANNOTE_SETUP_GUIDE.md](PYANNOTE_SETUP_GUIDE.md) for detailed setup
-
-### 7. Output Issues
-
-**Missing output files:**
-- Check `output/transcripts/` directory
-- Review job logs for errors: `tail -f transcription_<job_id>_<task_id>.out`
-- Verify disk space: `df -h $DATA`
-
-**Incorrect output format:**
-- System generates both `.txt` and `.docx` files by default
-- With speaker attribution, additional `_with_speakers` versions are created
-
-## Processing Modes: Batch vs Single File
-
-**IMPORTANT:** The system supports two processing approaches:
-
-### 1. Batch Processing (Recommended for Multiple Files)
-
-Process ALL audio files in the `audio_input/` directory:
+For offline use, or before a batch on nodes without network access,
+fetch the models first:
 
 ```bash
-# Processes all files with default settings
-hpc/submit_transcription.sh
-
-# With name masking enabled
-hpc/submit_transcription.sh --mask-personal-names
-
-# Force English-only transcription
-hpc/submit_transcription.sh --language english --mask-personal-names
-
-# Combine multiple options
-hpc/submit_transcription.sh --mask-personal-names --language english --fix-spurious-repetitions
+python setup/download_model.py        # Whisper, openai/whisper-large-v3 by default
+python setup/cache_pyannote_arc.py    # the diarisation models (needs a HuggingFace token)
+python -m ner_masking --download      # the optional NER model
 ```
 
-The system automatically detects all audio files and creates appropriate job arrays.
+pyannote.audio 3.x does not read `HF_HOME`: it loads its models from
+`$PYANNOTE_CACHE`, or `~/.cache/torch/pyannote` when that is unset, and
+`setup/cache_pyannote_arc.py` downloads into that same directory.
 
-### 2. Single File Processing
+When loading the diarisation pipeline fails with `KeyError: 'name'`, the
+cached `config.yaml` of `pyannote/speaker-diarization-3.1` has been
+damaged: pyannote reads the pipeline's name from it, and the damaged file
+has none. Neither a token nor a new download repairs it, because a
+download keeps a file the cache already holds. `python -m preflight`
+checks that each cached snapshot's `config.yaml` can load and that every
+file in the pipeline's `blobs` directory, linked or not, still hashes to
+the name it is stored under. It names each damaged file and how to
+replace it. With `--diarisation-required` it fails, and the job scripts
+of the DER benchmark and sweep, the fine-tuning, the case study and the
+anonymisation benchmark pass that option, so those jobs stop before
+doing any work.
 
-Process one specific audio file:
+Outside those jobs, the message depends on the caller. `transcription.py`
+runs the same check when the load fails. If it finds the damage, the
+error names the damaged file, says that neither a token nor a new
+download repairs it and gives the fix, ending with
+`Underlying error: KeyError: 'name'`. The DER benchmark does not catch
+the error and stops with a traceback ending in `KeyError: 'name'`. The
+anonymisation benchmark prints
+`could not reuse the diarisation pipeline (KeyError: 'name')`, records
+the reason in its summary and loads the embedding model directly.
 
-```bash
-# Using submit_transcription.sh (recommended)
-hpc/submit_transcription.sh --single-file audio_input/interview.wav --mask-personal-names
+The jobs that met a damaged config in September 2026 (incident
+NEW-INC-01, under Observations from ARC in `ISSUES.md`) ran code at
+6f9bf56, from before these checks, and printed less. Case-study job
+8918023 asked for a token and ended with `Underlying error: 'name'`, and
+anonymisation jobs 8913992, 8917988 and 8917989 printed
+`could not reuse the diarisation pipeline ('name')`. 392b975 and 71560ae
+added the exception's type to those two messages, and 1bbae87 the damage
+report to the first.
 
-# With custom output name
-hpc/submit_transcription.sh --single-file audio_input/recording.wav --output-name "client_meeting" --mask-personal-names
-```
+To repair the cache, delete the damaged blob and the snapshot's link to
+it (or, where the snapshot holds the file itself, that file), then run
+`setup/cache_pyannote_arc.py` again, which exits 3 while anything it
+checks is still damaged. A damaged blob that no snapshot links to is
+deleted on its own, since a download would link it again. Alternatively,
+restore the file from an intact copy in the Hugging Face hub cache.
+preflight names such a copy when it finds one that still hashes to its
+blob's name. For a blob, it otherwise says where the hub cache's blob of
+the same name would be, to be used only after `git hash-object` on it
+(`sha256sum` for a blob named after a SHA-256) prints that name.
 
-## Performance Troubleshooting
+Speaker-attribution problems (tokens, gated models, offline loading) are
+covered in [PYANNOTE_SETUP_GUIDE.md](PYANNOTE_SETUP_GUIDE.md).
 
-### Slow Processing
+## Memory and time on HPC
 
-**If transcription is taking too long:**
-- Verify GPU is being used: check job logs for GPU detection
-- Check GPU utilization: `nvidia-smi`
-- Consider shorter audio segments
-- Use appropriate time limits: `--time-limit 06:00:00`
+The transcription tasks run on CPU with 32G of memory and 08:00:00 of wall
+time each by default. A task SLURM kills for memory needs a larger
+`--memory` (for example `--memory 64G`), and one that ends in the
+`TIMEOUT` state a larger `--time-limit`, up to the 12-hour limit of the
+`short` partition. Check a finished task with
+`sacct -M htc -j <job_id> --format=JobID,State,ExitCode,Elapsed,MaxRSS`.
 
-### Expected Performance
+The GPU evaluation jobs stop (exit 2, or exit 4 in the case study) when
+their preflight finds no usable CUDA device. If one does, check that it
+went to the `htc` cluster with `--gres=gpu:1`, as the scripts' own
+`#SBATCH` lines ask. The preflight report says whether torch is a CUDA
+build, and when it is, the node or the allocation is the problem, not the
+environment.
 
-- Single file processing: ~40 minutes per hour of audio
-- Batch processing: Linear scaling with available GPU resources
-- Memory usage: 8-16GB per concurrent job
-- Disk I/O: Enhanced audio files require 2x original file size
+## Logs
 
-## Debug Steps
+Every job script writes its log to `logs/` in the repository. A
+transcription task writes `logs/transcription_<job_id>_<task_id>.out` and
+`.err`; a single-file job is not an array, so match its log with
+`logs/transcription_<job_id>_*.out`. The wrapper prints the exact
+monitoring commands after it submits. The end of a task's `.out` lists
+the files it wrote, or says which requested artefacts are missing.
 
-1. **Check SLURM output files:** `slurm-<jobid>_<taskid>.out`
-2. **Verify GPU allocation:** `scontrol show job <jobid>`
-3. **Test environment manually:** `srun -p interactive --gres=gpu:1 --pty /bin/bash`
-4. **Check disk space:** `df -h $DATA`
-5. **Review logs:** `tail -f transcription_<job_id>_<task_id>.out`
+## Transcript quality
 
-## Getting Help
+Pass `--language` on every run: it also selects the post-processing
+rules, and a wrong guess from language detection applies the wrong ones.
+`--fix-spurious-repetitions` removes repetition loops, and
+`--enhance-audio` may help noisy recordings at the cost of time. With
+`--timestamps`, the `_review.json` file flags the segments most likely to
+be hallucinated; listen to those passages.
 
-### Documentation Resources
+Name masking that hides ordinary words is usually the common-word
+filter being off. It is on by default for English, and
+`--exclude-common-english-words-from-name-masking` turns it on for other
+languages. Specific names can be left unmasked with
+`--exclude-names-from-masking "Name1,Name2"`. The Facebook name lists
+(`--use-facebook-names-for-masking`, `--use-facebook-surnames-for-masking`)
+mask far more ordinary words than the default curated dictionary.
 
-- [README.md](README.md) - Main documentation
-- [docs/architecture.md](docs/architecture.md) - System architecture details
-- [docs/advanced_usage.md](docs/advanced_usage.md) - Advanced features
-- [docs/hpc_usage.md](docs/hpc_usage.md) - HPC-specific guidance
-- [PYANNOTE_SETUP_GUIDE.md](PYANNOTE_SETUP_GUIDE.md) - Speaker attribution setup
+## Reporting a problem
 
-### HPC Support
-
-For ARC-specific issues, consult:
-- [ARC User Guide](https://arc-user-guide.readthedocs.io/)
-- [ARC Support](https://www.arc.ox.ac.uk/support)
-
-### Reporting Issues
-
-When reporting issues, please include:
-- Python version: `python --version`
-- PyTorch version: `python -c "import torch; print(torch.__version__)"`
-- Error messages from log files
-- Command used to run transcription
-- Audio file characteristics (duration, format, size)
+Include the output of `python -m preflight`, the command you ran, the
+error from the log, and the recording's format, duration and size.
+For issues specific to the University of Oxford cluster, see the
+[ARC user guide](https://arc-user-guide.readthedocs.io/).

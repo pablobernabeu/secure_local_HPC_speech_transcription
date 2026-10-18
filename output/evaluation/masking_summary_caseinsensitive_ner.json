@@ -1,0 +1,272 @@
+{
+  "n": 1940,
+  "seed": 42,
+  "n_per_cell": 4,
+  "overall": {
+    "n": 1940,
+    "recall": 0.9365979381443299,
+    "precision": 1.0,
+    "f1": 0.9672611125898323,
+    "leakage": 0.0634020618556701,
+    "hits": 1817,
+    "false_positives": 0,
+    "replaced_total": 1817
+  },
+  "by_in_db": {
+    "in_db": {
+      "n": 1360,
+      "recall": 1.0,
+      "precision": 1.0,
+      "f1": 1.0,
+      "leakage": 0.0,
+      "hits": 1360,
+      "false_positives": 0,
+      "replaced_total": 1360
+    },
+    "out_of_db": {
+      "n": 580,
+      "recall": 0.7879310344827586,
+      "precision": 1.0,
+      "f1": 0.8813886210221793,
+      "leakage": 0.21206896551724141,
+      "hits": 457,
+      "false_positives": 0,
+      "replaced_total": 457
+    }
+  },
+  "by_casing": {
+    "lower": {
+      "n": 970,
+      "recall": 0.9257731958762887,
+      "precision": 1.0,
+      "f1": 0.961456102783726,
+      "leakage": 0.0742268041237113,
+      "hits": 898,
+      "false_positives": 0,
+      "replaced_total": 898
+    },
+    "title": {
+      "n": 970,
+      "recall": 0.9474226804123711,
+      "precision": 1.0,
+      "f1": 0.973001588141874,
+      "leakage": 0.0525773195876289,
+      "hits": 919,
+      "false_positives": 0,
+      "replaced_total": 919
+    }
+  },
+  "by_morphology": {
+    "bare": {
+      "n": 970,
+      "recall": 0.954639175257732,
+      "precision": 1.0,
+      "f1": 0.9767932489451476,
+      "leakage": 0.04536082474226799,
+      "hits": 926,
+      "false_positives": 0,
+      "replaced_total": 926
+    },
+    "possessive": {
+      "n": 970,
+      "recall": 0.9185567010309278,
+      "precision": 1.0,
+      "f1": 0.9575497044599678,
+      "leakage": 0.08144329896907221,
+      "hits": 891,
+      "false_positives": 0,
+      "replaced_total": 891
+    }
+  },
+  "by_position": {
+    "bracketed": {
+      "n": 388,
+      "recall": 0.9716494845360825,
+      "precision": 1.0,
+      "f1": 0.9856209150326797,
+      "leakage": 0.028350515463917536,
+      "hits": 377,
+      "false_positives": 0,
+      "replaced_total": 377
+    },
+    "mid": {
+      "n": 388,
+      "recall": 0.8118556701030928,
+      "precision": 1.0,
+      "f1": 0.8961593172119487,
+      "leakage": 0.18814432989690721,
+      "hits": 315,
+      "false_positives": 0,
+      "replaced_total": 315
+    },
+    "quoted": {
+      "n": 388,
+      "recall": 0.9896907216494846,
+      "precision": 1.0,
+      "f1": 0.9948186528497409,
+      "leakage": 0.010309278350515427,
+      "hits": 384,
+      "false_positives": 0,
+      "replaced_total": 384
+    },
+    "start": {
+      "n": 388,
+      "recall": 0.9716494845360825,
+      "precision": 1.0,
+      "f1": 0.9856209150326797,
+      "leakage": 0.028350515463917536,
+      "hits": 377,
+      "false_positives": 0,
+      "replaced_total": 377
+    },
+    "title": {
+      "n": 388,
+      "recall": 0.9381443298969072,
+      "precision": 1.0,
+      "f1": 0.9680851063829787,
+      "leakage": 0.061855670103092786,
+      "hits": 364,
+      "false_positives": 0,
+      "replaced_total": 364
+    }
+  },
+  "by_language": {
+    "arabic": {
+      "n": 160,
+      "recall": 1.0,
+      "precision": 1.0,
+      "f1": 1.0,
+      "leakage": 0.0,
+      "hits": 160,
+      "false_positives": 0,
+      "replaced_total": 160
+    },
+    "chinese": {
+      "n": 160,
+      "recall": 1.0,
+      "precision": 1.0,
+      "f1": 1.0,
+      "leakage": 0.0,
+      "hits": 160,
+      "false_positives": 0,
+      "replaced_total": 160
+    },
+    "english": {
+      "n": 160,
+      "recall": 1.0,
+      "precision": 1.0,
+      "f1": 1.0,
+      "leakage": 0.0,
+      "hits": 160,
+      "false_positives": 0,
+      "replaced_total": 160
+    },
+    "french": {
+      "n": 160,
+      "recall": 1.0,
+      "precision": 1.0,
+      "f1": 1.0,
+      "leakage": 0.0,
+      "hits": 160,
+      "false_positives": 0,
+      "replaced_total": 160
+    },
+    "german": {
+      "n": 160,
+      "recall": 1.0,
+      "precision": 1.0,
+      "f1": 1.0,
+      "leakage": 0.0,
+      "hits": 160,
+      "false_positives": 0,
+      "replaced_total": 160
+    },
+    "held_out": {
+      "n": 580,
+      "recall": 0.7879310344827586,
+      "precision": 1.0,
+      "f1": 0.8813886210221793,
+      "leakage": 0.21206896551724141,
+      "hits": 457,
+      "false_positives": 0,
+      "replaced_total": 457
+    },
+    "hindi": {
+      "n": 160,
+      "recall": 1.0,
+      "precision": 1.0,
+      "f1": 1.0,
+      "leakage": 0.0,
+      "hits": 160,
+      "false_positives": 0,
+      "replaced_total": 160
+    },
+    "italian": {
+      "n": 160,
+      "recall": 1.0,
+      "precision": 1.0,
+      "f1": 1.0,
+      "leakage": 0.0,
+      "hits": 160,
+      "false_positives": 0,
+      "replaced_total": 160
+    },
+    "polynesian": {
+      "n": 80,
+      "recall": 1.0,
+      "precision": 1.0,
+      "f1": 1.0,
+      "leakage": 0.0,
+      "hits": 80,
+      "false_positives": 0,
+      "replaced_total": 80
+    },
+    "spanish": {
+      "n": 160,
+      "recall": 1.0,
+      "precision": 1.0,
+      "f1": 1.0,
+      "leakage": 0.0,
+      "hits": 160,
+      "false_positives": 0,
+      "replaced_total": 160
+    }
+  },
+  "case_insensitive": true,
+  "ner_stage": true,
+  "curated_names_sha256": "e60dec823e338a7084bfed812b9259bbc081cceebec3c1ad1df6e7da6c130a0a",
+  "run_metadata": {
+    "git_commit": "eaef44ae17722bb40eac9d22cc0eeb175f2c6716",
+    "git_dirty": true,
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "torch": "2.12.1",
+      "torchaudio": null,
+      "transformers": "5.13.1",
+      "pyannote.audio": null,
+      "jiwer": null,
+      "datasets": null,
+      "numpy": "2.3.2",
+      "scipy": "1.17.1",
+      "librosa": null,
+      "soundfile": "0.13.1",
+      "gliner": "0.2.28",
+      "huggingface_hub": "1.22.0"
+    }
+  },
+  "ner": {
+    "model_id": "urchade/gliner_small-v2.1",
+    "revision": "4e091416cf7c3481db542c2a3d26156916f3a47f",
+    "threshold": 0.6,
+    "labels": [
+      "person",
+      "person name",
+      "participant name"
+    ],
+    "gliner_version": "0.2.28",
+    "calls": 1940,
+    "failures": 0,
+    "first_error": null
+  }
+}

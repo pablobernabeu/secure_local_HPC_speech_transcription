@@ -1,0 +1,39 @@
+{
+  "cluster": "htc",
+  "captured": "2026-10-04",
+  "until": null,
+  "sacct_file": "sacct_2026-10-04_final.psv",
+  "sacct_sha256": "5c7e6f7cca75bb808cadaac35351bc13256b113e6c0a316e73e09184d7fb405b",
+  "sacct_query": "sacct -M htc --starttime 2026-05-16 --endtime now -X -P --format=JobID,JobName,Account,State,ElapsedRaw,Start,End,Partition,AllocTRES,NodeList,WorkDir",
+  "nodes_file": null,
+  "nodes_sha256": null,
+  "assume_gpu_type": null,
+  "gpu_model_source": "job NodeList mapped through ARC_NODE_GPU (built-in 2026-10-04 listing); boards from NODE_GPU_VARIANT (htc-g003, htc-g004, htc-g015, htc-g016, htc-g032, htc-g033, htc-g034, htc-g035, htc-g037, htc-g038, htc-g041, htc-g042, htc-g043, htc-g053, htc-g054, htc-g055, htc-g058, htc-g059, htc-g060); a typed AllocTRES entry checked against the node",
+  "job_selection": "this project's job names (evaluation.footprint.job_category), run from its directories, or from elsewhere under a name of _RUN_ELSEWHERE; every finished job that held an allocation, whatever its state",
+  "workdir_checked": true,
+  "counted_outside_project_dirs": [
+    "7740690",
+    "7746170",
+    "7746189",
+    "8976270",
+    "8976304"
+  ],
+  "left_out_outside_project_dirs": [],
+  "left_out_never_allocated": [
+    "7662615",
+    "7662616",
+    "7668876",
+    "7670257",
+    "7670830",
+    "7670907",
+    "8917982"
+  ],
+  "left_out_unfinished": [],
+  "left_out_reasons": {
+    "left_out_outside_project_dirs": "run under one of this project's job names from another directory, so possibly another project's job",
+    "left_out_never_allocated": "cancelled while pending: no allocation, so it ran on no node and drew no power",
+    "left_out_unfinished": "still pending or running when the dump was taken, so its runtime was not final"
+  },
+  "measured_energy_available": false,
+  "note": "sacct ConsumedEnergy is 0 for every job (no site energy-accounting plugin); figures are Green-Algorithms model estimates."
+}

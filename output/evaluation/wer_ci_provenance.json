@@ -1,0 +1,27 @@
+{
+  "artefact": "wer_ci.csv",
+  "artefact_sha256_lf": "7a754b523d949836ad02f4e479cc836ad73ea29412854299f76b1d80a9615f9a",
+  "tool": "evaluation.bootstrap_ci",
+  "arguments": {
+    "report": [
+      "output/evaluation/wer_report.csv"
+    ],
+    "bootstrap": 10000,
+    "seed": 42
+  },
+  "inputs": [
+    {
+      "path": "output/evaluation/wer_report.csv",
+      "sha256_lf": "7df34cb91fcc4a6a0892ec2352b4184f8aa5490cf015c646ad5a451e30dbe32b"
+    }
+  ],
+  "run_metadata": {
+    "git_commit": "e3cb67598c05bb7e643bd3a82a66d540758f1442",
+    "git_dirty": false,
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "packages": {
+      "numpy": "2.3.2"
+    }
+  }
+}

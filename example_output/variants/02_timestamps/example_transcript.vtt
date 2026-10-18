@@ -1,0 +1,118 @@
+WEBVTT
+
+1
+00:00:00.500 --> 00:00:04.060
+You have been building a transcription workflow for research recordings.
+
+2
+00:00:04.100 --> 00:00:06.940
+Thank you for joining us today, Dr Rossi.
+
+3
+00:00:06.980 --> 00:00:09.460
+What problem were you trying to solve?
+
+4
+00:00:10.200 --> 00:00:15.920
+Research interviews are full of personal information: names, places and details that could identify a participant.
+
+5
+00:00:15.960 --> 00:00:22.760
+Uploading them to a cloud service moves that information outside the institution, which many ethics approvals do not allow.
+
+6
+00:00:22.800 --> 00:00:29.600
+This workflow runs every step on hardware the institution controls, whether that is a laptop or a university cluster.
+
+7
+00:00:30.340 --> 00:00:32.460
+Which models does it rely on?
+
+8
+00:00:33.200 --> 00:00:40.720
+Speech is transcribed by Whisper through the Hugging Face transformers library, and speakers are told apart by a pyannote diarisation pipeline.
+
+9
+00:00:40.760 --> 00:00:46.120
+The model weights are downloaded once, and after that a run needs no network connection.
+
+10
+00:00:46.860 --> 00:00:50.780
+What happens to the text once the model has produced it?
+
+11
+00:00:51.520 --> 00:00:59.400
+A series of clean-up stages removes stray characters, repairs spacing and punctuation, and can shorten the runaway repetitions that Whisper occasionally produces.
+
+12
+00:00:59.440 --> 00:01:05.160
+Personal names are then replaced with placeholders, using a curated dictionary of first names and surnames.
+
+13
+00:01:05.900 --> 00:01:08.020
+Does the masking find every name?
+
+14
+00:01:08.760 --> 00:01:11.240
+No, and it matters to say so.
+
+15
+00:01:11.280 --> 00:01:19.520
+A dictionary finds only the names it contains, and only when they are capitalised, so an unusual or lower-case name can slip through.
+
+16
+00:01:19.560 --> 00:01:25.280
+Every masked transcript therefore recommends a review, and the paper reports how often names were missed.
+
+17
+00:01:26.020 --> 00:01:29.220
+How far can a researcher trust the speaker labels?
+
+18
+00:01:29.960 --> 00:01:31.720
+That depends on the recording.
+
+19
+00:01:31.760 --> 00:01:40.360
+Overlapping speech, similar voices and distant microphones all make attribution harder, so the labels should be checked against the audio wherever exact attribution matters.
+
+20
+00:01:40.400 --> 00:01:44.320
+The paper reports the error rates we measured on meeting recordings.
+
+21
+00:01:45.060 --> 00:01:47.180
+What do the timestamped files contain?
+
+22
+00:01:47.920 --> 00:01:55.080
+The JSON file keeps the timing of every segment and every word, and the caption file uses the same timings.
+
+23
+00:01:55.120 --> 00:02:05.160
+Both are written before any clean-up, so they record exactly what the model produced, and with masking switched on a redacted copy of each is written beside them.
+
+24
+00:02:05.200 --> 00:02:09.120
+A review file then points to segments worth checking by ear.
+
+25
+00:02:09.860 --> 00:02:13.060
+And how would someone check a transcript months later?
+
+26
+00:02:13.800 --> 00:02:22.400
+Each run writes a manifest that lists every file it produced with a digest of its contents, together with the settings and software versions.
+
+27
+00:02:22.440 --> 00:02:26.720
+Checking the files against that manifest shows whether anything has changed since.
+
+28
+00:02:27.460 --> 00:02:28.500
+Thank you, Elena.
+
+29
+00:02:28.540 --> 00:02:29.940
+That was very clear.
+

@@ -1,0 +1,129 @@
+{
+  "source": "audit2026/sweep/wer_hypotheses_ami_whisper-large-v3.csv",
+  "source_sha256": "3fa3957260f28a3af42ee0deadcda4445a1fd5142b94ba316127e2e4190716bf",
+  "conditions_selected": [
+    "raw",
+    "pipeline_full",
+    "whisper_norm"
+  ],
+  "run_metadata": {
+    "git_commit": "e7dadbd4811de86c231fc7ab7895b81809be79f2",
+    "git_dirty": false,
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "packages": {
+      "torch": "2.12.1",
+      "torchaudio": null,
+      "transformers": "5.13.1",
+      "pyannote.audio": null,
+      "jiwer": null,
+      "datasets": null,
+      "numpy": "2.3.2",
+      "scipy": "1.17.1",
+      "librosa": null,
+      "soundfile": "0.13.1",
+      "gliner": "0.2.28",
+      "huggingface_hub": "1.22.0"
+    }
+  },
+  "filler_tokens": [
+    "um",
+    "uh",
+    "er",
+    "ah",
+    "hmm",
+    "mm",
+    "mhm",
+    "uhuh",
+    "uhhuh"
+  ],
+  "detector_pattern": "(?<![\\w-])(?:(?:uh+\\s+huh+|mm+\\s+hm+)|(?:uhhuh|uhuh|mm+hm+|uhm+|um+|uh+|erm+|er+|ah+|mhm+|hmm+|hm+|mm+)(?:-(?:uhhuh|uhuh|mm+hm+|uhm+|um+|uh+|erm+|er+|ah+|mhm+|hmm+|hm+|mm+|huh+))*)(?![\\w-])",
+  "reference_source": "reference_raw column",
+  "n_utterances": 12643,
+  "n_shared_utterances": 11653,
+  "conditions": {
+    "pipeline_full": {
+      "n_utterances": 12643,
+      "n_reference_unknown": 0,
+      "reference_fillers": 4072,
+      "raw_fillers": 1195,
+      "output_fillers": 1195,
+      "output_marked": 1191,
+      "retained": 1195,
+      "reference_recovered": 802,
+      "retention": 1.0,
+      "reference_recall": 0.197,
+      "output_over_reference": 0.2935,
+      "n_utterances_dropped": 0
+    },
+    "raw": {
+      "n_utterances": 12643,
+      "n_reference_unknown": 0,
+      "reference_fillers": 4072,
+      "raw_fillers": 1195,
+      "output_fillers": 1195,
+      "output_marked": 0,
+      "retained": 1195,
+      "reference_recovered": 802,
+      "retention": 1.0,
+      "reference_recall": 0.197,
+      "output_over_reference": 0.2935,
+      "n_utterances_dropped": 0
+    },
+    "whisper_norm": {
+      "n_utterances": 11653,
+      "n_reference_unknown": 0,
+      "reference_fillers": 3066,
+      "raw_fillers": 357,
+      "output_fillers": 2,
+      "output_marked": 0,
+      "retained": 2,
+      "reference_recovered": 0,
+      "retention": 0.0056,
+      "reference_recall": 0.0,
+      "output_over_reference": 0.0007,
+      "n_utterances_dropped": 990
+    }
+  },
+  "conditions_shared_set": {
+    "pipeline_full": {
+      "n_utterances": 11653,
+      "n_reference_unknown": 0,
+      "reference_fillers": 3066,
+      "raw_fillers": 357,
+      "output_fillers": 357,
+      "output_marked": 356,
+      "retained": 357,
+      "reference_recovered": 226,
+      "retention": 1.0,
+      "reference_recall": 0.0737,
+      "output_over_reference": 0.1164
+    },
+    "raw": {
+      "n_utterances": 11653,
+      "n_reference_unknown": 0,
+      "reference_fillers": 3066,
+      "raw_fillers": 357,
+      "output_fillers": 357,
+      "output_marked": 0,
+      "retained": 357,
+      "reference_recovered": 226,
+      "retention": 1.0,
+      "reference_recall": 0.0737,
+      "output_over_reference": 0.1164
+    },
+    "whisper_norm": {
+      "n_utterances": 11653,
+      "n_reference_unknown": 0,
+      "reference_fillers": 3066,
+      "raw_fillers": 357,
+      "output_fillers": 2,
+      "output_marked": 0,
+      "retained": 2,
+      "reference_recovered": 0,
+      "retention": 0.0056,
+      "reference_recall": 0.0,
+      "output_over_reference": 0.0007
+    }
+  }
+}

@@ -1,0 +1,7 @@
+condition,set,n_utterances,n_reference_unknown,reference_fillers,raw_fillers,output_fillers,output_marked,retained,reference_recovered,retention,reference_recall,output_over_reference,n_utterances_dropped
+pipeline_full,own,12643,0,4072,1195,1195,1191,1195,802,1.0,0.197,0.2935,0
+raw,own,12643,0,4072,1195,1195,0,1195,802,1.0,0.197,0.2935,0
+whisper_norm,own,11653,0,3066,357,2,0,2,0,0.0056,0.0,0.0007,990
+pipeline_full,shared,11653,0,3066,357,357,356,357,226,1.0,0.0737,0.1164,
+raw,shared,11653,0,3066,357,357,0,357,226,1.0,0.0737,0.1164,
+whisper_norm,shared,11653,0,3066,357,2,0,2,0,0.0056,0.0,0.0007,

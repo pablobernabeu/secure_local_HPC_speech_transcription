@@ -1,0 +1,16 @@
+# Development and testing tools. Not needed to run the workflow, so they are
+# kept out of requirements.txt and out of setup.py's install_requires
+# (audit findings DEPS-11, CORE-17).
+#
+#   pip install -r requirements.txt -r requirements-dev.txt
+
+# Testing Framework
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# Code Formatting and Linting
+black>=23.0.0
+flake8>=6.0.0
+
+# Type Checking (Optional)
+mypy>=1.0.0

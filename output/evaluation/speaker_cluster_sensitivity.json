@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "resampling_unit": "LibriSpeech reader",
+  "estimand": "mean per-utterance WER; paired deltas are condition minus baseline",
+  "interval": "95% percentile; whole readers sampled with replacement",
+  "limits": "Exploratory sampling sensitivity within the observed reader population; no corpus-selection or reference-error uncertainty is estimated.",
+  "macro_wer": {
+    "source": {
+      "path": "output/evaluation/wer_report.csv",
+      "sha256": "7df34cb91fcc4a6a0892ec2352b4184f8aa5490cf015c646ad5a451e30dbe32b",
+      "hash_normalisation": "CRLF to LF"
+    },
+    "n_utterances": 2620,
+    "n_readers": 40,
+    "estimate": 0.062132222346406946,
+    "ci_lo": 0.05079344228911985,
+    "ci_hi": 0.07355563892574989,
+    "bootstrap": 10000,
+    "seed": 42
+  },
+  "paired_deltas": [
+    {
+      "condition": {
+        "path": "output/evaluation/sweep_reports/wer_report_contraction_fix.csv",
+        "sha256": "fbbdb7495ff690693d977f6ce16085fdeccac9f988fb19decfdd8f8e06c86134",
+        "hash_normalisation": "CRLF to LF"
+      },
+      "baseline": {
+        "path": "output/evaluation/sweep_reports/wer_report.csv",
+        "sha256": "8312d4abbc746a3bd69905f8eeb29762c5b643ebb34d38af441d696554b717e8",
+        "hash_normalisation": "CRLF to LF"
+      },
+      "n_utterances": 2620,
+      "n_readers": 40,
+      "estimate": 0.004300781742400503,
+      "ci_lo": 0.003514917077208902,
+      "ci_hi": 0.005202930212006837,
+      "bootstrap": 10000,
+      "seed": 42
+    },
+    {
+      "condition": {
+        "path": "output/evaluation/sweep_reports/wer_report_pipeline_full.csv",
+        "sha256": "753701cd1be934fa41cfeededf578570a59bb18da56f4ea2020fb97fe9afc037",
+        "hash_normalisation": "CRLF to LF"
+      },
+      "baseline": {
+        "path": "output/evaluation/sweep_reports/wer_report.csv",
+        "sha256": "8312d4abbc746a3bd69905f8eeb29762c5b643ebb34d38af441d696554b717e8",
+        "hash_normalisation": "CRLF to LF"
+      },
+      "n_utterances": 2620,
+      "n_readers": 40,
+      "estimate": 0.004037296605011108,
+      "ci_lo": 0.0030481123107023744,
+      "ci_hi": 0.005076363094988974,
+      "bootstrap": 10000,
+      "seed": 42
+    }
+  ]
+}

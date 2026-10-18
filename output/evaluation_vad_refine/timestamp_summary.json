@@ -1,0 +1,73 @@
+{
+  "n": 499,
+  "mae_start": 0.0087374749498998,
+  "mae_end": 0.06390819138276553,
+  "mae_total": 0.07264566633266532,
+  "rmse_start": 0.07091726529579427,
+  "rmse_end": 0.25356058650348934,
+  "mean_start_error": 0.0087374749498998,
+  "mean_end_error": 0.05701365230460922,
+  "median_abs_end_error": 0.009999999999999787,
+  "p90_abs_end_error": 0.09,
+  "gross_end_error_rate": 0.04208416833667335,
+  "truncation_rate": 0.04208416833667335,
+  "n_skipped": 1,
+  "skip_reasons": {
+    "decode_error": 0,
+    "resample_error": 0,
+    "asr_error": 0,
+    "no_chunks": 0,
+    "untimed_tail": 1,
+    "no_start_timestamp": 0
+  },
+  "n_missing_end_timestamp": 1,
+  "dataset": "edinburghcstr/ami/ihm/test",
+  "model": "openai/whisper-large-v3",
+  "sampling": {
+    "limit": 500,
+    "per_meeting": null,
+    "order": "stream order, first rows of the split",
+    "n_streamed": 500,
+    "n_meetings": 1,
+    "utterances_per_meeting": {
+      "EN2002a": 500
+    }
+  },
+  "whisper": {
+    "device": "cuda:0",
+    "gpu": "NVIDIA H100 80GB HBM3",
+    "dtype": "float16",
+    "chunk_length_s": 30,
+    "stride_length_s": 5,
+    "model_revision": "06f233fe06e710322aca913c1bc4249a0d71fce1"
+  },
+  "revisions": {
+    "openai/whisper-large-v3": "06f233fe06e710322aca913c1bc4249a0d71fce1",
+    "edinburghcstr/ami": "46f28f2503e2ec48f8867a84eef356c70476beab"
+  },
+  "vad_refine": true,
+  "vad_applied": true,
+  "vad_source": "snakers4/silero-vad:v6.2.1",
+  "n_vad_exception": 0,
+  "n_vad_no_speech": 162,
+  "run": {
+    "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+    "git_dirty": false,
+    "python": "3.12.12",
+    "platform": "Linux-5.14.0-427.42.2.arc.el9.x86_64-x86_64-with-glibc2.34",
+    "packages": {
+      "torch": "2.5.1+cu121",
+      "torchaudio": "2.5.1+cu121",
+      "transformers": "4.57.1",
+      "pyannote.audio": "3.4.0",
+      "jiwer": "4.0.0",
+      "datasets": "4.8.5",
+      "numpy": "2.3.3",
+      "scipy": "1.16.2",
+      "librosa": "0.11.0",
+      "soundfile": "0.13.1",
+      "gliner": null,
+      "huggingface_hub": "0.35.3"
+    }
+  }
+}

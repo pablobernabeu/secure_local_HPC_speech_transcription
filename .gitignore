@@ -184,14 +184,39 @@ ehthumbs.db
 Desktop.ini
 
 # HPC and SLURM job files (potentially sensitive)
+# The name patterns are anchored to the repository root, where stray job
+# files used to land. Unanchored, `test_*` and `transcription_*` also hid
+# source files anywhere in the tree (evaluation/test_helpers.py,
+# hpc/transcription_job.sh) from `git add`.
 *.out
 *.err
 slurm-*.out
-batch_transcription_*
-transcription_*
-setup_environment_*
-unified_batch_*
-test_*
+/batch_transcription_*
+/transcription_*
+/setup_environment_*
+/unified_batch_*
+/test_*
+# Job logs: the hpc/ scripts write logs/<job>_<id>.out/.err and the frozen
+# recording lists logs/filelist_*.txt, which name participants' files.
+logs/*
+!logs/.gitkeep
+
+# Transcription outputs and masking logs. These hold participants' speech
+# and names (the raw _transcript.json/.vtt are unmasked by design), so they
+# must never be committed by accident. Only the placeholder files that keep
+# the directories in the tree are tracked; the curated examples live under
+# example_output/, and output/case_study/ is tracked deliberately.
+output/transcripts/*
+!output/transcripts/.gitkeep
+output/enhanced_audio/*
+!output/enhanced_audio/.gitkeep
+name_masking_logs/*
+!name_masking_logs/.gitkeep
+# Structural evaluation of a case-study run written into the evaluation
+# directory, and verbatim hypothesis dumps (--dump-hypotheses /
+# DUMP_HYPOTHESES=1), which hold transcript text.
+output/evaluation/podcast_eval_*
+wer_hypotheses*.csv
 
 # Sensitive configuration and authentication
 hf_token.txt
@@ -217,8 +242,9 @@ bin/
 # Audio input directory (sensitive personal data)
 audio_input/
 
-# Personal environment scripts
+# Personal environment scripts (excluded by default; the canonical ARC script is explicitly tracked)
 activate_project_env*.sh
+!activate_project_env_arc.sh
 
 
 # Test audio directory
@@ -229,3 +255,21 @@ HPC_scripts/
 
 # Delete temporary presentation files
 presentation/
+
+# Scratch / temporary working files (this session)
+docs/temp/
+/extract_pdfs.py
+/smoke_test.py
+
+# Kept from when the "test_*" pattern above was unanchored; harmless now
+!tests/
+!tests/**
+# ...but keep compiled caches out of the tree
+tests/**/__pycache__/
+
+# Quarto manuscript render outputs (build artefacts; source is manuscript.qmd)
+manuscript/manuscript.html
+manuscript/manuscript.pdf
+manuscript/manuscript.tex
+manuscript/manuscript_files/
+manuscript/.quarto/

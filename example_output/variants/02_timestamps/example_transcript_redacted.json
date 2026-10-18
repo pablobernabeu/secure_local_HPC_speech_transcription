@@ -1,0 +1,2168 @@
+{
+  "audio_file": "example.wav",
+  "model": "openai/whisper-large-v3",
+  "language": "english",
+  "generated_at": "2026-09-27T12:00:00",
+  "pipeline": {
+    "asr_model": "openai/whisper-large-v3",
+    "asr_model_revision": "06f233fe06e710322aca913c1bc4249a0d71fce1",
+    "language": "english",
+    "language_requested": "english",
+    "language_detected": null,
+    "language_assumed": false
+  },
+  "timeline_repairs": {
+    "word_retimed": 0,
+    "word_order_enforced": 0,
+    "word_end_clamped": 0,
+    "segment_overlap_clamped": 0,
+    "segment_merged": 0
+  },
+  "text": "You have been building a transcription workflow for research recordings. Thank you for joining us today, [TITLE] [SURNAME]. What problem were you trying to solve? Research interviews are full of personal information: names, places and details that could identify a participant. Uploading them to a cloud service moves that information outside the institution, which many ethics approvals do not allow. This workflow runs every step on hardware the institution controls, whether that is a laptop or a university cluster. Which models does it rely on? Speech is transcribed by Whisper through the Hugging Face transformers library, and speakers are told apart by a pyannote diarisation pipeline. The model weights are downloaded once, and after that a run needs no network connection. What happens to the text once the model has produced it? A series of clean-up stages removes stray characters, repairs spacing and punctuation, and can shorten the runaway repetitions that Whisper occasionally produces. Personal names are then replaced with placeholders, using a curated dictionary of first names and surnames. Does the masking find every name? No, and it matters to say so. A dictionary finds only the names it contains, and only when they are capitalised, so an unusual or lower-case name can slip through. Every masked transcript therefore recommends a review, and the paper reports how often names were missed. How far can a researcher trust the speaker labels? That depends on the recording. Overlapping speech, similar voices and distant microphones all make attribution harder, so the labels should be checked against the audio wherever exact attribution matters. The paper reports the error rates we measured on meeting recordings. What do the timestamped files contain? The JSON file keeps the timing of every segment and every word, and the caption file uses the same timings. Both are written before any clean-up, so they record exactly what the model produced, and with masking switched on a redacted copy of each is written beside them. A review file then points to segments worth checking by ear. And how would someone check a transcript months later? Each run writes a manifest that lists every file it produced with a digest of its contents, together with the settings and software versions. Checking the files against that manifest shows whether anything has changed since. Thank you, [NAME]. That was very clear.",
+  "segments": [
+    {
+      "start": 0.5,
+      "end": 4.06,
+      "text": "You have been building a transcription workflow for research recordings.",
+      "words": [
+        {
+          "word": "You",
+          "start": 0.5,
+          "end": 0.82
+        },
+        {
+          "word": "have",
+          "start": 0.86,
+          "end": 1.18
+        },
+        {
+          "word": "been",
+          "start": 1.22,
+          "end": 1.54
+        },
+        {
+          "word": "building",
+          "start": 1.58,
+          "end": 1.9
+        },
+        {
+          "word": "a",
+          "start": 1.94,
+          "end": 2.26
+        },
+        {
+          "word": "transcription",
+          "start": 2.3,
+          "end": 2.62
+        },
+        {
+          "word": "workflow",
+          "start": 2.66,
+          "end": 2.98
+        },
+        {
+          "word": "for",
+          "start": 3.02,
+          "end": 3.34
+        },
+        {
+          "word": "research",
+          "start": 3.38,
+          "end": 3.7
+        },
+        {
+          "word": "recordings.",
+          "start": 3.74,
+          "end": 4.06
+        }
+      ]
+    },
+    {
+      "start": 4.1,
+      "end": 6.94,
+      "text": "Thank you for joining us today, [TITLE] [SURNAME].",
+      "words": [
+        {
+          "word": "Thank",
+          "start": 4.1,
+          "end": 4.42
+        },
+        {
+          "word": "you",
+          "start": 4.46,
+          "end": 4.78
+        },
+        {
+          "word": "for",
+          "start": 4.82,
+          "end": 5.14
+        },
+        {
+          "word": "joining",
+          "start": 5.18,
+          "end": 5.5
+        },
+        {
+          "word": "us",
+          "start": 5.54,
+          "end": 5.86
+        },
+        {
+          "word": "today,",
+          "start": 5.9,
+          "end": 6.22
+        },
+        {
+          "word": "Dr",
+          "start": 6.26,
+          "end": 6.58
+        },
+        {
+          "word": "[SURNAME].",
+          "start": 6.62,
+          "end": 6.94
+        }
+      ]
+    },
+    {
+      "start": 6.98,
+      "end": 9.46,
+      "text": "What problem were you trying to solve?",
+      "words": [
+        {
+          "word": "What",
+          "start": 6.98,
+          "end": 7.3
+        },
+        {
+          "word": "problem",
+          "start": 7.34,
+          "end": 7.66
+        },
+        {
+          "word": "were",
+          "start": 7.7,
+          "end": 8.02
+        },
+        {
+          "word": "you",
+          "start": 8.06,
+          "end": 8.38
+        },
+        {
+          "word": "trying",
+          "start": 8.42,
+          "end": 8.74
+        },
+        {
+          "word": "to",
+          "start": 8.78,
+          "end": 9.1
+        },
+        {
+          "word": "solve?",
+          "start": 9.14,
+          "end": 9.46
+        }
+      ]
+    },
+    {
+      "start": 10.2,
+      "end": 15.92,
+      "text": "Research interviews are full of personal information: names, places and details that could identify a participant.",
+      "words": [
+        {
+          "word": "Research",
+          "start": 10.2,
+          "end": 10.52
+        },
+        {
+          "word": "interviews",
+          "start": 10.56,
+          "end": 10.88
+        },
+        {
+          "word": "are",
+          "start": 10.92,
+          "end": 11.24
+        },
+        {
+          "word": "full",
+          "start": 11.28,
+          "end": 11.6
+        },
+        {
+          "word": "of",
+          "start": 11.64,
+          "end": 11.96
+        },
+        {
+          "word": "personal",
+          "start": 12.0,
+          "end": 12.32
+        },
+        {
+          "word": "information:",
+          "start": 12.36,
+          "end": 12.68
+        },
+        {
+          "word": "names,",
+          "start": 12.72,
+          "end": 13.04
+        },
+        {
+          "word": "places",
+          "start": 13.08,
+          "end": 13.4
+        },
+        {
+          "word": "and",
+          "start": 13.44,
+          "end": 13.76
+        },
+        {
+          "word": "details",
+          "start": 13.8,
+          "end": 14.12
+        },
+        {
+          "word": "that",
+          "start": 14.16,
+          "end": 14.48
+        },
+        {
+          "word": "could",
+          "start": 14.52,
+          "end": 14.84
+        },
+        {
+          "word": "identify",
+          "start": 14.88,
+          "end": 15.2
+        },
+        {
+          "word": "a",
+          "start": 15.24,
+          "end": 15.56
+        },
+        {
+          "word": "participant.",
+          "start": 15.6,
+          "end": 15.92
+        }
+      ]
+    },
+    {
+      "start": 15.96,
+      "end": 22.76,
+      "text": "Uploading them to a cloud service moves that information outside the institution, which many ethics approvals do not allow.",
+      "words": [
+        {
+          "word": "Uploading",
+          "start": 15.96,
+          "end": 16.28
+        },
+        {
+          "word": "them",
+          "start": 16.32,
+          "end": 16.64
+        },
+        {
+          "word": "to",
+          "start": 16.68,
+          "end": 17.0
+        },
+        {
+          "word": "a",
+          "start": 17.04,
+          "end": 17.36
+        },
+        {
+          "word": "cloud",
+          "start": 17.4,
+          "end": 17.72
+        },
+        {
+          "word": "service",
+          "start": 17.76,
+          "end": 18.08
+        },
+        {
+          "word": "moves",
+          "start": 18.12,
+          "end": 18.44
+        },
+        {
+          "word": "that",
+          "start": 18.48,
+          "end": 18.8
+        },
+        {
+          "word": "information",
+          "start": 18.84,
+          "end": 19.16
+        },
+        {
+          "word": "outside",
+          "start": 19.2,
+          "end": 19.52
+        },
+        {
+          "word": "the",
+          "start": 19.56,
+          "end": 19.88
+        },
+        {
+          "word": "institution,",
+          "start": 19.92,
+          "end": 20.24
+        },
+        {
+          "word": "which",
+          "start": 20.28,
+          "end": 20.6
+        },
+        {
+          "word": "many",
+          "start": 20.64,
+          "end": 20.96
+        },
+        {
+          "word": "ethics",
+          "start": 21.0,
+          "end": 21.32
+        },
+        {
+          "word": "approvals",
+          "start": 21.36,
+          "end": 21.68
+        },
+        {
+          "word": "do",
+          "start": 21.72,
+          "end": 22.04
+        },
+        {
+          "word": "not",
+          "start": 22.08,
+          "end": 22.4
+        },
+        {
+          "word": "allow.",
+          "start": 22.44,
+          "end": 22.76
+        }
+      ]
+    },
+    {
+      "start": 22.8,
+      "end": 29.6,
+      "text": "This workflow runs every step on hardware the institution controls, whether that is a laptop or a university cluster.",
+      "words": [
+        {
+          "word": "This",
+          "start": 22.8,
+          "end": 23.12
+        },
+        {
+          "word": "workflow",
+          "start": 23.16,
+          "end": 23.48
+        },
+        {
+          "word": "runs",
+          "start": 23.52,
+          "end": 23.84
+        },
+        {
+          "word": "every",
+          "start": 23.88,
+          "end": 24.2
+        },
+        {
+          "word": "step",
+          "start": 24.24,
+          "end": 24.56
+        },
+        {
+          "word": "on",
+          "start": 24.6,
+          "end": 24.92
+        },
+        {
+          "word": "hardware",
+          "start": 24.96,
+          "end": 25.28
+        },
+        {
+          "word": "the",
+          "start": 25.32,
+          "end": 25.64
+        },
+        {
+          "word": "institution",
+          "start": 25.68,
+          "end": 26.0
+        },
+        {
+          "word": "controls,",
+          "start": 26.04,
+          "end": 26.36
+        },
+        {
+          "word": "whether",
+          "start": 26.4,
+          "end": 26.72
+        },
+        {
+          "word": "that",
+          "start": 26.76,
+          "end": 27.08
+        },
+        {
+          "word": "is",
+          "start": 27.12,
+          "end": 27.44
+        },
+        {
+          "word": "a",
+          "start": 27.48,
+          "end": 27.8
+        },
+        {
+          "word": "laptop",
+          "start": 27.84,
+          "end": 28.16
+        },
+        {
+          "word": "or",
+          "start": 28.2,
+          "end": 28.52
+        },
+        {
+          "word": "a",
+          "start": 28.56,
+          "end": 28.88
+        },
+        {
+          "word": "university",
+          "start": 28.92,
+          "end": 29.24
+        },
+        {
+          "word": "cluster.",
+          "start": 29.28,
+          "end": 29.6
+        }
+      ]
+    },
+    {
+      "start": 30.34,
+      "end": 32.46,
+      "text": "Which models does it rely on?",
+      "words": [
+        {
+          "word": "Which",
+          "start": 30.34,
+          "end": 30.66
+        },
+        {
+          "word": "models",
+          "start": 30.7,
+          "end": 31.02
+        },
+        {
+          "word": "does",
+          "start": 31.06,
+          "end": 31.38
+        },
+        {
+          "word": "it",
+          "start": 31.42,
+          "end": 31.74
+        },
+        {
+          "word": "rely",
+          "start": 31.78,
+          "end": 32.1
+        },
+        {
+          "word": "on?",
+          "start": 32.14,
+          "end": 32.46
+        }
+      ]
+    },
+    {
+      "start": 33.2,
+      "end": 40.72,
+      "text": "Speech is transcribed by Whisper through the Hugging Face transformers library, and speakers are told apart by a pyannote diarisation pipeline.",
+      "words": [
+        {
+          "word": "Speech",
+          "start": 33.2,
+          "end": 33.52
+        },
+        {
+          "word": "is",
+          "start": 33.56,
+          "end": 33.88
+        },
+        {
+          "word": "transcribed",
+          "start": 33.92,
+          "end": 34.24
+        },
+        {
+          "word": "by",
+          "start": 34.28,
+          "end": 34.6
+        },
+        {
+          "word": "Whisper",
+          "start": 34.64,
+          "end": 34.96
+        },
+        {
+          "word": "through",
+          "start": 35.0,
+          "end": 35.32
+        },
+        {
+          "word": "the",
+          "start": 35.36,
+          "end": 35.68
+        },
+        {
+          "word": "Hugging",
+          "start": 35.72,
+          "end": 36.04
+        },
+        {
+          "word": "Face",
+          "start": 36.08,
+          "end": 36.4
+        },
+        {
+          "word": "transformers",
+          "start": 36.44,
+          "end": 36.76
+        },
+        {
+          "word": "library,",
+          "start": 36.8,
+          "end": 37.12
+        },
+        {
+          "word": "and",
+          "start": 37.16,
+          "end": 37.48
+        },
+        {
+          "word": "speakers",
+          "start": 37.52,
+          "end": 37.84
+        },
+        {
+          "word": "are",
+          "start": 37.88,
+          "end": 38.2
+        },
+        {
+          "word": "told",
+          "start": 38.24,
+          "end": 38.56
+        },
+        {
+          "word": "apart",
+          "start": 38.6,
+          "end": 38.92
+        },
+        {
+          "word": "by",
+          "start": 38.96,
+          "end": 39.28
+        },
+        {
+          "word": "a",
+          "start": 39.32,
+          "end": 39.64
+        },
+        {
+          "word": "pyannote",
+          "start": 39.68,
+          "end": 40.0
+        },
+        {
+          "word": "diarisation",
+          "start": 40.04,
+          "end": 40.36
+        },
+        {
+          "word": "pipeline.",
+          "start": 40.4,
+          "end": 40.72
+        }
+      ]
+    },
+    {
+      "start": 40.76,
+      "end": 46.12,
+      "text": "The model weights are downloaded once, and after that a run needs no network connection.",
+      "words": [
+        {
+          "word": "The",
+          "start": 40.76,
+          "end": 41.08
+        },
+        {
+          "word": "model",
+          "start": 41.12,
+          "end": 41.44
+        },
+        {
+          "word": "weights",
+          "start": 41.48,
+          "end": 41.8
+        },
+        {
+          "word": "are",
+          "start": 41.84,
+          "end": 42.16
+        },
+        {
+          "word": "downloaded",
+          "start": 42.2,
+          "end": 42.52
+        },
+        {
+          "word": "once,",
+          "start": 42.56,
+          "end": 42.88
+        },
+        {
+          "word": "and",
+          "start": 42.92,
+          "end": 43.24
+        },
+        {
+          "word": "after",
+          "start": 43.28,
+          "end": 43.6
+        },
+        {
+          "word": "that",
+          "start": 43.64,
+          "end": 43.96
+        },
+        {
+          "word": "a",
+          "start": 44.0,
+          "end": 44.32
+        },
+        {
+          "word": "run",
+          "start": 44.36,
+          "end": 44.68
+        },
+        {
+          "word": "needs",
+          "start": 44.72,
+          "end": 45.04
+        },
+        {
+          "word": "no",
+          "start": 45.08,
+          "end": 45.4
+        },
+        {
+          "word": "network",
+          "start": 45.44,
+          "end": 45.76
+        },
+        {
+          "word": "connection.",
+          "start": 45.8,
+          "end": 46.12
+        }
+      ]
+    },
+    {
+      "start": 46.86,
+      "end": 50.78,
+      "text": "What happens to the text once the model has produced it?",
+      "words": [
+        {
+          "word": "What",
+          "start": 46.86,
+          "end": 47.18
+        },
+        {
+          "word": "happens",
+          "start": 47.22,
+          "end": 47.54
+        },
+        {
+          "word": "to",
+          "start": 47.58,
+          "end": 47.9
+        },
+        {
+          "word": "the",
+          "start": 47.94,
+          "end": 48.26
+        },
+        {
+          "word": "text",
+          "start": 48.3,
+          "end": 48.62
+        },
+        {
+          "word": "once",
+          "start": 48.66,
+          "end": 48.98
+        },
+        {
+          "word": "the",
+          "start": 49.02,
+          "end": 49.34
+        },
+        {
+          "word": "model",
+          "start": 49.38,
+          "end": 49.7
+        },
+        {
+          "word": "has",
+          "start": 49.74,
+          "end": 50.06
+        },
+        {
+          "word": "produced",
+          "start": 50.1,
+          "end": 50.42
+        },
+        {
+          "word": "it?",
+          "start": 50.46,
+          "end": 50.78
+        }
+      ]
+    },
+    {
+      "start": 51.52,
+      "end": 59.4,
+      "text": "A series of clean-up stages removes stray characters, repairs spacing and punctuation, and can shorten the runaway repetitions that Whisper occasionally produces.",
+      "words": [
+        {
+          "word": "A",
+          "start": 51.52,
+          "end": 51.84
+        },
+        {
+          "word": "series",
+          "start": 51.88,
+          "end": 52.2
+        },
+        {
+          "word": "of",
+          "start": 52.24,
+          "end": 52.56
+        },
+        {
+          "word": "clean-up",
+          "start": 52.6,
+          "end": 52.92
+        },
+        {
+          "word": "stages",
+          "start": 52.96,
+          "end": 53.28
+        },
+        {
+          "word": "removes",
+          "start": 53.32,
+          "end": 53.64
+        },
+        {
+          "word": "stray",
+          "start": 53.68,
+          "end": 54.0
+        },
+        {
+          "word": "characters,",
+          "start": 54.04,
+          "end": 54.36
+        },
+        {
+          "word": "repairs",
+          "start": 54.4,
+          "end": 54.72
+        },
+        {
+          "word": "spacing",
+          "start": 54.76,
+          "end": 55.08
+        },
+        {
+          "word": "and",
+          "start": 55.12,
+          "end": 55.44
+        },
+        {
+          "word": "punctuation,",
+          "start": 55.48,
+          "end": 55.8
+        },
+        {
+          "word": "and",
+          "start": 55.84,
+          "end": 56.16
+        },
+        {
+          "word": "can",
+          "start": 56.2,
+          "end": 56.52
+        },
+        {
+          "word": "shorten",
+          "start": 56.56,
+          "end": 56.88
+        },
+        {
+          "word": "the",
+          "start": 56.92,
+          "end": 57.24
+        },
+        {
+          "word": "runaway",
+          "start": 57.28,
+          "end": 57.6
+        },
+        {
+          "word": "repetitions",
+          "start": 57.64,
+          "end": 57.96
+        },
+        {
+          "word": "that",
+          "start": 58.0,
+          "end": 58.32
+        },
+        {
+          "word": "Whisper",
+          "start": 58.36,
+          "end": 58.68
+        },
+        {
+          "word": "occasionally",
+          "start": 58.72,
+          "end": 59.04
+        },
+        {
+          "word": "produces.",
+          "start": 59.08,
+          "end": 59.4
+        }
+      ]
+    },
+    {
+      "start": 59.44,
+      "end": 65.16,
+      "text": "Personal names are then replaced with placeholders, using a curated dictionary of first names and surnames.",
+      "words": [
+        {
+          "word": "Personal",
+          "start": 59.44,
+          "end": 59.76
+        },
+        {
+          "word": "names",
+          "start": 59.8,
+          "end": 60.12
+        },
+        {
+          "word": "are",
+          "start": 60.16,
+          "end": 60.48
+        },
+        {
+          "word": "then",
+          "start": 60.52,
+          "end": 60.84
+        },
+        {
+          "word": "replaced",
+          "start": 60.88,
+          "end": 61.2
+        },
+        {
+          "word": "with",
+          "start": 61.24,
+          "end": 61.56
+        },
+        {
+          "word": "placeholders,",
+          "start": 61.6,
+          "end": 61.92
+        },
+        {
+          "word": "using",
+          "start": 61.96,
+          "end": 62.28
+        },
+        {
+          "word": "a",
+          "start": 62.32,
+          "end": 62.64
+        },
+        {
+          "word": "curated",
+          "start": 62.68,
+          "end": 63.0
+        },
+        {
+          "word": "dictionary",
+          "start": 63.04,
+          "end": 63.36
+        },
+        {
+          "word": "of",
+          "start": 63.4,
+          "end": 63.72
+        },
+        {
+          "word": "first",
+          "start": 63.76,
+          "end": 64.08
+        },
+        {
+          "word": "names",
+          "start": 64.12,
+          "end": 64.44
+        },
+        {
+          "word": "and",
+          "start": 64.48,
+          "end": 64.8
+        },
+        {
+          "word": "surnames.",
+          "start": 64.84,
+          "end": 65.16
+        }
+      ]
+    },
+    {
+      "start": 65.9,
+      "end": 68.02,
+      "text": "Does the masking find every name?",
+      "words": [
+        {
+          "word": "Does",
+          "start": 65.9,
+          "end": 66.22
+        },
+        {
+          "word": "the",
+          "start": 66.26,
+          "end": 66.58
+        },
+        {
+          "word": "masking",
+          "start": 66.62,
+          "end": 66.94
+        },
+        {
+          "word": "find",
+          "start": 66.98,
+          "end": 67.3
+        },
+        {
+          "word": "every",
+          "start": 67.34,
+          "end": 67.66
+        },
+        {
+          "word": "name?",
+          "start": 67.7,
+          "end": 68.02
+        }
+      ]
+    },
+    {
+      "start": 68.76,
+      "end": 71.24,
+      "text": "No, and it matters to say so.",
+      "words": [
+        {
+          "word": "No,",
+          "start": 68.76,
+          "end": 69.08
+        },
+        {
+          "word": "and",
+          "start": 69.12,
+          "end": 69.44
+        },
+        {
+          "word": "it",
+          "start": 69.48,
+          "end": 69.8
+        },
+        {
+          "word": "matters",
+          "start": 69.84,
+          "end": 70.16
+        },
+        {
+          "word": "to",
+          "start": 70.2,
+          "end": 70.52
+        },
+        {
+          "word": "say",
+          "start": 70.56,
+          "end": 70.88
+        },
+        {
+          "word": "so.",
+          "start": 70.92,
+          "end": 71.24
+        }
+      ]
+    },
+    {
+      "start": 71.28,
+      "end": 79.52,
+      "text": "A dictionary finds only the names it contains, and only when they are capitalised, so an unusual or lower-case name can slip through.",
+      "words": [
+        {
+          "word": "A",
+          "start": 71.28,
+          "end": 71.6
+        },
+        {
+          "word": "dictionary",
+          "start": 71.64,
+          "end": 71.96
+        },
+        {
+          "word": "finds",
+          "start": 72.0,
+          "end": 72.32
+        },
+        {
+          "word": "only",
+          "start": 72.36,
+          "end": 72.68
+        },
+        {
+          "word": "the",
+          "start": 72.72,
+          "end": 73.04
+        },
+        {
+          "word": "names",
+          "start": 73.08,
+          "end": 73.4
+        },
+        {
+          "word": "it",
+          "start": 73.44,
+          "end": 73.76
+        },
+        {
+          "word": "contains,",
+          "start": 73.8,
+          "end": 74.12
+        },
+        {
+          "word": "and",
+          "start": 74.16,
+          "end": 74.48
+        },
+        {
+          "word": "only",
+          "start": 74.52,
+          "end": 74.84
+        },
+        {
+          "word": "when",
+          "start": 74.88,
+          "end": 75.2
+        },
+        {
+          "word": "they",
+          "start": 75.24,
+          "end": 75.56
+        },
+        {
+          "word": "are",
+          "start": 75.6,
+          "end": 75.92
+        },
+        {
+          "word": "capitalised,",
+          "start": 75.96,
+          "end": 76.28
+        },
+        {
+          "word": "so",
+          "start": 76.32,
+          "end": 76.64
+        },
+        {
+          "word": "an",
+          "start": 76.68,
+          "end": 77.0
+        },
+        {
+          "word": "unusual",
+          "start": 77.04,
+          "end": 77.36
+        },
+        {
+          "word": "or",
+          "start": 77.4,
+          "end": 77.72
+        },
+        {
+          "word": "lower-case",
+          "start": 77.76,
+          "end": 78.08
+        },
+        {
+          "word": "name",
+          "start": 78.12,
+          "end": 78.44
+        },
+        {
+          "word": "can",
+          "start": 78.48,
+          "end": 78.8
+        },
+        {
+          "word": "slip",
+          "start": 78.84,
+          "end": 79.16
+        },
+        {
+          "word": "through.",
+          "start": 79.2,
+          "end": 79.52
+        }
+      ]
+    },
+    {
+      "start": 79.56,
+      "end": 85.28,
+      "text": "Every masked transcript therefore recommends a review, and the paper reports how often names were missed.",
+      "words": [
+        {
+          "word": "Every",
+          "start": 79.56,
+          "end": 79.88
+        },
+        {
+          "word": "masked",
+          "start": 79.92,
+          "end": 80.24
+        },
+        {
+          "word": "transcript",
+          "start": 80.28,
+          "end": 80.6
+        },
+        {
+          "word": "therefore",
+          "start": 80.64,
+          "end": 80.96
+        },
+        {
+          "word": "recommends",
+          "start": 81.0,
+          "end": 81.32
+        },
+        {
+          "word": "a",
+          "start": 81.36,
+          "end": 81.68
+        },
+        {
+          "word": "review,",
+          "start": 81.72,
+          "end": 82.04
+        },
+        {
+          "word": "and",
+          "start": 82.08,
+          "end": 82.4
+        },
+        {
+          "word": "the",
+          "start": 82.44,
+          "end": 82.76
+        },
+        {
+          "word": "paper",
+          "start": 82.8,
+          "end": 83.12
+        },
+        {
+          "word": "reports",
+          "start": 83.16,
+          "end": 83.48
+        },
+        {
+          "word": "how",
+          "start": 83.52,
+          "end": 83.84
+        },
+        {
+          "word": "often",
+          "start": 83.88,
+          "end": 84.2
+        },
+        {
+          "word": "names",
+          "start": 84.24,
+          "end": 84.56
+        },
+        {
+          "word": "were",
+          "start": 84.6,
+          "end": 84.92
+        },
+        {
+          "word": "missed.",
+          "start": 84.96,
+          "end": 85.28
+        }
+      ]
+    },
+    {
+      "start": 86.02,
+      "end": 89.22,
+      "text": "How far can a researcher trust the speaker labels?",
+      "words": [
+        {
+          "word": "How",
+          "start": 86.02,
+          "end": 86.34
+        },
+        {
+          "word": "far",
+          "start": 86.38,
+          "end": 86.7
+        },
+        {
+          "word": "can",
+          "start": 86.74,
+          "end": 87.06
+        },
+        {
+          "word": "a",
+          "start": 87.1,
+          "end": 87.42
+        },
+        {
+          "word": "researcher",
+          "start": 87.46,
+          "end": 87.78
+        },
+        {
+          "word": "trust",
+          "start": 87.82,
+          "end": 88.14
+        },
+        {
+          "word": "the",
+          "start": 88.18,
+          "end": 88.5
+        },
+        {
+          "word": "speaker",
+          "start": 88.54,
+          "end": 88.86
+        },
+        {
+          "word": "labels?",
+          "start": 88.9,
+          "end": 89.22
+        }
+      ]
+    },
+    {
+      "start": 89.96,
+      "end": 91.72,
+      "text": "That depends on the recording.",
+      "words": [
+        {
+          "word": "That",
+          "start": 89.96,
+          "end": 90.28
+        },
+        {
+          "word": "depends",
+          "start": 90.32,
+          "end": 90.64
+        },
+        {
+          "word": "on",
+          "start": 90.68,
+          "end": 91.0
+        },
+        {
+          "word": "the",
+          "start": 91.04,
+          "end": 91.36
+        },
+        {
+          "word": "recording.",
+          "start": 91.4,
+          "end": 91.72
+        }
+      ]
+    },
+    {
+      "start": 91.76,
+      "end": 100.36,
+      "text": "Overlapping speech, similar voices and distant microphones all make attribution harder, so the labels should be checked against the audio wherever exact attribution matters.",
+      "words": [
+        {
+          "word": "Overlapping",
+          "start": 91.76,
+          "end": 92.08
+        },
+        {
+          "word": "speech,",
+          "start": 92.12,
+          "end": 92.44
+        },
+        {
+          "word": "similar",
+          "start": 92.48,
+          "end": 92.8
+        },
+        {
+          "word": "voices",
+          "start": 92.84,
+          "end": 93.16
+        },
+        {
+          "word": "and",
+          "start": 93.2,
+          "end": 93.52
+        },
+        {
+          "word": "distant",
+          "start": 93.56,
+          "end": 93.88
+        },
+        {
+          "word": "microphones",
+          "start": 93.92,
+          "end": 94.24
+        },
+        {
+          "word": "all",
+          "start": 94.28,
+          "end": 94.6
+        },
+        {
+          "word": "make",
+          "start": 94.64,
+          "end": 94.96
+        },
+        {
+          "word": "attribution",
+          "start": 95.0,
+          "end": 95.32
+        },
+        {
+          "word": "harder,",
+          "start": 95.36,
+          "end": 95.68
+        },
+        {
+          "word": "so",
+          "start": 95.72,
+          "end": 96.04
+        },
+        {
+          "word": "the",
+          "start": 96.08,
+          "end": 96.4
+        },
+        {
+          "word": "labels",
+          "start": 96.44,
+          "end": 96.76
+        },
+        {
+          "word": "should",
+          "start": 96.8,
+          "end": 97.12
+        },
+        {
+          "word": "be",
+          "start": 97.16,
+          "end": 97.48
+        },
+        {
+          "word": "checked",
+          "start": 97.52,
+          "end": 97.84
+        },
+        {
+          "word": "against",
+          "start": 97.88,
+          "end": 98.2
+        },
+        {
+          "word": "the",
+          "start": 98.24,
+          "end": 98.56
+        },
+        {
+          "word": "audio",
+          "start": 98.6,
+          "end": 98.92
+        },
+        {
+          "word": "wherever",
+          "start": 98.96,
+          "end": 99.28
+        },
+        {
+          "word": "exact",
+          "start": 99.32,
+          "end": 99.64
+        },
+        {
+          "word": "attribution",
+          "start": 99.68,
+          "end": 100.0
+        },
+        {
+          "word": "matters.",
+          "start": 100.04,
+          "end": 100.36
+        }
+      ]
+    },
+    {
+      "start": 100.4,
+      "end": 104.32,
+      "text": "The paper reports the error rates we measured on meeting recordings.",
+      "words": [
+        {
+          "word": "The",
+          "start": 100.4,
+          "end": 100.72
+        },
+        {
+          "word": "paper",
+          "start": 100.76,
+          "end": 101.08
+        },
+        {
+          "word": "reports",
+          "start": 101.12,
+          "end": 101.44
+        },
+        {
+          "word": "the",
+          "start": 101.48,
+          "end": 101.8
+        },
+        {
+          "word": "error",
+          "start": 101.84,
+          "end": 102.16
+        },
+        {
+          "word": "rates",
+          "start": 102.2,
+          "end": 102.52
+        },
+        {
+          "word": "we",
+          "start": 102.56,
+          "end": 102.88
+        },
+        {
+          "word": "measured",
+          "start": 102.92,
+          "end": 103.24
+        },
+        {
+          "word": "on",
+          "start": 103.28,
+          "end": 103.6
+        },
+        {
+          "word": "meeting",
+          "start": 103.64,
+          "end": 103.96
+        },
+        {
+          "word": "recordings.",
+          "start": 104.0,
+          "end": 104.32
+        }
+      ]
+    },
+    {
+      "start": 105.06,
+      "end": 107.18,
+      "text": "What do the timestamped files contain?",
+      "words": [
+        {
+          "word": "What",
+          "start": 105.06,
+          "end": 105.38
+        },
+        {
+          "word": "do",
+          "start": 105.42,
+          "end": 105.74
+        },
+        {
+          "word": "the",
+          "start": 105.78,
+          "end": 106.1
+        },
+        {
+          "word": "timestamped",
+          "start": 106.14,
+          "end": 106.46
+        },
+        {
+          "word": "files",
+          "start": 106.5,
+          "end": 106.82
+        },
+        {
+          "word": "contain?",
+          "start": 106.86,
+          "end": 107.18
+        }
+      ]
+    },
+    {
+      "start": 107.92,
+      "end": 115.08,
+      "text": "The JSON file keeps the timing of every segment and every word, and the caption file uses the same timings.",
+      "words": [
+        {
+          "word": "The",
+          "start": 107.92,
+          "end": 108.24
+        },
+        {
+          "word": "JSON",
+          "start": 108.28,
+          "end": 108.6
+        },
+        {
+          "word": "file",
+          "start": 108.64,
+          "end": 108.96
+        },
+        {
+          "word": "keeps",
+          "start": 109.0,
+          "end": 109.32
+        },
+        {
+          "word": "the",
+          "start": 109.36,
+          "end": 109.68
+        },
+        {
+          "word": "timing",
+          "start": 109.72,
+          "end": 110.04
+        },
+        {
+          "word": "of",
+          "start": 110.08,
+          "end": 110.4
+        },
+        {
+          "word": "every",
+          "start": 110.44,
+          "end": 110.76
+        },
+        {
+          "word": "segment",
+          "start": 110.8,
+          "end": 111.12
+        },
+        {
+          "word": "and",
+          "start": 111.16,
+          "end": 111.48
+        },
+        {
+          "word": "every",
+          "start": 111.52,
+          "end": 111.84
+        },
+        {
+          "word": "word,",
+          "start": 111.88,
+          "end": 112.2
+        },
+        {
+          "word": "and",
+          "start": 112.24,
+          "end": 112.56
+        },
+        {
+          "word": "the",
+          "start": 112.6,
+          "end": 112.92
+        },
+        {
+          "word": "caption",
+          "start": 112.96,
+          "end": 113.28
+        },
+        {
+          "word": "file",
+          "start": 113.32,
+          "end": 113.64
+        },
+        {
+          "word": "uses",
+          "start": 113.68,
+          "end": 114.0
+        },
+        {
+          "word": "the",
+          "start": 114.04,
+          "end": 114.36
+        },
+        {
+          "word": "same",
+          "start": 114.4,
+          "end": 114.72
+        },
+        {
+          "word": "timings.",
+          "start": 114.76,
+          "end": 115.08
+        }
+      ]
+    },
+    {
+      "start": 115.12,
+      "end": 125.16,
+      "text": "Both are written before any clean-up, so they record exactly what the model produced, and with masking switched on a redacted copy of each is written beside them.",
+      "words": [
+        {
+          "word": "Both",
+          "start": 115.12,
+          "end": 115.44
+        },
+        {
+          "word": "are",
+          "start": 115.48,
+          "end": 115.8
+        },
+        {
+          "word": "written",
+          "start": 115.84,
+          "end": 116.16
+        },
+        {
+          "word": "before",
+          "start": 116.2,
+          "end": 116.52
+        },
+        {
+          "word": "any",
+          "start": 116.56,
+          "end": 116.88
+        },
+        {
+          "word": "clean-up,",
+          "start": 116.92,
+          "end": 117.24
+        },
+        {
+          "word": "so",
+          "start": 117.28,
+          "end": 117.6
+        },
+        {
+          "word": "they",
+          "start": 117.64,
+          "end": 117.96
+        },
+        {
+          "word": "record",
+          "start": 118.0,
+          "end": 118.32
+        },
+        {
+          "word": "exactly",
+          "start": 118.36,
+          "end": 118.68
+        },
+        {
+          "word": "what",
+          "start": 118.72,
+          "end": 119.04
+        },
+        {
+          "word": "the",
+          "start": 119.08,
+          "end": 119.4
+        },
+        {
+          "word": "model",
+          "start": 119.44,
+          "end": 119.76
+        },
+        {
+          "word": "produced,",
+          "start": 119.8,
+          "end": 120.12
+        },
+        {
+          "word": "and",
+          "start": 120.16,
+          "end": 120.48
+        },
+        {
+          "word": "with",
+          "start": 120.52,
+          "end": 120.84
+        },
+        {
+          "word": "masking",
+          "start": 120.88,
+          "end": 121.2
+        },
+        {
+          "word": "switched",
+          "start": 121.24,
+          "end": 121.56
+        },
+        {
+          "word": "on",
+          "start": 121.6,
+          "end": 121.92
+        },
+        {
+          "word": "a",
+          "start": 121.96,
+          "end": 122.28
+        },
+        {
+          "word": "redacted",
+          "start": 122.32,
+          "end": 122.64
+        },
+        {
+          "word": "copy",
+          "start": 122.68,
+          "end": 123.0
+        },
+        {
+          "word": "of",
+          "start": 123.04,
+          "end": 123.36
+        },
+        {
+          "word": "each",
+          "start": 123.4,
+          "end": 123.72
+        },
+        {
+          "word": "is",
+          "start": 123.76,
+          "end": 124.08
+        },
+        {
+          "word": "written",
+          "start": 124.12,
+          "end": 124.44
+        },
+        {
+          "word": "beside",
+          "start": 124.48,
+          "end": 124.8
+        },
+        {
+          "word": "them.",
+          "start": 124.84,
+          "end": 125.16
+        }
+      ]
+    },
+    {
+      "start": 125.2,
+      "end": 129.12,
+      "text": "A review file then points to segments worth checking by ear.",
+      "words": [
+        {
+          "word": "A",
+          "start": 125.2,
+          "end": 125.52
+        },
+        {
+          "word": "review",
+          "start": 125.56,
+          "end": 125.88
+        },
+        {
+          "word": "file",
+          "start": 125.92,
+          "end": 126.24
+        },
+        {
+          "word": "then",
+          "start": 126.28,
+          "end": 126.6
+        },
+        {
+          "word": "points",
+          "start": 126.64,
+          "end": 126.96
+        },
+        {
+          "word": "to",
+          "start": 127.0,
+          "end": 127.32
+        },
+        {
+          "word": "segments",
+          "start": 127.36,
+          "end": 127.68
+        },
+        {
+          "word": "worth",
+          "start": 127.72,
+          "end": 128.04
+        },
+        {
+          "word": "checking",
+          "start": 128.08,
+          "end": 128.4
+        },
+        {
+          "word": "by",
+          "start": 128.44,
+          "end": 128.76
+        },
+        {
+          "word": "ear.",
+          "start": 128.8,
+          "end": 129.12
+        }
+      ]
+    },
+    {
+      "start": 129.86,
+      "end": 133.06,
+      "text": "And how would someone check a transcript months later?",
+      "words": [
+        {
+          "word": "And",
+          "start": 129.86,
+          "end": 130.18
+        },
+        {
+          "word": "how",
+          "start": 130.22,
+          "end": 130.54
+        },
+        {
+          "word": "would",
+          "start": 130.58,
+          "end": 130.9
+        },
+        {
+          "word": "someone",
+          "start": 130.94,
+          "end": 131.26
+        },
+        {
+          "word": "check",
+          "start": 131.3,
+          "end": 131.62
+        },
+        {
+          "word": "a",
+          "start": 131.66,
+          "end": 131.98
+        },
+        {
+          "word": "transcript",
+          "start": 132.02,
+          "end": 132.34
+        },
+        {
+          "word": "months",
+          "start": 132.38,
+          "end": 132.7
+        },
+        {
+          "word": "later?",
+          "start": 132.74,
+          "end": 133.06
+        }
+      ]
+    },
+    {
+      "start": 133.8,
+      "end": 142.4,
+      "text": "Each run writes a manifest that lists every file it produced with a digest of its contents, together with the settings and software versions.",
+      "words": [
+        {
+          "word": "Each",
+          "start": 133.8,
+          "end": 134.12
+        },
+        {
+          "word": "run",
+          "start": 134.16,
+          "end": 134.48
+        },
+        {
+          "word": "writes",
+          "start": 134.52,
+          "end": 134.84
+        },
+        {
+          "word": "a",
+          "start": 134.88,
+          "end": 135.2
+        },
+        {
+          "word": "manifest",
+          "start": 135.24,
+          "end": 135.56
+        },
+        {
+          "word": "that",
+          "start": 135.6,
+          "end": 135.92
+        },
+        {
+          "word": "lists",
+          "start": 135.96,
+          "end": 136.28
+        },
+        {
+          "word": "every",
+          "start": 136.32,
+          "end": 136.64
+        },
+        {
+          "word": "file",
+          "start": 136.68,
+          "end": 137.0
+        },
+        {
+          "word": "it",
+          "start": 137.04,
+          "end": 137.36
+        },
+        {
+          "word": "produced",
+          "start": 137.4,
+          "end": 137.72
+        },
+        {
+          "word": "with",
+          "start": 137.76,
+          "end": 138.08
+        },
+        {
+          "word": "a",
+          "start": 138.12,
+          "end": 138.44
+        },
+        {
+          "word": "digest",
+          "start": 138.48,
+          "end": 138.8
+        },
+        {
+          "word": "of",
+          "start": 138.84,
+          "end": 139.16
+        },
+        {
+          "word": "its",
+          "start": 139.2,
+          "end": 139.52
+        },
+        {
+          "word": "contents,",
+          "start": 139.56,
+          "end": 139.88
+        },
+        {
+          "word": "together",
+          "start": 139.92,
+          "end": 140.24
+        },
+        {
+          "word": "with",
+          "start": 140.28,
+          "end": 140.6
+        },
+        {
+          "word": "the",
+          "start": 140.64,
+          "end": 140.96
+        },
+        {
+          "word": "settings",
+          "start": 141.0,
+          "end": 141.32
+        },
+        {
+          "word": "and",
+          "start": 141.36,
+          "end": 141.68
+        },
+        {
+          "word": "software",
+          "start": 141.72,
+          "end": 142.04
+        },
+        {
+          "word": "versions.",
+          "start": 142.08,
+          "end": 142.4
+        }
+      ]
+    },
+    {
+      "start": 142.44,
+      "end": 146.72,
+      "text": "Checking the files against that manifest shows whether anything has changed since.",
+      "words": [
+        {
+          "word": "Checking",
+          "start": 142.44,
+          "end": 142.76
+        },
+        {
+          "word": "the",
+          "start": 142.8,
+          "end": 143.12
+        },
+        {
+          "word": "files",
+          "start": 143.16,
+          "end": 143.48
+        },
+        {
+          "word": "against",
+          "start": 143.52,
+          "end": 143.84
+        },
+        {
+          "word": "that",
+          "start": 143.88,
+          "end": 144.2
+        },
+        {
+          "word": "manifest",
+          "start": 144.24,
+          "end": 144.56
+        },
+        {
+          "word": "shows",
+          "start": 144.6,
+          "end": 144.92
+        },
+        {
+          "word": "whether",
+          "start": 144.96,
+          "end": 145.28
+        },
+        {
+          "word": "anything",
+          "start": 145.32,
+          "end": 145.64
+        },
+        {
+          "word": "has",
+          "start": 145.68,
+          "end": 146.0
+        },
+        {
+          "word": "changed",
+          "start": 146.04,
+          "end": 146.36
+        },
+        {
+          "word": "since.",
+          "start": 146.4,
+          "end": 146.72
+        }
+      ]
+    },
+    {
+      "start": 147.46,
+      "end": 148.5,
+      "text": "Thank you, [NAME].",
+      "words": [
+        {
+          "word": "Thank",
+          "start": 147.46,
+          "end": 147.78
+        },
+        {
+          "word": "you,",
+          "start": 147.82,
+          "end": 148.14
+        },
+        {
+          "word": "[NAME].",
+          "start": 148.18,
+          "end": 148.5
+        }
+      ]
+    },
+    {
+      "start": 148.54,
+      "end": 149.94,
+      "text": "That was very clear.",
+      "words": [
+        {
+          "word": "That",
+          "start": 148.54,
+          "end": 148.86
+        },
+        {
+          "word": "was",
+          "start": 148.9,
+          "end": 149.22
+        },
+        {
+          "word": "very",
+          "start": 149.26,
+          "end": 149.58
+        },
+        {
+          "word": "clear.",
+          "start": 149.62,
+          "end": 149.94
+        }
+      ]
+    }
+  ],
+  "redacted": true
+}

@@ -1,0 +1,55 @@
+{
+  "dataset": "google/fleurs",
+  "revision": "70bb2e84b976b7e960aa89f1c648e09c59f894dd",
+  "split": "test",
+  "reference_field": "transcription",
+  "definition": "share of whitespace-separated reference words holding at least one letter outside ASCII (str.isalpha and code point > 127)",
+  "languages": {
+    "pl_pl": {
+      "n_utterances": 758,
+      "n_words": 14308,
+      "n_words_with_diacritic": 4987,
+      "pct_words_with_diacritic": 35
+    },
+    "es_419": {
+      "n_utterances": 908,
+      "n_words": 23262,
+      "n_words_with_diacritic": 2448,
+      "pct_words_with_diacritic": 11
+    },
+    "fr_fr": {
+      "n_utterances": 676,
+      "n_words": 17085,
+      "n_words_with_diacritic": 2653,
+      "pct_words_with_diacritic": 16
+    },
+    "de_de": {
+      "n_utterances": 862,
+      "n_words": 18507,
+      "n_words_with_diacritic": 1835,
+      "pct_words_with_diacritic": 10
+    },
+    "it_it": {
+      "n_utterances": 865,
+      "n_words": 20605,
+      "n_words_with_diacritic": 944,
+      "pct_words_with_diacritic": 5
+    },
+    "nl_nl": {
+      "n_utterances": 364,
+      "n_words": 8287,
+      "n_words_with_diacritic": 58,
+      "pct_words_with_diacritic": 1
+    }
+  },
+  "run_metadata": {
+    "git_commit": "2fd96a900914c94895cbfd1bad7d921a257da6e0",
+    "git_dirty": false,
+    "python": "3.12.12",
+    "platform": "Linux-5.14.0-427.42.2.arc.el9.x86_64-x86_64-with-glibc2.34",
+    "packages": {
+      "datasets": "4.8.5",
+      "huggingface_hub": "0.35.3"
+    }
+  }
+}

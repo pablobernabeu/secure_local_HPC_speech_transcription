@@ -1,0 +1,2810 @@
+{
+  "schema_version": 1,
+  "analysis": "Exploratory sensitivity to edge apostrophes; original scorer retained in canonical results.",
+  "transform": {
+    "after": "evaluation.wer.normalise_text(..., strip_header=False)",
+    "pattern": "(?<!\\w)'|'(?!\\w)",
+    "replacement": " ",
+    "whitespace": "collapse and strip",
+    "sides": [
+      "reference",
+      "hypothesis"
+    ],
+    "word_characters": "Python Unicode \\w (letters, digits and underscore)",
+    "limits": "Also removes edge elisions and terminal possessive marks. This is not an established gold scorer."
+  },
+  "provenance": {
+    "digest_policy": {
+      "committed_text_and_input_manifest": "SHA-256 with CRLF normalised to LF",
+      "recovered_arc_inputs": "SHA-256 of exact raw bytes"
+    },
+    "aggregate": {
+      "file": "output/evaluation/sweep_aggregate.json",
+      "sha256_lf": "5a4626c49fff01f42adfc9077ed59433779175f5969230739771a98c3ec8dba9"
+    },
+    "input_manifest": {
+      "file": "output/evaluation/sweep_input_manifest.json",
+      "sha256_lf": "b532f9892255a1ab6c83c9dca5b9c66bca76ffbc654617a3331dc7ccea6ff146"
+    },
+    "input_files": [
+      {
+        "name": "wer_summary_ami_distil-large-v3.json",
+        "sha256": "9575c96e6030934aa5e1a423c1bb44d7c1ed252c1d2c7478f80caaf1dc8d292a"
+      },
+      {
+        "name": "wer_summary_ami_distil-large-v3_whisper_norm.json",
+        "sha256": "a312c0a879132b8ef15032a4d1714900d0d636e10516e216ec3abbcf0546c32a"
+      },
+      {
+        "name": "wer_hypotheses_ami_distil-large-v3.csv",
+        "sha256": "03d4ba71ce816b49d5eac40d36cc269c19624146511b5f8f66310b49d4b2b787"
+      },
+      {
+        "name": "wer_summary_ami_whisper-large-v3.json",
+        "sha256": "46d7a5fd087b7a7da9119fe46dc4ac62d03e339db9f359f5e937a720717c7e4e"
+      },
+      {
+        "name": "wer_summary_ami_whisper-large-v3_whisper_norm.json",
+        "sha256": "8473d2842f5ad7197575f30fc7902952380decdf2c709af50439a30efbe41e38"
+      },
+      {
+        "name": "wer_hypotheses_ami_whisper-large-v3.csv",
+        "sha256": "3fa3957260f28a3af42ee0deadcda4445a1fd5142b94ba316127e2e4190716bf"
+      },
+      {
+        "name": "wer_summary_ami_whisper-medium.json",
+        "sha256": "1a32a1653859c79c5b7a84193fbc0a15cb6ea42225fb6687d6befceb4d6366ab"
+      },
+      {
+        "name": "wer_summary_ami_whisper-medium_whisper_norm.json",
+        "sha256": "7a713165b939d9931cdaa9ceabe498a393d598cf6494a6db29b1adab3972d59f"
+      },
+      {
+        "name": "wer_hypotheses_ami_whisper-medium.csv",
+        "sha256": "8f0ae8f6f17af55e015a77e67fce9c56ec3db442363afd02834bbb8da6080f7e"
+      },
+      {
+        "name": "wer_summary_fleurs_distil-large-v3.json",
+        "sha256": "f1122784fe8b9f9cb61de17e3ec4d14126ce987fa41299b1cfd2104279778bd9"
+      },
+      {
+        "name": "wer_summary_fleurs_distil-large-v3_whisper_norm.json",
+        "sha256": "1be819c050b285690b1a7d442b8554ce515d2ed6c81e2e5b24f7cd5455bb603a"
+      },
+      {
+        "name": "wer_hypotheses_fleurs_distil-large-v3.csv",
+        "sha256": "9dd6e28f495c0c0db2ffd424a69e7f4fda8ddd09739cebdf737d099f1c7af74f"
+      },
+      {
+        "name": "wer_summary_fleurs_whisper-large-v3.json",
+        "sha256": "e7476887dcfd89d3d4155f75752909c080de3c5efaa57513a4fe8f23eaca2e41"
+      },
+      {
+        "name": "wer_summary_fleurs_whisper-large-v3_whisper_norm.json",
+        "sha256": "5151ca6c306c4a1861b3d0fea38b5455a4716ab74b4fa58df44d1d86c4636209"
+      },
+      {
+        "name": "wer_hypotheses_fleurs_whisper-large-v3.csv",
+        "sha256": "2e51e582e0a6d68f738c7d6293509e474cf0cb4e3a6154b9a58559cf09adbf4f"
+      },
+      {
+        "name": "wer_summary_fleurs_whisper-medium.json",
+        "sha256": "0372aecfe4814fa3b0bf99994c640b530c8a63320bd2a11de6fbadd11960bde8"
+      },
+      {
+        "name": "wer_summary_fleurs_whisper-medium_whisper_norm.json",
+        "sha256": "818a250fa5ffce8db9a12e91ecd87d2b6a489304c36e645dbdd33b63c48946c0"
+      },
+      {
+        "name": "wer_hypotheses_fleurs_whisper-medium.csv",
+        "sha256": "b34da7a77f93862a1ddde832b6856cefec26dc6e690d155ed186d8cd41cec9f7"
+      },
+      {
+        "name": "wer_summary_librispeech_distil-large-v3.json",
+        "sha256": "21ea7026516a5f6adfeaf209b68142ac9242895dc66e072f38011f48b9d73643"
+      },
+      {
+        "name": "wer_summary_librispeech_distil-large-v3_whisper_norm.json",
+        "sha256": "31e3d988e88bfb301aad7b46331ee80f7eb35880c71af5c32df365ae0aa1a738"
+      },
+      {
+        "name": "wer_hypotheses_librispeech_clean_distil-large-v3.csv",
+        "sha256": "047f622978169f650bc8f66c5089b636d16dccef64276a68410a1eb82a1c4ea8"
+      },
+      {
+        "name": "wer_summary_librispeech_whisper-large-v3.json",
+        "sha256": "c3039d79549f9a930a6af86395bb6c62bfeb48971293131b9e4925217a6e60ff"
+      },
+      {
+        "name": "wer_summary_librispeech_whisper-large-v3_whisper_norm.json",
+        "sha256": "02b5d10dc892ed79b4d56c448b2c0d149275e32047d68b01d991c6aa2ca98a18"
+      },
+      {
+        "name": "wer_hypotheses_librispeech_clean_whisper-large-v3.csv",
+        "sha256": "291e2f99005ed5f9e727990b2e41eba5cac88007fef5132d97baf7395a93f58b"
+      },
+      {
+        "name": "wer_summary_librispeech_whisper-medium.json",
+        "sha256": "d156ace926bad5da1c7226b251d98cff68a4a0136a68203f00e6cc0ecbb97759"
+      },
+      {
+        "name": "wer_summary_librispeech_whisper-medium_whisper_norm.json",
+        "sha256": "df9d01e7a9652d8cd28d1f6b94111241f0bd48c49471b0fc9963b57d55e2149d"
+      },
+      {
+        "name": "wer_hypotheses_librispeech_clean_whisper-medium.csv",
+        "sha256": "c48a2b1d7c73120072a756c0bcb42a96f869a1fc71c55ef385529b6515f44fdc"
+      },
+      {
+        "name": "wer_summary_librispeech_other_distil-large-v3.json",
+        "sha256": "4195654ee022f1d42e5b8222040328dd7d3f33298254d4ae457372d35501db78"
+      },
+      {
+        "name": "wer_summary_librispeech_other_distil-large-v3_whisper_norm.json",
+        "sha256": "4743249ff3d6fce511281b277942fbb4ad4cd8f3a98332a9b9700ed4e0fd4274"
+      },
+      {
+        "name": "wer_hypotheses_librispeech_other_distil-large-v3.csv",
+        "sha256": "4bf1ec91ebef3e8e5c99b3a5b10f58bcbfc3fbc8d93ddea59da78ce504502fd0"
+      },
+      {
+        "name": "wer_summary_librispeech_other_whisper-large-v3.json",
+        "sha256": "53e05abebfe90ca8ee1a77f415124fff6ff0d2aa7a86cd841cb87635090c3da9"
+      },
+      {
+        "name": "wer_summary_librispeech_other_whisper-large-v3_whisper_norm.json",
+        "sha256": "4738c01f1a1d3297cd0d06f227d4d8c68b8ec59c4cddb0a9a28db480a3e42031"
+      },
+      {
+        "name": "wer_hypotheses_librispeech_other_whisper-large-v3.csv",
+        "sha256": "97acffa6e20098fb508525879078e17db710014759920a4aea80358d660d54c8"
+      },
+      {
+        "name": "wer_summary_librispeech_other_whisper-medium.json",
+        "sha256": "1f37cdea05becdfc0be61e92d248ae5157bab9bb4a498e1ee90cc1ffbdbc6311"
+      },
+      {
+        "name": "wer_summary_librispeech_other_whisper-medium_whisper_norm.json",
+        "sha256": "a1ad0b3c9597f14fd4f2139cccb9c8551bdc87b85412abb6e0bdc84349d688b6"
+      },
+      {
+        "name": "wer_hypotheses_librispeech_other_whisper-medium.csv",
+        "sha256": "952916e711644e7a9391953df3995cb10a97ced9bfb0d82f73e461597dbb6275"
+      },
+      {
+        "name": "wer_summary_voxpopuli_accented_distil-large-v3.json",
+        "sha256": "44a9770a4712e19046bad270af574846f0c730bc578bd96ab8d6c38e91904001"
+      },
+      {
+        "name": "wer_summary_voxpopuli_accented_distil-large-v3_whisper_norm.json",
+        "sha256": "ecebb2310037ab277ee0d1ea067fcf81b4d9813932cdcb60ea3fd145c4e60e8c"
+      },
+      {
+        "name": "wer_hypotheses_voxpopuli_accented_distil-large-v3.csv",
+        "sha256": "1f60714fd5fe4ee8ea94c33f53fff7a20bc5fe8e228b658d118d47d056f87a5a"
+      },
+      {
+        "name": "wer_summary_voxpopuli_accented_whisper-large-v3.json",
+        "sha256": "5294397822bb63c4ded6d6aeb5a93e8ed43cc2e041cf6fe16a4356cd4cf5941b"
+      },
+      {
+        "name": "wer_summary_voxpopuli_accented_whisper-large-v3_whisper_norm.json",
+        "sha256": "e8f4b66a7c41ad79cb8657d2f7f239591d8be33bafb015ccb8b5744fc8979aed"
+      },
+      {
+        "name": "wer_hypotheses_voxpopuli_accented_whisper-large-v3.csv",
+        "sha256": "7c6a4cf08202cb97c8a0a33bbe0e082a175554b42a232a10af9a2977e42a0a2c"
+      },
+      {
+        "name": "wer_summary_voxpopuli_accented_whisper-medium.json",
+        "sha256": "8256140453f5366d2521723e307a0eda80500dec29050c1e73950f3bd057374b"
+      },
+      {
+        "name": "wer_summary_voxpopuli_accented_whisper-medium_whisper_norm.json",
+        "sha256": "b162fcae79465a4fd30cb43dad30a7fa3e4666cb1a113a79e04027baee29c6ac"
+      },
+      {
+        "name": "wer_hypotheses_voxpopuli_accented_whisper-medium.csv",
+        "sha256": "d183e8e9d00715a4baed0908a3ae9797a13e8c070ec57c4d55ba99200c92c5fa"
+      }
+    ],
+    "producer": {
+      "file": "evaluation/scorer_sensitivity.py",
+      "sha256_lf": "47afa13762b153e887d54054a970e2180651190e902c5cfb42da664676eeb259"
+    },
+    "original_scorer": {
+      "file": "evaluation/wer.py",
+      "sha256_lf": "795c2535f6fe502d804f68f86de164102113e9f3934ef34779d92250b679d1e8"
+    },
+    "python": "3.13.7",
+    "jiwer": "4.0.0",
+    "rapidfuzz": "3.14.5",
+    "original_scoring_verified": true,
+    "suite_model_cells": 15,
+    "condition_cells": 30,
+    "original_verification": {
+      "per_utterance_fields": "exact",
+      "summary_and_aggregate": "exact at full precision",
+      "stored_dump_wer": "matches the original score rounded to six decimals"
+    },
+    "command": [
+      "python",
+      "-m",
+      "evaluation.scorer_sensitivity",
+      "--inputs",
+      "build/recovered_arc_sweep/inputs",
+      "--aggregate",
+      "output/evaluation/sweep_aggregate.json",
+      "--input-manifest",
+      "output/evaluation/sweep_input_manifest.json",
+      "--output-csv",
+      "build/clean_scorer_rebuild/scorer_sensitivity.csv",
+      "--output-json",
+      "build/clean_scorer_rebuild/scorer_sensitivity.json"
+    ]
+  },
+  "limits": [
+    "Hypothesis dumps retain originally scored pairs only; historical exclusions are read from the source summaries.",
+    "Removing apostrophes cannot restore an originally empty reference; newly empty references are counted separately.",
+    "Condition transformations and model decoding are not rerun. Historical fraction handling (NEW-03) remains unchanged.",
+    "No sampling confidence interval, reference-correctness uncertainty or effect in other benchmark waves is estimated.",
+    "The source inputs are not yet in the public repository; reproducing this artefact requires the recovered input bundle."
+  ],
+  "cells": [
+    {
+      "suite": "ami",
+      "model_slug": "distil-large-v3",
+      "conditions": {
+        "raw": {
+          "n_streamed": 12643,
+          "n_original_scored": 12643,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 12643,
+            "macro_wer": 0.28464335855749373,
+            "micro_wer": 0.19813633590326696,
+            "macro_mer": 0.22587451013870152,
+            "micro_mer": 0.1932485799296727,
+            "macro_wil": 0.25707704519594565,
+            "macro_cer": 0.25519939939785574,
+            "total_reference_words": 90145,
+            "total_hypothesis_words": 83682,
+            "total_hits": 74564,
+            "total_substitutions": 6838,
+            "total_deletions": 8743,
+            "total_insertions": 2280
+          },
+          "edge_apostrophe": {
+            "files": 12643,
+            "macro_wer": 0.28463870590152507,
+            "micro_wer": 0.19812524266459594,
+            "macro_mer": 0.22586985748273286,
+            "micro_mer": 0.19323776034622667,
+            "macro_wil": 0.2570680722165775,
+            "macro_cer": 0.25610091286904824,
+            "total_reference_words": 90145,
+            "total_hypothesis_words": 83682,
+            "total_hits": 74565,
+            "total_substitutions": 6837,
+            "total_deletions": 8743,
+            "total_insertions": 2280
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 264,
+            "hypothesis_strings_changed": 0,
+            "error_counts_lower": 1,
+            "error_counts_higher": 0,
+            "error_counts_equal": 12642
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        },
+        "whisper_norm": {
+          "n_streamed": 12643,
+          "n_original_scored": 11653,
+          "n_original_excluded": 990,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 990,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 11653,
+            "macro_wer": 0.23743125292278713,
+            "micro_wer": 0.15097330118760605,
+            "macro_mer": 0.18232252089132683,
+            "micro_mer": 0.14750755204641372,
+            "macro_wil": 0.20932328447714332,
+            "macro_cer": 0.2149549145332373,
+            "total_reference_words": 89592,
+            "total_hypothesis_words": 85428,
+            "total_hits": 78171,
+            "total_substitutions": 5152,
+            "total_deletions": 6269,
+            "total_insertions": 2105
+          },
+          "edge_apostrophe": {
+            "files": 11653,
+            "macro_wer": 0.23743125292278713,
+            "micro_wer": 0.15097330118760605,
+            "macro_mer": 0.18232252089132683,
+            "micro_mer": 0.14750755204641372,
+            "macro_wil": 0.20932328447714332,
+            "macro_cer": 0.2149549145332373,
+            "total_reference_words": 89592,
+            "total_hypothesis_words": 85428,
+            "total_hits": 78171,
+            "total_substitutions": 5152,
+            "total_deletions": 6269,
+            "total_insertions": 2105
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 0,
+            "hypothesis_strings_changed": 0,
+            "error_counts_lower": 0,
+            "error_counts_higher": 0,
+            "error_counts_equal": 11653
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        }
+      },
+      "paired_gains": {
+        "original": {
+          "n_shared": 11653,
+          "n_baseline_only": 990,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.2655750435289104,
+          "macro_condition_shared": 0.23743125292278713,
+          "macro_gain_shared": 0.10597302454385013,
+          "micro_baseline_shared": 0.19478923574706034,
+          "micro_condition_shared": 0.15097330118760605,
+          "micro_gain_shared": 0.22494022522040485,
+          "reference_words_baseline_shared": 88701,
+          "reference_words_condition_shared": 89592
+        },
+        "edge_apostrophe": {
+          "n_shared": 11653,
+          "n_baseline_only": 990,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.26556999559881417,
+          "macro_condition_shared": 0.23743125292278713,
+          "macro_gain_shared": 0.1059560309611749,
+          "micro_baseline_shared": 0.19477796191700206,
+          "micro_condition_shared": 0.15097330118760605,
+          "micro_gain_shared": 0.22489536443584857,
+          "reference_words_baseline_shared": 88701,
+          "reference_words_condition_shared": 89592
+        }
+      },
+      "cross_rule_sample": {
+        "n_common": 11653,
+        "newly_excluded_shared_uids": [],
+        "newly_included_shared_uids": []
+      },
+      "paired_gains_on_fixed_cross_rule_sample": {
+        "original": {
+          "n_shared": 11653,
+          "n_baseline_only": 990,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.2655750435289104,
+          "macro_condition_shared": 0.23743125292278713,
+          "macro_gain_shared": 0.10597302454385013,
+          "micro_baseline_shared": 0.19478923574706034,
+          "micro_condition_shared": 0.15097330118760605,
+          "micro_gain_shared": 0.22494022522040485,
+          "reference_words_baseline_shared": 88701,
+          "reference_words_condition_shared": 89592
+        },
+        "edge_apostrophe": {
+          "n_shared": 11653,
+          "n_baseline_only": 990,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.26556999559881417,
+          "macro_condition_shared": 0.23743125292278713,
+          "macro_gain_shared": 0.1059560309611749,
+          "micro_baseline_shared": 0.19477796191700206,
+          "micro_condition_shared": 0.15097330118760605,
+          "micro_gain_shared": 0.22489536443584857,
+          "reference_words_baseline_shared": 88701,
+          "reference_words_condition_shared": 89592
+        }
+      }
+    },
+    {
+      "suite": "ami",
+      "model_slug": "whisper-large-v3",
+      "conditions": {
+        "raw": {
+          "n_streamed": 12643,
+          "n_original_scored": 12643,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 12643,
+            "macro_wer": 0.3243469622225079,
+            "micro_wer": 0.20442620222974098,
+            "macro_mer": 0.2260533095653351,
+            "micro_mer": 0.19834034721400048,
+            "macro_wil": 0.25530646615694125,
+            "macro_cer": 0.31011338055419935,
+            "total_reference_words": 90145,
+            "total_hypothesis_words": 83689,
+            "total_hits": 74483,
+            "total_substitutions": 6440,
+            "total_deletions": 9222,
+            "total_insertions": 2766
+          },
+          "edge_apostrophe": {
+            "files": 12643,
+            "macro_wer": 0.3242345717787088,
+            "micro_wer": 0.20438182927505685,
+            "macro_mer": 0.22598046669726954,
+            "micro_mer": 0.19829729526105627,
+            "macro_wil": 0.2552280643883665,
+            "macro_cer": 0.31112416141143195,
+            "total_reference_words": 90145,
+            "total_hypothesis_words": 83689,
+            "total_hits": 74487,
+            "total_substitutions": 6436,
+            "total_deletions": 9222,
+            "total_insertions": 2766
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 264,
+            "hypothesis_strings_changed": 1,
+            "error_counts_lower": 4,
+            "error_counts_higher": 0,
+            "error_counts_equal": 12639
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        },
+        "whisper_norm": {
+          "n_streamed": 12643,
+          "n_original_scored": 11653,
+          "n_original_excluded": 990,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 990,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 11653,
+            "macro_wer": 0.2852459523204471,
+            "micro_wer": 0.15994731672470755,
+            "macro_mer": 0.18831589548225353,
+            "micro_mer": 0.1554651478166531,
+            "macro_wil": 0.2126364742753199,
+            "macro_cer": 0.2791390829374027,
+            "total_reference_words": 89592,
+            "total_hypothesis_words": 85250,
+            "total_hits": 77845,
+            "total_substitutions": 4822,
+            "total_deletions": 6925,
+            "total_insertions": 2583
+          },
+          "edge_apostrophe": {
+            "files": 11653,
+            "macro_wer": 0.2852459523204471,
+            "micro_wer": 0.15994731672470755,
+            "macro_mer": 0.18831589548225353,
+            "micro_mer": 0.1554651478166531,
+            "macro_wil": 0.2126364742753199,
+            "macro_cer": 0.2791390829374027,
+            "total_reference_words": 89592,
+            "total_hypothesis_words": 85250,
+            "total_hits": 77845,
+            "total_substitutions": 4822,
+            "total_deletions": 6925,
+            "total_insertions": 2583
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 0,
+            "hypothesis_strings_changed": 0,
+            "error_counts_lower": 0,
+            "error_counts_higher": 0,
+            "error_counts_equal": 11653
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        }
+      },
+      "paired_gains": {
+        "original": {
+          "n_shared": 11653,
+          "n_baseline_only": 990,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.3061273471820562,
+          "macro_condition_shared": 0.2852459523204471,
+          "macro_gain_shared": 0.06821146511027254,
+          "micro_baseline_shared": 0.20091092546870948,
+          "micro_condition_shared": 0.15994731672470755,
+          "micro_gain_shared": 0.20388940346791512,
+          "reference_words_baseline_shared": 88701,
+          "reference_words_condition_shared": 89592
+        },
+        "edge_apostrophe": {
+          "n_shared": 11653,
+          "n_baseline_only": 990,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.3060054084211404,
+          "macro_condition_shared": 0.2852459523204471,
+          "macro_gain_shared": 0.06784016075991398,
+          "micro_baseline_shared": 0.20086583014847634,
+          "micro_condition_shared": 0.15994731672470755,
+          "micro_gain_shared": 0.20371067290799322,
+          "reference_words_baseline_shared": 88701,
+          "reference_words_condition_shared": 89592
+        }
+      },
+      "cross_rule_sample": {
+        "n_common": 11653,
+        "newly_excluded_shared_uids": [],
+        "newly_included_shared_uids": []
+      },
+      "paired_gains_on_fixed_cross_rule_sample": {
+        "original": {
+          "n_shared": 11653,
+          "n_baseline_only": 990,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.3061273471820562,
+          "macro_condition_shared": 0.2852459523204471,
+          "macro_gain_shared": 0.06821146511027254,
+          "micro_baseline_shared": 0.20091092546870948,
+          "micro_condition_shared": 0.15994731672470755,
+          "micro_gain_shared": 0.20388940346791512,
+          "reference_words_baseline_shared": 88701,
+          "reference_words_condition_shared": 89592
+        },
+        "edge_apostrophe": {
+          "n_shared": 11653,
+          "n_baseline_only": 990,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.3060054084211404,
+          "macro_condition_shared": 0.2852459523204471,
+          "macro_gain_shared": 0.06784016075991398,
+          "micro_baseline_shared": 0.20086583014847634,
+          "micro_condition_shared": 0.15994731672470755,
+          "micro_gain_shared": 0.20371067290799322,
+          "reference_words_baseline_shared": 88701,
+          "reference_words_condition_shared": 89592
+        }
+      }
+    },
+    {
+      "suite": "ami",
+      "model_slug": "whisper-medium",
+      "conditions": {
+        "raw": {
+          "n_streamed": 12643,
+          "n_original_scored": 12643,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 12643,
+            "macro_wer": 3.3706378432933337,
+            "micro_wer": 0.7819069277275501,
+            "macro_mer": 0.25183474493042796,
+            "micro_mer": 0.4861503869339109,
+            "macro_wil": 0.28236432734647976,
+            "macro_cer": 4.714687161784627,
+            "total_reference_words": 90145,
+            "total_hypothesis_words": 136454,
+            "total_hits": 74501,
+            "total_substitutions": 7112,
+            "total_deletions": 8532,
+            "total_insertions": 54841
+          },
+          "edge_apostrophe": {
+            "files": 12643,
+            "macro_wer": 3.3705970151294333,
+            "micro_wer": 0.7818736480115369,
+            "macro_mer": 0.25179391676652774,
+            "micro_mer": 0.4861296952809237,
+            "macro_wil": 0.28231136930276457,
+            "macro_cer": 4.740911023163003,
+            "total_reference_words": 90145,
+            "total_hypothesis_words": 136454,
+            "total_hits": 74504,
+            "total_substitutions": 7109,
+            "total_deletions": 8532,
+            "total_insertions": 54841
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 264,
+            "hypothesis_strings_changed": 1,
+            "error_counts_lower": 3,
+            "error_counts_higher": 0,
+            "error_counts_equal": 12640
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        },
+        "whisper_norm": {
+          "n_streamed": 12643,
+          "n_original_scored": 11653,
+          "n_original_excluded": 990,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 990,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 11653,
+            "macro_wer": 3.195193374398238,
+            "micro_wer": 0.6719238324850433,
+            "macro_mer": 0.21123745140512415,
+            "micro_mer": 0.4355177103831462,
+            "macro_wil": 0.23695542304283987,
+            "macro_cer": 4.5802380682209165,
+            "total_reference_words": 89592,
+            "total_hypothesis_words": 132038,
+            "total_hits": 78025,
+            "total_substitutions": 5381,
+            "total_deletions": 6186,
+            "total_insertions": 48632
+          },
+          "edge_apostrophe": {
+            "files": 11653,
+            "macro_wer": 3.195193374398238,
+            "micro_wer": 0.6719238324850433,
+            "macro_mer": 0.21123745140512415,
+            "micro_mer": 0.4355177103831462,
+            "macro_wil": 0.23695542304283987,
+            "macro_cer": 4.5802380682209165,
+            "total_reference_words": 89592,
+            "total_hypothesis_words": 132038,
+            "total_hits": 78025,
+            "total_substitutions": 5381,
+            "total_deletions": 6186,
+            "total_insertions": 48632
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 0,
+            "hypothesis_strings_changed": 0,
+            "error_counts_lower": 0,
+            "error_counts_higher": 0,
+            "error_counts_equal": 11653
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        }
+      },
+      "paired_gains": {
+        "original": {
+          "n_shared": 11653,
+          "n_baseline_only": 990,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 3.0287099962319535,
+          "macro_condition_shared": 3.195193374398238,
+          "macro_gain_shared": -0.05496841175728544,
+          "micro_baseline_shared": 0.6931939887938129,
+          "micro_condition_shared": 0.6719238324850433,
+          "micro_gain_shared": 0.03068427691616395,
+          "reference_words_baseline_shared": 88701,
+          "reference_words_condition_shared": 89592
+        },
+        "edge_apostrophe": {
+          "n_shared": 11653,
+          "n_baseline_only": 990,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 3.0286656994434704,
+          "macro_condition_shared": 3.195193374398238,
+          "macro_gain_shared": -0.05498384155945889,
+          "micro_baseline_shared": 0.693160167303638,
+          "micro_condition_shared": 0.6719238324850433,
+          "micro_gain_shared": 0.03063698091770501,
+          "reference_words_baseline_shared": 88701,
+          "reference_words_condition_shared": 89592
+        }
+      },
+      "cross_rule_sample": {
+        "n_common": 11653,
+        "newly_excluded_shared_uids": [],
+        "newly_included_shared_uids": []
+      },
+      "paired_gains_on_fixed_cross_rule_sample": {
+        "original": {
+          "n_shared": 11653,
+          "n_baseline_only": 990,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 3.0287099962319535,
+          "macro_condition_shared": 3.195193374398238,
+          "macro_gain_shared": -0.05496841175728544,
+          "micro_baseline_shared": 0.6931939887938129,
+          "micro_condition_shared": 0.6719238324850433,
+          "micro_gain_shared": 0.03068427691616395,
+          "reference_words_baseline_shared": 88701,
+          "reference_words_condition_shared": 89592
+        },
+        "edge_apostrophe": {
+          "n_shared": 11653,
+          "n_baseline_only": 990,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 3.0286656994434704,
+          "macro_condition_shared": 3.195193374398238,
+          "macro_gain_shared": -0.05498384155945889,
+          "micro_baseline_shared": 0.693160167303638,
+          "micro_condition_shared": 0.6719238324850433,
+          "micro_gain_shared": 0.03063698091770501,
+          "reference_words_baseline_shared": 88701,
+          "reference_words_condition_shared": 89592
+        }
+      }
+    },
+    {
+      "suite": "fleurs",
+      "model_slug": "distil-large-v3",
+      "conditions": {
+        "raw": {
+          "n_streamed": 647,
+          "n_original_scored": 647,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 647,
+            "macro_wer": 0.06527833324980718,
+            "micro_wer": 0.06386949609456004,
+            "macro_mer": 0.06375696378183027,
+            "micro_mer": 0.0632963419646527,
+            "macro_wil": 0.10573500654941868,
+            "macro_cer": 0.027093962092523866,
+            "total_reference_words": 14467,
+            "total_hypothesis_words": 14489,
+            "total_hits": 13674,
+            "total_substitutions": 684,
+            "total_deletions": 109,
+            "total_insertions": 131
+          },
+          "edge_apostrophe": {
+            "files": 647,
+            "macro_wer": 0.06490991144025123,
+            "micro_wer": 0.06345475910693302,
+            "macro_mer": 0.06338854197227431,
+            "micro_mer": 0.06288532675709001,
+            "macro_wil": 0.10502864630718012,
+            "macro_cer": 0.02702083513509468,
+            "total_reference_words": 14467,
+            "total_hypothesis_words": 14489,
+            "total_hits": 13680,
+            "total_substitutions": 678,
+            "total_deletions": 109,
+            "total_insertions": 131
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 8,
+            "hypothesis_strings_changed": 0,
+            "error_counts_lower": 6,
+            "error_counts_higher": 0,
+            "error_counts_equal": 641
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        },
+        "whisper_norm": {
+          "n_streamed": 647,
+          "n_original_scored": 647,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 647,
+            "macro_wer": 0.0574871611038423,
+            "micro_wer": 0.0565778632243889,
+            "macro_mer": 0.05609676558448413,
+            "micro_mer": 0.056096398665668186,
+            "macro_wil": 0.09185713052293866,
+            "macro_cer": 0.023173110731903555,
+            "total_reference_words": 14564,
+            "total_hypothesis_words": 14577,
+            "total_hits": 13865,
+            "total_substitutions": 587,
+            "total_deletions": 112,
+            "total_insertions": 125
+          },
+          "edge_apostrophe": {
+            "files": 647,
+            "macro_wer": 0.0574871611038423,
+            "micro_wer": 0.0565778632243889,
+            "macro_mer": 0.05609676558448413,
+            "micro_mer": 0.056096398665668186,
+            "macro_wil": 0.09185713052293866,
+            "macro_cer": 0.023173110731903555,
+            "total_reference_words": 14564,
+            "total_hypothesis_words": 14577,
+            "total_hits": 13865,
+            "total_substitutions": 587,
+            "total_deletions": 112,
+            "total_insertions": 125
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 0,
+            "hypothesis_strings_changed": 0,
+            "error_counts_lower": 0,
+            "error_counts_higher": 0,
+            "error_counts_equal": 647
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        }
+      },
+      "paired_gains": {
+        "original": {
+          "n_shared": 647,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.06527833324980718,
+          "macro_condition_shared": 0.0574871611038423,
+          "macro_gain_shared": 0.11935311087293882,
+          "micro_baseline_shared": 0.06386949609456004,
+          "micro_condition_shared": 0.0565778632243889,
+          "micro_gain_shared": 0.11416455923459504,
+          "reference_words_baseline_shared": 14467,
+          "reference_words_condition_shared": 14564
+        },
+        "edge_apostrophe": {
+          "n_shared": 647,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.06490991144025123,
+          "macro_condition_shared": 0.0574871611038423,
+          "macro_gain_shared": 0.11435465203555974,
+          "micro_baseline_shared": 0.06345475910693302,
+          "micro_condition_shared": 0.0565778632243889,
+          "micro_gain_shared": 0.10837478511194523,
+          "reference_words_baseline_shared": 14467,
+          "reference_words_condition_shared": 14564
+        }
+      },
+      "cross_rule_sample": {
+        "n_common": 647,
+        "newly_excluded_shared_uids": [],
+        "newly_included_shared_uids": []
+      },
+      "paired_gains_on_fixed_cross_rule_sample": {
+        "original": {
+          "n_shared": 647,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.06527833324980718,
+          "macro_condition_shared": 0.0574871611038423,
+          "macro_gain_shared": 0.11935311087293882,
+          "micro_baseline_shared": 0.06386949609456004,
+          "micro_condition_shared": 0.0565778632243889,
+          "micro_gain_shared": 0.11416455923459504,
+          "reference_words_baseline_shared": 14467,
+          "reference_words_condition_shared": 14564
+        },
+        "edge_apostrophe": {
+          "n_shared": 647,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.06490991144025123,
+          "macro_condition_shared": 0.0574871611038423,
+          "macro_gain_shared": 0.11435465203555974,
+          "micro_baseline_shared": 0.06345475910693302,
+          "micro_condition_shared": 0.0565778632243889,
+          "micro_gain_shared": 0.10837478511194523,
+          "reference_words_baseline_shared": 14467,
+          "reference_words_condition_shared": 14564
+        }
+      }
+    },
+    {
+      "suite": "fleurs",
+      "model_slug": "whisper-large-v3",
+      "conditions": {
+        "raw": {
+          "n_streamed": 647,
+          "n_original_scored": 647,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 647,
+            "macro_wer": 0.04723667333265836,
+            "micro_wer": 0.046104928457869634,
+            "macro_mer": 0.04658337317235795,
+            "micro_mer": 0.0458576830525954,
+            "macro_wil": 0.07673106278508154,
+            "macro_cer": 0.02126964261889548,
+            "total_reference_words": 14467,
+            "total_hypothesis_words": 14425,
+            "total_hits": 13878,
+            "total_substitutions": 469,
+            "total_deletions": 120,
+            "total_insertions": 78
+          },
+          "edge_apostrophe": {
+            "files": 647,
+            "macro_wer": 0.04686825152310241,
+            "micro_wer": 0.04569019147024262,
+            "macro_mer": 0.046214951362801994,
+            "micro_mer": 0.04544517016156755,
+            "macro_wil": 0.07603785267622151,
+            "macro_cer": 0.021192703246989103,
+            "total_reference_words": 14467,
+            "total_hypothesis_words": 14425,
+            "total_hits": 13884,
+            "total_substitutions": 463,
+            "total_deletions": 120,
+            "total_insertions": 78
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 8,
+            "hypothesis_strings_changed": 1,
+            "error_counts_lower": 6,
+            "error_counts_higher": 0,
+            "error_counts_equal": 641
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        },
+        "whisper_norm": {
+          "n_streamed": 647,
+          "n_original_scored": 647,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 647,
+            "macro_wer": 0.04031311761387156,
+            "micro_wer": 0.039686899203515515,
+            "macro_mer": 0.039675167754368856,
+            "micro_mer": 0.0394700901393062,
+            "macro_wil": 0.06371763074208601,
+            "macro_cer": 0.017204400079830522,
+            "total_reference_words": 14564,
+            "total_hypothesis_words": 14525,
+            "total_hits": 14066,
+            "total_substitutions": 379,
+            "total_deletions": 119,
+            "total_insertions": 80
+          },
+          "edge_apostrophe": {
+            "files": 647,
+            "macro_wer": 0.04031311761387156,
+            "micro_wer": 0.039686899203515515,
+            "macro_mer": 0.039675167754368856,
+            "micro_mer": 0.0394700901393062,
+            "macro_wil": 0.06371763074208601,
+            "macro_cer": 0.017204400079830522,
+            "total_reference_words": 14564,
+            "total_hypothesis_words": 14525,
+            "total_hits": 14066,
+            "total_substitutions": 379,
+            "total_deletions": 119,
+            "total_insertions": 80
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 0,
+            "hypothesis_strings_changed": 0,
+            "error_counts_lower": 0,
+            "error_counts_higher": 0,
+            "error_counts_equal": 647
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        }
+      },
+      "paired_gains": {
+        "original": {
+          "n_shared": 647,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.04723667333265836,
+          "macro_condition_shared": 0.04031311761387156,
+          "macro_gain_shared": 0.14657161968262508,
+          "micro_baseline_shared": 0.046104928457869634,
+          "micro_condition_shared": 0.039686899203515515,
+          "micro_gain_shared": 0.13920484141340486,
+          "reference_words_baseline_shared": 14467,
+          "reference_words_condition_shared": 14564
+        },
+        "edge_apostrophe": {
+          "n_shared": 647,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.04686825152310241,
+          "macro_condition_shared": 0.04031311761387156,
+          "macro_gain_shared": 0.13986299245662442,
+          "micro_baseline_shared": 0.04569019147024262,
+          "micro_condition_shared": 0.039686899203515515,
+          "micro_gain_shared": 0.13139126962593198,
+          "reference_words_baseline_shared": 14467,
+          "reference_words_condition_shared": 14564
+        }
+      },
+      "cross_rule_sample": {
+        "n_common": 647,
+        "newly_excluded_shared_uids": [],
+        "newly_included_shared_uids": []
+      },
+      "paired_gains_on_fixed_cross_rule_sample": {
+        "original": {
+          "n_shared": 647,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.04723667333265836,
+          "macro_condition_shared": 0.04031311761387156,
+          "macro_gain_shared": 0.14657161968262508,
+          "micro_baseline_shared": 0.046104928457869634,
+          "micro_condition_shared": 0.039686899203515515,
+          "micro_gain_shared": 0.13920484141340486,
+          "reference_words_baseline_shared": 14467,
+          "reference_words_condition_shared": 14564
+        },
+        "edge_apostrophe": {
+          "n_shared": 647,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.04686825152310241,
+          "macro_condition_shared": 0.04031311761387156,
+          "macro_gain_shared": 0.13986299245662442,
+          "micro_baseline_shared": 0.04569019147024262,
+          "micro_condition_shared": 0.039686899203515515,
+          "micro_gain_shared": 0.13139126962593198,
+          "reference_words_baseline_shared": 14467,
+          "reference_words_condition_shared": 14564
+        }
+      }
+    },
+    {
+      "suite": "fleurs",
+      "model_slug": "whisper-medium",
+      "conditions": {
+        "raw": {
+          "n_streamed": 647,
+          "n_original_scored": 647,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 647,
+            "macro_wer": 0.05088877001080941,
+            "micro_wer": 0.04963019285269925,
+            "macro_mer": 0.05002348898463698,
+            "micro_mer": 0.049296258153106766,
+            "macro_wil": 0.08277405072909946,
+            "macro_cer": 0.022219952580565906,
+            "total_reference_words": 14467,
+            "total_hypothesis_words": 14457,
+            "total_hits": 13847,
+            "total_substitutions": 512,
+            "total_deletions": 108,
+            "total_insertions": 98
+          },
+          "edge_apostrophe": {
+            "files": 647,
+            "macro_wer": 0.050573644582429154,
+            "micro_wer": 0.0492845786963434,
+            "macro_mer": 0.04970836355625675,
+            "micro_mer": 0.048952969447305185,
+            "macro_wil": 0.08216876983047003,
+            "macro_cer": 0.022154888540558883,
+            "total_reference_words": 14467,
+            "total_hypothesis_words": 14457,
+            "total_hits": 13852,
+            "total_substitutions": 507,
+            "total_deletions": 108,
+            "total_insertions": 98
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 8,
+            "hypothesis_strings_changed": 2,
+            "error_counts_lower": 5,
+            "error_counts_higher": 0,
+            "error_counts_equal": 642
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        },
+        "whisper_norm": {
+          "n_streamed": 647,
+          "n_original_scored": 647,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 647,
+            "macro_wer": 0.043823977121656206,
+            "micro_wer": 0.043120021971985716,
+            "macro_mer": 0.04298726813890568,
+            "micro_mer": 0.042834731600845784,
+            "macro_wil": 0.0697856264595276,
+            "macro_cer": 0.01843918174062574,
+            "total_reference_words": 14564,
+            "total_hypothesis_words": 14555,
+            "total_hits": 14033,
+            "total_substitutions": 425,
+            "total_deletions": 106,
+            "total_insertions": 97
+          },
+          "edge_apostrophe": {
+            "files": 647,
+            "macro_wer": 0.043823977121656206,
+            "micro_wer": 0.043120021971985716,
+            "macro_mer": 0.04298726813890568,
+            "micro_mer": 0.042834731600845784,
+            "macro_wil": 0.0697856264595276,
+            "macro_cer": 0.01843918174062574,
+            "total_reference_words": 14564,
+            "total_hypothesis_words": 14555,
+            "total_hits": 14033,
+            "total_substitutions": 425,
+            "total_deletions": 106,
+            "total_insertions": 97
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 0,
+            "hypothesis_strings_changed": 0,
+            "error_counts_lower": 0,
+            "error_counts_higher": 0,
+            "error_counts_equal": 647
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        }
+      },
+      "paired_gains": {
+        "original": {
+          "n_shared": 647,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.05088877001080941,
+          "macro_condition_shared": 0.043823977121656206,
+          "macro_gain_shared": 0.13882813217243317,
+          "micro_baseline_shared": 0.04963019285269925,
+          "micro_condition_shared": 0.043120021971985716,
+          "micro_gain_shared": 0.1311735962831235,
+          "reference_words_baseline_shared": 14467,
+          "reference_words_condition_shared": 14564
+        },
+        "edge_apostrophe": {
+          "n_shared": 647,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.050573644582429154,
+          "macro_condition_shared": 0.043823977121656206,
+          "macro_gain_shared": 0.13346215240176681,
+          "micro_baseline_shared": 0.0492845786963434,
+          "micro_condition_shared": 0.043120021971985716,
+          "micro_gain_shared": 0.12508084450390275,
+          "reference_words_baseline_shared": 14467,
+          "reference_words_condition_shared": 14564
+        }
+      },
+      "cross_rule_sample": {
+        "n_common": 647,
+        "newly_excluded_shared_uids": [],
+        "newly_included_shared_uids": []
+      },
+      "paired_gains_on_fixed_cross_rule_sample": {
+        "original": {
+          "n_shared": 647,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.05088877001080941,
+          "macro_condition_shared": 0.043823977121656206,
+          "macro_gain_shared": 0.13882813217243317,
+          "micro_baseline_shared": 0.04963019285269925,
+          "micro_condition_shared": 0.043120021971985716,
+          "micro_gain_shared": 0.1311735962831235,
+          "reference_words_baseline_shared": 14467,
+          "reference_words_condition_shared": 14564
+        },
+        "edge_apostrophe": {
+          "n_shared": 647,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.050573644582429154,
+          "macro_condition_shared": 0.043823977121656206,
+          "macro_gain_shared": 0.13346215240176681,
+          "micro_baseline_shared": 0.0492845786963434,
+          "micro_condition_shared": 0.043120021971985716,
+          "micro_gain_shared": 0.12508084450390275,
+          "reference_words_baseline_shared": 14467,
+          "reference_words_condition_shared": 14564
+        }
+      }
+    },
+    {
+      "suite": "librispeech_clean",
+      "model_slug": "distil-large-v3",
+      "conditions": {
+        "raw": {
+          "n_streamed": 2620,
+          "n_original_scored": 2620,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 2620,
+            "macro_wer": 0.060906521666857394,
+            "micro_wer": 0.04096926354230067,
+            "macro_mer": 0.05639421826705874,
+            "micro_mer": 0.040602439162315505,
+            "macro_wil": 0.0877828995929993,
+            "macro_cer": 0.021333494987797928,
+            "total_reference_words": 52576,
+            "total_hypothesis_words": 52887,
+            "total_hits": 50897,
+            "total_substitutions": 1515,
+            "total_deletions": 164,
+            "total_insertions": 475
+          },
+          "edge_apostrophe": {
+            "files": 2620,
+            "macro_wer": 0.033665296102869606,
+            "micro_wer": 0.027445982958003653,
+            "macro_mer": 0.033104077405636576,
+            "micro_mer": 0.027381923755668988,
+            "macro_wil": 0.05517978410437178,
+            "macro_cer": 0.012784050322063638,
+            "total_reference_words": 52576,
+            "total_hypothesis_words": 52532,
+            "total_hits": 51256,
+            "total_substitutions": 1153,
+            "total_deletions": 167,
+            "total_insertions": 123
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 0,
+            "hypothesis_strings_changed": 295,
+            "error_counts_lower": 294,
+            "error_counts_higher": 0,
+            "error_counts_equal": 2326
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        },
+        "whisper_norm": {
+          "n_streamed": 2620,
+          "n_original_scored": 2620,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 2620,
+            "macro_wer": 0.02776347471320097,
+            "micro_wer": 0.02319573047692685,
+            "macro_mer": 0.02711073544742927,
+            "micro_mer": 0.023134651193409447,
+            "macro_wil": 0.04476738335269623,
+            "macro_cer": 0.009031148280614442,
+            "total_reference_words": 53027,
+            "total_hypothesis_words": 53011,
+            "total_hits": 51937,
+            "total_substitutions": 934,
+            "total_deletions": 156,
+            "total_insertions": 140
+          },
+          "edge_apostrophe": {
+            "files": 2620,
+            "macro_wer": 0.02776347471320097,
+            "micro_wer": 0.02319573047692685,
+            "macro_mer": 0.02711073544742927,
+            "micro_mer": 0.023134651193409447,
+            "macro_wil": 0.04476738335269623,
+            "macro_cer": 0.009031148280614442,
+            "total_reference_words": 53027,
+            "total_hypothesis_words": 53011,
+            "total_hits": 51937,
+            "total_substitutions": 934,
+            "total_deletions": 156,
+            "total_insertions": 140
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 0,
+            "hypothesis_strings_changed": 0,
+            "error_counts_lower": 0,
+            "error_counts_higher": 0,
+            "error_counts_equal": 2620
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        }
+      },
+      "paired_gains": {
+        "original": {
+          "n_shared": 2620,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.060906521666857394,
+          "macro_condition_shared": 0.02776347471320097,
+          "macro_gain_shared": 0.5441625304912362,
+          "micro_baseline_shared": 0.04096926354230067,
+          "micro_condition_shared": 0.02319573047692685,
+          "micro_gain_shared": 0.43382603270431475,
+          "reference_words_baseline_shared": 52576,
+          "reference_words_condition_shared": 53027
+        },
+        "edge_apostrophe": {
+          "n_shared": 2620,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.033665296102869606,
+          "macro_condition_shared": 0.02776347471320097,
+          "macro_gain_shared": 0.17530876222311226,
+          "micro_baseline_shared": 0.027445982958003653,
+          "micro_condition_shared": 0.02319573047692685,
+          "micro_gain_shared": 0.15485881804926818,
+          "reference_words_baseline_shared": 52576,
+          "reference_words_condition_shared": 53027
+        }
+      },
+      "cross_rule_sample": {
+        "n_common": 2620,
+        "newly_excluded_shared_uids": [],
+        "newly_included_shared_uids": []
+      },
+      "paired_gains_on_fixed_cross_rule_sample": {
+        "original": {
+          "n_shared": 2620,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.060906521666857394,
+          "macro_condition_shared": 0.02776347471320097,
+          "macro_gain_shared": 0.5441625304912362,
+          "micro_baseline_shared": 0.04096926354230067,
+          "micro_condition_shared": 0.02319573047692685,
+          "micro_gain_shared": 0.43382603270431475,
+          "reference_words_baseline_shared": 52576,
+          "reference_words_condition_shared": 53027
+        },
+        "edge_apostrophe": {
+          "n_shared": 2620,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.033665296102869606,
+          "macro_condition_shared": 0.02776347471320097,
+          "macro_gain_shared": 0.17530876222311226,
+          "micro_baseline_shared": 0.027445982958003653,
+          "micro_condition_shared": 0.02319573047692685,
+          "micro_gain_shared": 0.15485881804926818,
+          "reference_words_baseline_shared": 52576,
+          "reference_words_condition_shared": 53027
+        }
+      }
+    },
+    {
+      "suite": "librispeech_clean",
+      "model_slug": "whisper-large-v3",
+      "conditions": {
+        "raw": {
+          "n_streamed": 2620,
+          "n_original_scored": 2620,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 2620,
+            "macro_wer": 0.062132222346406946,
+            "micro_wer": 0.03861077297626293,
+            "macro_mer": 0.05661008732367857,
+            "micro_mer": 0.038236956112262195,
+            "macro_wil": 0.08628942663190452,
+            "macro_cer": 0.021719420620382093,
+            "total_reference_words": 52576,
+            "total_hypothesis_words": 52941,
+            "total_hits": 51060,
+            "total_substitutions": 1367,
+            "total_deletions": 149,
+            "total_insertions": 514
+          },
+          "edge_apostrophe": {
+            "files": 2620,
+            "macro_wer": 0.02848449748742756,
+            "micro_wer": 0.02259586122945831,
+            "macro_mer": 0.027999266713093645,
+            "micro_mer": 0.022548684660061498,
+            "macro_wil": 0.04605618197994101,
+            "macro_cer": 0.01128726276572174,
+            "total_reference_words": 52576,
+            "total_hypothesis_words": 52531,
+            "total_hits": 51498,
+            "total_substitutions": 923,
+            "total_deletions": 155,
+            "total_insertions": 110
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 0,
+            "hypothesis_strings_changed": 362,
+            "error_counts_lower": 360,
+            "error_counts_higher": 0,
+            "error_counts_equal": 2260
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        },
+        "whisper_norm": {
+          "n_streamed": 2620,
+          "n_original_scored": 2620,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 2620,
+            "macro_wer": 0.022098692272192272,
+            "micro_wer": 0.018122843079940408,
+            "macro_mer": 0.021546993427620623,
+            "micro_mer": 0.018081583502671784,
+            "macro_wil": 0.03496161268095407,
+            "macro_cer": 0.007344390496975705,
+            "total_reference_words": 53027,
+            "total_hypothesis_words": 53008,
+            "total_hits": 52187,
+            "total_substitutions": 700,
+            "total_deletions": 140,
+            "total_insertions": 121
+          },
+          "edge_apostrophe": {
+            "files": 2620,
+            "macro_wer": 0.022098692272192272,
+            "micro_wer": 0.018122843079940408,
+            "macro_mer": 0.021546993427620623,
+            "micro_mer": 0.018081583502671784,
+            "macro_wil": 0.03496161268095407,
+            "macro_cer": 0.007344390496975705,
+            "total_reference_words": 53027,
+            "total_hypothesis_words": 53008,
+            "total_hits": 52187,
+            "total_substitutions": 700,
+            "total_deletions": 140,
+            "total_insertions": 121
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 0,
+            "hypothesis_strings_changed": 0,
+            "error_counts_lower": 0,
+            "error_counts_higher": 0,
+            "error_counts_equal": 2620
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        }
+      },
+      "paired_gains": {
+        "original": {
+          "n_shared": 2620,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.062132222346406946,
+          "macro_condition_shared": 0.022098692272192272,
+          "macro_gain_shared": 0.6443279921811742,
+          "micro_baseline_shared": 0.03861077297626293,
+          "micro_condition_shared": 0.018122843079940408,
+          "micro_gain_shared": 0.5306272917384498,
+          "reference_words_baseline_shared": 52576,
+          "reference_words_condition_shared": 53027
+        },
+        "edge_apostrophe": {
+          "n_shared": 2620,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.02848449748742756,
+          "macro_condition_shared": 0.022098692272192272,
+          "macro_gain_shared": 0.22418528598069337,
+          "micro_baseline_shared": 0.02259586122945831,
+          "micro_condition_shared": 0.018122843079940408,
+          "micro_gain_shared": 0.19795740928371475,
+          "reference_words_baseline_shared": 52576,
+          "reference_words_condition_shared": 53027
+        }
+      },
+      "cross_rule_sample": {
+        "n_common": 2620,
+        "newly_excluded_shared_uids": [],
+        "newly_included_shared_uids": []
+      },
+      "paired_gains_on_fixed_cross_rule_sample": {
+        "original": {
+          "n_shared": 2620,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.062132222346406946,
+          "macro_condition_shared": 0.022098692272192272,
+          "macro_gain_shared": 0.6443279921811742,
+          "micro_baseline_shared": 0.03861077297626293,
+          "micro_condition_shared": 0.018122843079940408,
+          "micro_gain_shared": 0.5306272917384498,
+          "reference_words_baseline_shared": 52576,
+          "reference_words_condition_shared": 53027
+        },
+        "edge_apostrophe": {
+          "n_shared": 2620,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.02848449748742756,
+          "macro_condition_shared": 0.022098692272192272,
+          "macro_gain_shared": 0.22418528598069337,
+          "micro_baseline_shared": 0.02259586122945831,
+          "micro_condition_shared": 0.018122843079940408,
+          "micro_gain_shared": 0.19795740928371475,
+          "reference_words_baseline_shared": 52576,
+          "reference_words_condition_shared": 53027
+        }
+      }
+    },
+    {
+      "suite": "librispeech_clean",
+      "model_slug": "whisper-medium",
+      "conditions": {
+        "raw": {
+          "n_streamed": 2620,
+          "n_original_scored": 2620,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 2620,
+            "macro_wer": 0.06550264776233385,
+            "micro_wer": 0.04977556299452222,
+            "macro_mer": 0.04175985171027483,
+            "micro_mer": 0.048762763658045764,
+            "macro_wil": 0.06683583361572919,
+            "macro_cer": 0.03322785648379405,
+            "total_reference_words": 52576,
+            "total_hypothesis_words": 53462,
+            "total_hits": 51051,
+            "total_substitutions": 1319,
+            "total_deletions": 206,
+            "total_insertions": 1092
+          },
+          "edge_apostrophe": {
+            "files": 2620,
+            "macro_wer": 0.06101234483993037,
+            "micro_wer": 0.04642802799756543,
+            "macro_mer": 0.03825590956074892,
+            "micro_mer": 0.04556229584694354,
+            "macro_wil": 0.06178208593833088,
+            "macro_cer": 0.03173299490736794,
+            "total_reference_words": 52576,
+            "total_hypothesis_words": 53367,
+            "total_hits": 51134,
+            "total_substitutions": 1234,
+            "total_deletions": 208,
+            "total_insertions": 999
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 0,
+            "hypothesis_strings_changed": 73,
+            "error_counts_lower": 66,
+            "error_counts_higher": 0,
+            "error_counts_equal": 2554
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        },
+        "whisper_norm": {
+          "n_streamed": 2620,
+          "n_original_scored": 2620,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 2620,
+            "macro_wer": 0.05325095604876963,
+            "micro_wer": 0.040696249080657027,
+            "macro_mer": 0.030557446070581664,
+            "micro_mer": 0.039929688222777315,
+            "macro_wil": 0.048725031900151164,
+            "macro_cer": 0.026801692446040328,
+            "total_reference_words": 53027,
+            "total_hypothesis_words": 53870,
+            "total_hits": 51887,
+            "total_substitutions": 965,
+            "total_deletions": 175,
+            "total_insertions": 1018
+          },
+          "edge_apostrophe": {
+            "files": 2620,
+            "macro_wer": 0.05325095604876963,
+            "micro_wer": 0.040696249080657027,
+            "macro_mer": 0.030557446070581664,
+            "micro_mer": 0.039929688222777315,
+            "macro_wil": 0.048725031900151164,
+            "macro_cer": 0.026801692446040328,
+            "total_reference_words": 53027,
+            "total_hypothesis_words": 53870,
+            "total_hits": 51887,
+            "total_substitutions": 965,
+            "total_deletions": 175,
+            "total_insertions": 1018
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 0,
+            "hypothesis_strings_changed": 0,
+            "error_counts_lower": 0,
+            "error_counts_higher": 0,
+            "error_counts_equal": 2620
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        }
+      },
+      "paired_gains": {
+        "original": {
+          "n_shared": 2620,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.06550264776233385,
+          "macro_condition_shared": 0.05325095604876963,
+          "macro_gain_shared": 0.18704116752680855,
+          "micro_baseline_shared": 0.04977556299452222,
+          "micro_condition_shared": 0.040696249080657027,
+          "micro_gain_shared": 0.18240504712853506,
+          "reference_words_baseline_shared": 52576,
+          "reference_words_condition_shared": 53027
+        },
+        "edge_apostrophe": {
+          "n_shared": 2620,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.06101234483993037,
+          "macro_condition_shared": 0.05325095604876963,
+          "macro_gain_shared": 0.12721013774381598,
+          "micro_baseline_shared": 0.04642802799756543,
+          "micro_condition_shared": 0.040696249080657027,
+          "micro_gain_shared": 0.12345514475025654,
+          "reference_words_baseline_shared": 52576,
+          "reference_words_condition_shared": 53027
+        }
+      },
+      "cross_rule_sample": {
+        "n_common": 2620,
+        "newly_excluded_shared_uids": [],
+        "newly_included_shared_uids": []
+      },
+      "paired_gains_on_fixed_cross_rule_sample": {
+        "original": {
+          "n_shared": 2620,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.06550264776233385,
+          "macro_condition_shared": 0.05325095604876963,
+          "macro_gain_shared": 0.18704116752680855,
+          "micro_baseline_shared": 0.04977556299452222,
+          "micro_condition_shared": 0.040696249080657027,
+          "micro_gain_shared": 0.18240504712853506,
+          "reference_words_baseline_shared": 52576,
+          "reference_words_condition_shared": 53027
+        },
+        "edge_apostrophe": {
+          "n_shared": 2620,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.06101234483993037,
+          "macro_condition_shared": 0.05325095604876963,
+          "macro_gain_shared": 0.12721013774381598,
+          "micro_baseline_shared": 0.04642802799756543,
+          "micro_condition_shared": 0.040696249080657027,
+          "micro_gain_shared": 0.12345514475025654,
+          "reference_words_baseline_shared": 52576,
+          "reference_words_condition_shared": 53027
+        }
+      }
+    },
+    {
+      "suite": "librispeech_other",
+      "model_slug": "distil-large-v3",
+      "conditions": {
+        "raw": {
+          "n_streamed": 2939,
+          "n_original_scored": 2939,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 2939,
+            "macro_wer": 0.09472394939831297,
+            "micro_wer": 0.06684752497946239,
+            "macro_mer": 0.08810806832007631,
+            "micro_mer": 0.06611242324043458,
+            "macro_wil": 0.13658166640124125,
+            "macro_cer": 0.0382551647526163,
+            "total_reference_words": 52343,
+            "total_hypothesis_words": 52644,
+            "total_hits": 49426,
+            "total_substitutions": 2636,
+            "total_deletions": 281,
+            "total_insertions": 582
+          },
+          "edge_apostrophe": {
+            "files": 2939,
+            "macro_wer": 0.07052377883628726,
+            "micro_wer": 0.055365569417114034,
+            "macro_mer": 0.06882782161695099,
+            "micro_mer": 0.05508353766322632,
+            "macro_wil": 0.11133610443804551,
+            "macro_cer": 0.030655090142227986,
+            "total_reference_words": 52343,
+            "total_hypothesis_words": 52325,
+            "total_hits": 49713,
+            "total_substitutions": 2344,
+            "total_deletions": 286,
+            "total_insertions": 268
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 1,
+            "hypothesis_strings_changed": 259,
+            "error_counts_lower": 258,
+            "error_counts_higher": 0,
+            "error_counts_equal": 2681
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        },
+        "whisper_norm": {
+          "n_streamed": 2939,
+          "n_original_scored": 2939,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 2939,
+            "macro_wer": 0.06260260372927443,
+            "micro_wer": 0.049714458605952874,
+            "macro_mer": 0.060639766840987194,
+            "micro_mer": 0.04944331603099376,
+            "macro_wil": 0.09787150054591598,
+            "macro_cer": 0.02558775964864559,
+            "total_reference_words": 52882,
+            "total_hypothesis_words": 52905,
+            "total_hits": 50543,
+            "total_substitutions": 2072,
+            "total_deletions": 267,
+            "total_insertions": 290
+          },
+          "edge_apostrophe": {
+            "files": 2939,
+            "macro_wer": 0.06260260372927443,
+            "micro_wer": 0.049714458605952874,
+            "macro_mer": 0.060639766840987194,
+            "micro_mer": 0.04944331603099376,
+            "macro_wil": 0.09787150054591598,
+            "macro_cer": 0.02558775964864559,
+            "total_reference_words": 52882,
+            "total_hypothesis_words": 52905,
+            "total_hits": 50543,
+            "total_substitutions": 2072,
+            "total_deletions": 267,
+            "total_insertions": 290
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 0,
+            "hypothesis_strings_changed": 0,
+            "error_counts_lower": 0,
+            "error_counts_higher": 0,
+            "error_counts_equal": 2939
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        }
+      },
+      "paired_gains": {
+        "original": {
+          "n_shared": 2939,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.09472394939831297,
+          "macro_condition_shared": 0.06260260372927443,
+          "macro_gain_shared": 0.33910479739362115,
+          "micro_baseline_shared": 0.06684752497946239,
+          "micro_condition_shared": 0.049714458605952874,
+          "micro_gain_shared": 0.25630068396359207,
+          "reference_words_baseline_shared": 52343,
+          "reference_words_condition_shared": 52882
+        },
+        "edge_apostrophe": {
+          "n_shared": 2939,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.07052377883628726,
+          "macro_condition_shared": 0.06260260372927443,
+          "macro_gain_shared": 0.1123192097434387,
+          "micro_baseline_shared": 0.055365569417114034,
+          "micro_condition_shared": 0.049714458605952874,
+          "micro_gain_shared": 0.10206904526867101,
+          "reference_words_baseline_shared": 52343,
+          "reference_words_condition_shared": 52882
+        }
+      },
+      "cross_rule_sample": {
+        "n_common": 2939,
+        "newly_excluded_shared_uids": [],
+        "newly_included_shared_uids": []
+      },
+      "paired_gains_on_fixed_cross_rule_sample": {
+        "original": {
+          "n_shared": 2939,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.09472394939831297,
+          "macro_condition_shared": 0.06260260372927443,
+          "macro_gain_shared": 0.33910479739362115,
+          "micro_baseline_shared": 0.06684752497946239,
+          "micro_condition_shared": 0.049714458605952874,
+          "micro_gain_shared": 0.25630068396359207,
+          "reference_words_baseline_shared": 52343,
+          "reference_words_condition_shared": 52882
+        },
+        "edge_apostrophe": {
+          "n_shared": 2939,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.07052377883628726,
+          "macro_condition_shared": 0.06260260372927443,
+          "macro_gain_shared": 0.1123192097434387,
+          "micro_baseline_shared": 0.055365569417114034,
+          "micro_condition_shared": 0.049714458605952874,
+          "micro_gain_shared": 0.10206904526867101,
+          "reference_words_baseline_shared": 52343,
+          "reference_words_condition_shared": 52882
+        }
+      }
+    },
+    {
+      "suite": "librispeech_other",
+      "model_slug": "whisper-large-v3",
+      "conditions": {
+        "raw": {
+          "n_streamed": 2939,
+          "n_original_scored": 2939,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 2939,
+            "macro_wer": 0.08400321984552249,
+            "micro_wer": 0.05525094090900407,
+            "macro_mer": 0.07660051188638513,
+            "micro_mer": 0.05460725075528701,
+            "macro_wil": 0.11723441431532447,
+            "macro_cer": 0.032658646324714394,
+            "total_reference_words": 52343,
+            "total_hypothesis_words": 52736,
+            "total_hits": 50068,
+            "total_substitutions": 2051,
+            "total_deletions": 224,
+            "total_insertions": 617
+          },
+          "edge_apostrophe": {
+            "files": 2939,
+            "macro_wer": 0.05123809820922515,
+            "micro_wer": 0.03922205452496036,
+            "macro_mer": 0.04982398553206229,
+            "micro_mer": 0.039070528679633086,
+            "macro_wil": 0.08118380875021618,
+            "macro_cer": 0.022454197415674535,
+            "total_reference_words": 52343,
+            "total_hypothesis_words": 52317,
+            "total_hits": 50493,
+            "total_substitutions": 1621,
+            "total_deletions": 229,
+            "total_insertions": 203
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 1,
+            "hypothesis_strings_changed": 353,
+            "error_counts_lower": 349,
+            "error_counts_higher": 0,
+            "error_counts_equal": 2590
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        },
+        "whisper_norm": {
+          "n_streamed": 2939,
+          "n_original_scored": 2939,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 2939,
+            "macro_wer": 0.04339237352609341,
+            "micro_wer": 0.03356529632010892,
+            "macro_mer": 0.042096128260421396,
+            "micro_mer": 0.033428124823443005,
+            "macro_wil": 0.06836536587549062,
+            "macro_cer": 0.01752865957975642,
+            "total_reference_words": 52882,
+            "total_hypothesis_words": 52902,
+            "total_hits": 51324,
+            "total_substitutions": 1361,
+            "total_deletions": 197,
+            "total_insertions": 217
+          },
+          "edge_apostrophe": {
+            "files": 2939,
+            "macro_wer": 0.04339237352609341,
+            "micro_wer": 0.03356529632010892,
+            "macro_mer": 0.042096128260421396,
+            "micro_mer": 0.033428124823443005,
+            "macro_wil": 0.06836536587549062,
+            "macro_cer": 0.01752865957975642,
+            "total_reference_words": 52882,
+            "total_hypothesis_words": 52902,
+            "total_hits": 51324,
+            "total_substitutions": 1361,
+            "total_deletions": 197,
+            "total_insertions": 217
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 0,
+            "hypothesis_strings_changed": 0,
+            "error_counts_lower": 0,
+            "error_counts_higher": 0,
+            "error_counts_equal": 2939
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        }
+      },
+      "paired_gains": {
+        "original": {
+          "n_shared": 2939,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.08400321984552249,
+          "macro_condition_shared": 0.04339237352609341,
+          "macro_gain_shared": 0.48344392505561445,
+          "micro_baseline_shared": 0.05525094090900407,
+          "micro_condition_shared": 0.03356529632010892,
+          "micro_gain_shared": 0.3924936703722472,
+          "reference_words_baseline_shared": 52343,
+          "reference_words_condition_shared": 52882
+        },
+        "edge_apostrophe": {
+          "n_shared": 2939,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.05123809820922515,
+          "macro_condition_shared": 0.04339237352609341,
+          "macro_gain_shared": 0.15312287062440494,
+          "micro_baseline_shared": 0.03922205452496036,
+          "micro_condition_shared": 0.03356529632010892,
+          "micro_gain_shared": 0.14422391364663364,
+          "reference_words_baseline_shared": 52343,
+          "reference_words_condition_shared": 52882
+        }
+      },
+      "cross_rule_sample": {
+        "n_common": 2939,
+        "newly_excluded_shared_uids": [],
+        "newly_included_shared_uids": []
+      },
+      "paired_gains_on_fixed_cross_rule_sample": {
+        "original": {
+          "n_shared": 2939,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.08400321984552249,
+          "macro_condition_shared": 0.04339237352609341,
+          "macro_gain_shared": 0.48344392505561445,
+          "micro_baseline_shared": 0.05525094090900407,
+          "micro_condition_shared": 0.03356529632010892,
+          "micro_gain_shared": 0.3924936703722472,
+          "reference_words_baseline_shared": 52343,
+          "reference_words_condition_shared": 52882
+        },
+        "edge_apostrophe": {
+          "n_shared": 2939,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.05123809820922515,
+          "macro_condition_shared": 0.04339237352609341,
+          "macro_gain_shared": 0.15312287062440494,
+          "micro_baseline_shared": 0.03922205452496036,
+          "micro_condition_shared": 0.03356529632010892,
+          "micro_gain_shared": 0.14422391364663364,
+          "reference_words_baseline_shared": 52343,
+          "reference_words_condition_shared": 52882
+        }
+      }
+    },
+    {
+      "suite": "librispeech_other",
+      "model_slug": "whisper-medium",
+      "conditions": {
+        "raw": {
+          "n_streamed": 2939,
+          "n_original_scored": 2939,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 2939,
+            "macro_wer": 0.09450799160163276,
+            "micro_wer": 0.07695393844449115,
+            "macro_mer": 0.07831844842672264,
+            "micro_mer": 0.07524471344242696,
+            "macro_wil": 0.12294988134062317,
+            "macro_cer": 0.04678133240870391,
+            "total_reference_words": 52343,
+            "total_hypothesis_words": 53169,
+            "total_hits": 49504,
+            "total_substitutions": 2476,
+            "total_deletions": 363,
+            "total_insertions": 1189
+          },
+          "edge_apostrophe": {
+            "files": 2939,
+            "macro_wer": 0.09226715731893675,
+            "micro_wer": 0.07513898706608334,
+            "macro_mer": 0.07641319263642976,
+            "micro_mer": 0.07353188625273431,
+            "macro_wil": 0.12031524952644311,
+            "macro_cer": 0.04604145066746887,
+            "total_reference_words": 52343,
+            "total_hypothesis_words": 53123,
+            "total_hits": 49554,
+            "total_substitutions": 2425,
+            "total_deletions": 364,
+            "total_insertions": 1144
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 1,
+            "hypothesis_strings_changed": 48,
+            "error_counts_lower": 40,
+            "error_counts_higher": 0,
+            "error_counts_equal": 2899
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        },
+        "whisper_norm": {
+          "n_streamed": 2939,
+          "n_original_scored": 2939,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 2939,
+            "macro_wer": 0.08421724285416204,
+            "micro_wer": 0.06945652585000567,
+            "macro_mer": 0.06641541592801556,
+            "micro_mer": 0.06780881348422471,
+            "macro_wil": 0.10422937637636956,
+            "macro_cer": 0.03968735168417437,
+            "total_reference_words": 52882,
+            "total_hypothesis_words": 53873,
+            "total_hits": 50494,
+            "total_substitutions": 2094,
+            "total_deletions": 294,
+            "total_insertions": 1285
+          },
+          "edge_apostrophe": {
+            "files": 2939,
+            "macro_wer": 0.08421724285416204,
+            "micro_wer": 0.06945652585000567,
+            "macro_mer": 0.06641541592801556,
+            "micro_mer": 0.06780881348422471,
+            "macro_wil": 0.10422937637636956,
+            "macro_cer": 0.03968735168417437,
+            "total_reference_words": 52882,
+            "total_hypothesis_words": 53873,
+            "total_hits": 50494,
+            "total_substitutions": 2094,
+            "total_deletions": 294,
+            "total_insertions": 1285
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 0,
+            "hypothesis_strings_changed": 0,
+            "error_counts_lower": 0,
+            "error_counts_higher": 0,
+            "error_counts_equal": 2939
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        }
+      },
+      "paired_gains": {
+        "original": {
+          "n_shared": 2939,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.09450799160163276,
+          "macro_condition_shared": 0.08421724285416204,
+          "macro_gain_shared": 0.1088876038213569,
+          "micro_baseline_shared": 0.07695393844449115,
+          "micro_condition_shared": 0.06945652585000567,
+          "micro_gain_shared": 0.0974272759268008,
+          "reference_words_baseline_shared": 52343,
+          "reference_words_condition_shared": 52882
+        },
+        "edge_apostrophe": {
+          "n_shared": 2939,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.09226715731893675,
+          "macro_condition_shared": 0.08421724285416204,
+          "macro_gain_shared": 0.08724571883090365,
+          "micro_baseline_shared": 0.07513898706608334,
+          "micro_condition_shared": 0.06945652585000567,
+          "micro_gain_shared": 0.07562600239846261,
+          "reference_words_baseline_shared": 52343,
+          "reference_words_condition_shared": 52882
+        }
+      },
+      "cross_rule_sample": {
+        "n_common": 2939,
+        "newly_excluded_shared_uids": [],
+        "newly_included_shared_uids": []
+      },
+      "paired_gains_on_fixed_cross_rule_sample": {
+        "original": {
+          "n_shared": 2939,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.09450799160163276,
+          "macro_condition_shared": 0.08421724285416204,
+          "macro_gain_shared": 0.1088876038213569,
+          "micro_baseline_shared": 0.07695393844449115,
+          "micro_condition_shared": 0.06945652585000567,
+          "micro_gain_shared": 0.0974272759268008,
+          "reference_words_baseline_shared": 52343,
+          "reference_words_condition_shared": 52882
+        },
+        "edge_apostrophe": {
+          "n_shared": 2939,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.09226715731893675,
+          "macro_condition_shared": 0.08421724285416204,
+          "macro_gain_shared": 0.08724571883090365,
+          "micro_baseline_shared": 0.07513898706608334,
+          "micro_condition_shared": 0.06945652585000567,
+          "micro_gain_shared": 0.07562600239846261,
+          "reference_words_baseline_shared": 52343,
+          "reference_words_condition_shared": 52882
+        }
+      }
+    },
+    {
+      "suite": "voxpopuli_accented",
+      "model_slug": "distil-large-v3",
+      "conditions": {
+        "raw": {
+          "n_streamed": 8387,
+          "n_original_scored": 8387,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 8387,
+            "macro_wer": 0.16180064567692112,
+            "micro_wer": 0.14974979787164303,
+            "macro_mer": 0.147413878134787,
+            "micro_mer": 0.14559909576863914,
+            "macro_wil": 0.20896074368613549,
+            "macro_cer": 0.11892463354897766,
+            "total_reference_words": 228815,
+            "total_hypothesis_words": 224123,
+            "total_hits": 201073,
+            "total_substitutions": 16527,
+            "total_deletions": 11215,
+            "total_insertions": 6523
+          },
+          "edge_apostrophe": {
+            "files": 8387,
+            "macro_wer": 0.16158827196736944,
+            "micro_wer": 0.1495269103861198,
+            "macro_mer": 0.14720642485566066,
+            "micro_mer": 0.1453823861849765,
+            "macro_wil": 0.20858505244745826,
+            "macro_cer": 0.11887790027853257,
+            "total_reference_words": 228815,
+            "total_hypothesis_words": 224123,
+            "total_hits": 201124,
+            "total_substitutions": 16476,
+            "total_deletions": 11215,
+            "total_insertions": 6523
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 3,
+            "hypothesis_strings_changed": 70,
+            "error_counts_lower": 50,
+            "error_counts_higher": 0,
+            "error_counts_equal": 8337
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        },
+        "whisper_norm": {
+          "n_streamed": 8387,
+          "n_original_scored": 8387,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 8387,
+            "macro_wer": 0.14992262579486126,
+            "micro_wer": 0.1362413009206435,
+            "macro_mer": 0.13520507599524387,
+            "micro_mer": 0.1322947325687608,
+            "macro_wil": 0.1903593244921274,
+            "macro_cer": 0.10939339814674129,
+            "total_reference_words": 229622,
+            "total_hypothesis_words": 226639,
+            "total_hits": 205188,
+            "total_substitutions": 14601,
+            "total_deletions": 9833,
+            "total_insertions": 6850
+          },
+          "edge_apostrophe": {
+            "files": 8387,
+            "macro_wer": 0.14992262579486126,
+            "micro_wer": 0.1362413009206435,
+            "macro_mer": 0.13520507599524387,
+            "micro_mer": 0.1322947325687608,
+            "macro_wil": 0.1903593244921274,
+            "macro_cer": 0.10939339814674129,
+            "total_reference_words": 229622,
+            "total_hypothesis_words": 226639,
+            "total_hits": 205188,
+            "total_substitutions": 14601,
+            "total_deletions": 9833,
+            "total_insertions": 6850
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 0,
+            "hypothesis_strings_changed": 0,
+            "error_counts_lower": 0,
+            "error_counts_higher": 0,
+            "error_counts_equal": 8387
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        }
+      },
+      "paired_gains": {
+        "original": {
+          "n_shared": 8387,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.16180064567692112,
+          "macro_condition_shared": 0.14992262579486126,
+          "macro_gain_shared": 0.07341144920878466,
+          "micro_baseline_shared": 0.14974979787164303,
+          "micro_condition_shared": 0.1362413009206435,
+          "micro_gain_shared": 0.09020711308457491,
+          "reference_words_baseline_shared": 228815,
+          "reference_words_condition_shared": 229622
+        },
+        "edge_apostrophe": {
+          "n_shared": 8387,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.16158827196736944,
+          "macro_condition_shared": 0.14992262579486126,
+          "macro_gain_shared": 0.07219364394752545,
+          "micro_baseline_shared": 0.1495269103861198,
+          "micro_condition_shared": 0.1362413009206435,
+          "micro_gain_shared": 0.0888509595441328,
+          "reference_words_baseline_shared": 228815,
+          "reference_words_condition_shared": 229622
+        }
+      },
+      "cross_rule_sample": {
+        "n_common": 8387,
+        "newly_excluded_shared_uids": [],
+        "newly_included_shared_uids": []
+      },
+      "paired_gains_on_fixed_cross_rule_sample": {
+        "original": {
+          "n_shared": 8387,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.16180064567692112,
+          "macro_condition_shared": 0.14992262579486126,
+          "macro_gain_shared": 0.07341144920878466,
+          "micro_baseline_shared": 0.14974979787164303,
+          "micro_condition_shared": 0.1362413009206435,
+          "micro_gain_shared": 0.09020711308457491,
+          "reference_words_baseline_shared": 228815,
+          "reference_words_condition_shared": 229622
+        },
+        "edge_apostrophe": {
+          "n_shared": 8387,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.16158827196736944,
+          "macro_condition_shared": 0.14992262579486126,
+          "macro_gain_shared": 0.07219364394752545,
+          "micro_baseline_shared": 0.1495269103861198,
+          "micro_condition_shared": 0.1362413009206435,
+          "micro_gain_shared": 0.0888509595441328,
+          "reference_words_baseline_shared": 228815,
+          "reference_words_condition_shared": 229622
+        }
+      }
+    },
+    {
+      "suite": "voxpopuli_accented",
+      "model_slug": "whisper-large-v3",
+      "conditions": {
+        "raw": {
+          "n_streamed": 8387,
+          "n_original_scored": 8387,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 8387,
+            "macro_wer": 0.18180360738014736,
+            "micro_wer": 0.17075366562506827,
+            "macro_mer": 0.1688975677274113,
+            "micro_mer": 0.16573064687168612,
+            "macro_wil": 0.2313125246035587,
+            "macro_cer": 0.1348398721708498,
+            "total_reference_words": 228815,
+            "total_hypothesis_words": 220550,
+            "total_hits": 196679,
+            "total_substitutions": 16936,
+            "total_deletions": 15200,
+            "total_insertions": 6935
+          },
+          "edge_apostrophe": {
+            "files": 8387,
+            "macro_wer": 0.18161020334321637,
+            "micro_wer": 0.17054388916810523,
+            "macro_mer": 0.16870931150836568,
+            "micro_mer": 0.1655270413573701,
+            "macro_wil": 0.23097688181157183,
+            "macro_cer": 0.13480175683649825,
+            "total_reference_words": 228815,
+            "total_hypothesis_words": 220550,
+            "total_hits": 196727,
+            "total_substitutions": 16888,
+            "total_deletions": 15200,
+            "total_insertions": 6935
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 3,
+            "hypothesis_strings_changed": 59,
+            "error_counts_lower": 47,
+            "error_counts_higher": 0,
+            "error_counts_equal": 8340
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        },
+        "whisper_norm": {
+          "n_streamed": 8387,
+          "n_original_scored": 8387,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 8387,
+            "macro_wer": 0.17029850148971776,
+            "micro_wer": 0.1572061910444121,
+            "macro_mer": 0.15709382492751173,
+            "micro_mer": 0.15239582893570314,
+            "macro_wil": 0.21319815387254215,
+            "macro_cer": 0.12562147054905196,
+            "total_reference_words": 229622,
+            "total_hypothesis_words": 222993,
+            "total_hits": 200772,
+            "total_substitutions": 14973,
+            "total_deletions": 13877,
+            "total_insertions": 7248
+          },
+          "edge_apostrophe": {
+            "files": 8387,
+            "macro_wer": 0.17029850148971776,
+            "micro_wer": 0.1572061910444121,
+            "macro_mer": 0.15709382492751173,
+            "micro_mer": 0.15239582893570314,
+            "macro_wil": 0.21319815387254215,
+            "macro_cer": 0.12562147054905196,
+            "total_reference_words": 229622,
+            "total_hypothesis_words": 222993,
+            "total_hits": 200772,
+            "total_substitutions": 14973,
+            "total_deletions": 13877,
+            "total_insertions": 7248
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 0,
+            "hypothesis_strings_changed": 0,
+            "error_counts_lower": 0,
+            "error_counts_higher": 0,
+            "error_counts_equal": 8387
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        }
+      },
+      "paired_gains": {
+        "original": {
+          "n_shared": 8387,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.18180360738014736,
+          "macro_condition_shared": 0.17029850148971776,
+          "macro_gain_shared": 0.06328315513769033,
+          "micro_baseline_shared": 0.17075366562506827,
+          "micro_condition_shared": 0.1572061910444121,
+          "micro_gain_shared": 0.07933928991253976,
+          "reference_words_baseline_shared": 228815,
+          "reference_words_condition_shared": 229622
+        },
+        "edge_apostrophe": {
+          "n_shared": 8387,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.18161020334321637,
+          "macro_condition_shared": 0.17029850148971776,
+          "macro_gain_shared": 0.062285607555436585,
+          "micro_baseline_shared": 0.17054388916810523,
+          "micro_condition_shared": 0.1572061910444121,
+          "micro_gain_shared": 0.07820683689549346,
+          "reference_words_baseline_shared": 228815,
+          "reference_words_condition_shared": 229622
+        }
+      },
+      "cross_rule_sample": {
+        "n_common": 8387,
+        "newly_excluded_shared_uids": [],
+        "newly_included_shared_uids": []
+      },
+      "paired_gains_on_fixed_cross_rule_sample": {
+        "original": {
+          "n_shared": 8387,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.18180360738014736,
+          "macro_condition_shared": 0.17029850148971776,
+          "macro_gain_shared": 0.06328315513769033,
+          "micro_baseline_shared": 0.17075366562506827,
+          "micro_condition_shared": 0.1572061910444121,
+          "micro_gain_shared": 0.07933928991253976,
+          "reference_words_baseline_shared": 228815,
+          "reference_words_condition_shared": 229622
+        },
+        "edge_apostrophe": {
+          "n_shared": 8387,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.18161020334321637,
+          "macro_condition_shared": 0.17029850148971776,
+          "macro_gain_shared": 0.062285607555436585,
+          "micro_baseline_shared": 0.17054388916810523,
+          "micro_condition_shared": 0.1572061910444121,
+          "micro_gain_shared": 0.07820683689549346,
+          "reference_words_baseline_shared": 228815,
+          "reference_words_condition_shared": 229622
+        }
+      }
+    },
+    {
+      "suite": "voxpopuli_accented",
+      "model_slug": "whisper-medium",
+      "conditions": {
+        "raw": {
+          "n_streamed": 8387,
+          "n_original_scored": 8387,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 8387,
+            "macro_wer": 0.3784913864954166,
+            "micro_wer": 0.3392522343377838,
+            "macro_mer": 0.19004138949809282,
+            "micro_mer": 0.28352179756895746,
+            "macro_wil": 0.2507982821342639,
+            "macro_cer": 0.3216709596337262,
+            "total_reference_words": 228815,
+            "total_hypothesis_words": 258257,
+            "total_hits": 196166,
+            "total_substitutions": 17114,
+            "total_deletions": 15535,
+            "total_insertions": 44977
+          },
+          "edge_apostrophe": {
+            "files": 8387,
+            "macro_wer": 0.3783218558895982,
+            "micro_wer": 0.3390599392522343,
+            "macro_mer": 0.18988558613421025,
+            "micro_mer": 0.28336109163160356,
+            "macro_wil": 0.25051872528955765,
+            "macro_cer": 0.32163527829713134,
+            "total_reference_words": 228815,
+            "total_hypothesis_words": 258257,
+            "total_hits": 196210,
+            "total_substitutions": 17070,
+            "total_deletions": 15535,
+            "total_insertions": 44977
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 3,
+            "hypothesis_strings_changed": 54,
+            "error_counts_lower": 42,
+            "error_counts_higher": 0,
+            "error_counts_equal": 8345
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        },
+        "whisper_norm": {
+          "n_streamed": 8387,
+          "n_original_scored": 8387,
+          "n_original_excluded": 0,
+          "original_skip_counts": {
+            "n_skipped_transform": 0,
+            "n_skipped_empty_reference": 0,
+            "n_skipped_scoring": 0
+          },
+          "original": {
+            "files": 8387,
+            "macro_wer": 0.36909862630315055,
+            "micro_wer": 0.3257658238322112,
+            "macro_mer": 0.1777129037342875,
+            "micro_mer": 0.2717500290630086,
+            "macro_wil": 0.23175238388617275,
+            "macro_cer": 0.31702462379833507,
+            "total_reference_words": 229622,
+            "total_hypothesis_words": 261024,
+            "total_hits": 200461,
+            "total_substitutions": 14921,
+            "total_deletions": 14240,
+            "total_insertions": 45642
+          },
+          "edge_apostrophe": {
+            "files": 8387,
+            "macro_wer": 0.36909862630315055,
+            "micro_wer": 0.3257658238322112,
+            "macro_mer": 0.1777129037342875,
+            "micro_mer": 0.2717500290630086,
+            "macro_wil": 0.23175238388617275,
+            "macro_cer": 0.31702462379833507,
+            "total_reference_words": 229622,
+            "total_hypothesis_words": 261024,
+            "total_hits": 200461,
+            "total_substitutions": 14921,
+            "total_deletions": 14240,
+            "total_insertions": 45642
+          },
+          "n_newly_excluded": 0,
+          "newly_excluded_uids": [],
+          "n_newly_included": 0,
+          "changes": {
+            "reference_strings_changed": 0,
+            "hypothesis_strings_changed": 0,
+            "error_counts_lower": 0,
+            "error_counts_higher": 0,
+            "error_counts_equal": 8387
+          },
+          "original_per_utterance_and_aggregate_verified": true
+        }
+      },
+      "paired_gains": {
+        "original": {
+          "n_shared": 8387,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.3784913864954166,
+          "macro_condition_shared": 0.36909862630315055,
+          "macro_gain_shared": 0.02481631161870517,
+          "micro_baseline_shared": 0.3392522343377838,
+          "micro_condition_shared": 0.3257658238322112,
+          "micro_gain_shared": 0.03975334320759271,
+          "reference_words_baseline_shared": 228815,
+          "reference_words_condition_shared": 229622
+        },
+        "edge_apostrophe": {
+          "n_shared": 8387,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.3783218558895982,
+          "macro_condition_shared": 0.36909862630315055,
+          "macro_gain_shared": 0.024379319996619988,
+          "micro_baseline_shared": 0.3390599392522343,
+          "micro_condition_shared": 0.3257658238322112,
+          "micro_gain_shared": 0.039208747129908884,
+          "reference_words_baseline_shared": 228815,
+          "reference_words_condition_shared": 229622
+        }
+      },
+      "cross_rule_sample": {
+        "n_common": 8387,
+        "newly_excluded_shared_uids": [],
+        "newly_included_shared_uids": []
+      },
+      "paired_gains_on_fixed_cross_rule_sample": {
+        "original": {
+          "n_shared": 8387,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.3784913864954166,
+          "macro_condition_shared": 0.36909862630315055,
+          "macro_gain_shared": 0.02481631161870517,
+          "micro_baseline_shared": 0.3392522343377838,
+          "micro_condition_shared": 0.3257658238322112,
+          "micro_gain_shared": 0.03975334320759271,
+          "reference_words_baseline_shared": 228815,
+          "reference_words_condition_shared": 229622
+        },
+        "edge_apostrophe": {
+          "n_shared": 8387,
+          "n_baseline_only": 0,
+          "n_condition_only": 0,
+          "macro_baseline_shared": 0.3783218558895982,
+          "macro_condition_shared": 0.36909862630315055,
+          "macro_gain_shared": 0.024379319996619988,
+          "micro_baseline_shared": 0.3390599392522343,
+          "micro_condition_shared": 0.3257658238322112,
+          "micro_gain_shared": 0.039208747129908884,
+          "reference_words_baseline_shared": 228815,
+          "reference_words_condition_shared": 229622
+        }
+      }
+    }
+  ],
+  "run_metadata": {
+    "git_commit": "41fe7125873e3fdab205f4bfa0fcd05f58e565e2",
+    "git_dirty": false,
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "packages": {
+      "torch": null,
+      "torchaudio": null,
+      "transformers": null,
+      "pyannote.audio": null,
+      "jiwer": "4.0.0",
+      "datasets": null,
+      "numpy": "2.3.3",
+      "scipy": null,
+      "librosa": null,
+      "soundfile": null,
+      "gliner": null,
+      "huggingface_hub": null
+    }
+  }
+}

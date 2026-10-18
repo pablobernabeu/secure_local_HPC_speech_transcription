@@ -1,0 +1,219 @@
+{
+  "summary": {
+    "segments": 403,
+    "flagged": 13,
+    "flag_rate": 0.0323,
+    "counts_by_flag": {
+      "high_speech_rate": 4,
+      "repeated_passage": 11,
+      "zero_duration": 3
+    },
+    "rate_flags_skipped": 0,
+    "signal": "heuristic (pipeline does not expose model log-probabilities)"
+  },
+  "truncation": {
+    "checked": true,
+    "audio_duration_s": 1938.87,
+    "last_segment_end_s": 1936.34,
+    "shortfall_s": 2.53,
+    "shortfall_fraction": 0.0013,
+    "truncated": false
+  },
+  "flagged": [
+    {
+      "index": 3,
+      "start": 17.98,
+      "end": 18.66,
+      "words": 6,
+      "speech_rate": 8.82,
+      "flags": [
+        "high_speech_rate"
+      ],
+      "text": "It's good to be here."
+    },
+    {
+      "index": 46,
+      "start": 177.0,
+      "end": 180.32,
+      "words": 15,
+      "speech_rate": 4.52,
+      "flags": [
+        "repeated_passage"
+      ],
+      "text": "And that's because of the sheer scale and the diversity of its training data.",
+      "repeated_passage_with": [
+        50,
+        51
+      ]
+    },
+    {
+      "index": 47,
+      "start": 180.32,
+      "end": 182.0,
+      "words": 9,
+      "speech_rate": 5.36,
+      "flags": [
+        "repeated_passage"
+      ],
+      "text": "Can we just dwell on that for a second?",
+      "repeated_passage_with": [
+        50,
+        51
+      ]
+    },
+    {
+      "index": 48,
+      "start": 182.0,
+      "end": 189.38,
+      "words": 14,
+      "speech_rate": 1.9,
+      "flags": [
+        "repeated_passage"
+      ],
+      "text": "Because that number, 680 ,000 hours of multilingual audio data, that's just an astonishing number.",
+      "repeated_passage_with": [
+        51,
+        52
+      ]
+    },
+    {
+      "index": 49,
+      "start": 189.38,
+      "end": 189.98,
+      "words": 6,
+      "speech_rate": 10.0,
+      "flags": [
+        "repeated_passage",
+        "high_speech_rate"
+      ],
+      "text": "It's so Thanks for watching!",
+      "repeated_passage_with": [
+        52,
+        53
+      ]
+    },
+    {
+      "index": 50,
+      "start": 189.98,
+      "end": 189.98,
+      "words": 1,
+      "speech_rate": null,
+      "flags": [
+        "zero_duration",
+        "repeated_passage"
+      ],
+      "text": "data.",
+      "repeated_passage_with": [
+        46,
+        47
+      ]
+    },
+    {
+      "index": 51,
+      "start": 189.98,
+      "end": 189.98,
+      "words": 9,
+      "speech_rate": null,
+      "flags": [
+        "zero_duration",
+        "repeated_passage"
+      ],
+      "text": "Can we just dwell on that for a second?",
+      "repeated_passage_with": [
+        46,
+        47
+      ]
+    },
+    {
+      "index": 52,
+      "start": 189.98,
+      "end": 189.98,
+      "words": 14,
+      "speech_rate": null,
+      "flags": [
+        "zero_duration",
+        "repeated_passage"
+      ],
+      "text": "Because that number, 680 ,000 hours of multilingual audio data, that's just an astonishing number.",
+      "repeated_passage_with": [
+        47,
+        48
+      ]
+    },
+    {
+      "index": 53,
+      "start": 189.98,
+      "end": 194.18,
+      "words": 13,
+      "speech_rate": 3.1,
+      "flags": [
+        "repeated_passage"
+      ],
+      "text": "It's so important to understand why that makes the model so robust.",
+      "repeated_passage_with": [
+        48,
+        49
+      ]
+    },
+    {
+      "index": 84,
+      "start": 315.14,
+      "end": 320.04,
+      "words": 44,
+      "speech_rate": 8.98,
+      "flags": [
+        "repeated_passage",
+        "high_speech_rate"
+      ],
+      "text": "So if you're conducting a qualitative study, standard methodology often requires you to do these in -depth interviews or focus groups that can regularly span. 60 minutes, 90 minutes, even two hours. Easily. So that means a single two -hour interview has to be manual.",
+      "repeated_passage_with": [
+        85
+      ]
+    },
+    {
+      "index": 85,
+      "start": 320.04,
+      "end": 327.02,
+      "words": 20,
+      "speech_rate": 2.87,
+      "flags": [
+        "repeated_passage"
+      ],
+      "text": "you to do these in -depth interviews or focus groups that can regularly span 60 minutes, 90 minutes, even two hours easily.",
+      "repeated_passage_with": [
+        84
+      ]
+    },
+    {
+      "index": 86,
+      "start": 327.02,
+      "end": 334.94,
+      "words": 28,
+      "speech_rate": 3.54,
+      "flags": [
+        "repeated_passage"
+      ],
+      "text": "So that means a single two -hour interview has to be manually chopped into maybe four or five separate segments just to fit into this arbitrary upload window.",
+      "repeated_passage_with": [
+        84
+      ]
+    },
+    {
+      "index": 287,
+      "start": 1303.48,
+      "end": 1303.5,
+      "words": 1,
+      "speech_rate": 50.0,
+      "flags": [
+        "high_speech_rate"
+      ],
+      "text": "positives."
+    }
+  ],
+  "optional_checks": {
+    "flag_zero_duration": true,
+    "repeated_passage_words": 8,
+    "repeated_passage_window_s": 60.0
+  },
+  "redacted": true
+}

@@ -1,0 +1,20 @@
+{
+  "summary": {
+    "segments": 29,
+    "flagged": 0,
+    "flag_rate": 0.0,
+    "counts_by_flag": {},
+    "rate_flags_skipped": 0,
+    "signal": "heuristic (pipeline does not expose model log-probabilities)"
+  },
+  "truncation": {
+    "checked": true,
+    "audio_duration_s": 151.44,
+    "last_segment_end_s": 149.94,
+    "shortfall_s": 1.5,
+    "shortfall_fraction": 0.0099,
+    "truncated": false
+  },
+  "flagged": [],
+  "redacted": true
+}

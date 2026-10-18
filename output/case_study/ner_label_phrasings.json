@@ -1,0 +1,130 @@
+{
+  "description": "Words the NER stage's entities cover in the case-study text, per label set, split by whether the masker's capitalisation gate would let the stage mask them (audit finding NEW-10).",
+  "input": {
+    "path": "output/case_study/ep05_raw_text.txt",
+    "sha256_lf": "96d77f481b791fe7183027ede700d3208348902ea924033ff1a7ccee99af2e5d"
+  },
+  "model": "urchade/gliner_small-v2.1",
+  "revision": "4e091416cf7c3481db542c2a3d26156916f3a47f",
+  "threshold": 0.6,
+  "gliner": "0.2.28",
+  "n_sentences": 363,
+  "label_sets": {
+    "shipped": {
+      "labels": [
+        "person",
+        "person name",
+        "participant name"
+      ],
+      "capitalised": {
+        "bernabeu": 1,
+        "pablo": 1
+      },
+      "lower_case": {
+        "name": 2,
+        "one": 1,
+        "researcher": 1,
+        "researchers": 1,
+        "speaker": 2,
+        "two": 2,
+        "user": 2,
+        "we": 4
+      },
+      "model_calls": 363,
+      "model_failures": 0
+    },
+    "person name": {
+      "labels": [
+        "person name"
+      ],
+      "capitalised": {
+        "bernabeu": 1,
+        "hpc": 1,
+        "jordan": 1,
+        "pablo": 1,
+        "researchers": 1,
+        "slurm": 3,
+        "whisper": 1
+      },
+      "lower_case": {
+        "model": 1,
+        "name": 2,
+        "one": 2,
+        "researcher": 5,
+        "speaker": 2,
+        "two": 2,
+        "we": 4,
+        "whisper": 1,
+        "white": 1
+      },
+      "model_calls": 363,
+      "model_failures": 0
+    },
+    "personal name": {
+      "labels": [
+        "personal name"
+      ],
+      "capitalised": {
+        "bernabeu": 1,
+        "hpc": 1,
+        "jordan": 1,
+        "pablo": 1,
+        "slurm": 3,
+        "whisper": 1
+      },
+      "lower_case": {
+        "name": 2,
+        "one": 2,
+        "speaker": 2,
+        "two": 1,
+        "whisper": 1,
+        "white": 1
+      },
+      "model_calls": 363,
+      "model_failures": 0
+    },
+    "name of a person": {
+      "labels": [
+        "name of a person"
+      ],
+      "capitalised": {
+        "bernabeu": 1,
+        "hpc": 1,
+        "jordan": 1,
+        "pablo": 1,
+        "slurm": 1,
+        "whisper": 1
+      },
+      "lower_case": {
+        "name": 2,
+        "one": 1,
+        "researcher": 1,
+        "speaker": 2,
+        "two": 2,
+        "whisper": 1
+      },
+      "model_calls": 363,
+      "model_failures": 0
+    }
+  },
+  "run_metadata": {
+    "git_commit": "5b9acf27e940e9264552b36141e2e95f33c15ab8",
+    "git_dirty": false,
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "packages": {
+      "torch": "2.12.1",
+      "torchaudio": null,
+      "transformers": "5.13.1",
+      "pyannote.audio": null,
+      "jiwer": null,
+      "datasets": null,
+      "numpy": "2.3.2",
+      "scipy": "1.17.1",
+      "librosa": null,
+      "soundfile": "0.13.1",
+      "gliner": "0.2.28",
+      "huggingface_hub": "1.22.0"
+    }
+  }
+}

@@ -1,2 +1,24 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# The example variants include run manifests holding the SHA-256 of each
+# file as tools/generate_example_variants.py wrote it, with LF line endings.
+# Checked out with CRLF, `python -m provenance verify` would report every
+# one of those files as altered.
+example_output/variants/** text eol=lf
+
+# Shell scripts run on Linux (ARC, the container). Checked out with CRLF on
+# Windows, a script copied to ARC or into a Docker build fails at its shebang
+# or on a $'\r' in the first command (audit gap G4).
+*.sh text eol=lf
+
+# The run recipes are sourced by bash on ARC. Checked out with CRLF on
+# Windows, a recipe copied to ARC sets every value with a trailing carriage
+# return: ANON_PRESET becomes $'multi-meeting\r', which
+# submit_anonymisation.sh rejects as unknown.
+hpc/runs/*.env text eol=lf
+
+# The case study's review and run manifest are the job's own files, byte for
+# byte, and the manifest records the review's SHA-256. Checked out with CRLF,
+# the review would no longer match that digest.
+output/case_study/*.json text eol=lf

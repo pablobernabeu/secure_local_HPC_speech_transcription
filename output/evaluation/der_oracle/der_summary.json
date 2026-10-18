@@ -1,0 +1,66 @@
+{
+  "n_meetings": 16,
+  "total_ref_duration": 25533.446525182575,
+  "macro_der": 0.24982052381417053,
+  "micro_der": 0.2528266328410142,
+  "macro_missed": 0.0819876772777784,
+  "macro_fa": 0.013091937076428327,
+  "macro_confusion": 0.15474090945996377,
+  "collar_s": 0.25,
+  "collar_convention": "pyannote.metrics total width, centred on each reference boundary: collar_s/2 either side",
+  "audio_signal": "PCM_16 WAV read back as float32 (the cache format)",
+  "dataset": "edinburghcstr/ami/ihm/test",
+  "split": "test",
+  "mix_mode": "timeline",
+  "model": "pyannote/speaker-diarization-3.1",
+  "hyperparameters": {
+    "segmentation": {
+      "min_duration_off": 0.0
+    },
+    "clustering": {
+      "method": "centroid",
+      "min_cluster_size": 12,
+      "threshold": 0.7045654963945799
+    }
+  },
+  "oracle_num_speakers": true,
+  "max_minutes": null,
+  "corpus": {
+    "audio_hours": 8.894,
+    "speech_hours": 7.334,
+    "overlap_fraction": 0.1534,
+    "silence_fraction": 0.1754,
+    "mean_speakers_per_meeting": 3.94
+  },
+  "pyannote_audio_version": "3.4.0",
+  "revisions": {
+    "pyannote/speaker-diarization-3.1": "84fd25912480287da0247647c3d2b4853cb3ee5d",
+    "edinburghcstr/ami": "46f28f2503e2ec48f8867a84eef356c70476beab",
+    "pyannote/segmentation-3.0": "e66f3d3b9eb0873085418a7b813d3b369bf160bb",
+    "pyannote/wespeaker-voxceleb-resnet34-LM": "837717ddb9ff5507820346191109dc79c958d614"
+  },
+  "revisions_not_enforced": [
+    "pyannote/segmentation-3.0",
+    "pyannote/wespeaker-voxceleb-resnet34-LM"
+  ],
+  "run_metadata": {
+    "git_commit": "9cb43e3a4fa10ca4a7afe7e7c83a2c8de3cce915",
+    "git_dirty": false,
+    "python": "3.12.12",
+    "platform": "Linux-5.14.0-427.42.2.arc.el9.x86_64-x86_64-with-glibc2.34",
+    "packages": {
+      "torch": "2.5.1+cu121",
+      "torchaudio": "2.5.1+cu121",
+      "transformers": "4.57.1",
+      "pyannote.audio": "3.4.0",
+      "jiwer": "4.0.0",
+      "datasets": "4.8.5",
+      "numpy": "2.3.3",
+      "scipy": "1.16.2",
+      "librosa": "0.11.0",
+      "soundfile": "0.13.1",
+      "gliner": null,
+      "huggingface_hub": "0.35.3"
+    }
+  }
+}

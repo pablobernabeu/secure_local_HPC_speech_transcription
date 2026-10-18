@@ -1,70 +1,113 @@
 #!/usr/bin/env python3
 """
-Download speech transcription models to project cache.
-Usage: python3 download_model.py [--model "MODEL_NAME"]
+Download a speech transcription model to the project cache, and check it loads.
+
+Usage: python3 setup/download_model.py [--model "MODEL_NAME"]
 Default: openai/whisper-large-v3
+
+The files the transformers pipeline loads are fetched with
+``huggingface_hub.snapshot_download`` into ``$HF_HOME``, restricted to
+:data:`WEIGHT_PATTERNS`, at the revision ``evaluation.revisions`` pins for
+the model (the branch head for a model it does not list). Loadability is then confirmed by running the ASR
+pipeline on one second of silence, and any exception counts as failure. The
+previous check called the pipeline on a string that was not a file and
+treated the resulting error as success when its message happened to contain
+the input text, which depended on how transformers words that error (audit
+finding CORE-25).
+
+Exit code: 0 when the model downloads and runs, 1 otherwise.
 """
 
-import sys
-import os
-from transformers import pipeline
 import argparse
+import os
+import sys
+from pathlib import Path
 
-def download_model(model_name="openai/whisper-large-v3"):
-    """Download a model to the project cache directory."""
-    
+# The script runs as setup/download_model.py, so the repository root (where
+# evaluation.revisions lives) is not on sys.path by default.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from evaluation.revisions import revision_for  # noqa: E402
+
+DEFAULT_MODEL = "openai/whisper-large-v3"
+
+# What the pipeline actually loads: the JSON/TXT configuration, tokenizer and
+# preprocessor files, and the safetensors weights (single file or shards).
+# An unrestricted snapshot of openai/whisper-large-v3 is about 25 GB, because
+# the repository also carries Flax, PyTorch .bin and fp32 copies of the same
+# weights that transformers never reads; this set is about 3.1 GB (audit
+# finding CORE-R1). 'model-*.safetensors' is spelt with the hyphen on purpose:
+# 'model*.safetensors' would also match the model.fp32-0000N-of-0000M shards.
+# A checkpoint published without safetensors still works, because the load
+# check below makes the pipeline fetch its .bin weights itself.
+WEIGHT_PATTERNS = ["*.json", "*.txt", "model.safetensors", "model-*.safetensors"]
+
+
+def download_model(model_name=DEFAULT_MODEL):
+    """Download *model_name* and run it once on silence.
+
+    Returns True on success, False on any failure (the error is printed).
+    Side effects: network download into the HuggingFace cache, limited to
+    the files matching :data:`WEIGHT_PATTERNS`.
+    """
     print(f">> Downloading {model_name} model to project cache...")
     print(f"   Cache location: {os.environ.get('HF_HOME', 'default')}")
-    
+
+    # The revision the committed results used (None, i.e. the branch head,
+    # for a model the paper did not benchmark). Fetching 'main' instead
+    # would cache whatever the Hub serves today (audit finding DEPS-16).
+    revision = revision_for(model_name)
+    if revision:
+        print(f"   Revision: {revision}")
+
     try:
-        # Download model using the same pipeline configuration as transcription
+        from huggingface_hub import snapshot_download  # noqa: PLC0415
+        path = snapshot_download(model_name, revision=revision,
+                                 allow_patterns=WEIGHT_PATTERNS)
+        print(f"SUCCESS: Model {model_name} downloaded to {path}")
+    except Exception as e:
+        print(f"ERROR: Download failed: {e}")
+        return False
+
+    try:
+        import numpy as np  # noqa: PLC0415
+        from transformers import pipeline  # noqa: PLC0415
+
+        print(">> Testing model load...")
         transcriber = pipeline(
             "automatic-speech-recognition",
             model=model_name,
-            torch_dtype="float32",  # CPU-compatible for download
-            device=-1,  # Use CPU for download
-            return_timestamps=False,
-            chunk_length_s=15,
-            stride_length_s=2,
-            ignore_warning=True
+            revision=revision,
+            torch_dtype="float32",  # CPU-compatible for the check
+            device=-1,
         )
-        
-        print(f"SUCCESS: Model {model_name} download completed successfully!")
-        print(f"   Model cached in project space: {os.environ.get('HF_HOME')}")
-        
-        # Test that the model loads correctly
-        print(">> Testing model load...")
-        test_result = transcriber("Test audio")  # This will fail but confirms model loads
-        
+        transcriber({"raw": np.zeros(16000, dtype=np.float32),
+                     "sampling_rate": 16000})
     except Exception as e:
-        if "requires the same input length" in str(e) or "test audio" in str(e).lower():
-            # This error is expected - it means the model loaded successfully
-            print("SUCCESS: Model load test successful!")
-            print(f"SUCCESS: Model {model_name} is ready for use in transcription jobs!")
-        else:
-            print(f"ERROR: Download failed: {e}")
-            return False
-    
+        print(f"ERROR: Model downloaded but failed to load or run: {e}")
+        return False
+
+    print(f"SUCCESS: Model {model_name} is ready for use in transcription jobs!")
     return True
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Download speech transcription models")
-    parser.add_argument('--model', type=str, default="openai/whisper-large-v3",
-                       help='HuggingFace model name (default: openai/whisper-large-v3)')
-    
+    parser.add_argument('--model', type=str, default=DEFAULT_MODEL,
+                        help=f'HuggingFace model name (default: {DEFAULT_MODEL})')
+
     args = parser.parse_args()
-    
+
     print("Model Download Utility")
     print("=====================")
     print(f"Target model: {args.model}")
     print(f"Cache directory: {os.environ.get('HF_HOME', 'Not set - check environment!')}")
     print("")
-    
+
     success = download_model(args.model)
-    
+
     if success:
         print("")
-        print("COMPLETE: Download finished! You can now run transcription jobs:")
-        print(f'   ./submit_batch.sh --model "{args.model}"')
-    
+        print("COMPLETE: Download finished! You can now run transcription jobs, e.g.:")
+        print(f'   python transcription.py <recording> --model "{args.model}"')
+
     sys.exit(0 if success else 1)

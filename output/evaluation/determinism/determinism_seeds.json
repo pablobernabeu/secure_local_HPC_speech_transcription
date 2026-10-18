@@ -1,0 +1,17 @@
+{
+  "runs": [
+    "seed0_run1",
+    "seed1_run1"
+  ],
+  "utterances_compared": 200,
+  "utterances_dropped_per_run": {
+    "seed0_run1": 0,
+    "seed1_run1": 0
+  },
+  "identical": 200,
+  "exact_match_rate": 1.0,
+  "differing": 0,
+  "mean_word_divergence_over_differing": 0.0,
+  "max_word_divergence": 0.0,
+  "most_divergent": []
+}

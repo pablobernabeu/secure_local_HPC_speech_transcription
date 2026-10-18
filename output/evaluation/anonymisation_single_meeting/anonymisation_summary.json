@@ -1,0 +1,382 @@
+{
+  "corpus": "edinburghcstr/ami/ihm/test",
+  "n_utterances": 200,
+  "rows_skipped": {
+    "undecodable": 0,
+    "wrong_sample_rate": 0,
+    "too_short": 119
+  },
+  "requested": {
+    "limit": 200,
+    "alphas": [
+      0.5,
+      0.7,
+      0.8,
+      0.9
+    ],
+    "per_meeting": null,
+    "model": "openai/whisper-large-v3"
+  },
+  "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+  "n_meetings": 1,
+  "meetings": [
+    "EN2002a"
+  ],
+  "accepted_by_meeting": {
+    "EN2002a": 200
+  },
+  "n_speakers": 4,
+  "per_meeting_cap": null,
+  "sampling": "first usable utterances of the split, in stream order",
+  "asr_model": "openai/whisper-large-v3",
+  "embedding_model": "pyannote/wespeaker-voxceleb-resnet34-LM",
+  "degenerate_baseline_criterion": {
+    "rule": "hypothesis_words >= length_floor and hypothesis_words > length_factor * max(reference_words, 1)",
+    "hypothesis_words_fallback": "reference_words + insertions - deletions, for records without a hypothesis length",
+    "length_factor": 5,
+    "length_floor": 20,
+    "screened_arm": "resynthesis control",
+    "report_column": "degenerate_baseline"
+  },
+  "linkage_candidate_sets": {
+    "all": "every other original recording",
+    "within_meeting": "other original recordings from the probe's meeting",
+    "cross_meeting": "original recordings from other meetings",
+    "cross_meeting_cross_channel": "original recordings from other meetings on a different headset channel"
+  },
+  "linkage_ceiling": {
+    "all": {
+      "linkage_rate": 0.935,
+      "trials": 200,
+      "chance": 0.2937,
+      "distinct_speakers": 4,
+      "n_singleton_excluded": 0
+    },
+    "within_meeting": {
+      "linkage_rate": 0.935,
+      "trials": 200,
+      "chance": 0.2937,
+      "distinct_speakers": 4,
+      "n_singleton_excluded": 0
+    },
+    "cross_meeting": {
+      "linkage_rate": null,
+      "trials": 0,
+      "chance": null,
+      "distinct_speakers": 4,
+      "n_singleton_excluded": 200
+    },
+    "cross_meeting_cross_channel": {
+      "linkage_rate": null,
+      "trials": 0,
+      "chance": null,
+      "distinct_speakers": 4,
+      "n_singleton_excluded": 200
+    }
+  },
+  "speaker_channels": {
+    "speakers_in_several_meetings": 0,
+    "keep_channel": [],
+    "change_channel": [],
+    "channels": {
+      "FEO070": {
+        "EN2002a": [
+          "H01"
+        ]
+      },
+      "FEO072": {
+        "EN2002a": [
+          "H02"
+        ]
+      },
+      "MEE071": {
+        "EN2002a": [
+          "H03"
+        ]
+      },
+      "MEE073": {
+        "EN2002a": [
+          "H00"
+        ]
+      }
+    }
+  },
+  "revisions": {
+    "openai/whisper-large-v3": "06f233fe06e710322aca913c1bc4249a0d71fce1",
+    "pyannote/wespeaker-voxceleb-resnet34-LM": "837717ddb9ff5507820346191109dc79c958d614",
+    "edinburghcstr/ami": "46f28f2503e2ec48f8867a84eef356c70476beab"
+  },
+  "revisions_not_enforced": [
+    "pyannote/wespeaker-voxceleb-resnet34-LM"
+  ],
+  "run_metadata": {
+    "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+    "git_dirty": false,
+    "python": "3.12.12",
+    "platform": "Linux-5.14.0-427.42.2.arc.el9.x86_64-x86_64-with-glibc2.34",
+    "packages": {
+      "torch": "2.5.1+cu121",
+      "torchaudio": "2.5.1+cu121",
+      "transformers": "4.57.1",
+      "pyannote.audio": "3.4.0",
+      "jiwer": "4.0.0",
+      "datasets": "4.8.5",
+      "numpy": "2.3.3",
+      "scipy": "1.16.2",
+      "librosa": "0.11.0",
+      "soundfile": "0.13.1",
+      "gliner": null,
+      "huggingface_hub": "0.35.3"
+    }
+  },
+  "by_alpha": {
+    "0.5": {
+      "n_utterances": 200,
+      "mean_self_similarity": 0.0995,
+      "wer_original": 0.7884,
+      "wer_resynthesis_control": 0.7884,
+      "wer_anonymised": 2.5958,
+      "wer_cost": 1.8074,
+      "wer_cost_baseline": "resynthesis control",
+      "wer_baseline_name": "resynthesis control",
+      "wer_cost_sign_anomaly": null,
+      "n_degenerate_baselines": 5,
+      "degenerate_baseline_error_share": 0.7633,
+      "wer_baseline_guarded": 0.1871,
+      "wer_original_guarded": 0.1871,
+      "wer_anonymised_guarded": 2.5957,
+      "wer_cost_guarded": 2.4086,
+      "wer_averaging": "micro (pooled errors over pooled reference words)",
+      "level_ratio": 1.0,
+      "level_matched": true,
+      "linkage_rate": 0.48,
+      "trials": 200,
+      "chance": 0.2937,
+      "distinct_speakers": 4,
+      "n_singleton_excluded": 0,
+      "linkage_rate_within_meeting": 0.48,
+      "chance_within_meeting": 0.2937,
+      "linkage_rate_cross_meeting": null,
+      "chance_cross_meeting": null,
+      "linkage_by_candidates": {
+        "all": {
+          "linkage_rate": 0.48,
+          "trials": 200,
+          "chance": 0.2937,
+          "distinct_speakers": 4,
+          "n_singleton_excluded": 0
+        },
+        "within_meeting": {
+          "linkage_rate": 0.48,
+          "trials": 200,
+          "chance": 0.2937,
+          "distinct_speakers": 4,
+          "n_singleton_excluded": 0
+        },
+        "cross_meeting": {
+          "linkage_rate": null,
+          "trials": 0,
+          "chance": null,
+          "distinct_speakers": 4,
+          "n_singleton_excluded": 200
+        },
+        "cross_meeting_cross_channel": {
+          "linkage_rate": null,
+          "trials": 0,
+          "chance": null,
+          "distinct_speakers": 4,
+          "n_singleton_excluded": 200
+        }
+      },
+      "level_ratio_body": 0.9988,
+      "n_knee_compressed_samples": 21,
+      "alpha": 0.5
+    },
+    "0.7": {
+      "n_utterances": 200,
+      "mean_self_similarity": 0.3043,
+      "wer_original": 0.7884,
+      "wer_resynthesis_control": 0.7884,
+      "wer_anonymised": 0.4674,
+      "wer_cost": -0.321,
+      "wer_cost_baseline": "resynthesis control",
+      "wer_baseline_name": "resynthesis control",
+      "wer_cost_sign_anomaly": true,
+      "n_degenerate_baselines": 5,
+      "degenerate_baseline_error_share": 0.7633,
+      "wer_baseline_guarded": 0.1871,
+      "wer_original_guarded": 0.1871,
+      "wer_anonymised_guarded": 0.4659,
+      "wer_cost_guarded": 0.2788,
+      "wer_averaging": "micro (pooled errors over pooled reference words)",
+      "level_ratio": 1.0,
+      "level_matched": true,
+      "linkage_rate": 0.755,
+      "trials": 200,
+      "chance": 0.2937,
+      "distinct_speakers": 4,
+      "n_singleton_excluded": 0,
+      "linkage_rate_within_meeting": 0.755,
+      "chance_within_meeting": 0.2937,
+      "linkage_rate_cross_meeting": null,
+      "chance_cross_meeting": null,
+      "linkage_by_candidates": {
+        "all": {
+          "linkage_rate": 0.755,
+          "trials": 200,
+          "chance": 0.2937,
+          "distinct_speakers": 4,
+          "n_singleton_excluded": 0
+        },
+        "within_meeting": {
+          "linkage_rate": 0.755,
+          "trials": 200,
+          "chance": 0.2937,
+          "distinct_speakers": 4,
+          "n_singleton_excluded": 0
+        },
+        "cross_meeting": {
+          "linkage_rate": null,
+          "trials": 0,
+          "chance": null,
+          "distinct_speakers": 4,
+          "n_singleton_excluded": 200
+        },
+        "cross_meeting_cross_channel": {
+          "linkage_rate": null,
+          "trials": 0,
+          "chance": null,
+          "distinct_speakers": 4,
+          "n_singleton_excluded": 200
+        }
+      },
+      "level_ratio_body": 0.9995,
+      "n_knee_compressed_samples": 3,
+      "alpha": 0.7
+    },
+    "0.8": {
+      "n_utterances": 200,
+      "mean_self_similarity": 0.4605,
+      "wer_original": 0.7884,
+      "wer_resynthesis_control": 0.7884,
+      "wer_anonymised": 0.3634,
+      "wer_cost": -0.425,
+      "wer_cost_baseline": "resynthesis control",
+      "wer_baseline_name": "resynthesis control",
+      "wer_cost_sign_anomaly": true,
+      "n_degenerate_baselines": 5,
+      "degenerate_baseline_error_share": 0.7633,
+      "wer_baseline_guarded": 0.1871,
+      "wer_original_guarded": 0.1871,
+      "wer_anonymised_guarded": 0.3628,
+      "wer_cost_guarded": 0.1757,
+      "wer_averaging": "micro (pooled errors over pooled reference words)",
+      "level_ratio": 1.0,
+      "level_matched": true,
+      "linkage_rate": 0.865,
+      "trials": 200,
+      "chance": 0.2937,
+      "distinct_speakers": 4,
+      "n_singleton_excluded": 0,
+      "linkage_rate_within_meeting": 0.865,
+      "chance_within_meeting": 0.2937,
+      "linkage_rate_cross_meeting": null,
+      "chance_cross_meeting": null,
+      "linkage_by_candidates": {
+        "all": {
+          "linkage_rate": 0.865,
+          "trials": 200,
+          "chance": 0.2937,
+          "distinct_speakers": 4,
+          "n_singleton_excluded": 0
+        },
+        "within_meeting": {
+          "linkage_rate": 0.865,
+          "trials": 200,
+          "chance": 0.2937,
+          "distinct_speakers": 4,
+          "n_singleton_excluded": 0
+        },
+        "cross_meeting": {
+          "linkage_rate": null,
+          "trials": 0,
+          "chance": null,
+          "distinct_speakers": 4,
+          "n_singleton_excluded": 200
+        },
+        "cross_meeting_cross_channel": {
+          "linkage_rate": null,
+          "trials": 0,
+          "chance": null,
+          "distinct_speakers": 4,
+          "n_singleton_excluded": 200
+        }
+      },
+      "level_ratio_body": 1.0,
+      "n_knee_compressed_samples": 1,
+      "alpha": 0.8
+    },
+    "0.9": {
+      "n_utterances": 200,
+      "mean_self_similarity": 0.7076,
+      "wer_original": 0.7884,
+      "wer_resynthesis_control": 0.7884,
+      "wer_anonymised": 0.7628,
+      "wer_cost": -0.0256,
+      "wer_cost_baseline": "resynthesis control",
+      "wer_baseline_name": "resynthesis control",
+      "wer_cost_sign_anomaly": true,
+      "n_degenerate_baselines": 5,
+      "degenerate_baseline_error_share": 0.7633,
+      "wer_baseline_guarded": 0.1871,
+      "wer_original_guarded": 0.1871,
+      "wer_anonymised_guarded": 0.5226,
+      "wer_cost_guarded": 0.3355,
+      "wer_averaging": "micro (pooled errors over pooled reference words)",
+      "level_ratio": 1.0,
+      "level_matched": true,
+      "linkage_rate": 0.92,
+      "trials": 200,
+      "chance": 0.2937,
+      "distinct_speakers": 4,
+      "n_singleton_excluded": 0,
+      "linkage_rate_within_meeting": 0.92,
+      "chance_within_meeting": 0.2937,
+      "linkage_rate_cross_meeting": null,
+      "chance_cross_meeting": null,
+      "linkage_by_candidates": {
+        "all": {
+          "linkage_rate": 0.92,
+          "trials": 200,
+          "chance": 0.2937,
+          "distinct_speakers": 4,
+          "n_singleton_excluded": 0
+        },
+        "within_meeting": {
+          "linkage_rate": 0.92,
+          "trials": 200,
+          "chance": 0.2937,
+          "distinct_speakers": 4,
+          "n_singleton_excluded": 0
+        },
+        "cross_meeting": {
+          "linkage_rate": null,
+          "trials": 0,
+          "chance": null,
+          "distinct_speakers": 4,
+          "n_singleton_excluded": 200
+        },
+        "cross_meeting_cross_channel": {
+          "linkage_rate": null,
+          "trials": 0,
+          "chance": null,
+          "distinct_speakers": 4,
+          "n_singleton_excluded": 200
+        }
+      },
+      "level_ratio_body": 1.0,
+      "n_knee_compressed_samples": 0,
+      "alpha": 0.9
+    }
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "description": "What each run compared in determinism_cross_accelerator.json was, where its inputs were copied from, and how each fact is known. Written by hand from the job logs, the runs' own outputs and environment records, Slurm's accounting and node features, the ARC clones' git reflogs, the Hugging Face cache, the environment's package records and the cluster's CUDA modulefiles, all read on ARC on 2026-10-04; evaluation.determinism_cross copies it into the comparison unchanged. DATA is /data/educ-lift/educ1242.",
+  "comparison": "Five runs of one decode in four hardware configurations, three with a GPU and one without. A configuration with a GPU is a GPU model together with its node: the host processor and the software beneath the Python environment (driver and CUDA module), which only the two V100 runs recorded. Those two, the condition sweep's V100 pass (v100) and the V100 run of the check itself (v100_seed0), ran on the same node, htc-g004, with the same driver and CUDA module, so their pair holds the configuration fixed while the seed, the code commit, the process and the cores allocated change; which of the node's two cards each was given is not recorded. In the fourth configuration, the CPU run, the model ran on the node's processor in float32, where the GPUs decoded in the checkpoint's float16, so that configuration changes the hardware and the precision together. The runs also differ in seed, code commit and process, and the differences list sets out each difference with what is known of it. They share the model and corpus snapshots, the installed Python packages, the batching and the generation settings. The H100, L40S, CPU and v100_seed0 runs decoded their 200 utterances repeatedly, so whether each repeats itself was measured; the sweep's V100 pass decoded each utterance once, and the second decode its preflight made covers only the first 10. The CPU, L40S and both V100 runs kept their hypotheses and are compared word for word. The H100 run's hypotheses were lost, so it enters through the per-utterance error rates its log printed, which can show that its words differ but never that they agree. A difference between runs in two configurations therefore shows that the text changed from one hardware configuration to another. The v100_seed0 run shares the L40S run's seed and process, so their pair sets the configuration apart from those two but not from the code commit, and no pair isolates the GPU model from its node or the processor from the precision.",
+  "runs": {
+    "h100": {
+      "job": "8554985",
+      "date": "2026-08-12",
+      "node": "htc-g058",
+      "accelerator": "NVIDIA H100 NVL",
+      "accelerator_source": "the gpu.txt the job wrote, committed as output/evaluation/determinism/gpu.txt",
+      "host_processor": "Intel Xeon Gold 5418Y (Sapphire Rapids)",
+      "host_processor_source": "the node's Slurm features",
+      "driver": "not recorded; no environment record under $DATA/speech_transcription_env/output names the node",
+      "cuda_module": "not recorded: the job's script at 754594d runs `module load CUDA` without a version (see differences)",
+      "code_commit": "754594d",
+      "code_commit_source": "the job ran from the ARC clone ~/paper_speech_transcription between 16:11:56 and 16:25:04 BST; its reflog moves HEAD to 754594d at 16:08:27 and next at 16:27:03. Whether the working tree was clean was not recorded.",
+      "seeds": [0, 1],
+      "decodes": ["seed0_run1", "seed0_run2", "seed1_run1", "seed1_run2"],
+      "agreement_within_run": "200 of 200 identical, same seed repeated and across seeds (the committed determinism_repeat.json and determinism_seeds.json); the four decodes also printed the same error rate for every utterance",
+      "hypotheses": "lost: job 8781724 wrote over them on ARC",
+      "inputs": {
+        "log": "~/paper_speech_transcription/logs/determinism_8554985.out on ARC; the per-utterance raw WER printed by its first decode, seed 0 run 1"
+      }
+    },
+    "l40s": {
+      "job": "8781724",
+      "date": "2026-09-12",
+      "node": "htc-g064",
+      "accelerator": "NVIDIA L40S",
+      "accelerator_source": "the gpu.txt the job wrote, committed as output/evaluation/determinism/l40s_8781724/gpu.txt",
+      "host_processor": "Intel Xeon Gold 6548N (Emerald Rapids)",
+      "host_processor_source": "the node's Slurm features",
+      "driver": "not recorded; the node reported 580.65.06, the version both V100 runs recorded, in the audit wave's environment records of 2026-09-27 and 2026-09-28, a fortnight after this run",
+      "cuda_module": "not recorded: the job's script at 1bb68ba runs `module load CUDA` without a version (see differences)",
+      "code_commit": "1bb68ba",
+      "code_commit_source": "the job ran from the ARC clone between 09:13:37 and 09:26:43 BST; HEAD has been 1bb68ba there since 2026-09-10 23:55:51 by its reflog. The summaries predate run_metadata and record no commit, and whether the working tree was clean was not recorded.",
+      "seeds": [0, 1],
+      "decodes": ["seed0_run1", "seed0_run2", "seed1_run1", "seed1_run2"],
+      "agreement_within_run": "200 of 200 identical, same seed repeated and across seeds (l40s_8781724/determinism_repeat.json and determinism_seeds.json); the four hypothesis files are byte-identical, as are the four WER reports. within_run in the comparison recomputes the same-seed repeat from seed0_run1.csv and seed0_run2.csv",
+      "hypotheses": "kept on ARC in the directory below and not committed: the comparison records ids, word-edit counts and error rates, not text",
+      "inputs": {
+        "dump": "$DATA/speech_transcription_env/output/evaluation/determinism/seed0_run1.csv",
+        "repeat": "$DATA/speech_transcription_env/output/evaluation/determinism/seed0_run2.csv, the second decode under seed 0",
+        "report": "$DATA/speech_transcription_env/output/evaluation/determinism/wer_seed0_run1.csv. A copy is committed as l40s_8781724/wer_seed0_run1.csv, which git stores with LF line endings: the ARC original matches the comparison's sha256 for this input, and the committed copy its sha256_lf on any checkout"
+      }
+    },
+    "v100": {
+      "job": "8917985, array task 1 (Slurm job 8923478)",
+      "date": "2026-09-28",
+      "node": "htc-g004",
+      "identified_by": "evaluation.sweep at 6f9bf56 runs the suites in the array order librispeech_clean, ami, fleurs, librispeech_other, voxpopuli_accented, so ami is task 1. The task's environment record, environment/au_wer_large_8917985_1.txt, reads SUITE_INDEX=1, host htc-g004 and Slurm job 8923478; its log, ~/paper_speech_transcription_audit/logs/wer_sweep_8917985_1.out, reads 'Suite: ami'; sacct gives 8917985_1 as job 8923478 on htc-g004 from 10:24:15 to 13:29:20 BST, and the dump was last written at 13:29:11",
+      "accelerator": "Tesla V100-PCIE-32GB",
+      "accelerator_source": "benchmark.decode.gpu in the run's summary, wer_summary_ami_whisper-large-v3.json, and the GPU line of its environment record, au_wer_large_8917985_1.txt",
+      "host_processor": "Intel Xeon Platinum 8268 (Cascade Lake)",
+      "host_processor_source": "the node's Slurm features",
+      "driver": "580.65.06 (the environment record)",
+      "cuda_module": "CUDA/13.0.2 (the environment record)",
+      "code_commit": "6f9bf56",
+      "code_commit_source": "run_metadata in the run's summary (git_dirty false) and its environment record, au_wer_large_8917985_1.txt (no modified tracked file)",
+      "seeds": [42],
+      "decodes": ["one pass over the whole AMI test split, 12,643 utterances, scoring 17 conditions on each decode; the comparison reads its first 200"],
+      "agreement_within_run": "measured on the first 10 of the 200 only, against repeat_run, which decoded them in a separate job on the same node at the same commit, seed and settings; within_run in the comparison gives the result and how many of the utterances on which the runs differ those 10 include",
+      "repeat_run": {
+        "job": "8913987, array task 1 (Slurm job 8922107), the sweep's preflight",
+        "date": "2026-09-28, 07:11:08 to 07:15:12 BST by sacct, three hours before the sweep task",
+        "node": "htc-g004, as the sweep task. The node holds two V100 cards, and which of them each job was given is not recorded",
+        "code_commit": "6f9bf56 (run_metadata in its summary, git_dirty false; its environment record, pf_wer_large_8913987_1.txt, lists no modified tracked file)",
+        "settings": "seed 42, float16 on a Tesla V100-PCIE-32GB, the model and corpus snapshots under shared, the first 10 utterances (SWEEP_LIMIT=10), with the same 17 conditions scored after each decode (its summary and environment record)",
+        "identified_by": "the environment record reads SUITE_INDEX=1, SWEEP_LIMIT=10, host htc-g004 and Slurm job 8922107; the log, ~/paper_speech_transcription_audit/logs/wer_sweep_8913987_1.out, reads 'Suite: ami' and 'first 10 utterances'"
+      },
+      "hypotheses": "kept on ARC; not committed",
+      "inputs": {
+        "dump": "$DATA/speech_transcription_env/output/evaluation/audit2026/sweep/wer_hypotheses_ami_whisper-large-v3.csv, condition raw",
+        "repeat": "$DATA/speech_transcription_env/output/evaluation/audit2026/preflight_wer/wer_hypotheses_ami_whisper-large-v3.csv, condition raw: repeat_run's dump, which has the sweep dump's file name",
+        "report": "$DATA/speech_transcription_env/output/evaluation/audit2026/sweep/wer_report_ami_whisper-large-v3.csv"
+      }
+    },
+    "cpu": {
+      "job": "8978759",
+      "date": "2026-10-04",
+      "node": "htc-c074",
+      "identified_by": "the environment record the job wrote beside its results, environment/determinism_cpu_8978759.txt, reads host htc-c074, Slurm job 8978759, job name determinism_cpu and account educ-intract; the log, ~/paper_speech_transcription_audit_w2b/logs/determinism_cpu_8978759.out, reads 'Job: 8978759   Node: htc-c074' and names the output directory below; sacct gives 8978759 as determinism_cpu, COMPLETED with exit code 0:0, on htc-c074 from 04:51:19 to 06:08:35 BST with 16 cores and 32 GB",
+      "accelerator": "none: the model ran on the processor",
+      "accelerator_source": "benchmark.decode in the run's three WER summaries, wer_seed0_run1.json, wer_seed0_run2.json and wer_seed1_run1.json, which stay on ARC in the directory of its inputs below and are not committed (device cpu, gpu null), and its environment record (cuda_available False, nvidia-smi not available). The job asked Slurm for no GPU, Slurm's record of htc-c074 lists none (Gres=(null)), and the job script empties CUDA_VISIBLE_DEVICES and passes --device cpu",
+      "host_processor": "AMD EPYC 9634 84-Core Processor (Genoa)",
+      "host_processor_source": "cpu.txt, which the job wrote from /proc/cpuinfo, committed as output/evaluation/determinism/cpu_8978759/cpu.txt; benchmark.decode.cpu in its WER summaries; the node's Slurm features (cpu_gen:Genoa, cpu_sku:Epyc_9634)",
+      "precision": "float32",
+      "precision_source": "benchmark.decode.dtype (torch.float32) and dtype_requested (float32) in its WER summaries, DET_DTYPE=float32 in its environment record and 'Device:  cpu, float32, 16 threads' in its log",
+      "threads": 16,
+      "threads_source": "benchmark.decode.torch_threads in its WER summaries and OMP_NUM_THREADS=16 in its environment record. The job script sets OMP_NUM_THREADS and MKL_NUM_THREADS to the 16 cores Slurm allocated, of the node's 84",
+      "driver": "none: no GPU was used",
+      "cuda_module": "none: the environment record lists Anaconda3/2025.06-1 as the only module loaded, since the job script calls arc_activate (hpc/common/arc_common.sh) without the --cuda that GPU jobs pass. torch carries its own CUDA 12.1 runtime, which saw no device",
+      "code_commit": "f2578b8",
+      "code_commit_source": "run_metadata in its WER summaries (git_dirty false) and its environment record (git_commit f2578b83d146e87e23d18b824147c80e473d8d27, no modified tracked file). The job ran from the ARC clone ~/paper_speech_transcription_audit_w2b, whose reflog holds one entry, the checkout of f2578b8 at 04:48:50 BST, before the job started",
+      "seeds": [0, 1],
+      "decodes": ["seed0_run1", "seed0_run2", "seed1_run1"],
+      "agreement_within_run": "200 of 200 identical, same seed repeated and across seeds (cpu_8978759/determinism_repeat.json and determinism_seeds.json); the three hypothesis files are byte-identical, as are the three WER reports. within_run in the comparison recomputes the same-seed repeat from seed0_run1.csv and seed0_run2.csv",
+      "hypotheses": "kept on ARC in the directory below and not committed: the comparison records ids, word-edit counts and error rates, not text",
+      "inputs": {
+        "dump": "$DATA/speech_transcription_env/output/evaluation/repro/cpu_arm/determinism_cpu/seed0_run1.csv",
+        "repeat": "$DATA/speech_transcription_env/output/evaluation/repro/cpu_arm/determinism_cpu/seed0_run2.csv, the second decode under seed 0",
+        "report": "$DATA/speech_transcription_env/output/evaluation/repro/cpu_arm/determinism_cpu/wer_seed0_run1.csv. A copy is committed as cpu_8978759/wer_seed0_run1.csv, which git stores with LF line endings: the ARC original matches the comparison's sha256 for this input, and the committed copy its sha256_lf on any checkout"
+      }
+    },
+    "v100_seed0": {
+      "job": "8978760",
+      "date": "2026-10-04",
+      "node": "htc-g004",
+      "identified_by": "the environment record the job wrote beside its results, environment/determinism_8978760.txt, reads host htc-g004, Slurm job 8978760, job name determinism and account educ-intract; the log, ~/paper_speech_transcription_audit_w2b/logs/determinism_8978760.out, reads 'Job: 8978760   Node: htc-g004' and names the output directory below; sacct gives 8978760 as determinism, COMPLETED with exit code 0:0, on htc-g004 from 11:22:53 to 11:38:34 BST with 8 cores, 48 GB and one V100 (gres/gpu:v100=1)",
+      "accelerator": "Tesla V100-PCIE-32GB",
+      "accelerator_source": "the gpu.txt the job wrote, committed as output/evaluation/determinism/v100_8978760/gpu.txt; benchmark.decode.gpu in its three WER summaries, wer_seed0_run1.json, wer_seed0_run2.json and wer_seed1_run1.json, which stay on ARC in the directory of its inputs below and are not committed; the GPU line of its environment record; and sacct's gres/gpu:v100=1, which hpc/runs/determinism_v100.env asked for through SBATCH_GRES. htc-g004 holds two V100 cards (Gres=gpu:v100:2 in Slurm's node record), and which of them the job was given is not recorded",
+      "host_processor": "Intel Xeon Platinum 8268 (Cascade Lake)",
+      "host_processor_source": "benchmark.decode.cpu in its WER summaries (Intel(R) Xeon(R) Platinum 8268 CPU @ 2.90GHz) and the node's Slurm features (cpu_gen:Cascade_Lake, cpu_sku:Platinum_8268)",
+      "precision": "float16",
+      "precision_source": "benchmark.decode.dtype (torch.float16) and dtype_requested (auto) in its WER summaries, DET_DTYPE=(checkpoint) in its environment record and 'Dtype:   as stored in the checkpoint' in its log: the job passed the pipeline no dtype, as the other GPU runs did",
+      "threads": 8,
+      "threads_source": "benchmark.decode.torch_threads in its WER summaries. The job script sets no thread count, so this is torch's default on the 8 cores Slurm allocated",
+      "driver": "580.65.06 (the environment record)",
+      "cuda_module": "CUDA/13.0.2 (the environment record, which lists it beside Anaconda3/2025.06-1 as the modules loaded)",
+      "code_commit": "f2578b8",
+      "code_commit_source": "run_metadata in its WER summaries (git_dirty false) and its environment record (git_commit f2578b83d146e87e23d18b824147c80e473d8d27, no modified tracked file). The job ran from the CPU run's ARC clone, ~/paper_speech_transcription_audit_w2b, whose reflog holds one entry, the checkout of f2578b8 at 04:48:50 BST, before either job started",
+      "seeds": [0, 1],
+      "decodes": ["seed0_run1", "seed0_run2", "seed1_run1"],
+      "agreement_within_run": "200 of 200 identical, same seed repeated and across seeds (v100_8978760/determinism_repeat.json and determinism_seeds.json); the three hypothesis files are byte-identical, as are the three WER reports. within_run in the comparison recomputes the same-seed repeat from seed0_run1.csv and seed0_run2.csv",
+      "hypotheses": "kept on ARC in the directory below and not committed: the comparison records ids, word-edit counts and error rates, not text",
+      "inputs": {
+        "dump": "$DATA/speech_transcription_env/output/evaluation/repro/v100_arm/determinism/seed0_run1.csv",
+        "repeat": "$DATA/speech_transcription_env/output/evaluation/repro/v100_arm/determinism/seed0_run2.csv, the second decode under seed 0",
+        "report": "$DATA/speech_transcription_env/output/evaluation/repro/v100_arm/determinism/wer_seed0_run1.csv. A copy is committed as v100_8978760/wer_seed0_run1.csv, which git stores with LF line endings: the ARC original matches the comparison's sha256 for this input, and the committed copy its sha256_lf on any checkout"
+      }
+    }
+  },
+  "shared": {
+    "model": "openai/whisper-large-v3 at 06f233fe06e710322aca913c1bc4249a0d71fce1",
+    "model_source": "pinned and recorded by the two V100 runs and the CPU run (benchmark.revisions and benchmark.decode.model_commit in their WER summaries). The H100 and L40S runs loaded the repository's main without a pin; the environment's Hugging Face cache holds this one snapshot, with refs/main unchanged since 2026-05-16, so main resolved to it",
+    "corpus": "edinburghcstr/ami, ihm, test, at 46f28f2503e2ec48f8867a84eef356c70476beab; the first 200 utterances in streaming order, all from meeting EN2002a",
+    "corpus_source": "as for the model, with one cached snapshot and refs/main unchanged since 2026-05-26. The five runs list the same 200 ids in the same order, and the CPU, L40S and both V100 runs carry the same reference text and reference word count for every one",
+    "precision": "float16 for the four GPU runs; the CPU run decoded in float32 (runs.cpu and differences)",
+    "precision_source": "recorded by the two V100 runs (benchmark.decode.dtype, with dtype_requested auto in the V100 run of the check). The four GPU runs passed the pipeline no dtype, and transformers 4.57.1's pipeline() then loads the dtype the checkpoint's config names, float16. The CPU run passed --dtype float32, which hands the pipeline torch.float32, and recorded it",
+    "batching": "one utterance per pipeline call, so no utterance shared a batch with another",
+    "generation": "the checkpoint's generation_config, which asks for neither beams nor sampling, so decoding is greedy; language english and task transcribe through generate_kwargs; return_timestamps true; no chunking, every utterance being shorter than Whisper's 30 s window. The pipeline call of the V100 run of the check is the sweep's V100 pass's, and the CPU run's is that call with the device cpu in place of cuda and the dtype torch.float32 added (code_on_the_decode_path)",
+    "seeding": "the same _apply_seed in all five, its code identical at 754594d, 1bb68ba, 6f9bf56 and f2578b8: Python, NumPy and torch seeded, cuDNN deterministic and not benchmarking, CUBLAS_WORKSPACE_CONFIG :4096:8. On the processor the cuDNN and cuBLAS settings have nothing to act on",
+    "software": "Python 3.12.12, torch 2.5.1+cu121, transformers 4.57.1, datasets 4.8.5, numpy 2.3.3, jiwer 4.0.0, in the environment at $DATA/speech_transcription_env",
+    "software_source": "the preflight lines of the four determinism logs (Python, numpy, torch, transformers) and the environment records of the sweep's V100 pass, the CPU run and the V100 run of the check (every package; the last two list the same packages at the same versions). No *.dist-info directory in the environment's site-packages is newer than 2026-05-29, checked again on 2026-10-04 after the CPU run and again after the V100 run of the check, so the installed packages did not change between the five runs. The CPU run's preflight also found all 178 pins in requirements-lock.txt matched",
+    "code_on_the_decode_path": "754594d and 1bb68ba are identical in every Python file the determinism job runs (evaluation/__init__.py, benchmark_wer.py, challenge_suites.py, conditions.py, wer.py and determinism.py, and preflight.py with audio_io.py) and in activate_project_env_arc.sh; hpc/submit_determinism.sh differs only in comments. Between 1bb68ba and 6f9bf56 the decode path gained the revision pins, which resolve to the snapshots above, a check that the audio is mono and a resampling change that does not run on 16 kHz audio; the pipeline call and the per-utterance call are otherwise unchanged. Between 6f9bf56 and f2578b8, the CPU run's commit, benchmark_wer.py gained the --device and --dtype options (f0ac4e3), through which the CPU run passed the pipeline device cpu and dtype torch.float32, and the recording of the processor, the thread count and the requested dtype in each WER summary; no other function in it changed in code. wer.py, challenge_suites.py, revisions.py, determinism.py, evaluation/__init__.py, audio_io.py and hpc/common/arc_common.sh are unchanged, conditions.py changed only in a description string and activate_project_env_arc.sh only in how it exports one variable, and preflight.py, which runs in its own process before any decode, gained a check of the cached diarisation pipeline's config. provenance.py, whose run_metadata benchmark_wer.py calls for the commit and package versions before it seeds and builds the pipeline, gained an optional list of files for its dirty-tree check to ignore, which benchmark_wer.py does not pass, and digest and sidecar helpers that nothing the job runs calls. The CPU run's job script, hpc/submit_determinism_cpu.sh, makes submit_determinism.sh's benchmark_wer call with --device cpu and --dtype float32 added, after emptying CUDA_VISIBLE_DEVICES and fixing the thread count. The V100 run of the check ran f2578b8 too, through hpc/submit_determinism.sh, which since 1bb68ba loads its modules and runs its preflight through hpc/common/arc_common.sh, pinning Anaconda3/2025.06-1 and CUDA/13.0.2, writes the environment record, refuses to overwrite a run, decodes the second seed once and takes DET_DTYPE, which this run left unset. Its benchmark_wer call is the L40S run's, with neither --device nor --dtype, and its pipeline call is the one the sweep's V100 pass made at 6f9bf56 (model, revision, device cuda, return_timestamps and generate_kwargs, read from _build_asr_pipeline at both commits)",
+    "scoring": "evaluation.wer.normalise_text is identical at all four commits and compute_metrics differs only by a check that jiwer is installed, so the per-utterance error rates of the five runs are comparable; on the 198 utterances where the L40S's hypotheses agree with either V100 run's, their stored error rates agree too, and the reports of the CPU run and of the V100 run of the check equal the sweep's V100 report on all 200 utterances, as their text does. Those two runs, at the same commit and under the same seeds, wrote byte-identical hypothesis dumps and WER reports (the same sha256 in the comparison's runs block)"
+  },
+  "differences": [
+    "the card: Hopper (H100 NVL), Ada Lovelace (L40S) and Volta (both V100 runs); the CPU run used none",
+    "the host processor, on which the pipeline computes the log-mel features before the card sees them: Sapphire Rapids, Emerald Rapids and Cascade Lake (both V100 runs, on htc-g004). In the CPU run an AMD EPYC 9634 (Genoa) ran the model as well",
+    "the precision: float16 on the GPUs, float32 on the processor, the precision transcription.py also uses on a machine without CUDA",
+    "the thread count: the CPU run fixed torch's intra-op threads at 16, the cores it was allocated. The GPU jobs set none. The V100 run of the check recorded torch's default, 8, on its 8 allocated cores, and the other three recorded none, on 8 (H100, L40S) and 4 (the sweep's V100 pass) allocated cores by sacct",
+    "the driver, which only the two V100 runs recorded (580.65.06 in both); the CPU run used none, and each run's driver entry says what is known of the others",
+    "the CUDA module, which only the two V100 runs recorded (CUDA/13.0.2 in both); the CPU run loaded none. The H100 and L40S jobs ran `module load CUDA` without a version, which Lmod resolves to the highest installed one. ARC's CUDA modulefile directory has not changed since 2026-06-08, holds no version above 13.0.2 (whose modulefile is dated 2026-03-13) and no file naming another default, and Lmod gave CUDA/13.0.2 as the default on 2026-10-04, so all four GPU runs most likely loaded the same module, although nothing the H100 and L40S jobs wrote shows it",
+    "the seed: 0 for the H100, L40S, CPU and v100_seed0 decodes compared, 42 for the sweep's V100 pass. Decoding is greedy, and seeds 0 and 1 gave identical text on all 200 utterances on the H100, the L40S, the V100 and the processor",
+    "the code commit, with the decode path unchanged apart from what code_on_the_decode_path lists",
+    "the process: the sweep's V100 pass decoded the whole split in one process and scored 17 conditions after each decode; the conditions transform text only after decoding, and the 200 compared were its first 200 decodes. The H100, L40S, CPU and v100_seed0 runs decoded the 200 in one process per decode and scored raw alone",
+    "the date: 2026-08-12, 2026-09-12, 2026-09-28 and 2026-10-04 (the CPU run and the V100 run of the check). The installed packages and the cached snapshots did not change in between (shared); what lies beneath them on each GPU node is recorded only for htc-g004, the node of both V100 runs"
+  ],
+  "regenerate": "python -m evaluation.determinism_cross --dump cpu=<cpu dump> --repeat cpu=<cpu repeat> --report cpu=<cpu report> --dump l40s=<l40s dump> --repeat l40s=<l40s repeat> --report l40s=<l40s report> --dump v100=<v100 dump> --repeat v100=<v100 repeat> --report v100=<v100 report> --dump v100_seed0=<v100_seed0 dump> --repeat v100_seed0=<v100_seed0 repeat> --report v100_seed0=<v100_seed0 report> --log h100=<h100 log> --subset l40s --meta output/evaluation/determinism/determinism_cross_accelerator_runs.json --json <scratch path>, with the inputs above copied from ARC, run from a clean tree and the result copied over output/evaluation/determinism/determinism_cross_accelerator.json, so that its run_metadata records git_dirty false; the inputs' digests are in the comparison's runs block"
+}

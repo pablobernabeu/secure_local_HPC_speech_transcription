@@ -1,0 +1,111 @@
+{
+  "manifest_version": 1,
+  "generated_at": "2026-09-27T12:00:00",
+  "provenance": {
+    "asr_model": "openai/whisper-large-v3",
+    "asr_model_revision": "06f233fe06e710322aca913c1bc4249a0d71fce1",
+    "language": "english",
+    "language_requested": "english",
+    "language_detected": null,
+    "language_assumed": false,
+    "name_masking": true,
+    "repetition_fix": true,
+    "speaker_attribution": true,
+    "timestamps": false,
+    "timestamped_artefacts_written": true,
+    "redacted_timestamps_only": false,
+    "audio_enhancement": false,
+    "name_masking_settings": {
+      "languages": [
+        "arabic",
+        "chinese",
+        "english",
+        "french",
+        "german",
+        "hindi",
+        "italian",
+        "polynesian",
+        "spanish"
+      ],
+      "use_facebook_names": false,
+      "use_facebook_surnames": false,
+      "exclude_common_words": true,
+      "excluded_names": {
+        "count": 0,
+        "sha256": null
+      }
+    },
+    "diarization_settings": {
+      "source": "hf_loader_offline",
+      "model_id": "pyannote/speaker-diarization-3.1",
+      "model_revision": "84fd25912480287da0247647c3d2b4853cb3ee5d",
+      "sub_model_revisions": {
+        "pyannote/segmentation-3.0": "e66f3d3b9eb0873085418a7b813d3b369bf160bb",
+        "pyannote/wespeaker-voxceleb-resnet34-LM": "837717ddb9ff5507820346191109dc79c958d614"
+      },
+      "model_path": null,
+      "config": null,
+      "num_speakers": null,
+      "min_speakers": null,
+      "max_speakers": null,
+      "vad_onset": null,
+      "vad_offset": null,
+      "error": null
+    },
+    "software": {
+      "version": "2.0.0",
+      "packages": {
+        "python": "3.12.12",
+        "transformers": "4.57.1",
+        "torch": "2.5.1+cu121",
+        "pyannote.audio": "3.4.0",
+        "gliner": null
+      },
+      "git_commit": null,
+      "git_dirty": null
+    }
+  },
+  "artefacts": [
+    {
+      "path": "example_review.json",
+      "bytes": 442,
+      "sha256": "52ad77da098f5823d1ac1493a28746cae263dc347266e3afa961b738cc043484"
+    },
+    {
+      "path": "example_transcript.json",
+      "bytes": 62307,
+      "sha256": "765c41947ebe1925a72383f2ac554aa9b1d41184bbeec8b1e51bf47ad40e6b87"
+    },
+    {
+      "path": "example_transcript.txt",
+      "bytes": 2716,
+      "sha256": "fd4ca7c5b760b2293ec073cdc42880d7fe662784a8a5fab813f1d5f1bcb7a8ce"
+    },
+    {
+      "path": "example_transcript.vtt",
+      "bytes": 3928,
+      "sha256": "d34b3a7348bc3fcb3f9104354e9b5b13c5bf717d0e048a10bba85ba14b56ac52"
+    },
+    {
+      "path": "example_transcript_redacted.json",
+      "bytes": 62330,
+      "sha256": "bf9978ee8beefa5c099db78d7576efb630a31b5ee4c7d343f5156d60e24032c7"
+    },
+    {
+      "path": "example_transcript_redacted.vtt",
+      "bytes": 3938,
+      "sha256": "cce6fb7282ab41d65c9f5be354543680a05ff08655d992246deeed0675359f65"
+    },
+    {
+      "path": "example_transcript_with_speakers.txt",
+      "bytes": 3033,
+      "sha256": "27e0a36cd44a38c5cd51e58397f3ba8f32cc5c18841fe858a5ee2282f5ace7fa"
+    }
+  ],
+  "input_audio": {
+    "name": "example.wav",
+    "bytes": 44,
+    "sha256": "ba584a378b11d9e9c98736fd8c256fe1453a84ee4139416d24b07acff424f0fb"
+  },
+  "manifest_sha256": "6e053e7a712998a6fc69defd9c14184489fdf4469069227df7e49dca06a69db9"
+}

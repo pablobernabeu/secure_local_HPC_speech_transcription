@@ -1,0 +1,730 @@
+# hpc_advance plan for the secure-local-HPC speech-transcription project.
+#
+# This project shares the ARC account with several unrelated projects
+# (claps_*, bfda_*, p1_/p2_* decoding). The name_glob filters below keep
+# hpc_advance watching only this project's jobs. fnmatch is exact, so each
+# glob is written for the names the stage's jobs ran under. Where a stage
+# also lists detect.arrays, only those job IDs belong to it: its name_glob
+# alone would also match another stage's jobs.
+#
+# An outputs glob may reach one directory down ("*/der_summary.json"). Count
+# it with the shell, `ls -1 <path>/<glob> | wc -l`, since `find -name` does
+# not match a pattern with a slash in it.
+#
+# STATE ON 2026-10-04, read with sacct, squeue and sinfo at 22:00 BST: every
+# stage below is complete, and every result the evaluation reports from them
+# is committed. No job of this project is queued or running, and no wave is
+# pending.
+#
+# LOCAL FOLLOW-UP 2026-10-06: reader-cluster sensitivity intervals over the
+# committed LibriSpeech reports need no ARC run and are rebuilt by
+# tools/verify_regeneration.py. Optional repeated-passage review is tested
+# locally; the archived case-study review has not been replaced. Its full
+# transcript would be needed to evaluate the new flags on that run. These
+# additions change none of the stages or the cluster snapshot recorded here.
+#
+# ARCHIVE FOLLOW-UP 2026-10-06: read-only recovery copied all 255 summary
+# JSON files and 15 hypothesis CSVs from audit2026/sweep. All 270 remote
+# SHA-256 digests match. Strict local aggregation reproduces the complete
+# 255-row CSV byte for byte and all scientific JSON fields; input paths,
+# aggregation time and current run metadata differ. The inputs and proof
+# are in ignored build/recovered_arc_sweep/, pending public archiving and
+# attribution. No new jobs or decoding were needed. The proposed NEW-05
+# Spanish V100 control remains separate from the completed stages below.
+# The reviewed commands are in docs/next_control.md: a 5-utterance,
+# 30-minute preflight followed by a raw-only Spanish full split only after
+# inspection. Read-only checks on 2026-10-06 found the clean 6f9bf56 clone,
+# all 178 ARC lock pins unchanged and both 908-utterance comparison inputs
+# hash-verified. V100 nodes were mixed, P100s drained, and no matching
+# project job queued/running. New submissions still use confirm below.
+# - The audit's re-run wave at code 6f9bf56 (clone
+#   ~/paper_speech_transcription_audit, outputs under
+#   $DATA/speech_transcription_env/output/evaluation/audit2026/) is complete
+#   and its results are committed: the WER matrix (2e36bf9, 9cb43e3), the
+#   headline pair from it (e3cb675, 27cb15c) and the Large v3 AMI reports
+#   behind the normaliser's AMI gain (9507e0c, 81d8054), the timestamp
+#   benchmark (567cfd9), FLEURS arm 4 (56ce519, 51e6d47), anonymisation
+#   (8b6144c) and the reconstruction audit (942d2c1). Filler preservation
+#   was rescored locally from the sweep's AMI dump (a6dd82f, 9732ac0). Its
+#   case study, 8918023 (au_case), failed because test-suite jobs 8913985
+#   and 8917186 had written a stub over the cached pyannote pipeline config
+#   (incident NEW-INC-01). The blob was restored on 2026-10-04 at 00:03 and
+#   hashed to its own name when checked again at 07:10.
+# - Wave 2a, from clone ~/paper_speech_transcription_audit_w2 at 9cb43e3:
+#   the six DER re-runs au_der_* (8976354 to 8976358 and 8976362), on L40S
+#   cards, all COMPLETED 0:0 on 2026-10-04 between 09:45 and 11:28, and
+#   committed in 70933b4 (stages der_rerun and der_sweep_rerun).
+# - Wave 2b, submitted 2026-10-04 04:50 from clone
+#   ~/paper_speech_transcription_audit_w2b at f2578b8: test suite 8978757
+#   COMPLETED (2032 passed, 1 skipped, 1 xfailed). The case-study re-run
+#   8978758 FAILED at its structural evaluation (see case_study). The
+#   determinism check's CPU arm 8978759 COMPLETED at 06:08 and is committed
+#   (ddb37e6, 9084c63). Its V100 run 8978760 COMPLETED at 11:38 and is
+#   committed (203d3ba, c813fe5). Stages test_suite, case_study,
+#   determinism_cpu and determinism_v100.
+# - Wave 2c, from the clone ~/paper_speech_transcription_audit_w2c at
+#   c4c7b38, which fixes the case study's corpus manifest (NEW-06): test
+#   suite 8983111 COMPLETED (2058 passed, 1 skipped, 1 xfailed), then the
+#   case study 8983112 COMPLETED 0:0, committed in ac08cdc (stages
+#   test_suite and case_study).
+# - Jobs 8781723 and 8781724 (2026-09-12) are long done. 8781724's results
+#   are committed in output/evaluation/determinism/l40s_8781724/ (3efc8c8)
+#   and compared with the other runs in determinism_cross_accelerator.json
+#   (3efc8c8, 06d5a53). 8781723 (anon_multimeeting/ on ARC) broke the
+#   per-meeting cap (EPRIV-03), was superseded by 8917989 and was never
+#   committed.
+# - The 2026-09-10 plan to run the determinism check's desktop half on the
+#   local machine is superseded by hpc/submit_determinism_cpu.sh, which
+#   decodes on an ARC CPU node in the jobs' own environment (8978759). A
+#   local run would use a different software stack, so it would not
+#   isolate the hardware.
+# - The footprint ledger and summary were rebuilt from a read-only sacct
+#   dump taken on 2026-10-04 at 13:45:36 BST, after the last job to end
+#   (8978760) had finished: 197 jobs from 2026-05-16, each GPU job priced at
+#   the board of its node (e3e436d). The dump is not committed, because it
+#   lists the account's other projects, but arc_job_ledger_provenance.json
+#   records its query and SHA-256. Where the window opens is the author's
+#   decision (2026-05-20, the June capture's start, would drop 18 jobs).
+#
+# GPU types vary by job, since most scripts ask for any GPU. Each record
+# in hpc/runs/ names the card its run used, and the sbatch command it gives
+# asks for that card type:
+#   - sweep.env: Large v3 on a Tesla V100-PCIE-32GB (gpu:v100), Whisper
+#     Medium and distil-large-v3 on an NVIDIA L40S (gpu:l40s).
+#   - fleurs_ml.env: FLEURS arm 4, tasks 0 and 3 on the h100 type with the
+#     nvlink feature, task 1 on the a100 type and tasks 2, 4 and 5 on l40s.
+#   - timestamps.env, timestamps_vad.env: an NVIDIA H100 80GB HBM3, with
+#     --gres=gpu:h100:1 --constraint=nvlink.
+#   - anonymisation.env, anonymisation_single_meeting.env: an L40S.
+#   - der_default.env, der_oracle.env, der_tuned.env, der_concat.env,
+#     der_sweep.env, der_sweep2.env: an L40S (since 2776541).
+#   - case_study.env: the a6000 type, an NVIDIA RTX A6000.
+#   - determinism_v100.env: a V100, through SBATCH_GRES=gpu:v100:1.
+#   - determinism.env names the H100 NVL and the L40S of its two runs, but
+#     its command asks for any GPU, and determinism_cpu.env runs on a
+#     processor.
+# Jobs write their GPU, code commit and Python stack into
+# <report dir>/environment/ (hpc/common/arc_common.sh).
+#
+# No job installs or repairs packages: each runs `python -m preflight`
+# through hpc/common/arc_common.sh and exits 2 when it fails (4 for the case
+# study). From a07b47e on, the preflight of a diarisation job also fails on
+# a damaged cached pyannote pipeline config. Wave 2a's clone (9cb43e3)
+# predates that check, but each of its logs shows the preflight passing with
+# --diarisation-required and the pipeline loading (70933b4). Some jobs also
+# refuse to start over an earlier run's results (exit 3 for the determinism
+# jobs, 6 for the case study). An exit within seconds of the start is
+# therefore a failure for the poller to report, not a finished stage.
+#
+# The invocations (env overrides and job IDs) behind the committed
+# artefacts are in hpc/runs/*.env, and the scripts' defaults do not
+# reproduce them: the WER sweep (sweep.env), FLEURS arm 4 (fleurs_ml.env),
+# the timestamp runs (timestamps.env, timestamps_vad.env), anonymisation
+# (anonymisation.env, anonymisation_single_meeting.env), the DER runs
+# (der_default.env, der_oracle.env, der_tuned.env, der_concat.env,
+# der_sweep.env, der_sweep2.env), the determinism check (determinism.env,
+# determinism_cpu.env, determinism_v100.env) and the case study
+# (case_study.env). Each sends a reproduction to its own directory under
+# repro/, and its commands stop at "|| exit 1" when the record cannot be
+# read (95209a6).
+#
+# CLUSTER NOTE 2026-10-04: the three P100 nodes, htc-g032 to g034, have been
+# drained since 2026-09-04 ("to be decommissioned"), and still were at 21:59
+# BST, so no job can run on a P100. Judge capacity by node state, not by
+# queue depth alone.
+#
+# The cluster remains heavily loaded by the other projects (claps_*, p1_*,
+# bfda_*), so any later wave should still be sized modestly. GPU work
+# outside the stages below:
+#   - a decoding-configuration arm for whisper-medium on AMI. Still no
+#     script, and still no stated question it would answer. Ask before
+#     writing one.
+#   - the check of FLEURS arm 4's GPU attribution (NEW-05). A pl_pl decode
+#     on a P100, where arm 3 ran it, cannot be made, since the P100 nodes
+#     are drained to be decommissioned. NEW-05 proposes in its place an
+#     es_419 decode at 6f9bf56 on a V100, the GPU model arm 3 decoded
+#     Spanish on. It has no stage and has not been submitted (see
+#     fleurs_multilingual).
+#   - (RESOLVED) the Large v3 hypothesis dump lost to the path collision:
+#     the audit's sweep kept a dump for each of its 15 suite and model
+#     pairs in audit2026/sweep/.
+#
+# PARTITION NOTE: on ARC, `htc` is the CLUSTER, not a partition. Every
+# script here submits with `--clusters=htc --partition=short` (or
+# `medium` for the 48h CPU-only run). A generic default of
+# `--partition=htc` would be rejected.
+
+version: 1
+
+cluster:
+  ssh_alias: arc-agent
+  user: educ1242
+  clusters: htc
+  accounts: [educ-lift, educ-intract]
+  default_account: educ-intract # see BALANCE below
+  partition: short              # `htc` is the cluster; `short` is the partition
+  qos: standard                 # ALWAYS standard; never --qos=priority
+  # BALANCE: over the 30 days to 2026-08-20 educ-lift carried 982 jobs and
+  # 25,426 wall-hours against educ-intract's 753 and 4,746, about 5.4x the
+  # load, because most submit scripts documented educ-lift as their default.
+  # The default is now educ-intract and the scripts' usage lines were changed
+  # to match. Re-check the split before a large wave rather than assuming
+  # this still holds; `userbalance` is broken on the login node (glsuser and
+  # gbalance are missing), so use sacct wall-hours by account instead.
+
+poll:
+  interval_seconds: 1800
+  sacct_since: now-5days
+
+autonomy: confirm
+
+# Shorthand for the shared output directory used by the done-conditions.
+# $DATA = /data/educ-lift/educ1242
+_output_dir: &out "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation"
+
+stages:
+  - name: wer_sweep
+    detect:
+      # The jobs behind the committed matrix ran as au_wer_large,
+      # au_wer_med and au_wer_dis, after the pre-flights pf_wer_*. The
+      # script's own name is wer_sweep, and the post-fix passes ran as
+      # wer_sweep_postfix, wer_sweep_pf_med and wer_sweep_pf_dis, so set
+      # this glob to a new sweep's names before watching it.
+      name_glob: "*_wer_*"
+    done_when:
+      queue_empty: true
+      outputs:
+        # The SWEEP_OUTPUT_DIR of the sweep behind the committed matrix.
+        # Point this at a new run's directory before a new sweep: a
+        # finished directory already satisfies the count.
+        path: "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation/audit2026/sweep"
+        # No underscore after "summary", so that the legacy names
+        # wer_summary.json and wer_summary_<condition>.json, which the
+        # post-fix pass wrote in postfix/, match as well as the suite- and
+        # model-qualified names a sweep now writes.
+        glob: "wer_summary*.json"
+        # One summary per (suite, model, condition): 5 suites x 17
+        # conditions (evaluation.conditions.default_sweep_conditions(),
+        # raw and pronoun_i_fix included) x 3 models = 255.
+        # audit2026/sweep holds exactly 255 (checked 2026-10-04).
+        min_count: 255
+    on_failure: report
+    # The proceed step rebuilds the committed aggregate on ARC from the 255
+    # summaries in done_when.path, into sweep_aggregate.{csv,json} beside
+    # them, to be compared with output/evaluation/sweep_aggregate.*, which
+    # evaluation.sweep_aggregate built locally at 7214e77 from copies of
+    # the same files (2e36bf9; see sweep_aggregate). It sets no
+    # PIPELINE_VERSION: all 255 summaries record their commit, 6f9bf56,
+    # which becomes each row's pipeline_version (hpc/aggregate_sweep.sh,
+    # checked 2026-10-04). It runs from the w2b clone, at f2578b8; any clone
+    # at or after 2e36bf9 would do, but not ~/paper_speech_transcription,
+    # at 1bb68ba, whose aggregator writes no pipeline_version or input
+    # digests and does not refuse a repeated cell. For a new sweep, put its
+    # SWEEP_OUTPUT_DIR in SWEEP_DIR below and in done_when.path.
+    proceed:
+      description: "rebuild the committed 255-row sweep aggregate on ARC from audit2026/sweep"
+      run: "ssh arc-agent 'cd $HOME/paper_speech_transcription_audit_w2b && SWEEP_DIR=$DATA/speech_transcription_env/output/evaluation/audit2026/sweep sbatch --account=educ-intract hpc/aggregate_sweep.sh'"
+      autonomy: confirm
+    notes: >
+      submit_sweep.sh, array 0-4 (one suite each), one model per submission
+      via SWEEP_MODEL. COMPLETE: the audit's re-run on 2026-09-28 at
+      6f9bf56, 8917985 (Large v3, educ-intract, Tesla V100-PCIE-32GB),
+      8917986 (Whisper Medium, educ-lift, NVIDIA L40S) and 8917987
+      (distil-large-v3, educ-intract, NVIDIA L40S), each after a
+      SWEEP_LIMIT=10 pre-flight (8913987 to 8913989), with
+      DUMP_HYPOTHESES=1; recipe hpc/runs/sweep.env. Committed in
+      output/evaluation/: 2e36bf9 (the 255-row matrix and
+      sweep_reports_postfix/), 9cb43e3 (condition_ci_postfix), e3cb675 and
+      27cb15c (the headline pair, which is the raw Large v3 test-clean cell,
+      and its interval), and 9507e0c (sweep_reports_postfix_ami/, the raw
+      and whisper_norm reports of 8917985's AMI task, from which 81d8054
+      computed normaliser_gain_ami.csv locally). It
+      supersedes the post-fix passes 8688725 (Large v3) and 8708134 and
+      8708135 (Medium, distil), committed in 53378ba and aa6e61d, whose 240
+      summaries stay in postfix/ on ARC. Their pre-flights ran as
+      wer_sweep_pre: 8656348 exposed that the dump argument was never
+      passed and that tasks failed at interpreter teardown (both fixed in
+      25068a8), and 8679910 came back clean.
+      Always pre-flight a new run with SWEEP_LIMIT=10, and send the
+      pre-flight to its own SWEEP_OUTPUT_DIR: it writes the same filenames
+      as a real run, and the script refuses SWEEP_LIMIT without
+      SWEEP_OUTPUT_DIR.
+      DUMP_HYPOTHESES=1 is the point of the exercise: with the hypotheses
+      kept, any later post-processing change is rescored on CPU and never
+      needs the GPU again. The dumps have been keyed on suite and model
+      since the post-fix pass, in which the three models overwrote each
+      other's dumps (tests/test_sweep_dump_paths.py stops it recurring).
+      NOTE for aggregation on Windows: the scratchpad path plus these
+      filenames exceeds MAX_PATH, which silently drops the longest names and
+      produced 57 of 80 rows. Aggregate from a short path.
+
+  - name: sweep_aggregate
+    requires: [wer_sweep]
+    detect:
+      name_glob: "sweep_aggregate"
+    done_when:
+      queue_empty: true
+      # No outputs gate. The committed 255-row aggregate (2e36bf9) was built
+      # locally by evaluation.sweep_aggregate at 7214e77 from the summaries
+      # fetched off ARC; no aggregate_sweep.sh job ran over audit2026/sweep/,
+      # which holds no sweep_aggregate.json (checked 2026-10-04). For a
+      # sweep aggregated on ARC, gate on
+      #   outputs: {path: <its SWEEP_DIR>, glob: "sweep_aggregate.json", min_count: 1}
+    notes: >-
+      aggregate_sweep.sh (default SWEEP_DIR audit2026/sweep/). COMPLETE for
+      the committed matrix, aggregated locally (2e36bf9); the JSON's
+      provenance block holds the SHA-256 of each of the 255 summaries.
+
+  - name: ami_cache
+    detect:
+      name_glob: "ami_cache"
+    done_when:
+      queue_empty: true
+      outputs:
+        # The reconstruction audit behind the committed
+        # reconstruction_audit_{test,validation}.json (942d2c1), one record
+        # per split. submit_ami_cache.sh writes the same files to its
+        # REPORT_DIR after building the cache.
+        path: "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation/audit2026/reconstruction_audit"
+        glob: "reconstruction_audit_*.json"
+        min_count: 2
+    on_failure: report
+    notes: >-
+      submit_ami_cache.sh. CPU only. Rebuilds AMI validation and test
+      meetings on their original timeline into $DATA/ami_cache, which the
+      diarisation jobs read instead of downloading the corpus again for
+      every configuration (der_sweep, benchmark_der and their wave 2a
+      re-runs, and Phase 3 of submit_finetune_pyannote.sh). The
+      disfluency, determinism and anonymisation jobs stream AMI through
+      datasets and do not read it, so their stages do not require this
+      one. The job then runs
+      python -m evaluation.audit_reconstruction on each split's
+      <split>_timeline_full cache and writes
+      reconstruction_audit_<split>.json to REPORT_DIR (default the shared
+      evaluation directory). The job exits non-zero when an audit finds a
+      displaced reconstruction, which must stop the DER stages below: they
+      would score a misaligned corpus. COMPLETE: job 8534741 built the cache
+      on 2026-08-10 (htc-c020), and job 8918334 (au_recon_audit,
+      2026-09-27, at 6f9bf56) audited it read-only into
+      audit2026/reconstruction_audit/, committed in 942d2c1: best alignment
+      shift 0 ms and silence purity 1.0 for all 34 meetings.
+
+  - name: der_sweep
+    requires: [ami_cache]
+    detect:
+      name_glob: "der_sweep"
+    done_when:
+      queue_empty: true
+      outputs:
+        # The August sweeps wrote into der_sweep_dev/ and der_sweep_dev2/,
+        # each as der_sweep_selection.json (--output-prefix came later).
+        path: *out
+        glob: "der_sweep_dev*/der_sweep_selection.json"
+        min_count: 2
+    notes: >-
+      submit_der_sweep.sh. Hyperparameter grid on the AMI *validation*
+      split only; the test split must stay untouched until the
+      configuration is fixed. COMPLETE: 8534758 (five thresholds) and
+      8534792 (the default cell and a 3 x 3 grid), 2026-08-10, first
+      committed as der_sweep* (aaffb81) and der_sweep2* (3645869).
+      Superseded: their wave 2a re-runs (der_sweep_rerun) replaced those
+      files in 70933b4, and hpc/runs/der_sweep.env and der_sweep2.env now
+      describe the re-runs and keep these jobs as history.
+
+  - name: benchmark_der
+    requires: [der_sweep]
+    detect:
+      name_glob: "benchmark_der"
+    done_when:
+      queue_empty: true
+      outputs:
+        # The four August runs wrote into der_default/, der_tuned/,
+        # der_oracle/ and der_concat/; der_default/'s pair was committed as
+        # der_summary.json and der_report.csv.
+        path: *out
+        glob: "der_*/der_summary.json"
+        min_count: 4
+    notes: >-
+      submit_benchmark_der.sh, AMI IHM test split, pyannote 3.1,
+      timeline reconstruction. Scores the default and the
+      development-selected configuration on held-out test. COMPLETE,
+      2026-08-10: 8534772 (default), 8535638 (tuned), 8534775 (oracle
+      speaker count) and 8534773 (the old concatenation protocol), first
+      committed in aaffb81 and 3645869 (der_tuned/). Superseded: their wave
+      2a re-runs (der_rerun) replaced those files in 70933b4, and
+      hpc/runs/der_*.env now describe the re-runs and keep these jobs as
+      history.
+
+  # ---------------------------------------------------------------------
+  # Wave 2a: the DER re-runs, submitted 2026-10-04 00:15 to 00:18 from
+  # clone ~/paper_speech_transcription_audit_w2 at 9cb43e3, each asking for
+  # an L40S. Each job wrote into its own subdirectory of audit2026/der/,
+  # named at submission; its log in that clone, logs/benchmark_der_<id>.out
+  # or logs/der_sweep_<id>.out, prints it as "Report dir:", with the run's
+  # settings beside it. 9cb43e3 predates the preflight check on the cached
+  # pipeline config, but every log shows the preflight passing with
+  # --diarisation-required, the pipeline loading and the intended settings,
+  # with only the usual pyannote warnings on stderr (70933b4).
+  # ---------------------------------------------------------------------
+  - name: der_rerun
+    requires: [ami_cache]
+    detect:
+      name_glob: "au_der_*"
+      arrays: [8976354, 8976355, 8976356, 8976357]
+    done_when:
+      queue_empty: true
+      outputs:
+        path: "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation/audit2026/der"
+        glob: "*/der_summary.json"
+        min_count: 4
+    on_failure: report
+    notes: >-
+      submit_benchmark_der.sh, re-runs of the four August test-split jobs
+      (hpc/runs/der_default.env, der_tuned.env, der_oracle.env,
+      der_concat.env): au_der_default 8976354 (educ-intract), au_der_oracle
+      8976355 (educ-lift), au_der_tuned 8976356 (educ-intract) and
+      au_der_concat 8976357 (educ-lift). COMPLETE: all four COMPLETED 0:0
+      on 2026-10-04 between 09:45:36 and 10:31:51 by sacct, on NVIDIA L40S
+      cards (htc-g070 for the default and oracle runs, htc-g066 for the
+      tuned and concatenation runs), from the clean clone at 9cb43e3.
+      Committed in 70933b4 (merged in a3d80c3) into output/evaluation/:
+      der_summary.json and der_report.csv (the default run), der_tuned/,
+      der_oracle/ and der_concat/. Against the August runs only EN2002c
+      moved, by 5e-6 in DER (EDER-02), and der_concat/der_report.csv is the
+      August file byte for byte. The four records (2776541) ask for an L40S.
+
+  - name: der_sweep_rerun
+    requires: [ami_cache]
+    detect:
+      name_glob: "au_der_sweep*"
+      arrays: [8976358, 8976362]
+    done_when:
+      queue_empty: true
+      outputs:
+        path: "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation/audit2026/der"
+        # der_sweep_selection.json, or der_sweep2_selection.json from a run
+        # that set OUTPUT_PREFIX=der_sweep2, as hpc/runs/der_sweep2.env does.
+        glob: "*/der_sweep*_selection.json"
+        min_count: 2
+    on_failure: report
+    notes: >-
+      submit_der_sweep.sh on the validation split, re-runs of the two
+      August sweeps (hpc/runs/der_sweep.env, der_sweep2.env): au_der_sweep
+      8976358 (educ-intract) and au_der_sweep2 8976362 (educ-lift).
+      COMPLETE: both COMPLETED 0:0 on 2026-10-04, from 09:56:56 to 10:33:32
+      and from 10:30:24 to 11:27:47 by sacct, on L40S cards (htc-g070,
+      htc-g066), from the clean clone at 9cb43e3. Committed in 70933b4
+      (merged in a3d80c3) as output/evaluation/der_sweep.csv,
+      der_sweep_summary.csv and der_sweep_selection.json, and the
+      der_sweep2 trio. The first sweep now scores the pipeline defaults as
+      cfg000, six configurations where August had five. Both still select
+      threshold 0.70, minimum cluster size 12 and no minimum pause, the
+      configuration of der_tuned/. Only IB4002 moved against August, its
+      DER by at most 3.7e-4 in a cell (EDER-02).
+
+  - name: benchmark_timestamps
+    detect:
+      # The committed runs were au_ts and au_ts_vad; the script's own name
+      # is benchmark_timestamps.
+      name_glob: "au_ts*"
+    done_when:
+      queue_empty: true
+      outputs:
+        path: "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation/audit2026/timestamps"
+        glob: "timestamp_summary.json"
+        min_count: 1
+    notes: >-
+      submit_benchmark_timestamps.sh, AMI IHM, large-v3. COMPLETE: 8917980
+      (au_ts, educ-lift) and 8917981 (au_ts_vad, --vad-refine,
+      educ-intract, outputs in audit2026/timestamps_vad/), 2026-09-27 at
+      6f9bf56 on an NVIDIA H100 80GB HBM3 (htc-g059), after the pre-flights
+      8913990 and 8913991; committed in 567cfd9, with corrections in
+      d7b7df9, into output/evaluation/ and output/evaluation_vad_refine/.
+      Recipes hpc/runs/timestamps.env and timestamps_vad.env, which repeat
+      the card with --gres=gpu:h100:1 --constraint=nvlink. Both reproduce
+      the first runs, 7737896 and 7746221 (Tesla P100), in every row those
+      wrote. ARC's top-level timestamp files are job 7746137's (an H100
+      PCIe), which put one start 20 ms later.
+
+  - name: fleurs_multilingual
+    requires: [wer_sweep]
+    detect:
+      # wer_fleurs_ml for arms 1-3; au_ml and its pre-flight pf_ml for arm 4.
+      name_glob: "*_ml"
+    done_when:
+      queue_empty: true
+      outputs:
+        path: "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation/audit2026/fleurs_ml"
+        # Two letters and an underscore after "fleurs_" (fr_fr, es_419, ...)
+        # keeps out the English sweep's wer_summary_fleurs_<model>_*.json.
+        glob: "wer_summary_fleurs_[a-z][a-z]_*.json"
+        min_count: 12           # 6 languages x 2 conditions (raw, pipeline_full)
+    on_failure: report
+    notes: >
+      COMPLETE as of 2026-09-28, over four arms on the same six splits
+      (fr/de/es/it/nl/pl, large-v3, raw + pipeline_full). The first three
+      ran as --array=0-2%1 on educ-lift and 3-5%1 on educ-intract:
+        1. 8166513/8166514 at 9ae40a2: before the diacritics fix
+        2. 8174224/8174225 at 812552b: after it, before the language gate
+        3. 8245204/8245205 at c0f58c5: after both
+        4. 8917984 at 6f9bf56: the audit's re-run, array 0-5 on educ-lift,
+           job name au_ml, after the pre-flight 8917983 (pf_ml), outputs in
+           audit2026/fleurs_ml/ (recipe hpc/runs/fleurs_ml.env)
+      The composite went from inflating non-English WER by up to 8.10x to
+      being WER-neutral (1.00x) on all six languages, exactly so in arm 4;
+      raw WER moves by at most 0.0003 across the four arms. Results in
+      output/evaluation/fleurs_multilingual_summary.json (56ce519,
+      51e6d47), rebuilt by python -m evaluation.fleurs_multilingual from
+      the 48 summaries. Re-run only if the post-processing stages change.
+      OPEN: the summary names the GPU as the only known difference between
+      arm 4 and arm 3, though no pair of arms on the same architecture
+      isolates it (NEW-05). A pl_pl decode at 6f9bf56 on a P100, where arm 3
+      ran it, cannot be made: the P100 nodes have been drained since
+      2026-09-04 to be decommissioned, and still were on 2026-10-04 at 23:19
+      BST (sinfo). NEW-05 proposes in its place an es_419 decode at 6f9bf56
+      on a V100, the GPU model arm 3 decoded Spanish on, which htc-g003 and
+      htc-g004 had in service at that time. It has not been submitted.
+
+  - name: disfluency
+    detect:
+      name_glob: "disfluency"
+    done_when:
+      queue_empty: true
+      outputs:
+        path: *out
+        glob: "disfluency_summary.json"
+        min_count: 1
+    on_failure: report
+    notes: >-
+      submit_disfluency.sh, AMI IHM test, large-v3, one decoding pass
+      scored under raw / pipeline_full / whisper_norm. COMPLETE (8555165,
+      2026-08-12 16:29 to 19:11 per its log; 8554816 was the 200-utterance
+      pilot, 16:04 to 16:15). Superseded in the repository: the committed
+      disfluency pair is scored locally from the AMI dump of sweep 8917985
+      (evaluation.disfluency docstring; a6dd82f, 9732ac0). Re-run only with
+      a fresh REPORT_DIR, or it overwrites the August dump and summary. The
+      manuscript reads disfluency_summary.json only, from its conditions
+      block.
+
+  - name: determinism
+    detect:
+      # 8554985 ran as determinism and 8781724 as determinism_gpu. Wave 2b's
+      # V100 run is also named determinism, and its CPU arm determinism_cpu,
+      # so the job IDs keep them in their own stages below.
+      name_glob: "determinism*"
+      arrays: [8554985, 8781724]
+    done_when:
+      queue_empty: true
+      outputs:
+        # 8781724 used the default REPORT_DIR, so this ARC directory holds
+        # its files, which overwrote the August run's; the committed
+        # top-level copies are the August run's.
+        path: "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation/determinism"
+        glob: "determinism_*.json"
+        min_count: 2
+    on_failure: report
+    notes: >-
+      submit_determinism.sh, the first 200 AMI test utterances. COMPLETE:
+      8554985 (2026-08-12, NVIDIA H100 NVL, htc-g058; committed in aeaecf5)
+      and 8781724 (determinism_gpu, 2026-09-12, NVIDIA L40S, htc-g064;
+      committed in output/evaluation/determinism/l40s_8781724/, 3efc8c8).
+      Each agreed with itself on 200 of 200 under a repeated seed and
+      across seeds. determinism_cross_accelerator.json (3efc8c8, 06d5a53,
+      then 9084c63 and c813fe5) compares five runs in four configurations:
+      these two, the sweep's V100 decode of the same utterances (8917985
+      task 1), the CPU arm (determinism_cpu) and the V100 run of the check
+      (determinism_v100). The H100 run, whose hypotheses were lost, enters
+      through the per-utterance WER its log printed. The L40S differs from
+      the other three runs with text on the same 2 of 200, and the H100's
+      logged WER differs from each of the others on 1. Recipe
+      hpc/runs/determinism.env. The V100 run at seed 0 parts the card from
+      the seed, not from the node or the code (see its notes).
+
+  # ---------------------------------------------------------------------
+  # Wave 2b: submitted 2026-10-04 04:50 from clone
+  # ~/paper_speech_transcription_audit_w2b at f2578b8, under the scripts'
+  # own job names.
+  # ---------------------------------------------------------------------
+  - name: determinism_cpu
+    detect:
+      name_glob: "determinism_cpu"
+      arrays: [8978759]
+    done_when:
+      queue_empty: true
+      outputs:
+        path: "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation/repro/cpu_arm/determinism_cpu"
+        glob: "determinism_*.json"
+        min_count: 2           # determinism_repeat.json, determinism_seeds.json
+    on_failure: report
+    notes: >-
+      hpc/submit_determinism_cpu.sh with hpc/runs/determinism_cpu.env
+      (float32, 16 cores, no GPU): the desktop half of the determinism
+      check, the same 200 utterances decoded on a processor. COMPLETE:
+      8978759 (educ-intract) COMPLETED 0:0 on 2026-10-04, 04:51:19 to
+      06:08:35 BST by sacct, on htc-c074 (an AMD EPYC 9634, by its cpu.txt
+      and the node's Slurm features), from a clean checkout of f2578b8 by
+      its environment record. The job took 1 h 17 min of its 12 h limit for
+      its three decodes of 200 utterances. Its summaries, cpu.txt and WER
+      report are committed in output/evaluation/determinism/cpu_8978759/,
+      with its entry in determinism_cross_accelerator_runs.json (ddb37e6),
+      and determinism_cross_accelerator.json compares it with the GPU runs
+      under the label cpu (9084c63); its hypotheses stay in
+      repro/cpu_arm/determinism_cpu/ on ARC. It agreed with itself on 200
+      of 200 utterances, repeated and across seeds. Its text matches the
+      V100 sweep decode on all 200 and the L40S run on 198, differing on
+      the same 2 as the V100; the H100's logged WER differs from the CPU's
+      on 1 of 200. Its hypothesis files and WER reports are byte-identical
+      to those of the V100 run of the check (determinism_v100). Its subset
+      WER is the V100's, 451 errors in 1,067 reference words.
+      hpc/runs/determinism_cpu.env records the run, gives repro/cpu_arm/ as
+      the original and sends a reproduction to repro/determinism_cpu/
+      (3cae28a).
+
+  - name: determinism_v100
+    detect:
+      name_glob: "determinism"
+      arrays: [8978760]
+    done_when:
+      queue_empty: true
+      outputs:
+        path: "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation/repro/v100_arm/determinism"
+        glob: "determinism_*.json"
+        min_count: 2
+    on_failure: report
+    notes: >-
+      hpc/submit_determinism.sh with hpc/runs/determinism_v100.env
+      (SBATCH_GRES=gpu:v100:1): the check at seed 0 on a V100, so that its
+      comparison with the L40S's seed-0 decode no longer mixes the card
+      with the seed, and a V100 repeat covers the 2 utterances on which the
+      L40S and the V100 differ. COMPLETE: 8978760 (educ-intract) COMPLETED
+      0:0 on 2026-10-04, 11:22:53 to 11:38:34 BST by sacct, on a Tesla
+      V100-PCIE-32GB of htc-g004, the node of the sweep's V100 pass, from a
+      clean checkout of f2578b8, into repro/v100_arm/determinism/. Its
+      summaries, gpu.txt and WER report are committed in
+      output/evaluation/determinism/v100_8978760/, with its entry in
+      determinism_cross_accelerator_runs.json (203d3ba), and
+      determinism_cross_accelerator.json compares it under the label
+      v100_seed0 (c813fe5). It agreed with itself on 200 of 200, repeated
+      and across seeds. Its words match the sweep's V100 pass and the CPU
+      arm on all 200, and differ from the L40S on the same 2, so that
+      difference is not the seed's or the process's. It does not part the
+      card from its node or from the code: the L40S ran 1bb68ba by the ARC
+      clone's reflog (hpc/runs/determinism.env), and the decode path
+      changed between 1bb68ba and 6f9bf56 in the steps
+      determinism_cross_accelerator_runs.json lists.
+      hpc/runs/determinism_v100.env records the run, gives repro/v100_arm/
+      as the original and sends a reproduction to repro/determinism_v100/
+      (ba982b9).
+
+  - name: anonymisation
+    detect:
+      # anonymisation (August), anon_multimeeting (8781723), and the audit
+      # wave's au_anon1, au_anon2 and pf_anon.
+      name_glob: "*anon*"
+    done_when:
+      queue_empty: true
+      outputs:
+        # The committed multi-meeting run's REPORT_DIR. Point this at a new
+        # directory for each new run, since a finished one already
+        # satisfies the count.
+        path: "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation/audit2026/anon_multi"
+        glob: "anonymisation_summary.json"
+        min_count: 1
+    on_failure: report
+    notes: >-
+      submit_anonymisation.sh with ANON_PRESET (hpc/runs/anonymisation.env,
+      hpc/runs/anonymisation_single_meeting.env). COMPLETE: the audit wave
+      re-ran both presets at 6f9bf56 on 2026-09-28 after a 12-utterance
+      pre-flight (8913992): 8917989 multi-meeting, committed as
+      output/evaluation/anonymisation_*; 8917988 single-meeting, committed
+      in anonymisation_single_meeting/ (both in 8b6144c). Linkage
+      0.20/0.57/0.79/0.92 at alpha 0.5/0.7/0.8/0.9 against chance 0.14
+      (across meetings 0.17/0.51/0.74/0.89 against 0.11); guarded WER cost
+      0.67/0.43/0.20/0.15 on a screened baseline of 0.18. Both jobs loaded
+      the WeSpeaker model directly because a corrupted pyannote cache broke
+      the pipeline load; job 8976304 showed the embeddings bit-identical.
+      8556951 and 8573363 (August, the same 200 utterances) and 8781723
+      (September, cap not enforced) are superseded.
+
+  - name: case_study
+    detect:
+      # The August runs and waves 2b and 2c ran as case_study; the audit
+      # wave's attempts, 8917982 and 8918023, as au_case. Wave 2c's
+      # re-run is 8983112, and the follow-up of 17 October 2026 ran
+      # 9124852 (L40S, code fc652ab, after test job 9124851).
+      name_glob: "case_study"
+      arrays: [9124852]
+    done_when:
+      queue_empty: true
+      outputs:
+        # The re-run's CASE_REPORT_DIR. The job refuses to start over a
+        # finished result (exit 6), so give each new run a directory that
+        # holds no podcast_eval_summary.json and point this path at it.
+        path: "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation/audit2026/case_study_l40s"
+        glob: "podcast_eval_summary.json"
+        min_count: 1
+    on_failure: report
+    notes: >-
+      submit_case_study.sh, Codex Mentis episode 5 through the full deployed
+      pipeline. COMPLETE: wave 2c's 8983112 (educ-intract, afterany on test
+      job 8983111) COMPLETED 0:0 on 2026-10-04 on htc-g052, an NVIDIA RTX
+      A6000, from the clone ~/paper_speech_transcription_audit_w2c at
+      c4c7b38 with a clean tree, into audit2026/case_study_w2c. ca75ced and
+      c4c7b38 make the job read the committed data/codex_mentis/manifest.json
+      when no $DATA/codex_mentis/manifest.json exists (none does on ARC), and
+      stop before transcribing when it has no manifest; the committed
+      manifest's episode 5 entry has the SHA-256 and size of the recording
+      on ARC (a1f08233, 31,357,663 bytes). Its structural evaluation, review
+      and run manifest, with podcast_eval_report.csv, are committed in
+      output/case_study/ (ac08cdc, merged in 5f88685), with the README
+      rewritten for them, and hpc/runs/case_study.env records the run and
+      asks for the a6000 type. ep05_raw_text.txt and
+      ner_false_positive_test.md stay the August run's on purpose, because
+      the note measured that text.
+      Earlier runs: 8400094 (2026-08-02) and 8441879 (2026-08-05, Tesla
+      P100, htc-g032; 25c2582), the committed result until ac08cdc. The
+      audit wave's attempts at 6f9bf56 failed: 8917982 (au_case) was
+      cancelled before it started, and 8918023 (au_case, 2026-09-27) ran
+      without speaker attribution because the cached pipeline config had
+      been overwritten (NEW-INC-01). Re-run 8978758 (educ-lift, 2026-10-04
+      04:57 to 05:15, htc-g050, an NVIDIA RTX A6000) FAILED with exit 5:
+      diarisation loaded and found 2 speakers in 243 segments and
+      provenance verification passed, but the structural evaluation stopped
+      (exit 2) because $DATA/codex_mentis/manifest.json does not exist.
+      Since 4b22326 (EPRIV-23) a missing --manifest is an error; the August
+      runs went on without it and recorded no coverage figures. The job
+      writes the structural evaluation to CASE_REPORT_DIR, no longer to the
+      clone's tracked output/case_study/ (review finding REV-04), so a new
+      result is copied there by hand. The job fails if provenance
+      verification fails.
+
+  - name: test_suite
+    detect:
+      name_glob: "pytest_suite"
+      arrays: [8983111]
+    done_when:
+      queue_empty: true
+      outputs:
+        path: "/home/educ1242/paper_speech_transcription_audit_w2c/logs"
+        glob: "pytest_8983111.out"
+        min_count: 1
+    on_failure: report
+    notes: >-
+      hpc/run_tests.sh. COMPLETE: wave 2c's 8983111 (educ-lift) COMPLETED
+      0:0 on 2026-10-04, 10:07:32 to 10:12:24 by sacct, on htc-c031, from the
+      clone ~/paper_speech_transcription_audit_w2c at c4c7b38, ahead of the
+      case-study re-run 8983112, as in wave 2b: 2058 passed, 1 skipped
+      (tests/test_s1_misc_footprint.py:159, no raw sacct dump committed),
+      1 xfailed, by the summary line of logs/pytest_8983111.out. It was the
+      first ARC run of the preflight blob check (463340a) and its symlink
+      tests, which passed. The previous run, 8978757, COMPLETED 2026-10-04
+      04:51 to 04:56 on htc-c074 (educ-lift), from a clean checkout of
+      f2578b8 (logs/environment/pytest_suite_8978757.txt): 2032 passed,
+      1 skipped (the same test), 1 xfailed. It was the first run on ARC of
+      the seven tests in tests/test_test_isolation.py and
+      tests/test_preflight_pipeline_config.py that need symlinks, and all
+      seven passed. Both are recorded in hpc/README.md (Checks run on ARC).
+
+  # submit_finetune_pyannote.sh has no stage: no GPU fine-tuning has been
+  # run. Its CPU smoke test passed as jobs 8913986 and 8918331
+  # (hpc/README.md, Checks run on ARC). Add a stage if it is scheduled.

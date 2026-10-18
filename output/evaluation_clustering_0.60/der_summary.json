@@ -1,0 +1,13 @@
+{
+  "n_meetings": 16,
+  "total_ref_duration": 973.0499374999999,
+  "macro_der": 0.31937828062122087,
+  "micro_der": 0.2594611183560144,
+  "macro_missed": 0.12660195592062648,
+  "macro_fa": 0.05203979942809535,
+  "macro_confusion": 0.14073652527249905,
+  "collar_s": 0.25,
+  "dataset": "edinburghcstr/ami/ihm/test",
+  "model": "pyannote/speaker-diarization-3.1",
+  "clustering_threshold": 0.6
+}

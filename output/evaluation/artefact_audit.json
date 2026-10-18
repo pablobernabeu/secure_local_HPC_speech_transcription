@@ -1,0 +1,384 @@
+{
+  "summary": {
+    "files_audited": 39,
+    "counts_by_type": {
+      "other": 10,
+      "name_masking_log_csv": 3,
+      "transcript_docx": 4,
+      "transcript_txt": 10,
+      "raw_transcript_json": 3,
+      "vtt_captions": 3,
+      "redacted_transcript_json": 3,
+      "redacted_vtt_captions": 3
+    },
+    "masked_names_recovered": [
+      "Bernabeu",
+      "Morgan",
+      "Pablo",
+      "Stephen"
+    ],
+    "n_masked_names": 4,
+    "residual_pii_files": 2,
+    "masked_artefacts_leaking": 2,
+    "raw_artefacts_leaking": 0,
+    "masked_artefacts_casefold_only": 0,
+    "docx_reader_available": true
+  },
+  "per_file": [
+    {
+      "path": "name_masking_logs/.gitkeep",
+      "artefact_type": "other",
+      "masked_by_design": false,
+      "residual_pii_found": false,
+      "detail": "not an audited artefact type",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "name_masking_logs/architecture_of_meaning/name_replacements.csv",
+      "artefact_type": "name_masking_log_csv",
+      "masked_by_design": false,
+      "residual_pii_found": false,
+      "detail": "masking log; stores 2 original name(s) by design (expected, not a leak)",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "name_masking_logs/behind_the_curtains/name_replacements.csv",
+      "artefact_type": "name_masking_log_csv",
+      "masked_by_design": false,
+      "residual_pii_found": false,
+      "detail": "masking log; stores 3 original name(s) by design (expected, not a leak)",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "name_masking_logs/modular_mini_grammar/name_replacements.csv",
+      "artefact_type": "name_masking_log_csv",
+      "masked_by_design": false,
+      "residual_pii_found": false,
+      "detail": "masking log; stores 3 original name(s) by design (expected, not a leak)",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "transcripts/.gitkeep",
+      "artefact_type": "other",
+      "masked_by_design": false,
+      "residual_pii_found": false,
+      "detail": "not an audited artefact type",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "transcripts/architecture_of_meaning/transcript.docx",
+      "artefact_type": "transcript_docx",
+      "masked_by_design": true,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "transcripts/architecture_of_meaning/transcript.txt",
+      "artefact_type": "transcript_txt",
+      "masked_by_design": true,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "transcripts/behind_the_curtains/transcript.docx",
+      "artefact_type": "transcript_docx",
+      "masked_by_design": true,
+      "residual_pii_found": true,
+      "detail": "MASKED-BY-DESIGN ARTEFACT LEAKS PII: contains Bernabeu",
+      "leaked_names": [
+        "Bernabeu"
+      ],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "transcripts/behind_the_curtains/transcript.txt",
+      "artefact_type": "transcript_txt",
+      "masked_by_design": true,
+      "residual_pii_found": true,
+      "detail": "MASKED-BY-DESIGN ARTEFACT LEAKS PII: contains Bernabeu",
+      "leaked_names": [
+        "Bernabeu"
+      ],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "transcripts/l3_learning/transcript.docx",
+      "artefact_type": "transcript_docx",
+      "masked_by_design": true,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "transcripts/l3_learning/transcript.txt",
+      "artefact_type": "transcript_txt",
+      "masked_by_design": true,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "transcripts/modular_mini_grammar/transcript.docx",
+      "artefact_type": "transcript_docx",
+      "masked_by_design": true,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "transcripts/modular_mini_grammar/transcript.txt",
+      "artefact_type": "transcript_txt",
+      "masked_by_design": true,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "transcripts/README.md",
+      "artefact_type": "other",
+      "masked_by_design": false,
+      "residual_pii_found": false,
+      "detail": "not an audited artefact type",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/01_plain/example_manifest.json",
+      "artefact_type": "other",
+      "masked_by_design": false,
+      "residual_pii_found": false,
+      "detail": "not an audited artefact type",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/01_plain/example_transcript.txt",
+      "artefact_type": "transcript_txt",
+      "masked_by_design": true,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/02_timestamps/example_manifest.json",
+      "artefact_type": "other",
+      "masked_by_design": false,
+      "residual_pii_found": false,
+      "detail": "not an audited artefact type",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/02_timestamps/example_review.json",
+      "artefact_type": "other",
+      "masked_by_design": false,
+      "residual_pii_found": false,
+      "detail": "not an audited artefact type",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/02_timestamps/example_transcript.json",
+      "artefact_type": "raw_transcript_json",
+      "masked_by_design": false,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/02_timestamps/example_transcript.txt",
+      "artefact_type": "transcript_txt",
+      "masked_by_design": true,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/02_timestamps/example_transcript.vtt",
+      "artefact_type": "vtt_captions",
+      "masked_by_design": false,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/02_timestamps/example_transcript_redacted.json",
+      "artefact_type": "redacted_transcript_json",
+      "masked_by_design": true,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/02_timestamps/example_transcript_redacted.vtt",
+      "artefact_type": "redacted_vtt_captions",
+      "masked_by_design": true,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/03_diarisation/example_manifest.json",
+      "artefact_type": "other",
+      "masked_by_design": false,
+      "residual_pii_found": false,
+      "detail": "not an audited artefact type",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/03_diarisation/example_review.json",
+      "artefact_type": "other",
+      "masked_by_design": false,
+      "residual_pii_found": false,
+      "detail": "not an audited artefact type",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/03_diarisation/example_transcript.json",
+      "artefact_type": "raw_transcript_json",
+      "masked_by_design": false,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/03_diarisation/example_transcript.txt",
+      "artefact_type": "transcript_txt",
+      "masked_by_design": true,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/03_diarisation/example_transcript.vtt",
+      "artefact_type": "vtt_captions",
+      "masked_by_design": false,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/03_diarisation/example_transcript_redacted.json",
+      "artefact_type": "redacted_transcript_json",
+      "masked_by_design": true,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/03_diarisation/example_transcript_redacted.vtt",
+      "artefact_type": "redacted_vtt_captions",
+      "masked_by_design": true,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/03_diarisation/example_transcript_with_speakers.txt",
+      "artefact_type": "transcript_txt",
+      "masked_by_design": true,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/04_diarisation_and_timestamps/example_manifest.json",
+      "artefact_type": "other",
+      "masked_by_design": false,
+      "residual_pii_found": false,
+      "detail": "not an audited artefact type",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/04_diarisation_and_timestamps/example_review.json",
+      "artefact_type": "other",
+      "masked_by_design": false,
+      "residual_pii_found": false,
+      "detail": "not an audited artefact type",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/04_diarisation_and_timestamps/example_transcript.json",
+      "artefact_type": "raw_transcript_json",
+      "masked_by_design": false,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/04_diarisation_and_timestamps/example_transcript.txt",
+      "artefact_type": "transcript_txt",
+      "masked_by_design": true,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/04_diarisation_and_timestamps/example_transcript.vtt",
+      "artefact_type": "vtt_captions",
+      "masked_by_design": false,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/04_diarisation_and_timestamps/example_transcript_redacted.json",
+      "artefact_type": "redacted_transcript_json",
+      "masked_by_design": true,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/04_diarisation_and_timestamps/example_transcript_redacted.vtt",
+      "artefact_type": "redacted_vtt_captions",
+      "masked_by_design": true,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    },
+    {
+      "path": "variants/04_diarisation_and_timestamps/example_transcript_with_speakers.txt",
+      "artefact_type": "transcript_txt",
+      "masked_by_design": true,
+      "residual_pii_found": false,
+      "detail": "clean: no logged original name found",
+      "leaked_names": [],
+      "leaked_names_casefold": []
+    }
+  ]
+}

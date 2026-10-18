@@ -1,0 +1,250 @@
+{
+  "cache_dir": "/data/educ-lift/educ1242/ami_cache/test_timeline_full",
+  "manifest": {
+    "split": "test",
+    "mix_mode": "timeline",
+    "max_minutes": null,
+    "sample_rate": 16000,
+    "file": "manifest.json"
+  },
+  "parameters": {
+    "frame_s": 0.01,
+    "energy_floor": 0.02,
+    "shifts_ms": [
+      -200,
+      -100,
+      -50,
+      -20,
+      -10,
+      0,
+      10,
+      20,
+      50,
+      100,
+      200
+    ]
+  },
+  "summary": {
+    "n_meetings": 16,
+    "n_checked": 16,
+    "n_best_shift_zero": 16,
+    "displaced": [],
+    "min_speech_coverage": 0.6187,
+    "min_silence_purity": 1.0,
+    "min_silence_exact_zero": 1.0
+  },
+  "run": {
+    "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+    "git_dirty": false,
+    "python": "3.12.12",
+    "platform": "Linux-5.14.0-427.42.2.arc.el9.x86_64-x86_64-with-glibc2.34",
+    "packages": {
+      "torch": "2.5.1+cu121",
+      "torchaudio": "2.5.1+cu121",
+      "transformers": "4.57.1",
+      "pyannote.audio": "3.4.0",
+      "jiwer": "4.0.0",
+      "datasets": "4.8.5",
+      "numpy": "2.3.3",
+      "scipy": "1.16.2",
+      "librosa": "0.11.0",
+      "soundfile": "0.13.1",
+      "gliner": null,
+      "huggingface_hub": "0.35.3"
+    }
+  },
+  "meetings": [
+    {
+      "checked": true,
+      "frames": 214237,
+      "duration_s": 2142.37,
+      "speech_coverage": 0.65,
+      "silence_purity": 1.0,
+      "silence_exact_zero": 1.0,
+      "agreement_at_zero_shift": 0.6881,
+      "best_shift_ms": 0,
+      "agreement_at_best_shift": 0.6881,
+      "meeting_id": "EN2002a"
+    },
+    {
+      "checked": true,
+      "frames": 178658,
+      "duration_s": 1786.58,
+      "speech_coverage": 0.6779,
+      "silence_purity": 1.0,
+      "silence_exact_zero": 1.0,
+      "agreement_at_zero_shift": 0.7315,
+      "best_shift_ms": 0,
+      "agreement_at_best_shift": 0.7315,
+      "meeting_id": "EN2002b"
+    },
+    {
+      "checked": true,
+      "frames": 288963,
+      "duration_s": 2889.63,
+      "speech_coverage": 0.6788,
+      "silence_purity": 1.0,
+      "silence_exact_zero": 1.0,
+      "agreement_at_zero_shift": 0.7091,
+      "best_shift_ms": 0,
+      "agreement_at_best_shift": 0.7091,
+      "meeting_id": "EN2002c"
+    },
+    {
+      "checked": true,
+      "frames": 220785,
+      "duration_s": 2207.85,
+      "speech_coverage": 0.652,
+      "silence_purity": 1.0,
+      "silence_exact_zero": 1.0,
+      "agreement_at_zero_shift": 0.6934,
+      "best_shift_ms": 0,
+      "agreement_at_best_shift": 0.6934,
+      "meeting_id": "EN2002d"
+    },
+    {
+      "checked": true,
+      "frames": 104904,
+      "duration_s": 1049.04,
+      "speech_coverage": 0.6278,
+      "silence_purity": 1.0,
+      "silence_exact_zero": 1.0,
+      "agreement_at_zero_shift": 0.7176,
+      "best_shift_ms": 0,
+      "agreement_at_best_shift": 0.7176,
+      "meeting_id": "ES2004a"
+    },
+    {
+      "checked": true,
+      "frames": 234195,
+      "duration_s": 2341.95,
+      "speech_coverage": 0.6187,
+      "silence_purity": 1.0,
+      "silence_exact_zero": 1.0,
+      "agreement_at_zero_shift": 0.6706,
+      "best_shift_ms": 0,
+      "agreement_at_best_shift": 0.6706,
+      "meeting_id": "ES2004b"
+    },
+    {
+      "checked": true,
+      "frames": 233179,
+      "duration_s": 2331.79,
+      "speech_coverage": 0.7249,
+      "silence_purity": 1.0,
+      "silence_exact_zero": 1.0,
+      "agreement_at_zero_shift": 0.7617,
+      "best_shift_ms": 0,
+      "agreement_at_best_shift": 0.7617,
+      "meeting_id": "ES2004c"
+    },
+    {
+      "checked": true,
+      "frames": 222225,
+      "duration_s": 2222.25,
+      "speech_coverage": 0.6759,
+      "silence_purity": 1.0,
+      "silence_exact_zero": 1.0,
+      "agreement_at_zero_shift": 0.747,
+      "best_shift_ms": 0,
+      "agreement_at_best_shift": 0.747,
+      "meeting_id": "ES2004d"
+    },
+    {
+      "checked": true,
+      "frames": 80572,
+      "duration_s": 805.72,
+      "speech_coverage": 0.7755,
+      "silence_purity": 1.0,
+      "silence_exact_zero": 1.0,
+      "agreement_at_zero_shift": 0.8287,
+      "best_shift_ms": 0,
+      "agreement_at_best_shift": 0.8287,
+      "meeting_id": "IS1009a"
+    },
+    {
+      "checked": true,
+      "frames": 202690,
+      "duration_s": 2026.9,
+      "speech_coverage": 0.7959,
+      "silence_purity": 1.0,
+      "silence_exact_zero": 1.0,
+      "agreement_at_zero_shift": 0.8205,
+      "best_shift_ms": 0,
+      "agreement_at_best_shift": 0.8205,
+      "meeting_id": "IS1009b"
+    },
+    {
+      "checked": true,
+      "frames": 178918,
+      "duration_s": 1789.18,
+      "speech_coverage": 0.7696,
+      "silence_purity": 1.0,
+      "silence_exact_zero": 1.0,
+      "agreement_at_zero_shift": 0.8059,
+      "best_shift_ms": 0,
+      "agreement_at_best_shift": 0.8059,
+      "meeting_id": "IS1009c"
+    },
+    {
+      "checked": true,
+      "frames": 192575,
+      "duration_s": 1925.75,
+      "speech_coverage": 0.784,
+      "silence_purity": 1.0,
+      "silence_exact_zero": 1.0,
+      "agreement_at_zero_shift": 0.8253,
+      "best_shift_ms": 0,
+      "agreement_at_best_shift": 0.8253,
+      "meeting_id": "IS1009d"
+    },
+    {
+      "checked": true,
+      "frames": 147639,
+      "duration_s": 1476.39,
+      "speech_coverage": 0.6364,
+      "silence_purity": 1.0,
+      "silence_exact_zero": 1.0,
+      "agreement_at_zero_shift": 0.754,
+      "best_shift_ms": 0,
+      "agreement_at_best_shift": 0.754,
+      "meeting_id": "TS3003a"
+    },
+    {
+      "checked": true,
+      "frames": 214936,
+      "duration_s": 2149.36,
+      "speech_coverage": 0.6853,
+      "silence_purity": 1.0,
+      "silence_exact_zero": 1.0,
+      "agreement_at_zero_shift": 0.7437,
+      "best_shift_ms": 0,
+      "agreement_at_best_shift": 0.7437,
+      "meeting_id": "TS3003b"
+    },
+    {
+      "checked": true,
+      "frames": 228036,
+      "duration_s": 2280.36,
+      "speech_coverage": 0.6659,
+      "silence_purity": 1.0,
+      "silence_exact_zero": 1.0,
+      "agreement_at_zero_shift": 0.7345,
+      "best_shift_ms": 0,
+      "agreement_at_best_shift": 0.7345,
+      "meeting_id": "TS3003c"
+    },
+    {
+      "checked": true,
+      "frames": 259156,
+      "duration_s": 2591.56,
+      "speech_coverage": 0.676,
+      "silence_purity": 1.0,
+      "silence_exact_zero": 1.0,
+      "agreement_at_zero_shift": 0.7656,
+      "best_shift_ms": 0,
+      "agreement_at_best_shift": 0.7656,
+      "meeting_id": "TS3003d"
+    }
+  ]
+}

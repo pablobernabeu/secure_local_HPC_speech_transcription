@@ -1,0 +1,19 @@
+# CPU verification subset of requirements-lock.txt (ARC, 2026-09-26).
+# Run with Python 3.12.12. No audio/ML packages or model downloads are needed.
+# Include transitive dependencies so resolver drift cannot change the subset.
+numpy==2.3.3
+pytest==8.4.2
+iniconfig==2.3.0
+packaging==25.0
+pluggy==1.6.0
+Pygments==2.19.2
+jiwer==4.0.0
+RapidFuzz==3.14.5
+click==8.3.0
+python-docx==1.2.0
+lxml==6.0.2
+typing_extensions==4.15.0
+setuptools==70.2.0
+wheel==0.45.1
+# Windows-only terminal support is absent from the Linux ARC freeze.
+colorama==0.4.6; sys_platform == "win32"

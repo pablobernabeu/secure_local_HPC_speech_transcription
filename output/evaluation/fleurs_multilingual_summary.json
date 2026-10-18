@@ -1,0 +1,586 @@
+{
+  "benchmark": {
+    "corpus": "google/fleurs",
+    "split": "test",
+    "model": "openai/whisper-large-v3",
+    "seed": 42,
+    "conditions": [
+      "raw",
+      "pipeline_full"
+    ],
+    "design": "four arms over the same corpus: three isolating two defects, and a re-run of the repaired code after the September 2026 audit",
+    "arms": {
+      "1_before_fix": {
+        "code": "9ae40a2",
+        "arc_jobs": [
+          "8166513",
+          "8166514"
+        ],
+        "state": "unicode_strip deleted all non-ASCII; no language gate",
+        "gpus": {
+          "pl_pl": "Tesla V100-SXM2-32GB",
+          "es_419": "Tesla V100-SXM2-32GB",
+          "fr_fr": "Quadro RTX 8000",
+          "de_de": "Tesla V100-SXM2-32GB",
+          "it_it": "Quadro RTX 8000",
+          "nl_nl": "Quadro RTX 8000"
+        }
+      },
+      "2_after_fix": {
+        "code": "812552b",
+        "arc_jobs": [
+          "8174224",
+          "8174225"
+        ],
+        "state": "diacritics preserved (f6e708e); still no language gate",
+        "gpus": {
+          "pl_pl": "Tesla P100-PCIE-16GB",
+          "es_419": "Tesla P100-PCIE-16GB",
+          "fr_fr": "Tesla P100-PCIE-16GB",
+          "de_de": "Tesla V100-PCIE-16GB",
+          "it_it": "Tesla P100-PCIE-16GB",
+          "nl_nl": "Tesla P100-PCIE-16GB"
+        }
+      },
+      "3_after_gate": {
+        "code": "c0f58c5",
+        "arc_jobs": [
+          "8245204",
+          "8245205"
+        ],
+        "state": "diacritics preserved AND English-only stages gated",
+        "gpus": {
+          "pl_pl": "Tesla P100-PCIE-16GB",
+          "es_419": "Tesla V100-SXM2-32GB",
+          "fr_fr": "Tesla P100-PCIE-16GB",
+          "de_de": "Tesla P100-PCIE-16GB",
+          "it_it": "Tesla P100-PCIE-16GB",
+          "nl_nl": "Tesla P100-PCIE-16GB"
+        }
+      },
+      "4_after_audit": {
+        "code": "6f9bf56",
+        "arc_jobs": [
+          "8917984"
+        ],
+        "state": "English-only stages gated, at the code after the September 2026 audit; unicode_strip keeps every script, number and currency sign (748ae6b)",
+        "gpus": {
+          "pl_pl": "NVIDIA L40S",
+          "es_419": "NVIDIA L40S",
+          "fr_fr": "NVIDIA H100 80GB HBM3",
+          "de_de": "NVIDIA A100-PCIE-40GB",
+          "it_it": "NVIDIA H100 80GB HBM3",
+          "nl_nl": "NVIDIA L40S"
+        }
+      }
+    },
+    "ratio_definition": "Each ratio divides the composite's macro WER by the raw macro WER measured in the same arm, so no ratio mixes arms. Raw is stable to within 0.0003 across the four arms for every language.",
+    "diacritic_shares": {
+      "dataset": "google/fleurs",
+      "revision": "70bb2e84b976b7e960aa89f1c648e09c59f894dd",
+      "split": "test",
+      "reference_field": "transcription",
+      "definition": "share of whitespace-separated reference words holding at least one letter outside ASCII (str.isalpha and code point > 127)"
+    },
+    "inputs": [
+      {
+        "arm": "1_before_fix",
+        "file": "wer_summary_fleurs_pl_pl.json",
+        "sha256": "ddf5e6ce401fe87dd78ead7f8c2185bc6a926d4ea2ce675385abdbb2bf08b242"
+      },
+      {
+        "arm": "1_before_fix",
+        "file": "wer_summary_fleurs_pl_pl_pipeline_full.json",
+        "sha256": "060e8f189c8ab7102d04cfd71e9f7fe90ef95c9e3173d7643935ecb89b5e6ebc"
+      },
+      {
+        "arm": "1_before_fix",
+        "file": "wer_summary_fleurs_es_419.json",
+        "sha256": "7311b602f06666adf2b4ee0a9538f4727700becc601e8773f34541202f5c519b"
+      },
+      {
+        "arm": "1_before_fix",
+        "file": "wer_summary_fleurs_es_419_pipeline_full.json",
+        "sha256": "45cdea5e63374f3f392e364654f0994f991e98efafc37eb8cb8207d5218ea346"
+      },
+      {
+        "arm": "1_before_fix",
+        "file": "wer_summary_fleurs_fr_fr.json",
+        "sha256": "3f1608e40da21fcc927aeabbe442c77f64769db53ba6a7e7b0f4c6f37d9f8470"
+      },
+      {
+        "arm": "1_before_fix",
+        "file": "wer_summary_fleurs_fr_fr_pipeline_full.json",
+        "sha256": "526006b1cebfdeb8ca3efa4bb43a95ca3b0925c7fc5b104cb48e1c4cad44ce44"
+      },
+      {
+        "arm": "1_before_fix",
+        "file": "wer_summary_fleurs_de_de.json",
+        "sha256": "75f246b6368ff2219eba63fafe811c01da8864903d441e6e97b58b019a590100"
+      },
+      {
+        "arm": "1_before_fix",
+        "file": "wer_summary_fleurs_de_de_pipeline_full.json",
+        "sha256": "14e34bd1fdb3239abd5fdeb857ce5e1f94f9f38ea7071d38cfd97b502b3e19f3"
+      },
+      {
+        "arm": "1_before_fix",
+        "file": "wer_summary_fleurs_it_it.json",
+        "sha256": "37a195560e7f3b82fd1e9216b3d6b44100a710750fccbbbd141172a2a6893319"
+      },
+      {
+        "arm": "1_before_fix",
+        "file": "wer_summary_fleurs_it_it_pipeline_full.json",
+        "sha256": "20ec4e9f3b7e9d0f97c1fe9ecabbf4914bace045c47052290fc8b1a2dd60c723"
+      },
+      {
+        "arm": "1_before_fix",
+        "file": "wer_summary_fleurs_nl_nl.json",
+        "sha256": "fd1464d4ee660aa5fd386531ac44040cdb3e54f57158fad7f62b1ffd1f3da551"
+      },
+      {
+        "arm": "1_before_fix",
+        "file": "wer_summary_fleurs_nl_nl_pipeline_full.json",
+        "sha256": "1d9dec0d1ecfbad72ee5b10a1fc8238fce9b0ed551d36467dba19baf0e5fb2ad"
+      },
+      {
+        "arm": "2_after_fix",
+        "file": "wer_summary_fleurs_pl_pl.json",
+        "sha256": "2a5457bb84a96ae1d84f1250af6f1477f5f23088761fe87c24caf98e5869d6b5"
+      },
+      {
+        "arm": "2_after_fix",
+        "file": "wer_summary_fleurs_pl_pl_pipeline_full.json",
+        "sha256": "7692861a7d386583895f2633bc604362d0d53bc043f2397df82cdf57d0234dbf"
+      },
+      {
+        "arm": "2_after_fix",
+        "file": "wer_summary_fleurs_es_419.json",
+        "sha256": "92d3ba92f5f119b034bc07908713cd3845391605e76eed803f042851cc953aeb"
+      },
+      {
+        "arm": "2_after_fix",
+        "file": "wer_summary_fleurs_es_419_pipeline_full.json",
+        "sha256": "3fde36d76e4620e4909c8a9d1984f46d445bf0ca10f37ddfc1c6f8fe7501d597"
+      },
+      {
+        "arm": "2_after_fix",
+        "file": "wer_summary_fleurs_fr_fr.json",
+        "sha256": "3f1608e40da21fcc927aeabbe442c77f64769db53ba6a7e7b0f4c6f37d9f8470"
+      },
+      {
+        "arm": "2_after_fix",
+        "file": "wer_summary_fleurs_fr_fr_pipeline_full.json",
+        "sha256": "33b576c174a5e7702bbcce95f7aff00452583d77490552569f2e960c0f461a9b"
+      },
+      {
+        "arm": "2_after_fix",
+        "file": "wer_summary_fleurs_de_de.json",
+        "sha256": "75f246b6368ff2219eba63fafe811c01da8864903d441e6e97b58b019a590100"
+      },
+      {
+        "arm": "2_after_fix",
+        "file": "wer_summary_fleurs_de_de_pipeline_full.json",
+        "sha256": "98c50929c7a4a5f0d7fb10854466d1ebde9b55e2e2b86e849c89dc1f2faf4552"
+      },
+      {
+        "arm": "2_after_fix",
+        "file": "wer_summary_fleurs_it_it.json",
+        "sha256": "256750d4bf5384cfa29835ec326a11f95831155e151b7c722419c72d1a3f6348"
+      },
+      {
+        "arm": "2_after_fix",
+        "file": "wer_summary_fleurs_it_it_pipeline_full.json",
+        "sha256": "78a3c21ca21b4846af09d5bb8fead3a11d06fc5209b6f835c0d86baed35e2843"
+      },
+      {
+        "arm": "2_after_fix",
+        "file": "wer_summary_fleurs_nl_nl.json",
+        "sha256": "377d8b802f1e63d290b1f1bf7e84e97ca26aa3eed8af62277165275854db2e25"
+      },
+      {
+        "arm": "2_after_fix",
+        "file": "wer_summary_fleurs_nl_nl_pipeline_full.json",
+        "sha256": "2ec2db80de04b5f015c95466717b32b49e4690dd081ccec711e049a5d31cf2bd"
+      },
+      {
+        "arm": "3_after_gate",
+        "file": "wer_summary_fleurs_pl_pl.json",
+        "sha256": "2a5457bb84a96ae1d84f1250af6f1477f5f23088761fe87c24caf98e5869d6b5"
+      },
+      {
+        "arm": "3_after_gate",
+        "file": "wer_summary_fleurs_pl_pl_pipeline_full.json",
+        "sha256": "4710293e0916b47d41a6b2d77e5f75c30ac5dd25caeeb6c782698e2e780e0e32"
+      },
+      {
+        "arm": "3_after_gate",
+        "file": "wer_summary_fleurs_es_419.json",
+        "sha256": "7311b602f06666adf2b4ee0a9538f4727700becc601e8773f34541202f5c519b"
+      },
+      {
+        "arm": "3_after_gate",
+        "file": "wer_summary_fleurs_es_419_pipeline_full.json",
+        "sha256": "ce95642835c44fc3023dde80ae9a5d938785e29175fa39bb83fe450a69c50326"
+      },
+      {
+        "arm": "3_after_gate",
+        "file": "wer_summary_fleurs_fr_fr.json",
+        "sha256": "3f1608e40da21fcc927aeabbe442c77f64769db53ba6a7e7b0f4c6f37d9f8470"
+      },
+      {
+        "arm": "3_after_gate",
+        "file": "wer_summary_fleurs_fr_fr_pipeline_full.json",
+        "sha256": "0ae236677f85dc13aa6f44860bd0e4ebf529daeefe004c00005d75e12f5963a7"
+      },
+      {
+        "arm": "3_after_gate",
+        "file": "wer_summary_fleurs_de_de.json",
+        "sha256": "e6be01557beabf5b64f0fa98bbac2e6454ecdea3bde07873413bb82af35dee1a"
+      },
+      {
+        "arm": "3_after_gate",
+        "file": "wer_summary_fleurs_de_de_pipeline_full.json",
+        "sha256": "0dc5e87146a4be3230dc23c2105a6c562e33b7cd5ffc04ce6d19aff59b2a732c"
+      },
+      {
+        "arm": "3_after_gate",
+        "file": "wer_summary_fleurs_it_it.json",
+        "sha256": "256750d4bf5384cfa29835ec326a11f95831155e151b7c722419c72d1a3f6348"
+      },
+      {
+        "arm": "3_after_gate",
+        "file": "wer_summary_fleurs_it_it_pipeline_full.json",
+        "sha256": "78a3c21ca21b4846af09d5bb8fead3a11d06fc5209b6f835c0d86baed35e2843"
+      },
+      {
+        "arm": "3_after_gate",
+        "file": "wer_summary_fleurs_nl_nl.json",
+        "sha256": "377d8b802f1e63d290b1f1bf7e84e97ca26aa3eed8af62277165275854db2e25"
+      },
+      {
+        "arm": "3_after_gate",
+        "file": "wer_summary_fleurs_nl_nl_pipeline_full.json",
+        "sha256": "2ec2db80de04b5f015c95466717b32b49e4690dd081ccec711e049a5d31cf2bd"
+      },
+      {
+        "arm": "4_after_audit",
+        "file": "wer_summary_fleurs_pl_pl_whisper-large-v3.json",
+        "sha256": "ae618553049c094d0153788b933470a33edd12b9d23adf404bf664f292237efe"
+      },
+      {
+        "arm": "4_after_audit",
+        "file": "wer_summary_fleurs_pl_pl_whisper-large-v3_pipeline_full.json",
+        "sha256": "4c6546f6321797faa868e4f4ddafc7aa6ce772f10dc84a6dcdf5cfd962aae61f"
+      },
+      {
+        "arm": "4_after_audit",
+        "file": "wer_summary_fleurs_es_419_whisper-large-v3.json",
+        "sha256": "3c21bba3b288e3b97105fefaada3f1c236bac10268f7c62c5b449f4f9bcd765e"
+      },
+      {
+        "arm": "4_after_audit",
+        "file": "wer_summary_fleurs_es_419_whisper-large-v3_pipeline_full.json",
+        "sha256": "655517bd35d543e5c8d1ee6e240aed9cb692e2a8da4027e5d2f0b62ee966f916"
+      },
+      {
+        "arm": "4_after_audit",
+        "file": "wer_summary_fleurs_fr_fr_whisper-large-v3.json",
+        "sha256": "d47d9d0452029f1cc14e24ad4344650f52861ddfc4d3fc6bcc254a8ce61bee25"
+      },
+      {
+        "arm": "4_after_audit",
+        "file": "wer_summary_fleurs_fr_fr_whisper-large-v3_pipeline_full.json",
+        "sha256": "1baacce9cae82480ec8c8d0eef6f36c940570b256868cfa0443d41166b04f15e"
+      },
+      {
+        "arm": "4_after_audit",
+        "file": "wer_summary_fleurs_de_de_whisper-large-v3.json",
+        "sha256": "670938d07d061ead2d0480b1a9094e1707c17d7fb193139473d659794a180679"
+      },
+      {
+        "arm": "4_after_audit",
+        "file": "wer_summary_fleurs_de_de_whisper-large-v3_pipeline_full.json",
+        "sha256": "0bc79b870a2bdb44da61bb506ef834ff7dba95e940d3bac449b2865eb34c8315"
+      },
+      {
+        "arm": "4_after_audit",
+        "file": "wer_summary_fleurs_it_it_whisper-large-v3.json",
+        "sha256": "80f3626a5f96e6ee07bff47978d4aace3baaa3d1b92be3b8ca0dcd1210318fde"
+      },
+      {
+        "arm": "4_after_audit",
+        "file": "wer_summary_fleurs_it_it_whisper-large-v3_pipeline_full.json",
+        "sha256": "15f8fb90fe915573b6e25d357fc994b01cc81dfa1a7f828cd61cc6180f086876"
+      },
+      {
+        "arm": "4_after_audit",
+        "file": "wer_summary_fleurs_nl_nl_whisper-large-v3.json",
+        "sha256": "95dfa8bf6ed35a5f2ec4429fb4cff8ef5830a5b0dc3dc77e021903c5809ae049"
+      },
+      {
+        "arm": "4_after_audit",
+        "file": "wer_summary_fleurs_nl_nl_whisper-large-v3_pipeline_full.json",
+        "sha256": "68a4a2bc18b80a0f51b690f7719e9b7d0d7fbea09712b6ee204aa0e75f8a75f0"
+      }
+    ],
+    "assembled_by": {
+      "git_commit": "0f5b13eadade7d3d001e30569372264d9f32397a",
+      "git_dirty": false,
+      "python": "3.13.7",
+      "platform": "Windows-11-10.0.26300-SP0",
+      "packages": {
+        "torch": "2.12.1",
+        "torchaudio": null,
+        "transformers": "5.13.1",
+        "pyannote.audio": null,
+        "jiwer": null,
+        "datasets": null,
+        "numpy": "2.3.2",
+        "scipy": "1.17.1",
+        "librosa": null,
+        "soundfile": "0.13.1",
+        "gliner": "0.2.28",
+        "huggingface_hub": "1.22.0"
+      }
+    }
+  },
+  "languages": {
+    "pl_pl": {
+      "language": "polish",
+      "utterances": 758,
+      "raw_before_fix": 0.0473,
+      "pipeline_full_before_fix": 0.3829,
+      "ratio_before_fix": 8.1,
+      "raw_after_fix": 0.0473,
+      "pipeline_full_after_fix": 0.0481,
+      "ratio_after_fix": 1.02,
+      "raw_after_gate": 0.0473,
+      "pipeline_full_after_gate": 0.0473,
+      "ratio_after_gate": 1.0,
+      "raw_after_audit": 0.0475,
+      "pipeline_full_after_audit": 0.0475,
+      "ratio_after_audit": 1.0,
+      "words": 14308,
+      "words_with_diacritic": 4987,
+      "pct_words_with_diacritic": 35,
+      "raw": 0.0473,
+      "exact": {
+        "raw_before_fix": 0.04726463890488191,
+        "pipeline_full_before_fix": 0.3829266249869648,
+        "ratio_before_fix": 8.101757124551156,
+        "raw_after_fix": 0.047321998088087146,
+        "pipeline_full_after_fix": 0.04814257500226216,
+        "ratio_after_fix": 1.017340284589158,
+        "raw_after_gate": 0.047321998088087146,
+        "pipeline_full_after_gate": 0.047321998088087146,
+        "ratio_after_gate": 1.0,
+        "raw_after_audit": 0.04753487887484655,
+        "pipeline_full_after_audit": 0.04753487887484655,
+        "ratio_after_audit": 1.0,
+        "share_words_with_diacritic": 0.3485462678221974
+      }
+    },
+    "es_419": {
+      "language": "spanish",
+      "utterances": 908,
+      "raw_before_fix": 0.0294,
+      "pipeline_full_before_fix": 0.1341,
+      "ratio_before_fix": 4.56,
+      "raw_after_fix": 0.0293,
+      "pipeline_full_after_fix": 0.0292,
+      "ratio_after_fix": 1.0,
+      "raw_after_gate": 0.0294,
+      "pipeline_full_after_gate": 0.0293,
+      "ratio_after_gate": 1.0,
+      "raw_after_audit": 0.0292,
+      "pipeline_full_after_audit": 0.0292,
+      "ratio_after_audit": 1.0,
+      "words": 23262,
+      "words_with_diacritic": 2448,
+      "pct_words_with_diacritic": 11,
+      "raw": 0.0294,
+      "exact": {
+        "raw_before_fix": 0.02937565607283082,
+        "pipeline_full_before_fix": 0.1340827493528526,
+        "ratio_before_fix": 4.564417183412767,
+        "raw_after_fix": 0.02926012577362248,
+        "pipeline_full_after_fix": 0.029226752392231478,
+        "ratio_after_fix": 0.9988594245407828,
+        "raw_after_gate": 0.02937565607283082,
+        "pipeline_full_after_gate": 0.02934228269143982,
+        "ratio_after_gate": 0.998863910262693,
+        "raw_after_audit": 0.029237447336847126,
+        "pipeline_full_after_audit": 0.029237447336847126,
+        "ratio_after_audit": 1.0,
+        "share_words_with_diacritic": 0.10523600722207893
+      }
+    },
+    "fr_fr": {
+      "language": "french",
+      "utterances": 676,
+      "raw_before_fix": 0.0549,
+      "pipeline_full_before_fix": 0.203,
+      "ratio_before_fix": 3.7,
+      "raw_after_fix": 0.0549,
+      "pipeline_full_after_fix": 0.0556,
+      "ratio_after_fix": 1.01,
+      "raw_after_gate": 0.0549,
+      "pipeline_full_after_gate": 0.0549,
+      "ratio_after_gate": 1.0,
+      "raw_after_audit": 0.055,
+      "pipeline_full_after_audit": 0.055,
+      "ratio_after_audit": 1.0,
+      "words": 17085,
+      "words_with_diacritic": 2653,
+      "pct_words_with_diacritic": 16,
+      "raw": 0.0549,
+      "exact": {
+        "raw_before_fix": 0.05489245098536861,
+        "pipeline_full_before_fix": 0.2030489138822886,
+        "ratio_before_fix": 3.6990316562182763,
+        "raw_after_fix": 0.05489245098536861,
+        "pipeline_full_after_fix": 0.05560052877164068,
+        "ratio_after_fix": 1.0128993654603036,
+        "raw_after_gate": 0.05489245098536861,
+        "pipeline_full_after_gate": 0.05489245098536861,
+        "ratio_after_gate": 1.0,
+        "raw_after_audit": 0.054954088066236466,
+        "pipeline_full_after_audit": 0.054954088066236466,
+        "ratio_after_audit": 1.0,
+        "share_words_with_diacritic": 0.15528241147205152
+      }
+    },
+    "de_de": {
+      "language": "german",
+      "utterances": 862,
+      "raw_before_fix": 0.0492,
+      "pipeline_full_before_fix": 0.1522,
+      "ratio_before_fix": 3.09,
+      "raw_after_fix": 0.0492,
+      "pipeline_full_after_fix": 0.0571,
+      "ratio_after_fix": 1.16,
+      "raw_after_gate": 0.0492,
+      "pipeline_full_after_gate": 0.0492,
+      "ratio_after_gate": 1.0,
+      "raw_after_audit": 0.0492,
+      "pipeline_full_after_audit": 0.0492,
+      "ratio_after_audit": 1.0,
+      "words": 18507,
+      "words_with_diacritic": 1835,
+      "pct_words_with_diacritic": 10,
+      "raw": 0.0492,
+      "exact": {
+        "raw_before_fix": 0.04922303247586343,
+        "pipeline_full_before_fix": 0.15221723400118073,
+        "ratio_before_fix": 3.0923985448442375,
+        "raw_after_fix": 0.04922303247586343,
+        "pipeline_full_after_fix": 0.057090268278198464,
+        "ratio_after_fix": 1.1598283447122593,
+        "raw_after_gate": 0.04919184556532618,
+        "pipeline_full_after_gate": 0.04919184556532618,
+        "ratio_after_gate": 1.0,
+        "raw_after_audit": 0.049228305624988096,
+        "pipeline_full_after_audit": 0.049228305624988096,
+        "ratio_after_audit": 1.0,
+        "share_words_with_diacritic": 0.0991516723401956
+      }
+    },
+    "it_it": {
+      "language": "italian",
+      "utterances": 865,
+      "raw_before_fix": 0.0236,
+      "pipeline_full_before_fix": 0.0684,
+      "ratio_before_fix": 2.9,
+      "raw_after_fix": 0.0238,
+      "pipeline_full_after_fix": 0.0238,
+      "ratio_after_fix": 1.0,
+      "raw_after_gate": 0.0238,
+      "pipeline_full_after_gate": 0.0238,
+      "ratio_after_gate": 1.0,
+      "raw_after_audit": 0.0239,
+      "pipeline_full_after_audit": 0.0239,
+      "ratio_after_audit": 1.0,
+      "words": 20605,
+      "words_with_diacritic": 944,
+      "pct_words_with_diacritic": 5,
+      "raw": 0.0236,
+      "exact": {
+        "raw_before_fix": 0.023603259765755075,
+        "pipeline_full_before_fix": 0.06839844185309675,
+        "ratio_before_fix": 2.8978387956536844,
+        "raw_after_fix": 0.02381906303653197,
+        "pipeline_full_after_fix": 0.02381906303653197,
+        "ratio_after_fix": 1.0,
+        "raw_after_gate": 0.02381906303653197,
+        "pipeline_full_after_gate": 0.02381906303653197,
+        "ratio_after_gate": 1.0,
+        "raw_after_audit": 0.02391103269264237,
+        "pipeline_full_after_audit": 0.02391103269264237,
+        "ratio_after_audit": 1.0,
+        "share_words_with_diacritic": 0.04581412278573162
+      }
+    },
+    "nl_nl": {
+      "language": "dutch",
+      "utterances": 364,
+      "raw_before_fix": 0.0568,
+      "pipeline_full_before_fix": 0.0615,
+      "ratio_before_fix": 1.08,
+      "raw_after_fix": 0.0569,
+      "pipeline_full_after_fix": 0.0569,
+      "ratio_after_fix": 1.0,
+      "raw_after_gate": 0.0569,
+      "pipeline_full_after_gate": 0.0569,
+      "ratio_after_gate": 1.0,
+      "raw_after_audit": 0.0569,
+      "pipeline_full_after_audit": 0.0569,
+      "ratio_after_audit": 1.0,
+      "words": 8287,
+      "words_with_diacritic": 58,
+      "pct_words_with_diacritic": 1,
+      "raw": 0.0568,
+      "exact": {
+        "raw_before_fix": 0.056773236618129226,
+        "pipeline_full_before_fix": 0.06152236718001815,
+        "ratio_before_fix": 1.0836508686977413,
+        "raw_after_fix": 0.0569348397209088,
+        "pipeline_full_after_fix": 0.0569348397209088,
+        "ratio_after_fix": 1.0,
+        "raw_after_gate": 0.0569348397209088,
+        "pipeline_full_after_gate": 0.0569348397209088,
+        "ratio_after_gate": 1.0,
+        "raw_after_audit": 0.0569348397209088,
+        "pipeline_full_after_audit": 0.0569348397209088,
+        "ratio_after_audit": 1.0,
+        "share_words_with_diacritic": 0.0069989139616266445
+      }
+    }
+  },
+  "finding": {
+    "summary": "Two independent English-language assumptions in the production post-processing were inflating non-English word error rate. Fixing both makes the composite WER-neutral (ratio 1.00) on all six languages. The re-run of the repaired code after the September 2026 audit (arm 4) confirms it: there the composite scores every utterance of all six languages exactly as the raw hypothesis does.",
+    "defect_1": {
+      "what": "remove_emojis_and_unicode_artifacts stripped every non-ASCII codepoint, deleting diacritics.",
+      "evidence": "Damage tracked diacritic density: Polish 35% of words -> 8.10x; Dutch 1% -> 1.08x; Spearman rho 0.94 across the six languages, with the shares measured on every reference word of the test splits (benchmark.diacritic_shares).",
+      "fix": "f6e708e"
+    },
+    "defect_2": {
+      "what": "clean_transcription_text applied English-lexical stages to every language; contraction_fix rewrote the German preposition 'im' to \"I'm\".",
+      "evidence": "Visible only after defect 1 was fixed, mainly as a German residual of 1.16x, with smaller ones in Polish (1.02x) and French (1.01x). In arm 2 the English-only stages changed 132 German, 10 Polish and 11 French utterances, all but one of them for the worse. The gate closes all three to 1.00x and leaves the composite's effect on Spanish, Italian and Dutch unchanged.",
+      "fix": "c0f58c5"
+    },
+    "control": "Raw WER moves by at most 0.0003 across the four arms for every language (0.0002 across the first three), at the four decimals this file holds. The summaries keep no transcripts, so decodes are compared through what each utterance's record keeps, its word alignment counts and its character error rate. Arms 1 to 3 share their decoding code. For each language, every pair of them that ran on GPUs of the same architecture (six pairs in all) wrote byte-identical raw summaries, while pairs on different architectures differ on 0 to 4 utterances, always with the same reference words. Arm 4 ran on architectures none of the others used. Against arm 3 it differs on 1 to 4 utterances per language, 0 to 3 of them in word errors and the rest in character error rate alone, so at least one transcript changed in every language, Dutch included. Neither repair touches the raw hypothesis, and within arms 1 to 3 its movement follows the GPU. Arm 4 decoded with the same installed packages and the same model and dataset commits as arm 3, and its decoding code differs only by pinning those commits, so its GPU is the only known difference, although no pair of arms on the same architecture isolates it. benchmark.arms records the GPU of each arm and language.",
+    "status": "COMPLETE: the composite is WER-neutral on all six non-English languages, and the audit's re-run (arm 4) reproduces it.",
+    "defect_3": {
+      "what": "The language gate initially read only an explicit --language, so a user letting Whisper auto-detect still received the English-only stages. Wiring in the ASR pipeline's return_language reporting did not fix it: on transformers 4.48-5.6 the generation path strips the language token before the tokenizer decodes it, so that field is always None.",
+      "evidence": "GPU probe, ARC job 8293568, transformers 4.57.1, whisper-large-v3, real FLEURS audio. pipeline return_language returned None for de_de, fr_fr and en_us alike, while WhisperGenerationMixin.detect_language returned 'german', 'french' and 'english' correctly. End to end, the composite then preserved the German preposition 'im' where the ungated path rewrote it to \"I'm\".",
+      "fix": "c83162f (detect_language, plus splitting the English-only pronoun rule out of sentence_capitalise)",
+      "scope": "Product path only. evaluation/wer.py normalises with lowercase=True and the benchmark always passes an explicit --language, so no WER figure in this file is affected."
+    },
+    "defect_4": {
+      "what": "After f6e708e, remove_emojis_and_unicode_artifacts kept letters and combining marks outside ASCII but still deleted every other non-ASCII character, numbers among them.",
+      "evidence": "In FLEURS this touched one sentence, id 1682, whose dimensions the Spanish, German and Dutch references write as vulgar fractions (29\u00be by 24\u00bd inches). In arm 3 the composite deleted the fractions from Whisper's transcript of six of its recordings, three Spanish and one each French, German and Dutch. Five kept their error count, and one Spanish recording scored one error fewer, which is why arm 3's Spanish ratio is 0.9989 and not 1. The Polish and Italian references write the dimensions as decimals, and none of their recordings changed. In arm 4, with the fractions kept, the composite scores every utterance exactly as raw.",
+      "fix": "748ae6b (audit finding T1-02)"
+    }
+  }
+}

@@ -1,0 +1,217 @@
+{
+  "provenance": {
+    "cluster": "htc",
+    "captured": "2026-10-04",
+    "until": null,
+    "sacct_file": "sacct_2026-10-04_final.psv",
+    "sacct_sha256": "5c7e6f7cca75bb808cadaac35351bc13256b113e6c0a316e73e09184d7fb405b",
+    "sacct_query": "sacct -M htc --starttime 2026-05-16 --endtime now -X -P --format=JobID,JobName,Account,State,ElapsedRaw,Start,End,Partition,AllocTRES,NodeList,WorkDir",
+    "nodes_file": null,
+    "nodes_sha256": null,
+    "assume_gpu_type": null,
+    "gpu_model_source": "job NodeList mapped through ARC_NODE_GPU (built-in 2026-10-04 listing); boards from NODE_GPU_VARIANT (htc-g003, htc-g004, htc-g015, htc-g016, htc-g032, htc-g033, htc-g034, htc-g035, htc-g037, htc-g038, htc-g041, htc-g042, htc-g043, htc-g053, htc-g054, htc-g055, htc-g058, htc-g059, htc-g060); a typed AllocTRES entry checked against the node",
+    "job_selection": "this project's job names (evaluation.footprint.job_category), run from its directories, or from elsewhere under a name of _RUN_ELSEWHERE; every finished job that held an allocation, whatever its state",
+    "workdir_checked": true,
+    "counted_outside_project_dirs": [
+      "7740690",
+      "7746170",
+      "7746189",
+      "8976270",
+      "8976304"
+    ],
+    "left_out_outside_project_dirs": [],
+    "left_out_never_allocated": [
+      "7662615",
+      "7662616",
+      "7668876",
+      "7670257",
+      "7670830",
+      "7670907",
+      "8917982"
+    ],
+    "left_out_unfinished": [],
+    "left_out_reasons": {
+      "left_out_outside_project_dirs": "run under one of this project's job names from another directory, so possibly another project's job",
+      "left_out_never_allocated": "cancelled while pending: no allocation, so it ran on no node and drew no power",
+      "left_out_unfinished": "still pending or running when the dump was taken, so its runtime was not final"
+    },
+    "measured_energy_available": false,
+    "note": "sacct ConsumedEnergy is 0 for every job (no site energy-accounting plugin); figures are Green-Algorithms model estimates."
+  },
+  "parameters": {
+    "gpu_tdp_w": {
+      "a100": 400.0,
+      "a100-sxm4": 400.0,
+      "a100-pcie": 250.0,
+      "p100": 300.0,
+      "p100-pcie": 250.0,
+      "v100": 300.0,
+      "v100-pcie": 250.0,
+      "v100-sxm2": 300.0,
+      "rtx8000": 295.0,
+      "rtx-titan": 280.0,
+      "a6000": 300.0,
+      "l40s": 350.0,
+      "h100-nvl": 400.0,
+      "h100-pcie": 350.0,
+      "h100-sxm": 700.0
+    },
+    "cpu_power_w_per_core": 12.0,
+    "mem_power_w_per_gb": 0.3725,
+    "pue": 1.67,
+    "carbon_intensity_g_per_kwh": 207.0,
+    "gpu_util": 1.0,
+    "cpu_util": 1.0,
+    "car_g_per_km": 170.0
+  },
+  "overall": {
+    "n_jobs": 197,
+    "gpu_hours": 155.6977777777778,
+    "runtime_h": 161.23416666666665,
+    "energy_kwh": 95.95212304627778,
+    "carbon_g": 19862.0894705795,
+    "carbon_kg": 19.862089470579498,
+    "energy_gpu_kwh": 78.64318770833333,
+    "energy_cpu_kwh": 14.042072533333332,
+    "energy_mem_kwh": 3.266862804611111
+  },
+  "productive": {
+    "n_jobs": 167,
+    "gpu_hours": 130.2711111111111,
+    "runtime_h": 132.75611111111112,
+    "energy_kwh": 81.60014589455555,
+    "carbon_g": 16891.230200173
+  },
+  "overhead": {
+    "n_jobs": 30,
+    "gpu_hours": 25.426666666666666,
+    "runtime_h": 28.478055555555557,
+    "energy_kwh": 14.35197715172222,
+    "carbon_g": 2970.8592704064995,
+    "states": [
+      "CANCELLED",
+      "FAILED",
+      "TIMEOUT"
+    ]
+  },
+  "by_category": {
+    "WER condition sweep": {
+      "n_jobs": 20,
+      "gpu_hours": 50.61666666666667,
+      "energy_kwh": 31.054936085555546,
+      "carbon_g": 6428.371769709999
+    },
+    "WER condition sweep (post-fix re-run)": {
+      "n_jobs": 15,
+      "gpu_hours": 22.97277777777778,
+      "energy_kwh": 13.475510114666667,
+      "carbon_g": 2789.4305937359995
+    },
+    "WER condition sweep (audit re-run)": {
+      "n_jobs": 15,
+      "gpu_hours": 21.39888888888889,
+      "energy_kwh": 12.512056164,
+      "carbon_g": 2589.995625948
+    },
+    "WER (pilot)": {
+      "n_jobs": 16,
+      "gpu_hours": 21.250833333333333,
+      "energy_kwh": 12.41561273622222,
+      "carbon_g": 2570.0318363979995
+    },
+    "WER multilingual (FLEURS)": {
+      "n_jobs": 26,
+      "gpu_hours": 21.034444444444446,
+      "energy_kwh": 12.353237605333332,
+      "carbon_g": 2557.1201843039994
+    },
+    "Diarisation sweep (DER)": {
+      "n_jobs": 4,
+      "gpu_hours": 3.069444444444444,
+      "energy_kwh": 2.3778359944444443,
+      "carbon_g": 492.21205084999997
+    },
+    "Disfluency evaluation": {
+      "n_jobs": 2,
+      "gpu_hours": 2.888888888888889,
+      "energy_kwh": 2.2210730944444443,
+      "carbon_g": 459.76213054999994
+    },
+    "Diarisation (DER)": {
+      "n_jobs": 19,
+      "gpu_hours": 2.5977777777777784,
+      "energy_kwh": 2.118028731888889,
+      "carbon_g": 438.43194750099997
+    },
+    "Case study": {
+      "n_jobs": 8,
+      "gpu_hours": 2.596111111111111,
+      "energy_kwh": 1.7318652984444443,
+      "carbon_g": 358.496116778
+    },
+    "Voice anonymisation": {
+      "n_jobs": 9,
+      "gpu_hours": 2.493333333333333,
+      "energy_kwh": 1.883707524888889,
+      "carbon_g": 389.92745765199993
+    },
+    "Pre-flight runs": {
+      "n_jobs": 29,
+      "gpu_hours": 2.0625,
+      "energy_kwh": 1.3135564617777775,
+      "carbon_g": 271.9061875879999
+    },
+    "Timestamp accuracy": {
+      "n_jobs": 6,
+      "gpu_hours": 1.5319444444444446,
+      "energy_kwh": 1.0818161655555554,
+      "carbon_g": 223.93594627000002
+    },
+    "Determinism check": {
+      "n_jobs": 3,
+      "gpu_hours": 0.6997222222222222,
+      "energy_kwh": 0.5167090034444445,
+      "carbon_g": 106.958763713
+    },
+    "Diarisation probe": {
+      "n_jobs": 6,
+      "gpu_hours": 0.37833333333333335,
+      "energy_kwh": 0.27336521322222224,
+      "carbon_g": 56.586599136999986
+    },
+    "Language-detection probe": {
+      "n_jobs": 2,
+      "gpu_hours": 0.10611111111111111,
+      "energy_kwh": 0.07264010133333333,
+      "carbon_g": 15.036500976
+    },
+    "Test suite and smoke tests": {
+      "n_jobs": 12,
+      "gpu_hours": 0.0,
+      "energy_kwh": 0.08212816922222221,
+      "carbon_g": 17.000531028999998
+    },
+    "Aggregation (CPU only)": {
+      "n_jobs": 2,
+      "gpu_hours": 0.0,
+      "energy_kwh": 0.0009386791666666667,
+      "carbon_g": 0.19430658750000002
+    },
+    "AMI reconstruction (CPU only)": {
+      "n_jobs": 2,
+      "gpu_hours": 0.0,
+      "energy_kwh": 0.028557816444444446,
+      "carbon_g": 5.911468004
+    },
+    "Determinism check (CPU only)": {
+      "n_jobs": 1,
+      "gpu_hours": 0.0,
+      "energy_kwh": 0.4385480862222222,
+      "carbon_g": 90.77945384799999
+    }
+  },
+  "equivalence": {
+    "car_km_average_passenger": 116.83582041517353,
+    "car_g_per_km": 170.0
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "split": "validation",
+  "mix_mode": "timeline",
+  "collar_s": 0.25,
+  "collar_convention": "pyannote.metrics total width, centred on each reference boundary: collar_s/2 either side",
+  "audio_signal": "PCM_16 WAV read back as float32 (the cache format)",
+  "n_configurations": 10,
+  "criterion": "macro_der",
+  "best": {
+    "clustering_threshold": 0.7,
+    "min_cluster_size": 12,
+    "min_duration_off": 0.0,
+    "config_id": "cfg004",
+    "n_meetings": 18,
+    "macro_der": 0.179346,
+    "micro_der": 0.174369,
+    "macro_missed": 0.063961,
+    "macro_fa": 0.016577,
+    "macro_confusion": 0.098808,
+    "mean_hyp_speakers": 7.06,
+    "resolved_clustering_threshold": 0.7,
+    "resolved_min_cluster_size": 12,
+    "resolved_min_duration_off": 0.0
+  },
+  "baseline_in_grid": {
+    "clustering_threshold": null,
+    "min_cluster_size": null,
+    "min_duration_off": null,
+    "config_id": "cfg000",
+    "n_meetings": 18,
+    "macro_der": 0.179997,
+    "micro_der": 0.17502,
+    "macro_missed": 0.063961,
+    "macro_fa": 0.016577,
+    "macro_confusion": 0.099458,
+    "mean_hyp_speakers": 7.06,
+    "resolved_clustering_threshold": 0.7045654963945799,
+    "resolved_min_cluster_size": 12,
+    "resolved_min_duration_off": 0.0
+  },
+  "model": "pyannote/speaker-diarization-3.1",
+  "pyannote_audio_version": "3.4.0",
+  "pipeline_defaults": {
+    "segmentation": {
+      "min_duration_off": 0.0
+    },
+    "clustering": {
+      "method": "centroid",
+      "min_cluster_size": 12,
+      "threshold": 0.7045654963945799
+    }
+  },
+  "grid": {
+    "clustering_threshold": [
+      0.65,
+      0.7,
+      0.75
+    ],
+    "min_cluster_size": [
+      12
+    ],
+    "min_duration_off": [
+      0.0,
+      0.25,
+      0.5
+    ],
+    "include_default": true
+  },
+  "max_minutes": null,
+  "limit_meetings": null,
+  "argv": [
+    "--split",
+    "validation",
+    "--cache-dir",
+    "/data/educ-lift/educ1242/ami_cache",
+    "--output-dir",
+    "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation/audit2026/der/der_sweep2",
+    "--output-prefix",
+    "der_sweep2",
+    "--clustering-threshold",
+    "0.65",
+    "0.70",
+    "0.75",
+    "--min-cluster-size",
+    "12",
+    "--min-duration-off",
+    "0.0",
+    "0.25",
+    "0.5"
+  ],
+  "git_commit": "9cb43e3a4fa10ca4a7afe7e7c83a2c8de3cce915"
+}

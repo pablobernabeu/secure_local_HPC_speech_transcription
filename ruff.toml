@@ -1,0 +1,30 @@
+# Repository-wide lint configuration (python -m ruff check .).
+#
+# Kept in ruff.toml, not pyproject.toml: a pyproject.toml would switch pip to
+# PEP 517 isolated builds, changing how setup.py installs the package.
+
+# The ARC environment behind the results runs Python 3.12 (requirements-lock.txt)
+# and setup.py allows 3.11, so no syntax newer than 3.11 is suggested.
+target-version = "py311"
+line-length = 100
+extend-exclude = ["build", ".claude", "example_output", "output"]
+
+[lint]
+# pycodestyle errors and warnings, pyflakes, bugbear, pyupgrade, simplify.
+select = ["E", "F", "W", "B", "UP", "SIM"]
+ignore = [
+    # Long lines are mostly prose in docstrings, argparse help and test
+    # fixtures. Wrapping them by hand would touch hundreds of lines of code
+    # behind committed results for no behavioural gain; ISSUES.md records the
+    # count.
+    "E501",
+    # try/except/pass versus contextlib.suppress, and nested with-statements,
+    # are equivalent; rewriting them only churns code behind committed results.
+    "SIM105",
+    "SIM117",
+]
+
+[lint.per-file-ignores]
+# Tests import the module under test after adjusting sys.path or skipping on
+# a missing optional dependency.
+"tests/*" = ["E402"]

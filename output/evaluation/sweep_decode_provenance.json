@@ -1,0 +1,1994 @@
+{
+  "schema_version": 1,
+  "decoder_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+  "digest_policy": "Exact recovered summary bytes; LF-normalised committed aggregate and input receipt.",
+  "aggregate_sha256_lf": "5a4626c49fff01f42adfc9077ed59433779175f5969230739771a98c3ec8dba9",
+  "input_receipt_sha256_lf": "b532f9892255a1ab6c83c9dca5b9c66bca76ffbc654617a3331dc7ccea6ff146",
+  "extractor_sha256_lf": "e2f8ff33c675c60570c34d76aa2443a4e4efd835ebeb547df2d41d49b2cbd30e",
+  "cells_verified": 255,
+  "decode_profiles": 15,
+  "scope": "Recorded metadata extracted from all 255 hash-verified summaries. Each suite/model profile is identical across its 17 conditions. Corpus text and deployment locators are omitted.",
+  "limits": "This is a verified extraction of recorded metadata, not a new decode or a direct inspection of the historical runtime. Settings absent from the source summaries are not inferred.",
+  "profiles": [
+    {
+      "suite": "ami",
+      "model": "distil-whisper/distil-large-v3",
+      "recorded_decode_and_environment": {
+        "dataset": "edinburghcstr/ami",
+        "config": "ihm",
+        "split": "test",
+        "model": "distil-whisper/distil-large-v3",
+        "seed": 42,
+        "language": "english",
+        "n_streamed": 12643,
+        "revisions": {
+          "edinburghcstr/ami": "46f28f2503e2ec48f8867a84eef356c70476beab",
+          "distil-whisper/distil-large-v3": "8031d2e6ce6631b7fc45629dddfc00271116d981"
+        },
+        "decode": {
+          "device": "cuda",
+          "dtype": "torch.float16",
+          "model_commit": "8031d2e6ce6631b7fc45629dddfc00271116d981",
+          "torch_cuda": "12.1",
+          "cudnn": 90100,
+          "gpu": "NVIDIA L40S"
+        },
+        "run_metadata": {
+          "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+          "git_dirty": false,
+          "python": "3.12.12",
+          "platform": "Linux-5.14.0-427.42.2.arc.el9.x86_64-x86_64-with-glibc2.34",
+          "packages": {
+            "torch": "2.5.1+cu121",
+            "torchaudio": "2.5.1+cu121",
+            "transformers": "4.57.1",
+            "pyannote.audio": "3.4.0",
+            "jiwer": "4.0.0",
+            "datasets": "4.8.5",
+            "numpy": "2.3.3",
+            "scipy": "1.16.2",
+            "librosa": "0.11.0",
+            "soundfile": "0.13.1",
+            "gliner": null,
+            "huggingface_hub": "0.35.3"
+          }
+        }
+      },
+      "source_summaries": [
+        {
+          "condition": "case_fold",
+          "file": "wer_summary_ami_distil-large-v3_case_fold.json",
+          "sha256": "1a2321670ce7ecf477bee289d98ab887473dce72a16e6d309c0c0b1dbb24f7ab"
+        },
+        {
+          "condition": "common_phrase_fix",
+          "file": "wer_summary_ami_distil-large-v3_common_phrase_fix.json",
+          "sha256": "eba4b62b0537cf4236a158d8b2d97f72b7b3de31521d63500571837014cfb48b"
+        },
+        {
+          "condition": "contraction_fix",
+          "file": "wer_summary_ami_distil-large-v3_contraction_fix.json",
+          "sha256": "9ac73d136e3b403fcb03ce500bee9063095cf48849c6c59b1e74540426878dc8"
+        },
+        {
+          "condition": "dedup_window",
+          "file": "wer_summary_ami_distil-large-v3_dedup_window.json",
+          "sha256": "86f60419dc790d52116c6a351f9e2334b7e61acaf1389d74581b20e88d72d6db"
+        },
+        {
+          "condition": "filler_bracket",
+          "file": "wer_summary_ami_distil-large-v3_filler_bracket.json",
+          "sha256": "adc8455967da936f71092b4bcf6474373ecb1ee79c5c67860f9695e9d29fe985"
+        },
+        {
+          "condition": "filler_strip",
+          "file": "wer_summary_ami_distil-large-v3_filler_strip.json",
+          "sha256": "dc2444ec42578f083e5e0ca8afb532fb7b22bff8020dc56bbd310408f62f53a8"
+        },
+        {
+          "condition": "pipeline_full",
+          "file": "wer_summary_ami_distil-large-v3_pipeline_full.json",
+          "sha256": "f9a88a2d315391ceeace6ae0cb4599f29819babb3da8f5cdfd7e9e75795fc438"
+        },
+        {
+          "condition": "pronoun_i_fix",
+          "file": "wer_summary_ami_distil-large-v3_pronoun_i_fix.json",
+          "sha256": "09f5b25fdc282183d19a931f993df30dd16f81970c5f17fde7e1ddc3d5e7b8cf"
+        },
+        {
+          "condition": "punct_space_fix",
+          "file": "wer_summary_ami_distil-large-v3_punct_space_fix.json",
+          "sha256": "3431ba7fcf735b9859404940137c77a40b9e3db80767ce9881c58acfd35b4919"
+        },
+        {
+          "condition": "punct_strip",
+          "file": "wer_summary_ami_distil-large-v3_punct_strip.json",
+          "sha256": "11c8175a5dc1e74bdd219fd30d6be07693d80f8058bf1ff555b295a7087a8194"
+        },
+        {
+          "condition": "raw",
+          "file": "wer_summary_ami_distil-large-v3.json",
+          "sha256": "9575c96e6030934aa5e1a423c1bb44d7c1ed252c1d2c7478f80caaf1dc8d292a"
+        },
+        {
+          "condition": "repetition_fix",
+          "file": "wer_summary_ami_distil-large-v3_repetition_fix.json",
+          "sha256": "ebb66236212f52cbc85affe9aca48e7083c00554635f41d41d3fa48c7179308c"
+        },
+        {
+          "condition": "sentence_capitalise",
+          "file": "wer_summary_ami_distil-large-v3_sentence_capitalise.json",
+          "sha256": "78b9c3ac81004a070e33d82ce9043a9b5e4cd45413d339637d57cfb2f235dbc1"
+        },
+        {
+          "condition": "undefined_tag",
+          "file": "wer_summary_ami_distil-large-v3_undefined_tag.json",
+          "sha256": "8853d727b61b50729d95d4e27c19e6a9b12679e1459ae2cede2a9566e269738e"
+        },
+        {
+          "condition": "unicode_strip",
+          "file": "wer_summary_ami_distil-large-v3_unicode_strip.json",
+          "sha256": "111eac00fe693d75f8577b333015f480ce44998c11b38961753c8dded7f8e8de"
+        },
+        {
+          "condition": "whisper_norm",
+          "file": "wer_summary_ami_distil-large-v3_whisper_norm.json",
+          "sha256": "a312c0a879132b8ef15032a4d1714900d0d636e10516e216ec3abbcf0546c32a"
+        },
+        {
+          "condition": "whitespace_normalise",
+          "file": "wer_summary_ami_distil-large-v3_whitespace_normalise.json",
+          "sha256": "c6841eea598ed12c950e4a6f2dbfe054929f08e5247648a44e6ac7f0b2882ad8"
+        }
+      ]
+    },
+    {
+      "suite": "ami",
+      "model": "openai/whisper-large-v3",
+      "recorded_decode_and_environment": {
+        "dataset": "edinburghcstr/ami",
+        "config": "ihm",
+        "split": "test",
+        "model": "openai/whisper-large-v3",
+        "seed": 42,
+        "language": "english",
+        "n_streamed": 12643,
+        "revisions": {
+          "edinburghcstr/ami": "46f28f2503e2ec48f8867a84eef356c70476beab",
+          "openai/whisper-large-v3": "06f233fe06e710322aca913c1bc4249a0d71fce1"
+        },
+        "decode": {
+          "device": "cuda",
+          "dtype": "torch.float16",
+          "model_commit": "06f233fe06e710322aca913c1bc4249a0d71fce1",
+          "torch_cuda": "12.1",
+          "cudnn": 90100,
+          "gpu": "Tesla V100-PCIE-32GB"
+        },
+        "run_metadata": {
+          "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+          "git_dirty": false,
+          "python": "3.12.12",
+          "platform": "Linux-5.14.0-427.42.2.arc.el9.x86_64-x86_64-with-glibc2.34",
+          "packages": {
+            "torch": "2.5.1+cu121",
+            "torchaudio": "2.5.1+cu121",
+            "transformers": "4.57.1",
+            "pyannote.audio": "3.4.0",
+            "jiwer": "4.0.0",
+            "datasets": "4.8.5",
+            "numpy": "2.3.3",
+            "scipy": "1.16.2",
+            "librosa": "0.11.0",
+            "soundfile": "0.13.1",
+            "gliner": null,
+            "huggingface_hub": "0.35.3"
+          }
+        }
+      },
+      "source_summaries": [
+        {
+          "condition": "case_fold",
+          "file": "wer_summary_ami_whisper-large-v3_case_fold.json",
+          "sha256": "45a3ebbf7789931c2cf9cb7328c1804c4698084e632973c7b0ce480c6aee931b"
+        },
+        {
+          "condition": "common_phrase_fix",
+          "file": "wer_summary_ami_whisper-large-v3_common_phrase_fix.json",
+          "sha256": "1b6bcf76b7f9485993d0eb1d6eb9aea78031e29b13ec005b37011de337f32b8f"
+        },
+        {
+          "condition": "contraction_fix",
+          "file": "wer_summary_ami_whisper-large-v3_contraction_fix.json",
+          "sha256": "8f2ec82a94c065ba21178743b81edb12d05b548394a1e202dfc29cfd52b3ba95"
+        },
+        {
+          "condition": "dedup_window",
+          "file": "wer_summary_ami_whisper-large-v3_dedup_window.json",
+          "sha256": "c61e15764c3e16b59039467fffadfdd20086d1d941a9654bd5814e61a9b1c9e4"
+        },
+        {
+          "condition": "filler_bracket",
+          "file": "wer_summary_ami_whisper-large-v3_filler_bracket.json",
+          "sha256": "cd5087df5b4ff4bb18410c91c49af1d7e3863a0f58a2ce4a715cc4b570f88a2d"
+        },
+        {
+          "condition": "filler_strip",
+          "file": "wer_summary_ami_whisper-large-v3_filler_strip.json",
+          "sha256": "647c7eb2a544b3affc864ee3de26b7b9c10afce3fb6d616dc1b7209c53c607a6"
+        },
+        {
+          "condition": "pipeline_full",
+          "file": "wer_summary_ami_whisper-large-v3_pipeline_full.json",
+          "sha256": "074e565b96c439bbf13565255b0265eea462f8fedec0e4b8eb66f9368697eaeb"
+        },
+        {
+          "condition": "pronoun_i_fix",
+          "file": "wer_summary_ami_whisper-large-v3_pronoun_i_fix.json",
+          "sha256": "e53b59b2b19fd9de0447c0e10d54fe652f238519d97c877c0ca190b83e43e551"
+        },
+        {
+          "condition": "punct_space_fix",
+          "file": "wer_summary_ami_whisper-large-v3_punct_space_fix.json",
+          "sha256": "53a0bc9cefc18fd2a8b1169c377c0c3c27912252d7a5b3ae896e92a44c468034"
+        },
+        {
+          "condition": "punct_strip",
+          "file": "wer_summary_ami_whisper-large-v3_punct_strip.json",
+          "sha256": "4bc7ba53624f5f63a7feaa369bb5f8c239344a56b40c4f05dc60f3fa0ed1cd9c"
+        },
+        {
+          "condition": "raw",
+          "file": "wer_summary_ami_whisper-large-v3.json",
+          "sha256": "46d7a5fd087b7a7da9119fe46dc4ac62d03e339db9f359f5e937a720717c7e4e"
+        },
+        {
+          "condition": "repetition_fix",
+          "file": "wer_summary_ami_whisper-large-v3_repetition_fix.json",
+          "sha256": "3763a60a5bc98bfb3f31d59828d5fa4746068465b6edf8cdf5dfac7a29fd8d59"
+        },
+        {
+          "condition": "sentence_capitalise",
+          "file": "wer_summary_ami_whisper-large-v3_sentence_capitalise.json",
+          "sha256": "3dde084073bbc6a6d861974a1aaa127cc6545a65af614fa773c800d8ed415968"
+        },
+        {
+          "condition": "undefined_tag",
+          "file": "wer_summary_ami_whisper-large-v3_undefined_tag.json",
+          "sha256": "09654ad235472c28afe4fa7d0501aac134742ea3fa7d3498f5ab39e769e1c44d"
+        },
+        {
+          "condition": "unicode_strip",
+          "file": "wer_summary_ami_whisper-large-v3_unicode_strip.json",
+          "sha256": "374a8ef5e9fd53b52e7d8959ed9f9519ca9e351cb547b9bcf021c9daebdca418"
+        },
+        {
+          "condition": "whisper_norm",
+          "file": "wer_summary_ami_whisper-large-v3_whisper_norm.json",
+          "sha256": "8473d2842f5ad7197575f30fc7902952380decdf2c709af50439a30efbe41e38"
+        },
+        {
+          "condition": "whitespace_normalise",
+          "file": "wer_summary_ami_whisper-large-v3_whitespace_normalise.json",
+          "sha256": "c35e8b7eb7902eb7d0c4bdcb344a584e91a411588bafeee430b84150f2a9181a"
+        }
+      ]
+    },
+    {
+      "suite": "ami",
+      "model": "openai/whisper-medium",
+      "recorded_decode_and_environment": {
+        "dataset": "edinburghcstr/ami",
+        "config": "ihm",
+        "split": "test",
+        "model": "openai/whisper-medium",
+        "seed": 42,
+        "language": "english",
+        "n_streamed": 12643,
+        "revisions": {
+          "edinburghcstr/ami": "46f28f2503e2ec48f8867a84eef356c70476beab",
+          "openai/whisper-medium": "abdf7c39ab9d0397620ccaea8974cc764cd0953e"
+        },
+        "decode": {
+          "device": "cuda",
+          "dtype": "torch.float32",
+          "model_commit": "abdf7c39ab9d0397620ccaea8974cc764cd0953e",
+          "torch_cuda": "12.1",
+          "cudnn": 90100,
+          "gpu": "NVIDIA L40S"
+        },
+        "run_metadata": {
+          "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+          "git_dirty": false,
+          "python": "3.12.12",
+          "platform": "Linux-5.14.0-427.42.2.arc.el9.x86_64-x86_64-with-glibc2.34",
+          "packages": {
+            "torch": "2.5.1+cu121",
+            "torchaudio": "2.5.1+cu121",
+            "transformers": "4.57.1",
+            "pyannote.audio": "3.4.0",
+            "jiwer": "4.0.0",
+            "datasets": "4.8.5",
+            "numpy": "2.3.3",
+            "scipy": "1.16.2",
+            "librosa": "0.11.0",
+            "soundfile": "0.13.1",
+            "gliner": null,
+            "huggingface_hub": "0.35.3"
+          }
+        }
+      },
+      "source_summaries": [
+        {
+          "condition": "case_fold",
+          "file": "wer_summary_ami_whisper-medium_case_fold.json",
+          "sha256": "1b28d2e7a9d9c386bad1f22b41a4e730ae3a0492420dd3f78bfcfee8a07cf09b"
+        },
+        {
+          "condition": "common_phrase_fix",
+          "file": "wer_summary_ami_whisper-medium_common_phrase_fix.json",
+          "sha256": "0723e500e631ba1bdf559397fe83218cff6104d77ee5c405f634adb4a33d5026"
+        },
+        {
+          "condition": "contraction_fix",
+          "file": "wer_summary_ami_whisper-medium_contraction_fix.json",
+          "sha256": "f204242de1a8e41d1b1d6342a98b0ef2472fea944c7736ed44191fc2f5cd6ebc"
+        },
+        {
+          "condition": "dedup_window",
+          "file": "wer_summary_ami_whisper-medium_dedup_window.json",
+          "sha256": "00e6f4d194f3019bc1cea11f231f59b4faec52c538ffba3967537b7d8c6de787"
+        },
+        {
+          "condition": "filler_bracket",
+          "file": "wer_summary_ami_whisper-medium_filler_bracket.json",
+          "sha256": "60a8cbb95e93079125b3c58610d2582adbdefc53a2cdb0b50556a8be123732cb"
+        },
+        {
+          "condition": "filler_strip",
+          "file": "wer_summary_ami_whisper-medium_filler_strip.json",
+          "sha256": "cf9252f3381ba7c0998db077773c1e4ae9e169a3f8fde1cb0e7f893bd8ca5161"
+        },
+        {
+          "condition": "pipeline_full",
+          "file": "wer_summary_ami_whisper-medium_pipeline_full.json",
+          "sha256": "811cc35d4930fd93a7b4ccf91c24a4416042ec4c9157bc701409d93e8527ca4d"
+        },
+        {
+          "condition": "pronoun_i_fix",
+          "file": "wer_summary_ami_whisper-medium_pronoun_i_fix.json",
+          "sha256": "dbf665c69872ae770fd0e11681bac841b2949488624af846b279bd1807fca17b"
+        },
+        {
+          "condition": "punct_space_fix",
+          "file": "wer_summary_ami_whisper-medium_punct_space_fix.json",
+          "sha256": "e0666113fa41f7e3a5747ca8b53e17277f858245a9440846179256cd0228ecfb"
+        },
+        {
+          "condition": "punct_strip",
+          "file": "wer_summary_ami_whisper-medium_punct_strip.json",
+          "sha256": "c78f5979f8481704d0441d120a6b5cd786711f9f3a8f71fe44b9bb99522b7e03"
+        },
+        {
+          "condition": "raw",
+          "file": "wer_summary_ami_whisper-medium.json",
+          "sha256": "1a32a1653859c79c5b7a84193fbc0a15cb6ea42225fb6687d6befceb4d6366ab"
+        },
+        {
+          "condition": "repetition_fix",
+          "file": "wer_summary_ami_whisper-medium_repetition_fix.json",
+          "sha256": "479c45735200b9d4eae37e258b9478f16f2c68f00768f0cfcd898490953902ef"
+        },
+        {
+          "condition": "sentence_capitalise",
+          "file": "wer_summary_ami_whisper-medium_sentence_capitalise.json",
+          "sha256": "4b63c6592d1422857df6c6c76ff745c2798e5e199ac43e8eb4ed0c77f13d4396"
+        },
+        {
+          "condition": "undefined_tag",
+          "file": "wer_summary_ami_whisper-medium_undefined_tag.json",
+          "sha256": "abad6a793e709139ea1a985f7b04336d53ad90a523efb93a26f5700490728cc8"
+        },
+        {
+          "condition": "unicode_strip",
+          "file": "wer_summary_ami_whisper-medium_unicode_strip.json",
+          "sha256": "9c2e0e244d70a91b0c32ba9da47d493b8ddc66a49a6dcd4d84c7f4a90dbd8615"
+        },
+        {
+          "condition": "whisper_norm",
+          "file": "wer_summary_ami_whisper-medium_whisper_norm.json",
+          "sha256": "7a713165b939d9931cdaa9ceabe498a393d598cf6494a6db29b1adab3972d59f"
+        },
+        {
+          "condition": "whitespace_normalise",
+          "file": "wer_summary_ami_whisper-medium_whitespace_normalise.json",
+          "sha256": "cfd20eadc23bfe46a2b43f822f7e2169034da662fcf25958fe2506b7a3752bf5"
+        }
+      ]
+    },
+    {
+      "suite": "fleurs",
+      "model": "distil-whisper/distil-large-v3",
+      "recorded_decode_and_environment": {
+        "dataset": "google/fleurs",
+        "config": "en_us",
+        "split": "test",
+        "model": "distil-whisper/distil-large-v3",
+        "seed": 42,
+        "language": "english",
+        "n_streamed": 647,
+        "revisions": {
+          "google/fleurs": "70bb2e84b976b7e960aa89f1c648e09c59f894dd",
+          "distil-whisper/distil-large-v3": "8031d2e6ce6631b7fc45629dddfc00271116d981"
+        },
+        "decode": {
+          "device": "cuda",
+          "dtype": "torch.float16",
+          "model_commit": "8031d2e6ce6631b7fc45629dddfc00271116d981",
+          "torch_cuda": "12.1",
+          "cudnn": 90100,
+          "gpu": "NVIDIA L40S"
+        },
+        "run_metadata": {
+          "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+          "git_dirty": false,
+          "python": "3.12.12",
+          "platform": "Linux-5.14.0-427.42.2.arc.el9.x86_64-x86_64-with-glibc2.34",
+          "packages": {
+            "torch": "2.5.1+cu121",
+            "torchaudio": "2.5.1+cu121",
+            "transformers": "4.57.1",
+            "pyannote.audio": "3.4.0",
+            "jiwer": "4.0.0",
+            "datasets": "4.8.5",
+            "numpy": "2.3.3",
+            "scipy": "1.16.2",
+            "librosa": "0.11.0",
+            "soundfile": "0.13.1",
+            "gliner": null,
+            "huggingface_hub": "0.35.3"
+          }
+        }
+      },
+      "source_summaries": [
+        {
+          "condition": "case_fold",
+          "file": "wer_summary_fleurs_distil-large-v3_case_fold.json",
+          "sha256": "9b5270e676dd9ea0df6668c52bf1af913940c6e8a4fac6224b558f9d87724e10"
+        },
+        {
+          "condition": "common_phrase_fix",
+          "file": "wer_summary_fleurs_distil-large-v3_common_phrase_fix.json",
+          "sha256": "bbb101f707ae171e144a5a58e87dd6372cd3e0c206eeb42117ebee35104579b7"
+        },
+        {
+          "condition": "contraction_fix",
+          "file": "wer_summary_fleurs_distil-large-v3_contraction_fix.json",
+          "sha256": "97d8cd1cf243ea128824800b6890fa54a5d3ab4e4481bfd2a14d5832827594c0"
+        },
+        {
+          "condition": "dedup_window",
+          "file": "wer_summary_fleurs_distil-large-v3_dedup_window.json",
+          "sha256": "fea9a6c9137e3891f9be9fc39c5b16638c0d2a9101a66730a1b697608d7d117b"
+        },
+        {
+          "condition": "filler_bracket",
+          "file": "wer_summary_fleurs_distil-large-v3_filler_bracket.json",
+          "sha256": "68beb41b81fd19b4330641910d18a2f00118804ad1b6888f79536a4b32c1162b"
+        },
+        {
+          "condition": "filler_strip",
+          "file": "wer_summary_fleurs_distil-large-v3_filler_strip.json",
+          "sha256": "87ab9d86ce75a8e055013d979076c110121141a28bb9ba3a91a63f921067466f"
+        },
+        {
+          "condition": "pipeline_full",
+          "file": "wer_summary_fleurs_distil-large-v3_pipeline_full.json",
+          "sha256": "f97eb790210910fd3288d853310324a8cb97cca25e53495a56e33957bd4468b4"
+        },
+        {
+          "condition": "pronoun_i_fix",
+          "file": "wer_summary_fleurs_distil-large-v3_pronoun_i_fix.json",
+          "sha256": "2efee676d9a0af783cb52acf6e8ba4ce21086cfbd41df50c4551efac739e66ee"
+        },
+        {
+          "condition": "punct_space_fix",
+          "file": "wer_summary_fleurs_distil-large-v3_punct_space_fix.json",
+          "sha256": "8a19759cf30069ada1df18aac62721e9772835df9110a3ec8fdf5e3e4216c57c"
+        },
+        {
+          "condition": "punct_strip",
+          "file": "wer_summary_fleurs_distil-large-v3_punct_strip.json",
+          "sha256": "068ecdfda2b78de58d5b019282b9d3a4565e2586a54962ba327a2e5e2f656433"
+        },
+        {
+          "condition": "raw",
+          "file": "wer_summary_fleurs_distil-large-v3.json",
+          "sha256": "f1122784fe8b9f9cb61de17e3ec4d14126ce987fa41299b1cfd2104279778bd9"
+        },
+        {
+          "condition": "repetition_fix",
+          "file": "wer_summary_fleurs_distil-large-v3_repetition_fix.json",
+          "sha256": "5941a6db3d18a0bf4b9e1769dd1e57776aade2bc0c96ff81481cfc5574f39564"
+        },
+        {
+          "condition": "sentence_capitalise",
+          "file": "wer_summary_fleurs_distil-large-v3_sentence_capitalise.json",
+          "sha256": "098aca129bf129375f07d390542e259c658e1dc6e6755bb5108dc7ded8511609"
+        },
+        {
+          "condition": "undefined_tag",
+          "file": "wer_summary_fleurs_distil-large-v3_undefined_tag.json",
+          "sha256": "e405c7789a0cf846a818d03ae5117c1b8ae39bd893340ce781946154b5ad34a1"
+        },
+        {
+          "condition": "unicode_strip",
+          "file": "wer_summary_fleurs_distil-large-v3_unicode_strip.json",
+          "sha256": "9da92baab5a074b7e859de38274604712fb135ac06d1f7d5c47bda2263820bb9"
+        },
+        {
+          "condition": "whisper_norm",
+          "file": "wer_summary_fleurs_distil-large-v3_whisper_norm.json",
+          "sha256": "1be819c050b285690b1a7d442b8554ce515d2ed6c81e2e5b24f7cd5455bb603a"
+        },
+        {
+          "condition": "whitespace_normalise",
+          "file": "wer_summary_fleurs_distil-large-v3_whitespace_normalise.json",
+          "sha256": "f4e32c90340826e3255700533c34ec1f78c82d4648400283784739ef1107ed76"
+        }
+      ]
+    },
+    {
+      "suite": "fleurs",
+      "model": "openai/whisper-large-v3",
+      "recorded_decode_and_environment": {
+        "dataset": "google/fleurs",
+        "config": "en_us",
+        "split": "test",
+        "model": "openai/whisper-large-v3",
+        "seed": 42,
+        "language": "english",
+        "n_streamed": 647,
+        "revisions": {
+          "google/fleurs": "70bb2e84b976b7e960aa89f1c648e09c59f894dd",
+          "openai/whisper-large-v3": "06f233fe06e710322aca913c1bc4249a0d71fce1"
+        },
+        "decode": {
+          "device": "cuda",
+          "dtype": "torch.float16",
+          "model_commit": "06f233fe06e710322aca913c1bc4249a0d71fce1",
+          "torch_cuda": "12.1",
+          "cudnn": 90100,
+          "gpu": "Tesla V100-PCIE-32GB"
+        },
+        "run_metadata": {
+          "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+          "git_dirty": false,
+          "python": "3.12.12",
+          "platform": "Linux-5.14.0-427.42.2.arc.el9.x86_64-x86_64-with-glibc2.34",
+          "packages": {
+            "torch": "2.5.1+cu121",
+            "torchaudio": "2.5.1+cu121",
+            "transformers": "4.57.1",
+            "pyannote.audio": "3.4.0",
+            "jiwer": "4.0.0",
+            "datasets": "4.8.5",
+            "numpy": "2.3.3",
+            "scipy": "1.16.2",
+            "librosa": "0.11.0",
+            "soundfile": "0.13.1",
+            "gliner": null,
+            "huggingface_hub": "0.35.3"
+          }
+        }
+      },
+      "source_summaries": [
+        {
+          "condition": "case_fold",
+          "file": "wer_summary_fleurs_whisper-large-v3_case_fold.json",
+          "sha256": "684b95c6a0e618caedd6930f30095f12eb4796a7f49bf7d18eac4b7783f02ba7"
+        },
+        {
+          "condition": "common_phrase_fix",
+          "file": "wer_summary_fleurs_whisper-large-v3_common_phrase_fix.json",
+          "sha256": "cb962e668337bb0f21642357a09fe89cfd19a6f9bc7a2d61bbffd1c698a55eb6"
+        },
+        {
+          "condition": "contraction_fix",
+          "file": "wer_summary_fleurs_whisper-large-v3_contraction_fix.json",
+          "sha256": "59ff3c9e374556315839411c5f4d27e196ea8e0121c7eeda5aacef97a06789c6"
+        },
+        {
+          "condition": "dedup_window",
+          "file": "wer_summary_fleurs_whisper-large-v3_dedup_window.json",
+          "sha256": "40458428013a15ecab3d2850de7e7aa0e956ea617fc2ffe121936de8803dfc56"
+        },
+        {
+          "condition": "filler_bracket",
+          "file": "wer_summary_fleurs_whisper-large-v3_filler_bracket.json",
+          "sha256": "784364df55d2b8f2523e36307b10c3c8f85f60afb0a170315b11a25c66ffb7e1"
+        },
+        {
+          "condition": "filler_strip",
+          "file": "wer_summary_fleurs_whisper-large-v3_filler_strip.json",
+          "sha256": "158da7c3f457727225ba6fbebcc89939663845acb68f4b57c4162d504f8a9588"
+        },
+        {
+          "condition": "pipeline_full",
+          "file": "wer_summary_fleurs_whisper-large-v3_pipeline_full.json",
+          "sha256": "1f8feeeeca7447fbe4d5d8f73399eb575fe01aae3ab38ec1b6cb945c1e79481f"
+        },
+        {
+          "condition": "pronoun_i_fix",
+          "file": "wer_summary_fleurs_whisper-large-v3_pronoun_i_fix.json",
+          "sha256": "dceb155e77ae106401f9b1e8af0d030fe9679be10036be6dc3f95b978d6868db"
+        },
+        {
+          "condition": "punct_space_fix",
+          "file": "wer_summary_fleurs_whisper-large-v3_punct_space_fix.json",
+          "sha256": "997930c815589100e4f25bae160e2eb3df13143bc68e11b5cbb4475348ee4dfb"
+        },
+        {
+          "condition": "punct_strip",
+          "file": "wer_summary_fleurs_whisper-large-v3_punct_strip.json",
+          "sha256": "b819c0502ad980593cdedb39be33f4455083a9658d58b53c6c16eb6ae373ca96"
+        },
+        {
+          "condition": "raw",
+          "file": "wer_summary_fleurs_whisper-large-v3.json",
+          "sha256": "e7476887dcfd89d3d4155f75752909c080de3c5efaa57513a4fe8f23eaca2e41"
+        },
+        {
+          "condition": "repetition_fix",
+          "file": "wer_summary_fleurs_whisper-large-v3_repetition_fix.json",
+          "sha256": "452eb3adc0bc0bb5d3033d30e05a50b120167660bca9ec9392d3b4b231c79da0"
+        },
+        {
+          "condition": "sentence_capitalise",
+          "file": "wer_summary_fleurs_whisper-large-v3_sentence_capitalise.json",
+          "sha256": "bbeae4398aa8cbb26b24508ea58ac7e21677c37f07249088ba6990aa1795023c"
+        },
+        {
+          "condition": "undefined_tag",
+          "file": "wer_summary_fleurs_whisper-large-v3_undefined_tag.json",
+          "sha256": "349e88bc057d0eb093ab6e153a63aa7d4b8f9e41da33d135e60214a8eb33211b"
+        },
+        {
+          "condition": "unicode_strip",
+          "file": "wer_summary_fleurs_whisper-large-v3_unicode_strip.json",
+          "sha256": "ee4df9d22ae6a458b58780825c3d2decd661b03a76663c5d141d59486a605226"
+        },
+        {
+          "condition": "whisper_norm",
+          "file": "wer_summary_fleurs_whisper-large-v3_whisper_norm.json",
+          "sha256": "5151ca6c306c4a1861b3d0fea38b5455a4716ab74b4fa58df44d1d86c4636209"
+        },
+        {
+          "condition": "whitespace_normalise",
+          "file": "wer_summary_fleurs_whisper-large-v3_whitespace_normalise.json",
+          "sha256": "cc2ff091969317ece0cd2cfbddf43adb6ff8d800d57f369e4089a5ef4985d88b"
+        }
+      ]
+    },
+    {
+      "suite": "fleurs",
+      "model": "openai/whisper-medium",
+      "recorded_decode_and_environment": {
+        "dataset": "google/fleurs",
+        "config": "en_us",
+        "split": "test",
+        "model": "openai/whisper-medium",
+        "seed": 42,
+        "language": "english",
+        "n_streamed": 647,
+        "revisions": {
+          "google/fleurs": "70bb2e84b976b7e960aa89f1c648e09c59f894dd",
+          "openai/whisper-medium": "abdf7c39ab9d0397620ccaea8974cc764cd0953e"
+        },
+        "decode": {
+          "device": "cuda",
+          "dtype": "torch.float32",
+          "model_commit": "abdf7c39ab9d0397620ccaea8974cc764cd0953e",
+          "torch_cuda": "12.1",
+          "cudnn": 90100,
+          "gpu": "NVIDIA L40S"
+        },
+        "run_metadata": {
+          "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+          "git_dirty": false,
+          "python": "3.12.12",
+          "platform": "Linux-5.14.0-427.42.2.arc.el9.x86_64-x86_64-with-glibc2.34",
+          "packages": {
+            "torch": "2.5.1+cu121",
+            "torchaudio": "2.5.1+cu121",
+            "transformers": "4.57.1",
+            "pyannote.audio": "3.4.0",
+            "jiwer": "4.0.0",
+            "datasets": "4.8.5",
+            "numpy": "2.3.3",
+            "scipy": "1.16.2",
+            "librosa": "0.11.0",
+            "soundfile": "0.13.1",
+            "gliner": null,
+            "huggingface_hub": "0.35.3"
+          }
+        }
+      },
+      "source_summaries": [
+        {
+          "condition": "case_fold",
+          "file": "wer_summary_fleurs_whisper-medium_case_fold.json",
+          "sha256": "b5f2998e19cedc4c39b38037a1d6da6dce13c826d63190b849d15d21c9f129f2"
+        },
+        {
+          "condition": "common_phrase_fix",
+          "file": "wer_summary_fleurs_whisper-medium_common_phrase_fix.json",
+          "sha256": "d866037eb4094a53340754d2379980ec428767d8375a5e584610b3696d928264"
+        },
+        {
+          "condition": "contraction_fix",
+          "file": "wer_summary_fleurs_whisper-medium_contraction_fix.json",
+          "sha256": "92271fe2e3e7ec008bc099c856eb4104a368f749a5a9799a4f1a2cc9be63fea6"
+        },
+        {
+          "condition": "dedup_window",
+          "file": "wer_summary_fleurs_whisper-medium_dedup_window.json",
+          "sha256": "0c160a066517b826aff333428aa10a034b1c05634e1cce30992a2ab8fcf3a627"
+        },
+        {
+          "condition": "filler_bracket",
+          "file": "wer_summary_fleurs_whisper-medium_filler_bracket.json",
+          "sha256": "1d0ce6019ae1964a3dfeae047226f43556b5b7aed791f3632bb18d96b3721f60"
+        },
+        {
+          "condition": "filler_strip",
+          "file": "wer_summary_fleurs_whisper-medium_filler_strip.json",
+          "sha256": "c92bee16bd569025882d8c95c68f4c0e7887dd9de8512e988789a4c93a5887f0"
+        },
+        {
+          "condition": "pipeline_full",
+          "file": "wer_summary_fleurs_whisper-medium_pipeline_full.json",
+          "sha256": "6922b81d5a95c645564bfb76a855bc8482b1f9ba47b3284770d53ad5dc11dc02"
+        },
+        {
+          "condition": "pronoun_i_fix",
+          "file": "wer_summary_fleurs_whisper-medium_pronoun_i_fix.json",
+          "sha256": "a095f2e8209bf4619d5d9b0c9ae765810c68166f3e3eda8a7679a1d0765b31fb"
+        },
+        {
+          "condition": "punct_space_fix",
+          "file": "wer_summary_fleurs_whisper-medium_punct_space_fix.json",
+          "sha256": "1bff71094715fd844407266a02e38dfde8bb75a928af9da4e1735d73a2e48369"
+        },
+        {
+          "condition": "punct_strip",
+          "file": "wer_summary_fleurs_whisper-medium_punct_strip.json",
+          "sha256": "90550ffa7dcb8a963e967544e2cbf46e2ac942e976799c9db525003cdd154f19"
+        },
+        {
+          "condition": "raw",
+          "file": "wer_summary_fleurs_whisper-medium.json",
+          "sha256": "0372aecfe4814fa3b0bf99994c640b530c8a63320bd2a11de6fbadd11960bde8"
+        },
+        {
+          "condition": "repetition_fix",
+          "file": "wer_summary_fleurs_whisper-medium_repetition_fix.json",
+          "sha256": "697d91c214ceeb8be78911b3cad38d882d94bcf4c501a862ba910bfc3b48622d"
+        },
+        {
+          "condition": "sentence_capitalise",
+          "file": "wer_summary_fleurs_whisper-medium_sentence_capitalise.json",
+          "sha256": "48a5ef239eda4533aed8b5e6a1ea620f979a4b5df627f6c8eb451b38dad7dca9"
+        },
+        {
+          "condition": "undefined_tag",
+          "file": "wer_summary_fleurs_whisper-medium_undefined_tag.json",
+          "sha256": "3409ce412d4228238405d38414bb26e3f748037c56c8feac4c08c193b41cd85d"
+        },
+        {
+          "condition": "unicode_strip",
+          "file": "wer_summary_fleurs_whisper-medium_unicode_strip.json",
+          "sha256": "59cf85ed1fccef628fad6826a0ef1757687ceaa395e1a2a9c7460bbfb7c50d3f"
+        },
+        {
+          "condition": "whisper_norm",
+          "file": "wer_summary_fleurs_whisper-medium_whisper_norm.json",
+          "sha256": "818a250fa5ffce8db9a12e91ecd87d2b6a489304c36e645dbdd33b63c48946c0"
+        },
+        {
+          "condition": "whitespace_normalise",
+          "file": "wer_summary_fleurs_whisper-medium_whitespace_normalise.json",
+          "sha256": "92676f589396a1accfa38bcb29417dbf2b46dc8d19a5e687c562efa2014d6ccb"
+        }
+      ]
+    },
+    {
+      "suite": "librispeech_clean",
+      "model": "distil-whisper/distil-large-v3",
+      "recorded_decode_and_environment": {
+        "dataset": "librispeech_asr",
+        "config": "clean",
+        "split": "test",
+        "model": "distil-whisper/distil-large-v3",
+        "seed": 42,
+        "language": "english",
+        "n_streamed": 2620,
+        "revisions": {
+          "librispeech_asr": "71cacbfb7e2354c4226d01e70d77d5fca3d04ba1",
+          "distil-whisper/distil-large-v3": "8031d2e6ce6631b7fc45629dddfc00271116d981"
+        },
+        "decode": {
+          "device": "cuda",
+          "dtype": "torch.float16",
+          "model_commit": "8031d2e6ce6631b7fc45629dddfc00271116d981",
+          "torch_cuda": "12.1",
+          "cudnn": 90100,
+          "gpu": "NVIDIA L40S"
+        },
+        "run_metadata": {
+          "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+          "git_dirty": false,
+          "python": "3.12.12",
+          "platform": "Linux-5.14.0-427.42.2.arc.el9.x86_64-x86_64-with-glibc2.34",
+          "packages": {
+            "torch": "2.5.1+cu121",
+            "torchaudio": "2.5.1+cu121",
+            "transformers": "4.57.1",
+            "pyannote.audio": "3.4.0",
+            "jiwer": "4.0.0",
+            "datasets": "4.8.5",
+            "numpy": "2.3.3",
+            "scipy": "1.16.2",
+            "librosa": "0.11.0",
+            "soundfile": "0.13.1",
+            "gliner": null,
+            "huggingface_hub": "0.35.3"
+          }
+        }
+      },
+      "source_summaries": [
+        {
+          "condition": "case_fold",
+          "file": "wer_summary_librispeech_distil-large-v3_case_fold.json",
+          "sha256": "333f0aef9b21409ae361eadaabc0f8a5cd5aa2014de26e358872ccb3990b52a7"
+        },
+        {
+          "condition": "common_phrase_fix",
+          "file": "wer_summary_librispeech_distil-large-v3_common_phrase_fix.json",
+          "sha256": "061cd284e09cfb912e1a8507a489eb52633b070d0a247ac76a8da97a83103b0a"
+        },
+        {
+          "condition": "contraction_fix",
+          "file": "wer_summary_librispeech_distil-large-v3_contraction_fix.json",
+          "sha256": "d2035312306aac61ccb7afdcbe8b25c8b7caf014706f10390bdf8ac91caf5705"
+        },
+        {
+          "condition": "dedup_window",
+          "file": "wer_summary_librispeech_distil-large-v3_dedup_window.json",
+          "sha256": "829aee0b619c6970a95be20df3647b8dad5db981e7fe138dd99dcfc601d29f6d"
+        },
+        {
+          "condition": "filler_bracket",
+          "file": "wer_summary_librispeech_distil-large-v3_filler_bracket.json",
+          "sha256": "492b8cf0fa4dbaa762be6a27df4b5d140d2b4d2e0e1ff4e60ca8b61919bfd58c"
+        },
+        {
+          "condition": "filler_strip",
+          "file": "wer_summary_librispeech_distil-large-v3_filler_strip.json",
+          "sha256": "5aed50e3b1b18e0170c4a5b9f7ca94382d7e7d41493290eebdea79f54dfa5067"
+        },
+        {
+          "condition": "pipeline_full",
+          "file": "wer_summary_librispeech_distil-large-v3_pipeline_full.json",
+          "sha256": "5bacc8e8d9e628123025a9800754d88a985db51df09a6af4408a682cd5ac6a27"
+        },
+        {
+          "condition": "pronoun_i_fix",
+          "file": "wer_summary_librispeech_distil-large-v3_pronoun_i_fix.json",
+          "sha256": "4339b47c1fe39259184e802a12d2429e7bb380dfd6f2ca705afdd36235a99cc4"
+        },
+        {
+          "condition": "punct_space_fix",
+          "file": "wer_summary_librispeech_distil-large-v3_punct_space_fix.json",
+          "sha256": "cf84333709014e8eaed1783946d9dfce497b27bc43275964d9e13b78d96bcf4e"
+        },
+        {
+          "condition": "punct_strip",
+          "file": "wer_summary_librispeech_distil-large-v3_punct_strip.json",
+          "sha256": "0659afcf9579f0d33cdf67e0becf5fdaf4af234aa09cf86cac7d3404d16d2534"
+        },
+        {
+          "condition": "raw",
+          "file": "wer_summary_librispeech_distil-large-v3.json",
+          "sha256": "21ea7026516a5f6adfeaf209b68142ac9242895dc66e072f38011f48b9d73643"
+        },
+        {
+          "condition": "repetition_fix",
+          "file": "wer_summary_librispeech_distil-large-v3_repetition_fix.json",
+          "sha256": "d2c37a57f11cc5db3ca35dc1aa27aea7f51f199b34b5c9232efa46e9695876cd"
+        },
+        {
+          "condition": "sentence_capitalise",
+          "file": "wer_summary_librispeech_distil-large-v3_sentence_capitalise.json",
+          "sha256": "b0376c1a9dd16e4f9a578d0a9bd95d2d8e1c92503f1cce82d487009c1c72d319"
+        },
+        {
+          "condition": "undefined_tag",
+          "file": "wer_summary_librispeech_distil-large-v3_undefined_tag.json",
+          "sha256": "490112de4b16691a73a7ce09d8e023fcc8c224ad832e5060c73fd7893c44ffb4"
+        },
+        {
+          "condition": "unicode_strip",
+          "file": "wer_summary_librispeech_distil-large-v3_unicode_strip.json",
+          "sha256": "11a2e2fd7a4b9cd6ec9997f113dc04ab359d8c5e1f35eaa0096e8db52586fa8b"
+        },
+        {
+          "condition": "whisper_norm",
+          "file": "wer_summary_librispeech_distil-large-v3_whisper_norm.json",
+          "sha256": "31e3d988e88bfb301aad7b46331ee80f7eb35880c71af5c32df365ae0aa1a738"
+        },
+        {
+          "condition": "whitespace_normalise",
+          "file": "wer_summary_librispeech_distil-large-v3_whitespace_normalise.json",
+          "sha256": "49aa494ac34751120061c2099fc5148ecb083979191850678ce4da3a4b5343b2"
+        }
+      ]
+    },
+    {
+      "suite": "librispeech_clean",
+      "model": "openai/whisper-large-v3",
+      "recorded_decode_and_environment": {
+        "dataset": "librispeech_asr",
+        "config": "clean",
+        "split": "test",
+        "model": "openai/whisper-large-v3",
+        "seed": 42,
+        "language": "english",
+        "n_streamed": 2620,
+        "revisions": {
+          "librispeech_asr": "71cacbfb7e2354c4226d01e70d77d5fca3d04ba1",
+          "openai/whisper-large-v3": "06f233fe06e710322aca913c1bc4249a0d71fce1"
+        },
+        "decode": {
+          "device": "cuda",
+          "dtype": "torch.float16",
+          "model_commit": "06f233fe06e710322aca913c1bc4249a0d71fce1",
+          "torch_cuda": "12.1",
+          "cudnn": 90100,
+          "gpu": "Tesla V100-PCIE-32GB"
+        },
+        "run_metadata": {
+          "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+          "git_dirty": false,
+          "python": "3.12.12",
+          "platform": "Linux-5.14.0-427.42.2.arc.el9.x86_64-x86_64-with-glibc2.34",
+          "packages": {
+            "torch": "2.5.1+cu121",
+            "torchaudio": "2.5.1+cu121",
+            "transformers": "4.57.1",
+            "pyannote.audio": "3.4.0",
+            "jiwer": "4.0.0",
+            "datasets": "4.8.5",
+            "numpy": "2.3.3",
+            "scipy": "1.16.2",
+            "librosa": "0.11.0",
+            "soundfile": "0.13.1",
+            "gliner": null,
+            "huggingface_hub": "0.35.3"
+          }
+        }
+      },
+      "source_summaries": [
+        {
+          "condition": "case_fold",
+          "file": "wer_summary_librispeech_whisper-large-v3_case_fold.json",
+          "sha256": "1c4278da69501fc7a9483cec6e3624f3f9a586d4d8982b6bd60d15d65ef77b32"
+        },
+        {
+          "condition": "common_phrase_fix",
+          "file": "wer_summary_librispeech_whisper-large-v3_common_phrase_fix.json",
+          "sha256": "1502b5c2dcb419cac09b248a0bd08fb85d57248eb66b8203d7fe3b216e7a5dde"
+        },
+        {
+          "condition": "contraction_fix",
+          "file": "wer_summary_librispeech_whisper-large-v3_contraction_fix.json",
+          "sha256": "6980fedcbb75821bd98ca9bc50e39e6752f2a21840f6d2b1f5a387291d1b96c9"
+        },
+        {
+          "condition": "dedup_window",
+          "file": "wer_summary_librispeech_whisper-large-v3_dedup_window.json",
+          "sha256": "880fd7098dba834c83d9aac5e6cc1d264e47ef9907e213c57b38f421f8536350"
+        },
+        {
+          "condition": "filler_bracket",
+          "file": "wer_summary_librispeech_whisper-large-v3_filler_bracket.json",
+          "sha256": "7f80998d9262e3522204b21ca0b4838112df3da1ec29bffea3179ff844d3ab8a"
+        },
+        {
+          "condition": "filler_strip",
+          "file": "wer_summary_librispeech_whisper-large-v3_filler_strip.json",
+          "sha256": "d19f6f751f9afe40806ad2bf835ee2bdf7a25a3d5f8535ede005442d8a608d97"
+        },
+        {
+          "condition": "pipeline_full",
+          "file": "wer_summary_librispeech_whisper-large-v3_pipeline_full.json",
+          "sha256": "929b98de3aca9425c88fd2ea343f9ea4c8d213796b5726fced82f49aed9acb88"
+        },
+        {
+          "condition": "pronoun_i_fix",
+          "file": "wer_summary_librispeech_whisper-large-v3_pronoun_i_fix.json",
+          "sha256": "d7eaa58a223ae8a6c935be829074bf8dcffe48525025a6b6012bbdf28f3ba2a8"
+        },
+        {
+          "condition": "punct_space_fix",
+          "file": "wer_summary_librispeech_whisper-large-v3_punct_space_fix.json",
+          "sha256": "86c80f274369a1af18eda0d883635c84db6ace5ce9622b9875e118c3e6cf88f9"
+        },
+        {
+          "condition": "punct_strip",
+          "file": "wer_summary_librispeech_whisper-large-v3_punct_strip.json",
+          "sha256": "a2570d566977a6aacc6a89b95028c69825b647acde8f70c0a5ade29112cbd93c"
+        },
+        {
+          "condition": "raw",
+          "file": "wer_summary_librispeech_whisper-large-v3.json",
+          "sha256": "c3039d79549f9a930a6af86395bb6c62bfeb48971293131b9e4925217a6e60ff"
+        },
+        {
+          "condition": "repetition_fix",
+          "file": "wer_summary_librispeech_whisper-large-v3_repetition_fix.json",
+          "sha256": "de23a7a681eef62f3ded427c1dd20f2b941f47ac18e8dce426e0d4a513ce485c"
+        },
+        {
+          "condition": "sentence_capitalise",
+          "file": "wer_summary_librispeech_whisper-large-v3_sentence_capitalise.json",
+          "sha256": "1c02dec0fbdb2498fb43237bb67a68bdf0b0a745ce7f3f07212bb9c49ac86e82"
+        },
+        {
+          "condition": "undefined_tag",
+          "file": "wer_summary_librispeech_whisper-large-v3_undefined_tag.json",
+          "sha256": "9c40a91f8f3eea6ee65c885d80632e8abc3e1fd31c283a304f95beb636e7f239"
+        },
+        {
+          "condition": "unicode_strip",
+          "file": "wer_summary_librispeech_whisper-large-v3_unicode_strip.json",
+          "sha256": "990051dfc8873ddd797f45a1bc4115af59131a00a6fbb63feccac129f407bb0d"
+        },
+        {
+          "condition": "whisper_norm",
+          "file": "wer_summary_librispeech_whisper-large-v3_whisper_norm.json",
+          "sha256": "02b5d10dc892ed79b4d56c448b2c0d149275e32047d68b01d991c6aa2ca98a18"
+        },
+        {
+          "condition": "whitespace_normalise",
+          "file": "wer_summary_librispeech_whisper-large-v3_whitespace_normalise.json",
+          "sha256": "4926027e6adb1b6715373ddf6e789ad8a40ae1e2f3b212501e1fba6cef5fb8f1"
+        }
+      ]
+    },
+    {
+      "suite": "librispeech_clean",
+      "model": "openai/whisper-medium",
+      "recorded_decode_and_environment": {
+        "dataset": "librispeech_asr",
+        "config": "clean",
+        "split": "test",
+        "model": "openai/whisper-medium",
+        "seed": 42,
+        "language": "english",
+        "n_streamed": 2620,
+        "revisions": {
+          "librispeech_asr": "71cacbfb7e2354c4226d01e70d77d5fca3d04ba1",
+          "openai/whisper-medium": "abdf7c39ab9d0397620ccaea8974cc764cd0953e"
+        },
+        "decode": {
+          "device": "cuda",
+          "dtype": "torch.float32",
+          "model_commit": "abdf7c39ab9d0397620ccaea8974cc764cd0953e",
+          "torch_cuda": "12.1",
+          "cudnn": 90100,
+          "gpu": "NVIDIA L40S"
+        },
+        "run_metadata": {
+          "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+          "git_dirty": false,
+          "python": "3.12.12",
+          "platform": "Linux-5.14.0-427.42.2.arc.el9.x86_64-x86_64-with-glibc2.34",
+          "packages": {
+            "torch": "2.5.1+cu121",
+            "torchaudio": "2.5.1+cu121",
+            "transformers": "4.57.1",
+            "pyannote.audio": "3.4.0",
+            "jiwer": "4.0.0",
+            "datasets": "4.8.5",
+            "numpy": "2.3.3",
+            "scipy": "1.16.2",
+            "librosa": "0.11.0",
+            "soundfile": "0.13.1",
+            "gliner": null,
+            "huggingface_hub": "0.35.3"
+          }
+        }
+      },
+      "source_summaries": [
+        {
+          "condition": "case_fold",
+          "file": "wer_summary_librispeech_whisper-medium_case_fold.json",
+          "sha256": "a218ceacd3b9f0d0e017ec9e9abdcd1252589a99c57dc87d202afdf2f3f050c8"
+        },
+        {
+          "condition": "common_phrase_fix",
+          "file": "wer_summary_librispeech_whisper-medium_common_phrase_fix.json",
+          "sha256": "a9c28c1a8f1256ad135094920b9c43556d05a25ac8f12828998344a089a7afac"
+        },
+        {
+          "condition": "contraction_fix",
+          "file": "wer_summary_librispeech_whisper-medium_contraction_fix.json",
+          "sha256": "ac66433d82340ae1540629728296e5bff5151b1405350aa8f5888d81491aa855"
+        },
+        {
+          "condition": "dedup_window",
+          "file": "wer_summary_librispeech_whisper-medium_dedup_window.json",
+          "sha256": "5249392cfe5a1a7569f9199e9bcf3895b06a85b4d9e3c6cd9ce6dc571d008b80"
+        },
+        {
+          "condition": "filler_bracket",
+          "file": "wer_summary_librispeech_whisper-medium_filler_bracket.json",
+          "sha256": "204f74107634e9304bf2308ef0ab614f7e9ccb938b9fa4f13af4c89650e7964c"
+        },
+        {
+          "condition": "filler_strip",
+          "file": "wer_summary_librispeech_whisper-medium_filler_strip.json",
+          "sha256": "33864b1c45a7aaf85be042a2a81fcf3e880847fb95d59d98ba01f99d32a094ee"
+        },
+        {
+          "condition": "pipeline_full",
+          "file": "wer_summary_librispeech_whisper-medium_pipeline_full.json",
+          "sha256": "ca226e616b0ca66dc0570a91e9492be9f2ba91627aa2639d1272ce5c0b5bd49a"
+        },
+        {
+          "condition": "pronoun_i_fix",
+          "file": "wer_summary_librispeech_whisper-medium_pronoun_i_fix.json",
+          "sha256": "7bd82104ac8e2d63edbbe72b28e3282ce9991102af79cd0f085f3af90a99b09c"
+        },
+        {
+          "condition": "punct_space_fix",
+          "file": "wer_summary_librispeech_whisper-medium_punct_space_fix.json",
+          "sha256": "a390dd437e9135e5b891318b28bbeb7f6f39f50d6957f319dbe7e4058c4d335c"
+        },
+        {
+          "condition": "punct_strip",
+          "file": "wer_summary_librispeech_whisper-medium_punct_strip.json",
+          "sha256": "cbb7568aa53d7502f04430e30bd2ffadda8f6ed4aa23abe4e3f0ba18e9c06962"
+        },
+        {
+          "condition": "raw",
+          "file": "wer_summary_librispeech_whisper-medium.json",
+          "sha256": "d156ace926bad5da1c7226b251d98cff68a4a0136a68203f00e6cc0ecbb97759"
+        },
+        {
+          "condition": "repetition_fix",
+          "file": "wer_summary_librispeech_whisper-medium_repetition_fix.json",
+          "sha256": "497e0b3ac6755ec1bdbcc4496895b5a85c91cb6aec96adb64eeeea1a3dbed0df"
+        },
+        {
+          "condition": "sentence_capitalise",
+          "file": "wer_summary_librispeech_whisper-medium_sentence_capitalise.json",
+          "sha256": "a5345247d2313b319ea8508987a01359e9dcde31f7f500d0d9aabc357b009bce"
+        },
+        {
+          "condition": "undefined_tag",
+          "file": "wer_summary_librispeech_whisper-medium_undefined_tag.json",
+          "sha256": "fb8b939dd926c6bf0dade9ba013d4e41db0de1db24bc3ba9617dc7c62f260d17"
+        },
+        {
+          "condition": "unicode_strip",
+          "file": "wer_summary_librispeech_whisper-medium_unicode_strip.json",
+          "sha256": "4205d8b731b9bb7bea2650af062bab194a5b104fb21f01fdce72d82985d8f89a"
+        },
+        {
+          "condition": "whisper_norm",
+          "file": "wer_summary_librispeech_whisper-medium_whisper_norm.json",
+          "sha256": "df9d01e7a9652d8cd28d1f6b94111241f0bd48c49471b0fc9963b57d55e2149d"
+        },
+        {
+          "condition": "whitespace_normalise",
+          "file": "wer_summary_librispeech_whisper-medium_whitespace_normalise.json",
+          "sha256": "95f43f5ac0b964e637671b541e520659417a65905e764494fe9ba8b4075776a2"
+        }
+      ]
+    },
+    {
+      "suite": "librispeech_other",
+      "model": "distil-whisper/distil-large-v3",
+      "recorded_decode_and_environment": {
+        "dataset": "librispeech_asr",
+        "config": "other",
+        "split": "test",
+        "model": "distil-whisper/distil-large-v3",
+        "seed": 42,
+        "language": "english",
+        "n_streamed": 2939,
+        "revisions": {
+          "librispeech_asr": "71cacbfb7e2354c4226d01e70d77d5fca3d04ba1",
+          "distil-whisper/distil-large-v3": "8031d2e6ce6631b7fc45629dddfc00271116d981"
+        },
+        "decode": {
+          "device": "cuda",
+          "dtype": "torch.float16",
+          "model_commit": "8031d2e6ce6631b7fc45629dddfc00271116d981",
+          "torch_cuda": "12.1",
+          "cudnn": 90100,
+          "gpu": "NVIDIA L40S"
+        },
+        "run_metadata": {
+          "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+          "git_dirty": false,
+          "python": "3.12.12",
+          "platform": "Linux-5.14.0-427.42.2.arc.el9.x86_64-x86_64-with-glibc2.34",
+          "packages": {
+            "torch": "2.5.1+cu121",
+            "torchaudio": "2.5.1+cu121",
+            "transformers": "4.57.1",
+            "pyannote.audio": "3.4.0",
+            "jiwer": "4.0.0",
+            "datasets": "4.8.5",
+            "numpy": "2.3.3",
+            "scipy": "1.16.2",
+            "librosa": "0.11.0",
+            "soundfile": "0.13.1",
+            "gliner": null,
+            "huggingface_hub": "0.35.3"
+          }
+        }
+      },
+      "source_summaries": [
+        {
+          "condition": "case_fold",
+          "file": "wer_summary_librispeech_other_distil-large-v3_case_fold.json",
+          "sha256": "389c545279752f9a9d5ce4cda36b00a5e96113da0d72266071a93edcd7db1023"
+        },
+        {
+          "condition": "common_phrase_fix",
+          "file": "wer_summary_librispeech_other_distil-large-v3_common_phrase_fix.json",
+          "sha256": "3d0dba077edc5cba155ad56596422a7673f460b395a0afccedf012d4ca9d0596"
+        },
+        {
+          "condition": "contraction_fix",
+          "file": "wer_summary_librispeech_other_distil-large-v3_contraction_fix.json",
+          "sha256": "759b116b4a3e8aee491526f53d41c0cdfc96ca2da3750389eec63bf1382328c4"
+        },
+        {
+          "condition": "dedup_window",
+          "file": "wer_summary_librispeech_other_distil-large-v3_dedup_window.json",
+          "sha256": "d9d0f9372850ac24d73e0a6849c9cc789227e11a69f77c45cb2eb2b7465803a1"
+        },
+        {
+          "condition": "filler_bracket",
+          "file": "wer_summary_librispeech_other_distil-large-v3_filler_bracket.json",
+          "sha256": "f7c04cbaa27e751c1cf27b1ef229401b7a09d89c78846ee83c0def7af2049fd0"
+        },
+        {
+          "condition": "filler_strip",
+          "file": "wer_summary_librispeech_other_distil-large-v3_filler_strip.json",
+          "sha256": "aaa526706d262f7e6ba4f0ae01838ef7e7cf4fd15c316f3ce58d45d11cee8c5a"
+        },
+        {
+          "condition": "pipeline_full",
+          "file": "wer_summary_librispeech_other_distil-large-v3_pipeline_full.json",
+          "sha256": "0cf4a08b381db58980099e309a178c7aa3c48327d78fd9e46eb9592b8f58bfc9"
+        },
+        {
+          "condition": "pronoun_i_fix",
+          "file": "wer_summary_librispeech_other_distil-large-v3_pronoun_i_fix.json",
+          "sha256": "92ccaff825ad98d672afe68e171cd6407830b59b222cd422ed59ed2df25f581b"
+        },
+        {
+          "condition": "punct_space_fix",
+          "file": "wer_summary_librispeech_other_distil-large-v3_punct_space_fix.json",
+          "sha256": "08e46580e080d2dd9ba48c33c85f3949016cd6f8e159fe5d35486383ead9ef2b"
+        },
+        {
+          "condition": "punct_strip",
+          "file": "wer_summary_librispeech_other_distil-large-v3_punct_strip.json",
+          "sha256": "c29076428daf644f2c98dbf6ed9055a4d6562efd974b65fdc355f2053cc4ab0f"
+        },
+        {
+          "condition": "raw",
+          "file": "wer_summary_librispeech_other_distil-large-v3.json",
+          "sha256": "4195654ee022f1d42e5b8222040328dd7d3f33298254d4ae457372d35501db78"
+        },
+        {
+          "condition": "repetition_fix",
+          "file": "wer_summary_librispeech_other_distil-large-v3_repetition_fix.json",
+          "sha256": "44151ca8657b86d4f50a1d7918cd99e340a9c02e4d95a4d28e425d36ec069fb5"
+        },
+        {
+          "condition": "sentence_capitalise",
+          "file": "wer_summary_librispeech_other_distil-large-v3_sentence_capitalise.json",
+          "sha256": "1171119cc2405e778f3fcb24986cf552497801297d906559264748c26a1ccdc6"
+        },
+        {
+          "condition": "undefined_tag",
+          "file": "wer_summary_librispeech_other_distil-large-v3_undefined_tag.json",
+          "sha256": "aa04984ff91d5851e65fac13434bba0ca6a5091373f97d9e63022d7c93c186c4"
+        },
+        {
+          "condition": "unicode_strip",
+          "file": "wer_summary_librispeech_other_distil-large-v3_unicode_strip.json",
+          "sha256": "684cb972e211f8e52c81491792f1452b5949de8f088ed32932700bd4b27417c6"
+        },
+        {
+          "condition": "whisper_norm",
+          "file": "wer_summary_librispeech_other_distil-large-v3_whisper_norm.json",
+          "sha256": "4743249ff3d6fce511281b277942fbb4ad4cd8f3a98332a9b9700ed4e0fd4274"
+        },
+        {
+          "condition": "whitespace_normalise",
+          "file": "wer_summary_librispeech_other_distil-large-v3_whitespace_normalise.json",
+          "sha256": "ad581415a9ab239c98f674278c74ee4a8ea9e5c165dc6b281b8e861e9d93218f"
+        }
+      ]
+    },
+    {
+      "suite": "librispeech_other",
+      "model": "openai/whisper-large-v3",
+      "recorded_decode_and_environment": {
+        "dataset": "librispeech_asr",
+        "config": "other",
+        "split": "test",
+        "model": "openai/whisper-large-v3",
+        "seed": 42,
+        "language": "english",
+        "n_streamed": 2939,
+        "revisions": {
+          "librispeech_asr": "71cacbfb7e2354c4226d01e70d77d5fca3d04ba1",
+          "openai/whisper-large-v3": "06f233fe06e710322aca913c1bc4249a0d71fce1"
+        },
+        "decode": {
+          "device": "cuda",
+          "dtype": "torch.float16",
+          "model_commit": "06f233fe06e710322aca913c1bc4249a0d71fce1",
+          "torch_cuda": "12.1",
+          "cudnn": 90100,
+          "gpu": "Tesla V100-PCIE-32GB"
+        },
+        "run_metadata": {
+          "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+          "git_dirty": false,
+          "python": "3.12.12",
+          "platform": "Linux-5.14.0-427.42.2.arc.el9.x86_64-x86_64-with-glibc2.34",
+          "packages": {
+            "torch": "2.5.1+cu121",
+            "torchaudio": "2.5.1+cu121",
+            "transformers": "4.57.1",
+            "pyannote.audio": "3.4.0",
+            "jiwer": "4.0.0",
+            "datasets": "4.8.5",
+            "numpy": "2.3.3",
+            "scipy": "1.16.2",
+            "librosa": "0.11.0",
+            "soundfile": "0.13.1",
+            "gliner": null,
+            "huggingface_hub": "0.35.3"
+          }
+        }
+      },
+      "source_summaries": [
+        {
+          "condition": "case_fold",
+          "file": "wer_summary_librispeech_other_whisper-large-v3_case_fold.json",
+          "sha256": "fe53f5e112cb53defa7f86eeb27280ad9ddf38b577c3d0d4c19966b822ab51dd"
+        },
+        {
+          "condition": "common_phrase_fix",
+          "file": "wer_summary_librispeech_other_whisper-large-v3_common_phrase_fix.json",
+          "sha256": "78fceb762d58f38841345c0dd824028782a8630b301024a92e368e505a6c8f2d"
+        },
+        {
+          "condition": "contraction_fix",
+          "file": "wer_summary_librispeech_other_whisper-large-v3_contraction_fix.json",
+          "sha256": "125156b39aa05a60b269fbd1f01df69173b923d3ca3543233137130ce025e666"
+        },
+        {
+          "condition": "dedup_window",
+          "file": "wer_summary_librispeech_other_whisper-large-v3_dedup_window.json",
+          "sha256": "9f0705905f368bc169bbd6a0485956d89f9b5fb65395125ea1eeca770d19447b"
+        },
+        {
+          "condition": "filler_bracket",
+          "file": "wer_summary_librispeech_other_whisper-large-v3_filler_bracket.json",
+          "sha256": "7835ecbf619b46b19fcd93ce1830ef2c7b8a01ef87d4c06951da93125bcc7a08"
+        },
+        {
+          "condition": "filler_strip",
+          "file": "wer_summary_librispeech_other_whisper-large-v3_filler_strip.json",
+          "sha256": "6788052552bfcef40f76163e9af2bb81130ce2e508ce4cf07d07d0e99909842c"
+        },
+        {
+          "condition": "pipeline_full",
+          "file": "wer_summary_librispeech_other_whisper-large-v3_pipeline_full.json",
+          "sha256": "0bff2f44593f5fe52b79482662f8639f9e76a54a229f165d32923f567843c4e6"
+        },
+        {
+          "condition": "pronoun_i_fix",
+          "file": "wer_summary_librispeech_other_whisper-large-v3_pronoun_i_fix.json",
+          "sha256": "36a012aa9c55bd22acc1bf831082ffe524d04396654d938dba8d9b421bc58715"
+        },
+        {
+          "condition": "punct_space_fix",
+          "file": "wer_summary_librispeech_other_whisper-large-v3_punct_space_fix.json",
+          "sha256": "450743074f1959dbbdb495f4a460951f3a27e2f5f4319783d5e876e101a944f7"
+        },
+        {
+          "condition": "punct_strip",
+          "file": "wer_summary_librispeech_other_whisper-large-v3_punct_strip.json",
+          "sha256": "b7f828925be1e5b90bd9e7f5eda5d18c71d2a19957a1a33733172d9ed9e11f51"
+        },
+        {
+          "condition": "raw",
+          "file": "wer_summary_librispeech_other_whisper-large-v3.json",
+          "sha256": "53e05abebfe90ca8ee1a77f415124fff6ff0d2aa7a86cd841cb87635090c3da9"
+        },
+        {
+          "condition": "repetition_fix",
+          "file": "wer_summary_librispeech_other_whisper-large-v3_repetition_fix.json",
+          "sha256": "601dee170f2bfba777aeb1b6ca10c58f1c00bdaa395ea796dd455ef7811382ff"
+        },
+        {
+          "condition": "sentence_capitalise",
+          "file": "wer_summary_librispeech_other_whisper-large-v3_sentence_capitalise.json",
+          "sha256": "014b9a97fdef2f3b8fcd604eb00688c6bf0e5fd425abc5d154b996b5efb316be"
+        },
+        {
+          "condition": "undefined_tag",
+          "file": "wer_summary_librispeech_other_whisper-large-v3_undefined_tag.json",
+          "sha256": "17c973a07db8a2b5e8b2272d428ea186924b177c9304732d4ce72e286ab2c9e0"
+        },
+        {
+          "condition": "unicode_strip",
+          "file": "wer_summary_librispeech_other_whisper-large-v3_unicode_strip.json",
+          "sha256": "b4ed74ea0f7f35ee3163cc9201d7323b02f834b4d31fbfc2c24f610ad2f4be0c"
+        },
+        {
+          "condition": "whisper_norm",
+          "file": "wer_summary_librispeech_other_whisper-large-v3_whisper_norm.json",
+          "sha256": "4738c01f1a1d3297cd0d06f227d4d8c68b8ec59c4cddb0a9a28db480a3e42031"
+        },
+        {
+          "condition": "whitespace_normalise",
+          "file": "wer_summary_librispeech_other_whisper-large-v3_whitespace_normalise.json",
+          "sha256": "954ac3177a9c92773af0feff968744780f4bd479c8f7baa0c16bef93cab315ad"
+        }
+      ]
+    },
+    {
+      "suite": "librispeech_other",
+      "model": "openai/whisper-medium",
+      "recorded_decode_and_environment": {
+        "dataset": "librispeech_asr",
+        "config": "other",
+        "split": "test",
+        "model": "openai/whisper-medium",
+        "seed": 42,
+        "language": "english",
+        "n_streamed": 2939,
+        "revisions": {
+          "librispeech_asr": "71cacbfb7e2354c4226d01e70d77d5fca3d04ba1",
+          "openai/whisper-medium": "abdf7c39ab9d0397620ccaea8974cc764cd0953e"
+        },
+        "decode": {
+          "device": "cuda",
+          "dtype": "torch.float32",
+          "model_commit": "abdf7c39ab9d0397620ccaea8974cc764cd0953e",
+          "torch_cuda": "12.1",
+          "cudnn": 90100,
+          "gpu": "NVIDIA L40S"
+        },
+        "run_metadata": {
+          "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+          "git_dirty": false,
+          "python": "3.12.12",
+          "platform": "Linux-5.14.0-427.42.2.arc.el9.x86_64-x86_64-with-glibc2.34",
+          "packages": {
+            "torch": "2.5.1+cu121",
+            "torchaudio": "2.5.1+cu121",
+            "transformers": "4.57.1",
+            "pyannote.audio": "3.4.0",
+            "jiwer": "4.0.0",
+            "datasets": "4.8.5",
+            "numpy": "2.3.3",
+            "scipy": "1.16.2",
+            "librosa": "0.11.0",
+            "soundfile": "0.13.1",
+            "gliner": null,
+            "huggingface_hub": "0.35.3"
+          }
+        }
+      },
+      "source_summaries": [
+        {
+          "condition": "case_fold",
+          "file": "wer_summary_librispeech_other_whisper-medium_case_fold.json",
+          "sha256": "edf24be2a4948ee552851ed72ff558556becdb90362bcf80c612c0e929a16ae5"
+        },
+        {
+          "condition": "common_phrase_fix",
+          "file": "wer_summary_librispeech_other_whisper-medium_common_phrase_fix.json",
+          "sha256": "0623f2febf429b78e9c7c5640e4b213016fc51dc5c8712c6328789d6102fc916"
+        },
+        {
+          "condition": "contraction_fix",
+          "file": "wer_summary_librispeech_other_whisper-medium_contraction_fix.json",
+          "sha256": "20a0e6fedb7b8ce5c601967bd4d223e391a6bc286ac8e4a95c31f82c97f50143"
+        },
+        {
+          "condition": "dedup_window",
+          "file": "wer_summary_librispeech_other_whisper-medium_dedup_window.json",
+          "sha256": "4d24731bbe2a2840641896941fa3c9ef809b6d7429543a78e813d74db1e75448"
+        },
+        {
+          "condition": "filler_bracket",
+          "file": "wer_summary_librispeech_other_whisper-medium_filler_bracket.json",
+          "sha256": "5cf933b8f594b801d3899f704b4fda2fffbed2137636275b9daac1bec7ef0952"
+        },
+        {
+          "condition": "filler_strip",
+          "file": "wer_summary_librispeech_other_whisper-medium_filler_strip.json",
+          "sha256": "69993840ef10a8def899198d1a141de99d65d2f209797593bcfe9bc8274767ab"
+        },
+        {
+          "condition": "pipeline_full",
+          "file": "wer_summary_librispeech_other_whisper-medium_pipeline_full.json",
+          "sha256": "392f4b652a3fffa92d30f1b14a2b958085f996da2489713425dbb6c733a00d18"
+        },
+        {
+          "condition": "pronoun_i_fix",
+          "file": "wer_summary_librispeech_other_whisper-medium_pronoun_i_fix.json",
+          "sha256": "8227fa8b570d2f8a923ca5122759a0151837ddcf857ab37d0816e68072a9cb3f"
+        },
+        {
+          "condition": "punct_space_fix",
+          "file": "wer_summary_librispeech_other_whisper-medium_punct_space_fix.json",
+          "sha256": "6a05a12efa8a5425ac269ad6cba1bc327cac9a86959547b5e478e8042f7343dc"
+        },
+        {
+          "condition": "punct_strip",
+          "file": "wer_summary_librispeech_other_whisper-medium_punct_strip.json",
+          "sha256": "aeb05dd020c65c5d167fbb91e53875166bdae6ca5c155f8bfdcfc54c61ff7125"
+        },
+        {
+          "condition": "raw",
+          "file": "wer_summary_librispeech_other_whisper-medium.json",
+          "sha256": "1f37cdea05becdfc0be61e92d248ae5157bab9bb4a498e1ee90cc1ffbdbc6311"
+        },
+        {
+          "condition": "repetition_fix",
+          "file": "wer_summary_librispeech_other_whisper-medium_repetition_fix.json",
+          "sha256": "efb819a772eb670d41acef63db2476eb33b336e33a4e2f3be717a35094637de4"
+        },
+        {
+          "condition": "sentence_capitalise",
+          "file": "wer_summary_librispeech_other_whisper-medium_sentence_capitalise.json",
+          "sha256": "ece64e42ac4b07fbc3263492202d0456a3c14356e7e0612dd0d651d75fc560e7"
+        },
+        {
+          "condition": "undefined_tag",
+          "file": "wer_summary_librispeech_other_whisper-medium_undefined_tag.json",
+          "sha256": "e9b03a189c1d7b3bca32e530f42ed05329a1c1a1ba3146131863b5e6b4568f80"
+        },
+        {
+          "condition": "unicode_strip",
+          "file": "wer_summary_librispeech_other_whisper-medium_unicode_strip.json",
+          "sha256": "add18e80af80ea752a944dded495c9148d3eaeda69ff6827b398a2578d8ad6b5"
+        },
+        {
+          "condition": "whisper_norm",
+          "file": "wer_summary_librispeech_other_whisper-medium_whisper_norm.json",
+          "sha256": "a1ad0b3c9597f14fd4f2139cccb9c8551bdc87b85412abb6e0bdc84349d688b6"
+        },
+        {
+          "condition": "whitespace_normalise",
+          "file": "wer_summary_librispeech_other_whisper-medium_whitespace_normalise.json",
+          "sha256": "cec5849dc9c890f870d0a856a587562cbcc3367e249b8dc303a326f90ffb898d"
+        }
+      ]
+    },
+    {
+      "suite": "voxpopuli_accented",
+      "model": "distil-whisper/distil-large-v3",
+      "recorded_decode_and_environment": {
+        "dataset": "facebook/voxpopuli",
+        "config": "en_accented",
+        "split": "test",
+        "model": "distil-whisper/distil-large-v3",
+        "seed": 42,
+        "language": "english",
+        "n_streamed": 8387,
+        "revisions": {
+          "facebook/voxpopuli": "42f01879c780b4a2e90ec0b4f616c2ece526e4f1",
+          "distil-whisper/distil-large-v3": "8031d2e6ce6631b7fc45629dddfc00271116d981"
+        },
+        "decode": {
+          "device": "cuda",
+          "dtype": "torch.float16",
+          "model_commit": "8031d2e6ce6631b7fc45629dddfc00271116d981",
+          "torch_cuda": "12.1",
+          "cudnn": 90100,
+          "gpu": "NVIDIA L40S"
+        },
+        "run_metadata": {
+          "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+          "git_dirty": false,
+          "python": "3.12.12",
+          "platform": "Linux-5.14.0-427.42.2.arc.el9.x86_64-x86_64-with-glibc2.34",
+          "packages": {
+            "torch": "2.5.1+cu121",
+            "torchaudio": "2.5.1+cu121",
+            "transformers": "4.57.1",
+            "pyannote.audio": "3.4.0",
+            "jiwer": "4.0.0",
+            "datasets": "4.8.5",
+            "numpy": "2.3.3",
+            "scipy": "1.16.2",
+            "librosa": "0.11.0",
+            "soundfile": "0.13.1",
+            "gliner": null,
+            "huggingface_hub": "0.35.3"
+          }
+        }
+      },
+      "source_summaries": [
+        {
+          "condition": "case_fold",
+          "file": "wer_summary_voxpopuli_accented_distil-large-v3_case_fold.json",
+          "sha256": "85fb488898f80752eb235ae1c202c1ed6f56a9fce4c517de26f2b46d72c6cb3a"
+        },
+        {
+          "condition": "common_phrase_fix",
+          "file": "wer_summary_voxpopuli_accented_distil-large-v3_common_phrase_fix.json",
+          "sha256": "1f66da18de8df2816754a59706057830db5dcdb05e8d42e6d91c94cd0d6e0e98"
+        },
+        {
+          "condition": "contraction_fix",
+          "file": "wer_summary_voxpopuli_accented_distil-large-v3_contraction_fix.json",
+          "sha256": "6bffa0eac50184eca7d39cb8ff360a15a35e58ff6754615e86fda3419c8b2dda"
+        },
+        {
+          "condition": "dedup_window",
+          "file": "wer_summary_voxpopuli_accented_distil-large-v3_dedup_window.json",
+          "sha256": "4da4f3ad3540272a7ee48f0cf9ca673d996288fad64184b84c57c1ddda94d535"
+        },
+        {
+          "condition": "filler_bracket",
+          "file": "wer_summary_voxpopuli_accented_distil-large-v3_filler_bracket.json",
+          "sha256": "39b42ecea98e39124349e719786d18174b9620897001a476ec3f72067b551ff2"
+        },
+        {
+          "condition": "filler_strip",
+          "file": "wer_summary_voxpopuli_accented_distil-large-v3_filler_strip.json",
+          "sha256": "3e654e661975ae96b20fab7eff5642647ba0fd3814f1a4e23776a18f015caf48"
+        },
+        {
+          "condition": "pipeline_full",
+          "file": "wer_summary_voxpopuli_accented_distil-large-v3_pipeline_full.json",
+          "sha256": "bc834e856fa59548f46f704cf0fae7789c2dbd63b5f295e19c205ed7d89a7d3f"
+        },
+        {
+          "condition": "pronoun_i_fix",
+          "file": "wer_summary_voxpopuli_accented_distil-large-v3_pronoun_i_fix.json",
+          "sha256": "90e0b02074f19c415ae4374e4dec9c1387dff96866f0f1c3f8d39689b99d5382"
+        },
+        {
+          "condition": "punct_space_fix",
+          "file": "wer_summary_voxpopuli_accented_distil-large-v3_punct_space_fix.json",
+          "sha256": "68162b0eb076f6628a6ee1dd6cd06fef44515d96f67c614cd75267f5d1800f8d"
+        },
+        {
+          "condition": "punct_strip",
+          "file": "wer_summary_voxpopuli_accented_distil-large-v3_punct_strip.json",
+          "sha256": "8e5f898dd03fd39f55579686c23e1d5ea9ef51d83de715d6caee6e9d01ba066e"
+        },
+        {
+          "condition": "raw",
+          "file": "wer_summary_voxpopuli_accented_distil-large-v3.json",
+          "sha256": "44a9770a4712e19046bad270af574846f0c730bc578bd96ab8d6c38e91904001"
+        },
+        {
+          "condition": "repetition_fix",
+          "file": "wer_summary_voxpopuli_accented_distil-large-v3_repetition_fix.json",
+          "sha256": "a01cf5c12d348802ef801cd744e958f3d9e137f94660814826c06393a09b90a3"
+        },
+        {
+          "condition": "sentence_capitalise",
+          "file": "wer_summary_voxpopuli_accented_distil-large-v3_sentence_capitalise.json",
+          "sha256": "a6d6082c211915bbab2b4053145889eda17e9e67f62e821acec3cab0a8d15164"
+        },
+        {
+          "condition": "undefined_tag",
+          "file": "wer_summary_voxpopuli_accented_distil-large-v3_undefined_tag.json",
+          "sha256": "3895d36bb32221187725ca3511b744995155172674af95ae3f2fadfcb0538072"
+        },
+        {
+          "condition": "unicode_strip",
+          "file": "wer_summary_voxpopuli_accented_distil-large-v3_unicode_strip.json",
+          "sha256": "a86535d7dc309f1169778057d6f7a94e05cab48dea1cd428fbf75d384d48a97c"
+        },
+        {
+          "condition": "whisper_norm",
+          "file": "wer_summary_voxpopuli_accented_distil-large-v3_whisper_norm.json",
+          "sha256": "ecebb2310037ab277ee0d1ea067fcf81b4d9813932cdcb60ea3fd145c4e60e8c"
+        },
+        {
+          "condition": "whitespace_normalise",
+          "file": "wer_summary_voxpopuli_accented_distil-large-v3_whitespace_normalise.json",
+          "sha256": "9ccfe568982b3c0efed0c316634c545fa5df5a471b614f850932c1c8bcbd9764"
+        }
+      ]
+    },
+    {
+      "suite": "voxpopuli_accented",
+      "model": "openai/whisper-large-v3",
+      "recorded_decode_and_environment": {
+        "dataset": "facebook/voxpopuli",
+        "config": "en_accented",
+        "split": "test",
+        "model": "openai/whisper-large-v3",
+        "seed": 42,
+        "language": "english",
+        "n_streamed": 8387,
+        "revisions": {
+          "facebook/voxpopuli": "42f01879c780b4a2e90ec0b4f616c2ece526e4f1",
+          "openai/whisper-large-v3": "06f233fe06e710322aca913c1bc4249a0d71fce1"
+        },
+        "decode": {
+          "device": "cuda",
+          "dtype": "torch.float16",
+          "model_commit": "06f233fe06e710322aca913c1bc4249a0d71fce1",
+          "torch_cuda": "12.1",
+          "cudnn": 90100,
+          "gpu": "Tesla V100-PCIE-32GB"
+        },
+        "run_metadata": {
+          "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+          "git_dirty": false,
+          "python": "3.12.12",
+          "platform": "Linux-5.14.0-427.42.2.arc.el9.x86_64-x86_64-with-glibc2.34",
+          "packages": {
+            "torch": "2.5.1+cu121",
+            "torchaudio": "2.5.1+cu121",
+            "transformers": "4.57.1",
+            "pyannote.audio": "3.4.0",
+            "jiwer": "4.0.0",
+            "datasets": "4.8.5",
+            "numpy": "2.3.3",
+            "scipy": "1.16.2",
+            "librosa": "0.11.0",
+            "soundfile": "0.13.1",
+            "gliner": null,
+            "huggingface_hub": "0.35.3"
+          }
+        }
+      },
+      "source_summaries": [
+        {
+          "condition": "case_fold",
+          "file": "wer_summary_voxpopuli_accented_whisper-large-v3_case_fold.json",
+          "sha256": "bcc8c8281dbee9becc0793184d8676408a4d27bc6917feeed71bb5aa93f1ae2c"
+        },
+        {
+          "condition": "common_phrase_fix",
+          "file": "wer_summary_voxpopuli_accented_whisper-large-v3_common_phrase_fix.json",
+          "sha256": "52f5dea20c47a66189b87f613e2fb69bee025994ae9d3c4fa3558bbc49287385"
+        },
+        {
+          "condition": "contraction_fix",
+          "file": "wer_summary_voxpopuli_accented_whisper-large-v3_contraction_fix.json",
+          "sha256": "4125272b2c3bb7a7fda9e11bcf684e4a51711a759555272ebe0e6200b36d537d"
+        },
+        {
+          "condition": "dedup_window",
+          "file": "wer_summary_voxpopuli_accented_whisper-large-v3_dedup_window.json",
+          "sha256": "468158d0fdd69378120b7ff2e4f467dfdfe63806d7327511186b6f60f63e8961"
+        },
+        {
+          "condition": "filler_bracket",
+          "file": "wer_summary_voxpopuli_accented_whisper-large-v3_filler_bracket.json",
+          "sha256": "639f27bde9317b108fd84b158d183018454b7a6a08208df401aaa1cd79689235"
+        },
+        {
+          "condition": "filler_strip",
+          "file": "wer_summary_voxpopuli_accented_whisper-large-v3_filler_strip.json",
+          "sha256": "ca9e4f608d7cacd8b4bbcfe7807bec5ff88e8c78a1701dab795923900389f6d1"
+        },
+        {
+          "condition": "pipeline_full",
+          "file": "wer_summary_voxpopuli_accented_whisper-large-v3_pipeline_full.json",
+          "sha256": "6598477cbe281a77667da31bbc6f775b15aa57f3ec6687ea5c3a455a7790d8c2"
+        },
+        {
+          "condition": "pronoun_i_fix",
+          "file": "wer_summary_voxpopuli_accented_whisper-large-v3_pronoun_i_fix.json",
+          "sha256": "9c05b9124eb3e12c850f500a295fbed03e4028cdb8e22845d786b65005983ffd"
+        },
+        {
+          "condition": "punct_space_fix",
+          "file": "wer_summary_voxpopuli_accented_whisper-large-v3_punct_space_fix.json",
+          "sha256": "7d99de27b83d7fb7c0c1b61bc51d4181482f1df1214d0d3211a4dfecb2a5ff04"
+        },
+        {
+          "condition": "punct_strip",
+          "file": "wer_summary_voxpopuli_accented_whisper-large-v3_punct_strip.json",
+          "sha256": "2c8d8a61eb07ad3616e0e1f714991f386265f559ac1ba81a27cd3cbdbabb60ee"
+        },
+        {
+          "condition": "raw",
+          "file": "wer_summary_voxpopuli_accented_whisper-large-v3.json",
+          "sha256": "5294397822bb63c4ded6d6aeb5a93e8ed43cc2e041cf6fe16a4356cd4cf5941b"
+        },
+        {
+          "condition": "repetition_fix",
+          "file": "wer_summary_voxpopuli_accented_whisper-large-v3_repetition_fix.json",
+          "sha256": "7c230bc89d0bfeedf9a42f57d4f9b0a306d8fe91557ca4a65516fb465f4a01a3"
+        },
+        {
+          "condition": "sentence_capitalise",
+          "file": "wer_summary_voxpopuli_accented_whisper-large-v3_sentence_capitalise.json",
+          "sha256": "e49761aa048763a699cc57cdd2fbf4d4aa77a699b09baf073c008c8fbe582ef7"
+        },
+        {
+          "condition": "undefined_tag",
+          "file": "wer_summary_voxpopuli_accented_whisper-large-v3_undefined_tag.json",
+          "sha256": "173977452ce719f5a851ee4a9abd00e35107c93197a6e5ddececa67b1546916e"
+        },
+        {
+          "condition": "unicode_strip",
+          "file": "wer_summary_voxpopuli_accented_whisper-large-v3_unicode_strip.json",
+          "sha256": "606e35fbd5b0bf143ca56e1b58f1828337a5e9b613412b794cf28e8ef73ea5ea"
+        },
+        {
+          "condition": "whisper_norm",
+          "file": "wer_summary_voxpopuli_accented_whisper-large-v3_whisper_norm.json",
+          "sha256": "e8f4b66a7c41ad79cb8657d2f7f239591d8be33bafb015ccb8b5744fc8979aed"
+        },
+        {
+          "condition": "whitespace_normalise",
+          "file": "wer_summary_voxpopuli_accented_whisper-large-v3_whitespace_normalise.json",
+          "sha256": "bc4f4ba5c1729ad4ca47fecd20f73851d19ed8cef9bd7a317033d46525db104b"
+        }
+      ]
+    },
+    {
+      "suite": "voxpopuli_accented",
+      "model": "openai/whisper-medium",
+      "recorded_decode_and_environment": {
+        "dataset": "facebook/voxpopuli",
+        "config": "en_accented",
+        "split": "test",
+        "model": "openai/whisper-medium",
+        "seed": 42,
+        "language": "english",
+        "n_streamed": 8387,
+        "revisions": {
+          "facebook/voxpopuli": "42f01879c780b4a2e90ec0b4f616c2ece526e4f1",
+          "openai/whisper-medium": "abdf7c39ab9d0397620ccaea8974cc764cd0953e"
+        },
+        "decode": {
+          "device": "cuda",
+          "dtype": "torch.float32",
+          "model_commit": "abdf7c39ab9d0397620ccaea8974cc764cd0953e",
+          "torch_cuda": "12.1",
+          "cudnn": 90100,
+          "gpu": "NVIDIA L40S"
+        },
+        "run_metadata": {
+          "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+          "git_dirty": false,
+          "python": "3.12.12",
+          "platform": "Linux-5.14.0-427.42.2.arc.el9.x86_64-x86_64-with-glibc2.34",
+          "packages": {
+            "torch": "2.5.1+cu121",
+            "torchaudio": "2.5.1+cu121",
+            "transformers": "4.57.1",
+            "pyannote.audio": "3.4.0",
+            "jiwer": "4.0.0",
+            "datasets": "4.8.5",
+            "numpy": "2.3.3",
+            "scipy": "1.16.2",
+            "librosa": "0.11.0",
+            "soundfile": "0.13.1",
+            "gliner": null,
+            "huggingface_hub": "0.35.3"
+          }
+        }
+      },
+      "source_summaries": [
+        {
+          "condition": "case_fold",
+          "file": "wer_summary_voxpopuli_accented_whisper-medium_case_fold.json",
+          "sha256": "aa06ed489207855161f76ee51e5872db7f6424c158f1ceeeb465eddbe5c7ef6b"
+        },
+        {
+          "condition": "common_phrase_fix",
+          "file": "wer_summary_voxpopuli_accented_whisper-medium_common_phrase_fix.json",
+          "sha256": "d6c9187aca6c8335014d83c69456b623c26ae43a45e26b2be6545557683c37c3"
+        },
+        {
+          "condition": "contraction_fix",
+          "file": "wer_summary_voxpopuli_accented_whisper-medium_contraction_fix.json",
+          "sha256": "8b31c0b0254bb47af9321f6e4ddaed6b315270d449c76823779b951325d4562f"
+        },
+        {
+          "condition": "dedup_window",
+          "file": "wer_summary_voxpopuli_accented_whisper-medium_dedup_window.json",
+          "sha256": "d4c9bfda166f563655757353757e8d02e34903bcc01dae4c6e0773b0c83d70a2"
+        },
+        {
+          "condition": "filler_bracket",
+          "file": "wer_summary_voxpopuli_accented_whisper-medium_filler_bracket.json",
+          "sha256": "ce862160a8cf4046952bb6fa3632c87000c7a3001131a11d98b87dfc89df5b9f"
+        },
+        {
+          "condition": "filler_strip",
+          "file": "wer_summary_voxpopuli_accented_whisper-medium_filler_strip.json",
+          "sha256": "68bd2501072d629a2466cce4cc2b3bb8dfb5be22df1523b2d7f8acae9b5b609f"
+        },
+        {
+          "condition": "pipeline_full",
+          "file": "wer_summary_voxpopuli_accented_whisper-medium_pipeline_full.json",
+          "sha256": "84e61b58941e8e4a1980d20437cb3977b997b22764cb6cfacdaf9d24bce99b77"
+        },
+        {
+          "condition": "pronoun_i_fix",
+          "file": "wer_summary_voxpopuli_accented_whisper-medium_pronoun_i_fix.json",
+          "sha256": "73dca7414d04bff2828b8f1850d1c14b4ff47ae02792ed6b232c80539d3066c5"
+        },
+        {
+          "condition": "punct_space_fix",
+          "file": "wer_summary_voxpopuli_accented_whisper-medium_punct_space_fix.json",
+          "sha256": "f4d743e0dbaad5670a33379b5bf5a857630086b3eeddc3596cd51e6118fd7abf"
+        },
+        {
+          "condition": "punct_strip",
+          "file": "wer_summary_voxpopuli_accented_whisper-medium_punct_strip.json",
+          "sha256": "8418ffaa1383606b4a55b9d5ddf28de0c61854d0bfd71939a070bf7be76b905d"
+        },
+        {
+          "condition": "raw",
+          "file": "wer_summary_voxpopuli_accented_whisper-medium.json",
+          "sha256": "8256140453f5366d2521723e307a0eda80500dec29050c1e73950f3bd057374b"
+        },
+        {
+          "condition": "repetition_fix",
+          "file": "wer_summary_voxpopuli_accented_whisper-medium_repetition_fix.json",
+          "sha256": "10c08a6f8d41ad1a43ec4b0ec1e7dfbf8254d583535e578a1dd5b99712bc2ef6"
+        },
+        {
+          "condition": "sentence_capitalise",
+          "file": "wer_summary_voxpopuli_accented_whisper-medium_sentence_capitalise.json",
+          "sha256": "030114ede0df82770f6e79ff475b3157bf0073acabb0ff34dd011f28292c2a38"
+        },
+        {
+          "condition": "undefined_tag",
+          "file": "wer_summary_voxpopuli_accented_whisper-medium_undefined_tag.json",
+          "sha256": "d898bf2838f7bed3762003033f487d20dd2f9b3696cea3eb3ee427eff85dc792"
+        },
+        {
+          "condition": "unicode_strip",
+          "file": "wer_summary_voxpopuli_accented_whisper-medium_unicode_strip.json",
+          "sha256": "76267d57204a162cea5102ac56d828a12c6c46e061ffaba0350fc7fa0124e472"
+        },
+        {
+          "condition": "whisper_norm",
+          "file": "wer_summary_voxpopuli_accented_whisper-medium_whisper_norm.json",
+          "sha256": "b162fcae79465a4fd30cb43dad30a7fa3e4666cb1a113a79e04027baee29c6ac"
+        },
+        {
+          "condition": "whitespace_normalise",
+          "file": "wer_summary_voxpopuli_accented_whisper-medium_whitespace_normalise.json",
+          "sha256": "8ebbfd8c8cd05a4a8f4540cdcf9700fac145d3054c2bbc19d62b6460c52c2f19"
+        }
+      ]
+    }
+  ]
+}

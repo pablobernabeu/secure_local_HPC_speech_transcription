@@ -1,0 +1,198 @@
+job_id,job_name,category,state,productive,gpu_type,tdp_w,runtime_h,gpu_hours,energy_kwh,carbon_g
+7662519,pytest_suite,Test suite and smoke tests,FAILED,False,,0,0.0003,0.0000,0.00001,0.00
+7662553,pytest_suite,Test suite and smoke tests,COMPLETED,True,,0,0.1586,0.0000,0.00715,1.48
+7662584,pytest_suite,Test suite and smoke tests,COMPLETED,True,,0,0.1431,0.0000,0.00645,1.33
+7662692,benchmark_wer,WER (pilot),FAILED,False,,0,0.1250,0.0000,0.01126,2.33
+7662812,benchmark_wer,WER (pilot),FAILED,False,,0,0.0006,0.0000,0.00005,0.01
+7662816,benchmark_wer,WER (pilot),FAILED,False,,0,0.1575,0.0000,0.01419,2.94
+7662825,benchmark_wer,WER (pilot),CANCELLED,False,,0,2.2397,0.0000,0.20183,41.78
+7663560,benchmark_wer_gpu,WER (pilot),CANCELLED,False,h100-sxm,700,0.1981,0.1981,0.25135,52.03
+7663576,benchmark_wer_cpu_full,WER (pilot),CANCELLED,False,,0,0.1228,0.0000,0.02213,4.58
+7663579,benchmark_wer_gpu,WER (pilot),TIMEOUT,False,p100-pcie,250,12.0061,12.0061,6.21396,1286.29
+7667198,benchmark_wer_gpu,WER (pilot),CANCELLED,False,l40s,350,1.4389,1.4389,0.98501,203.90
+7668704,benchmark_wer_gpu,WER (pilot),CANCELLED,False,l40s,350,0.1097,0.1097,0.07511,15.55
+7668730,benchmark_wer_gpu,WER (pilot),COMPLETED,True,l40s,350,0.8467,0.8467,0.57960,119.98
+7668882,benchmark_wer_gpu,WER (pilot),COMPLETED,True,rtx8000,295,1.9628,1.9628,1.16337,240.82
+7671058,benchmark_wer_gpu,WER (pilot),COMPLETED,True,h100-pcie,350,1.5242,1.5242,1.04339,215.98
+7682561_0,benchmark_wer,WER (pilot),FAILED,False,l40s,350,0.8806,0.8806,0.60280,124.78
+7682561_1,benchmark_wer,WER (pilot),FAILED,False,l40s,350,0.2047,0.2047,0.14015,29.01
+7682561_2,benchmark_wer,WER (pilot),FAILED,False,v100-pcie,250,1.8678,1.8678,0.96670,200.11
+7721017,pilot_benchmark_wer,WER (pilot),COMPLETED,True,h100-pcie,350,0.2114,0.2114,0.14471,29.95
+7725869_0,wer_sweep,WER condition sweep,COMPLETED,True,v100-sxm2,300,1.8078,1.8078,1.08659,224.93
+7725869_1,wer_sweep,WER condition sweep,COMPLETED,True,p100-pcie,250,6.2942,6.2942,3.25765,674.33
+7725869_2,wer_sweep,WER condition sweep,COMPLETED,True,p100-pcie,250,0.6978,0.6978,0.36115,74.76
+7725869_3,wer_sweep,WER condition sweep,COMPLETED,True,p100-pcie,250,2.4928,2.4928,1.29018,267.07
+7725869_4,wer_sweep,WER condition sweep,CANCELLED,False,p100-pcie,250,7.3414,7.3414,3.79966,786.53
+7729882_0,wer_sweep,WER condition sweep,COMPLETED,True,h100-sxm,700,0.9764,0.9764,1.23910,256.49
+7729882_1,wer_sweep,WER condition sweep,COMPLETED,True,h100-pcie,350,2.6747,2.6747,1.83102,379.02
+7729882_2,wer_sweep,WER condition sweep,COMPLETED,True,p100-pcie,250,0.6944,0.6944,0.35942,74.40
+7729882_3,wer_sweep,WER condition sweep,COMPLETED,True,p100-pcie,250,2.4358,2.4358,1.26071,260.97
+7729882_4,wer_sweep,WER condition sweep,COMPLETED,True,p100-pcie,250,10.4397,10.4397,5.40325,1118.47
+7729883,sweep_aggregate,Aggregation (CPU only),COMPLETED,True,,0,0.0044,0.0000,0.00020,0.04
+7737895,benchmark_der,Diarisation (DER),FAILED,False,p100-pcie,250,0.1453,0.1453,0.07519,15.56
+7737896,benchmark_timestamps,Timestamp accuracy,COMPLETED,True,p100-pcie,250,0.4569,0.4569,0.23650,48.96
+7740690,benchmark_der,Diarisation (DER),FAILED,False,p100-pcie,250,0.0008,0.0008,0.00043,0.09
+7741099,benchmark_der,Diarisation (DER),FAILED,False,v100-sxm2,300,0.1356,0.1356,0.08148,16.87
+7741154,benchmark_der,Diarisation (DER),COMPLETED,True,h100-sxm,700,0.4642,0.4642,0.58906,121.94
+7742188,benchmark_der,Diarisation (DER),COMPLETED,True,p100-pcie,250,0.1561,0.1561,0.08080,16.73
+7746137,benchmark_timestamps,Timestamp accuracy,COMPLETED,True,h100-pcie,350,0.1972,0.1972,0.13501,27.95
+7746138,benchmark_timestamps,Timestamp accuracy,COMPLETED,True,h100-pcie,350,0.2042,0.2042,0.13977,28.93
+7746139,benchmark_der,Diarisation (DER),COMPLETED,True,h100-pcie,350,0.1619,0.1619,0.11086,22.95
+7746140,benchmark_der,Diarisation (DER),COMPLETED,True,h100-sxm,700,0.1297,0.1297,0.16463,34.08
+7746170,pyannote_probe,Diarisation probe,COMPLETED,True,h100-nvl,400,0.0800,0.0800,0.05744,11.89
+7746189,pyannote_probe2,Diarisation probe,COMPLETED,True,h100-nvl,400,0.1033,0.1033,0.07420,15.36
+7746221,benchmark_timestamps,Timestamp accuracy,COMPLETED,True,p100-pcie,250,0.3783,0.3783,0.19581,40.53
+7746222,benchmark_der,Diarisation (DER),COMPLETED,True,p100-pcie,250,0.1311,0.1311,0.06786,14.05
+7819552,benchmark_der,Diarisation (DER),COMPLETED,True,v100-sxm2,300,0.2217,0.2217,0.13324,27.58
+7995593_0,wer_sweep,WER condition sweep,COMPLETED,True,p100-pcie,250,1.8122,1.8122,0.93795,194.15
+7995593_1,wer_sweep,WER condition sweep,COMPLETED,True,p100-pcie,250,5.8361,5.8361,3.02058,625.26
+7995593_2,wer_sweep,WER condition sweep,COMPLETED,True,h100-sxm,700,0.2228,0.2228,0.28272,58.52
+7995593_3,wer_sweep,WER condition sweep,COMPLETED,True,p100-pcie,250,1.7725,1.7725,0.91739,189.90
+7995593_4,wer_sweep,WER condition sweep,COMPLETED,True,h100-sxm,700,3.3856,3.3856,4.29649,889.37
+7995594_0,wer_sweep,WER condition sweep,COMPLETED,True,h100-sxm,700,0.1664,0.1664,0.21116,43.71
+7995594_1,wer_sweep,WER condition sweep,COMPLETED,True,h100-sxm,700,0.4303,0.4303,0.54605,113.03
+7995594_2,wer_sweep,WER condition sweep,COMPLETED,True,h100-sxm,700,0.0967,0.0967,0.12268,25.39
+7995594_3,wer_sweep,WER condition sweep,COMPLETED,True,h100-sxm,700,0.2050,0.2050,0.26016,53.85
+7995594_4,wer_sweep,WER condition sweep,COMPLETED,True,h100-pcie,350,0.8342,0.8342,0.57104,118.21
+7995595,sweep_aggregate,Aggregation (CPU only),COMPLETED,True,,0,0.0164,0.0000,0.00074,0.15
+8130534_0,wer_fleurs_ml,WER multilingual (FLEURS),COMPLETED,True,v100-sxm2,300,0.2736,0.2736,0.16446,34.04
+8166513_0,wer_fleurs_ml,WER multilingual (FLEURS),COMPLETED,True,rtx8000,295,0.6575,0.6575,0.38971,80.67
+8166513_1,wer_fleurs_ml,WER multilingual (FLEURS),COMPLETED,True,v100-sxm2,300,1.0039,1.0039,0.60340,124.90
+8166513_2,wer_fleurs_ml,WER multilingual (FLEURS),COMPLETED,True,v100-sxm2,300,1.1550,1.1550,0.69423,143.71
+8166514_3,wer_fleurs_ml,WER multilingual (FLEURS),COMPLETED,True,rtx8000,295,0.8189,0.8189,0.48537,100.47
+8166514_4,wer_fleurs_ml,WER multilingual (FLEURS),COMPLETED,True,rtx8000,295,0.4200,0.4200,0.24894,51.53
+8166514_5,wer_fleurs_ml,WER multilingual (FLEURS),COMPLETED,True,v100-sxm2,300,0.9411,0.9411,0.56567,117.09
+8174224_0,wer_fleurs_ml,WER multilingual (FLEURS),COMPLETED,True,p100-pcie,250,1.0247,1.0247,0.53036,109.78
+8174224_1,wer_fleurs_ml,WER multilingual (FLEURS),COMPLETED,True,v100-pcie,250,1.0183,1.0183,0.52706,109.10
+8174224_2,wer_fleurs_ml,WER multilingual (FLEURS),COMPLETED,True,p100-pcie,250,1.3644,1.3644,0.70619,146.18
+8174225_3,wer_fleurs_ml,WER multilingual (FLEURS),COMPLETED,True,p100-pcie,250,1.3242,1.3242,0.68534,141.87
+8174225_4,wer_fleurs_ml,WER multilingual (FLEURS),COMPLETED,True,p100-pcie,250,0.6642,0.6642,0.34375,71.16
+8174225_5,wer_fleurs_ml,WER multilingual (FLEURS),COMPLETED,True,p100-pcie,250,1.2061,1.2061,0.62424,129.22
+8245204_0,wer_fleurs_ml,WER multilingual (FLEURS),COMPLETED,True,p100-pcie,250,1.0239,1.0239,0.52993,109.70
+8245204_1,wer_fleurs_ml,WER multilingual (FLEURS),COMPLETED,True,p100-pcie,250,1.1561,1.1561,0.59836,123.86
+8245204_2,wer_fleurs_ml,WER multilingual (FLEURS),COMPLETED,True,v100-sxm2,300,1.0094,1.0094,0.60674,125.60
+8245205_3,wer_fleurs_ml,WER multilingual (FLEURS),COMPLETED,True,p100-pcie,250,1.2928,1.2928,0.66910,138.50
+8245205_4,wer_fleurs_ml,WER multilingual (FLEURS),COMPLETED,True,p100-pcie,250,0.5925,0.5925,0.30666,63.48
+8245205_5,wer_fleurs_ml,WER multilingual (FLEURS),COMPLETED,True,p100-pcie,250,1.1642,1.1642,0.60253,124.72
+8293554,lang_probe,Language-detection probe,FAILED,False,l40s,350,0.0028,0.0028,0.00190,0.39
+8293568,lang_probe,Language-detection probe,COMPLETED,True,l40s,350,0.1033,0.1033,0.07074,14.64
+8400084,case_study,Case study,FAILED,False,h100-pcie,350,0.1661,0.1661,0.11371,23.54
+8400094,case_study,Case study,COMPLETED,True,h100-pcie,350,0.3475,0.3475,0.23789,49.24
+8441794,case_study,Case study,COMPLETED,True,h100-pcie,350,0.2822,0.2822,0.19320,39.99
+8441879,case_study,Case study,COMPLETED,True,p100-pcie,250,0.3928,0.3928,0.20329,42.08
+8453256,case_study,Case study,COMPLETED,True,p100-pcie,250,0.4900,0.4900,0.25361,52.50
+8534635,diar_probe,Diarisation probe,COMPLETED,True,l40s,350,0.1950,0.1950,0.13349,27.63
+8534731,ami_smoke,Diarisation probe,COMPLETED,True,,0,0.0217,0.0000,0.00195,0.40
+8534741,ami_cache,AMI reconstruction (CPU only),COMPLETED,True,,0,0.1558,0.0000,0.02809,5.81
+8534758,der_sweep,Diarisation sweep (DER),COMPLETED,True,l40s,350,0.5317,0.5317,0.41187,85.26
+8534763,benchmark_der,Diarisation (DER),FAILED,False,l40s,350,0.0014,0.0014,0.00108,0.22
+8534764,benchmark_der,Diarisation (DER),FAILED,False,l40s,350,0.0108,0.0108,0.00839,1.74
+8534772,benchmark_der,Diarisation (DER),COMPLETED,True,l40s,350,0.0953,0.0953,0.07381,15.28
+8534773,benchmark_der,Diarisation (DER),COMPLETED,True,l40s,350,0.1228,0.1228,0.09511,19.69
+8534775,benchmark_der,Diarisation (DER),COMPLETED,True,l40s,350,0.0939,0.0939,0.07273,15.06
+8534792,der_sweep,Diarisation sweep (DER),COMPLETED,True,l40s,350,0.9714,0.9714,0.75252,155.77
+8535638,benchmark_der,Diarisation (DER),COMPLETED,True,l40s,350,0.1742,0.1742,0.13492,27.93
+8554816,disfluency,Disfluency evaluation,COMPLETED,True,rtx8000,295,0.1839,0.1839,0.12556,25.99
+8554985,determinism,Determinism check,COMPLETED,True,h100-nvl,400,0.2192,0.2192,0.18808,38.93
+8555165,disfluency,Disfluency evaluation,COMPLETED,True,h100-pcie,350,2.7050,2.7050,2.09551,433.77
+8556620,anonymisation,Voice anonymisation,FAILED,False,h100-pcie,350,0.1017,0.1017,0.07876,16.30
+8556647,anonymisation,Voice anonymisation,COMPLETED,True,l40s,350,0.1108,0.1108,0.08586,17.77
+8556661,anonymisation,Voice anonymisation,COMPLETED,True,h100-nvl,400,0.2578,0.2578,0.22122,45.79
+8556730,anonymisation,Voice anonymisation,COMPLETED,True,a100-pcie,250,0.4153,0.4153,0.25236,52.24
+8556951,anonymisation,Voice anonymisation,COMPLETED,True,l40s,350,0.2269,0.2269,0.17581,36.39
+8573363,anonymisation,Voice anonymisation,COMPLETED,True,l40s,350,0.2800,0.2800,0.21691,44.90
+8656348_0,wer_sweep_pre,Pre-flight runs,COMPLETED,True,l40s,350,0.0678,0.0678,0.04640,9.60
+8656348_1,wer_sweep_pre,Pre-flight runs,FAILED,False,l40s,350,0.0650,0.0650,0.04450,9.21
+8656348_2,wer_sweep_pre,Pre-flight runs,COMPLETED,True,rtx8000,295,0.0750,0.0750,0.04445,9.20
+8656348_3,wer_sweep_pre,Pre-flight runs,FAILED,False,l40s,350,0.0275,0.0275,0.01883,3.90
+8656348_4,wer_sweep_pre,Pre-flight runs,FAILED,False,l40s,350,0.1469,0.1469,0.10059,20.82
+8679910_0,wer_sweep_pre,Pre-flight runs,COMPLETED,True,l40s,350,0.0997,0.0997,0.06827,14.13
+8679910_1,wer_sweep_pre,Pre-flight runs,COMPLETED,True,l40s,350,0.0708,0.0708,0.04849,10.04
+8679910_2,wer_sweep_pre,Pre-flight runs,COMPLETED,True,l40s,350,0.0633,0.0633,0.04336,8.97
+8679910_3,wer_sweep_pre,Pre-flight runs,COMPLETED,True,h100-pcie,350,0.0578,0.0578,0.03955,8.19
+8679910_4,wer_sweep_pre,Pre-flight runs,COMPLETED,True,v100-pcie,250,0.2158,0.2158,0.11171,23.12
+8688725_0,wer_sweep_postfix,WER condition sweep (post-fix re-run),COMPLETED,True,v100-pcie,250,1.4583,1.4583,0.75478,156.24
+8688725_1,wer_sweep_postfix,WER condition sweep (post-fix re-run),COMPLETED,True,v100-pcie,250,3.2056,3.2056,1.65909,343.43
+8688725_2,wer_sweep_postfix,WER condition sweep (post-fix re-run),COMPLETED,True,v100-pcie,250,0.5036,0.5036,0.26065,53.96
+8688725_3,wer_sweep_postfix,WER condition sweep (post-fix re-run),COMPLETED,True,v100-pcie,250,1.5258,1.5258,0.78972,163.47
+8688725_4,wer_sweep_postfix,WER condition sweep (post-fix re-run),COMPLETED,True,v100-pcie,250,6.7850,6.7850,3.51169,726.92
+8708134_0,wer_sweep_pf_med,WER condition sweep (post-fix re-run),COMPLETED,True,l40s,350,0.7869,0.7869,0.53872,111.51
+8708134_1,wer_sweep_pf_med,WER condition sweep (post-fix re-run),COMPLETED,True,l40s,350,2.2836,2.2836,1.56328,323.60
+8708134_2,wer_sweep_pf_med,WER condition sweep (post-fix re-run),COMPLETED,True,l40s,350,0.2389,0.2389,0.16354,33.85
+8708134_3,wer_sweep_pf_med,WER condition sweep (post-fix re-run),COMPLETED,True,l40s,350,0.7628,0.7628,0.52217,108.09
+8708134_4,wer_sweep_pf_med,WER condition sweep (post-fix re-run),COMPLETED,True,l40s,350,3.6669,3.6669,2.51027,519.63
+8708135_0,wer_sweep_pf_dis,WER condition sweep (post-fix re-run),COMPLETED,True,l40s,350,0.1769,0.1769,0.12113,25.07
+8708135_1,wer_sweep_pf_dis,WER condition sweep (post-fix re-run),COMPLETED,True,l40s,350,0.3731,0.3731,0.25538,52.86
+8708135_2,wer_sweep_pf_dis,WER condition sweep (post-fix re-run),COMPLETED,True,l40s,350,0.0936,0.0936,0.06408,13.27
+8708135_3,wer_sweep_pf_dis,WER condition sweep (post-fix re-run),COMPLETED,True,l40s,350,0.1467,0.1467,0.10040,20.78
+8708135_4,wer_sweep_pf_dis,WER condition sweep (post-fix re-run),COMPLETED,True,l40s,350,0.9650,0.9650,0.66061,136.75
+8781723,anon_multimeeting,Voice anonymisation,COMPLETED,True,l40s,350,0.4608,0.4608,0.35700,73.90
+8781724,determinism_gpu,Determinism check,COMPLETED,True,l40s,350,0.2192,0.2192,0.16978,35.15
+8913985,pytest_suite,Test suite and smoke tests,FAILED,False,,0,0.1964,0.0000,0.00885,1.83
+8913986,finetune_smoke,Test suite and smoke tests,COMPLETED,True,,0,0.0919,0.0000,0.01657,3.43
+8913987_0,pf_wer_large,Pre-flight runs,COMPLETED,True,v100-pcie,250,0.1314,0.1314,0.06800,14.08
+8913987_1,pf_wer_large,Pre-flight runs,COMPLETED,True,v100-pcie,250,0.0678,0.0678,0.03508,7.26
+8913987_2,pf_wer_large,Pre-flight runs,COMPLETED,True,v100-pcie,250,0.0739,0.0739,0.03824,7.92
+8913987_3,pf_wer_large,Pre-flight runs,COMPLETED,True,v100-pcie,250,0.0719,0.0719,0.03724,7.71
+8913987_4,pf_wer_large,Pre-flight runs,COMPLETED,True,v100-pcie,250,0.0442,0.0442,0.02286,4.73
+8913988_0,pf_wer_med,Pre-flight runs,COMPLETED,True,l40s,350,0.0786,0.0786,0.05381,11.14
+8913988_1,pf_wer_med,Pre-flight runs,COMPLETED,True,l40s,350,0.0494,0.0494,0.03385,7.01
+8913988_2,pf_wer_med,Pre-flight runs,COMPLETED,True,l40s,350,0.0311,0.0311,0.02130,4.41
+8913988_3,pf_wer_med,Pre-flight runs,COMPLETED,True,l40s,350,0.0339,0.0339,0.02320,4.80
+8913988_4,pf_wer_med,Pre-flight runs,COMPLETED,True,l40s,350,0.0431,0.0431,0.02947,6.10
+8913989_0,pf_wer_dis,Pre-flight runs,COMPLETED,True,l40s,350,0.0733,0.0733,0.05020,10.39
+8913989_1,pf_wer_dis,Pre-flight runs,COMPLETED,True,l40s,350,0.0456,0.0456,0.03119,6.46
+8913989_2,pf_wer_dis,Pre-flight runs,COMPLETED,True,l40s,350,0.0231,0.0231,0.01578,3.27
+8913989_3,pf_wer_dis,Pre-flight runs,COMPLETED,True,l40s,350,0.0208,0.0208,0.01426,2.95
+8913989_4,pf_wer_dis,Pre-flight runs,COMPLETED,True,l40s,350,0.0225,0.0225,0.01540,3.19
+8913990,pf_ts,Pre-flight runs,COMPLETED,True,l40s,350,0.1033,0.1033,0.07074,14.64
+8913991,pf_ts_vad,Pre-flight runs,COMPLETED,True,l40s,350,0.0617,0.0617,0.04221,8.74
+8913992,pf_anon,Pre-flight runs,COMPLETED,True,l40s,350,0.1061,0.1061,0.08220,17.02
+8917186,pytest_suite,Test suite and smoke tests,FAILED,False,,0,0.1006,0.0000,0.00453,0.94
+8917459,pytest_suite,Test suite and smoke tests,FAILED,False,,0,0.1086,0.0000,0.00489,1.01
+8917831,pytest_suite,Test suite and smoke tests,COMPLETED,True,,0,0.0767,0.0000,0.00345,0.72
+8917980,au_ts,Timestamp accuracy,COMPLETED,True,h100-sxm,700,0.1514,0.1514,0.19212,39.77
+8917981,au_ts_vad,Timestamp accuracy,COMPLETED,True,h100-sxm,700,0.1439,0.1439,0.18260,37.80
+8917983_0,pf_ml,Pre-flight runs,COMPLETED,True,l40s,350,0.0911,0.0911,0.06237,12.91
+8917984_0,au_ml,WER multilingual (FLEURS),COMPLETED,True,h100-sxm,700,0.4131,0.4131,0.52419,108.51
+8917984_1,au_ml,WER multilingual (FLEURS),COMPLETED,True,a100-pcie,250,0.7347,0.7347,0.38027,78.72
+8917984_2,au_ml,WER multilingual (FLEURS),COMPLETED,True,l40s,350,0.4750,0.4750,0.32517,67.31
+8917984_3,au_ml,WER multilingual (FLEURS),COMPLETED,True,h100-sxm,700,0.5986,0.5986,0.75968,157.25
+8917984_4,au_ml,WER multilingual (FLEURS),COMPLETED,True,l40s,350,0.2464,0.2464,0.16867,34.91
+8917984_5,au_ml,WER multilingual (FLEURS),COMPLETED,True,l40s,350,0.4558,0.4558,0.31205,64.59
+8917985_0,au_wer_large,WER condition sweep (audit re-run),COMPLETED,True,v100-pcie,250,1.4481,1.4481,0.74946,155.14
+8917985_1,au_wer_large,WER condition sweep (audit re-run),COMPLETED,True,v100-pcie,250,3.0847,3.0847,1.59655,330.49
+8917985_2,au_wer_large,WER condition sweep (audit re-run),COMPLETED,True,v100-pcie,250,0.4378,0.4378,0.22658,46.90
+8917985_3,au_wer_large,WER condition sweep (audit re-run),COMPLETED,True,v100-pcie,250,1.4861,1.4861,0.76916,159.22
+8917985_4,au_wer_large,WER condition sweep (audit re-run),COMPLETED,True,v100-pcie,250,6.3392,6.3392,3.28094,679.15
+8917986_0,au_wer_med,WER condition sweep (audit re-run),COMPLETED,True,l40s,350,0.7186,0.7186,0.49194,101.83
+8917986_1,au_wer_med,WER condition sweep (audit re-run),COMPLETED,True,l40s,350,2.2517,2.2517,1.54142,319.07
+8917986_2,au_wer_med,WER condition sweep (audit re-run),COMPLETED,True,l40s,350,0.2092,0.2092,0.14319,29.64
+8917986_3,au_wer_med,WER condition sweep (audit re-run),COMPLETED,True,l40s,350,0.7656,0.7656,0.52407,108.48
+8917986_4,au_wer_med,WER condition sweep (audit re-run),COMPLETED,True,l40s,350,3.4019,3.4019,2.32886,482.07
+8917988,au_anon1,Voice anonymisation,COMPLETED,True,l40s,350,0.2542,0.2542,0.19690,40.76
+8917989,au_anon2,Voice anonymisation,COMPLETED,True,l40s,350,0.3858,0.3858,0.29890,61.87
+8917987_0,au_wer_dis,WER condition sweep (audit re-run),COMPLETED,True,l40s,350,0.1347,0.1347,0.09223,19.09
+8917987_1,au_wer_dis,WER condition sweep (audit re-run),COMPLETED,True,l40s,350,0.3231,0.3231,0.22115,45.78
+8917987_2,au_wer_dis,WER condition sweep (audit re-run),COMPLETED,True,l40s,350,0.1161,0.1161,0.07949,16.45
+8917987_3,au_wer_dis,WER condition sweep (audit re-run),COMPLETED,True,l40s,350,0.1367,0.1367,0.09356,19.37
+8917987_4,au_wer_dis,WER condition sweep (audit re-run),COMPLETED,True,l40s,350,0.5456,0.5456,0.37347,77.31
+8918023,au_case,Case study,FAILED,False,h100-sxm,700,0.2675,0.2675,0.33948,70.27
+8918061,pytest_suite,Test suite and smoke tests,COMPLETED,True,,0,0.0836,0.0000,0.00377,0.78
+8918331,finetune_smoke,Test suite and smoke tests,COMPLETED,True,,0,0.1047,0.0000,0.01887,3.91
+8918334,au_recon_audit,AMI reconstruction (CPU only),COMPLETED,True,,0,0.0094,0.0000,0.00047,0.10
+8918340,au_fleurs_diac,WER multilingual (FLEURS),COMPLETED,True,,0,0.0231,0.0000,0.00115,0.24
+8976270,diag_diar,Diarisation probe,COMPLETED,True,,0,0.0814,0.0000,0.00367,0.76
+8976304,diag_diar2,Diarisation probe,COMPLETED,True,,0,0.0581,0.0000,0.00262,0.54
+8976354,au_der_default,Diarisation (DER),COMPLETED,True,l40s,350,0.1792,0.1792,0.13880,28.73
+8976355,au_der_oracle,Diarisation (DER),COMPLETED,True,l40s,350,0.1547,0.1547,0.11986,24.81
+8976356,au_der_tuned,Diarisation (DER),COMPLETED,True,l40s,350,0.1303,0.1303,0.10092,20.89
+8976357,au_der_concat,Diarisation (DER),COMPLETED,True,l40s,350,0.0889,0.0889,0.06886,14.25
+8976358,au_der_sweep,Diarisation sweep (DER),COMPLETED,True,l40s,350,0.6100,0.6100,0.47255,97.82
+8976362,au_der_sweep2,Diarisation sweep (DER),COMPLETED,True,l40s,350,0.9564,0.9564,0.74089,153.37
+8978757,pytest_suite,Test suite and smoke tests,COMPLETED,True,,0,0.0872,0.0000,0.00393,0.81
+8978758,case_study,Case study,FAILED,False,a6000,300,0.3081,0.3081,0.18516,38.33
+8978759,determinism_cpu,Determinism check (CPU only),COMPLETED,True,,0,1.2878,0.0000,0.43855,90.78
+8978760,determinism,Determinism check,COMPLETED,True,v100-pcie,250,0.2614,0.2614,0.15884,32.88
+8983111,pytest_suite,Test suite and smoke tests,COMPLETED,True,,0,0.0811,0.0000,0.00365,0.76
+8983112,case_study,Case study,COMPLETED,True,a6000,300,0.3419,0.3419,0.20553,42.54

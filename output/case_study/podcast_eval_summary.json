@@ -1,0 +1,45 @@
+{
+  "n_transcripts": 1,
+  "per_file": [
+    {
+      "timestamps": {
+        "n_segments": 403,
+        "n_words": 5477,
+        "n_words_timed": 5477,
+        "monotonicity_violations": 0,
+        "n_overlaps": 0,
+        "max_gap_s": 2.2,
+        "median_gap_s": 0.0,
+        "speech_s": 1841.42,
+        "segment_span_s": 1882.12,
+        "span_end_s": 1936.34,
+        "audio_duration_s": 1938.0,
+        "coverage_ratio": 0.9502,
+        "segment_coverage_ratio": 0.9712,
+        "end_drift_s": 1.66,
+        "duration_source": "episode"
+      },
+      "diarisation": {
+        "has_speakers": true,
+        "n_speakers": 2,
+        "expected_speakers": 2,
+        "speaker_count_error": 0,
+        "n_turns": 170,
+        "talk_time_s": {
+          "SPEAKER_00": 674.4,
+          "SPEAKER_01": 1207.8
+        }
+      },
+      "masking": {
+        "n_tokens": 5382,
+        "n_redacted": 4,
+        "redaction_rate": 0.00074
+      },
+      "repetition": {
+        "max_immediate_repeat": 2,
+        "n_tokens": 5382
+      },
+      "file": "codex_mentis_ep05_transcript.json"
+    }
+  ]
+}
