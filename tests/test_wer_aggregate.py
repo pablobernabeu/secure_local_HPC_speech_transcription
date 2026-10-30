@@ -14,7 +14,7 @@ import pytest
 
 pytest.importorskip("jiwer")
 
-from evaluation.wer import PairResult, aggregate  # noqa: E402
+from evaluation.wer import PairResult, aggregate
 
 
 def _pair(

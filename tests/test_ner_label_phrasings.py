@@ -15,8 +15,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "tools"))
 sys.path.insert(0, str(PROJECT_ROOT))
 
-import ner_label_phrasings as tool  # noqa: E402
-import ner_masking  # noqa: E402
+import ner_label_phrasings as tool
+import ner_masking
 
 
 def _fake_predict(text, labels, threshold):

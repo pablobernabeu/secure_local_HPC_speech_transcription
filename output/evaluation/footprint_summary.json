@@ -1,10 +1,10 @@
 {
   "provenance": {
     "cluster": "htc",
-    "captured": "2026-10-04",
+    "captured": "2026-10-30",
     "until": null,
-    "sacct_file": "sacct_2026-10-04_final.psv",
-    "sacct_sha256": "5c7e6f7cca75bb808cadaac35351bc13256b113e6c0a316e73e09184d7fb405b",
+    "sacct_file": "sacct_2026-10-30.psv",
+    "sacct_sha256": "307ce7a713f2e1dac978f83340267ab8fc58cf54fe5f986c22e13dcf1c873c16",
     "sacct_query": "sacct -M htc --starttime 2026-05-16 --endtime now -X -P --format=JobID,JobName,Account,State,ElapsedRaw,Start,End,Partition,AllocTRES,NodeList,WorkDir",
     "nodes_file": null,
     "nodes_sha256": null,
@@ -65,29 +65,29 @@
     "car_g_per_km": 170.0
   },
   "overall": {
-    "n_jobs": 197,
-    "gpu_hours": 155.6977777777778,
-    "runtime_h": 161.23416666666665,
-    "energy_kwh": 95.95212304627778,
-    "carbon_g": 19862.0894705795,
-    "carbon_kg": 19.862089470579498,
-    "energy_gpu_kwh": 78.64318770833333,
-    "energy_cpu_kwh": 14.042072533333332,
-    "energy_mem_kwh": 3.266862804611111
+    "n_jobs": 203,
+    "gpu_hours": 157.0336111111111,
+    "runtime_h": 162.9897222222222,
+    "energy_kwh": 96.71209925188889,
+    "carbon_g": 20019.404545141,
+    "carbon_kg": 20.019404545140997,
+    "energy_gpu_kwh": 79.250580625,
+    "energy_cpu_kwh": 14.165975399999999,
+    "energy_mem_kwh": 3.2955432268888885
   },
   "productive": {
-    "n_jobs": 167,
-    "gpu_hours": 130.2711111111111,
-    "runtime_h": 132.75611111111112,
-    "energy_kwh": 81.60014589455555,
-    "carbon_g": 16891.230200173
+    "n_jobs": 171,
+    "gpu_hours": 131.60694444444445,
+    "runtime_h": 134.21583333333334,
+    "energy_kwh": 82.346792856,
+    "carbon_g": 17045.786121192
   },
   "overhead": {
-    "n_jobs": 30,
+    "n_jobs": 32,
     "gpu_hours": 25.426666666666666,
-    "runtime_h": 28.478055555555557,
-    "energy_kwh": 14.35197715172222,
-    "carbon_g": 2970.8592704064995,
+    "runtime_h": 28.773888888888887,
+    "energy_kwh": 14.365306395888886,
+    "carbon_g": 2973.6184239489994,
     "states": [
       "CANCELLED",
       "FAILED",
@@ -107,6 +107,12 @@
       "energy_kwh": 13.475510114666667,
       "carbon_g": 2789.4305937359995
     },
+    "WER multilingual (FLEURS)": {
+      "n_jobs": 27,
+      "gpu_hours": 21.908333333333335,
+      "energy_kwh": 12.805533131555555,
+      "carbon_g": 2650.7453582319995
+    },
     "WER condition sweep (audit re-run)": {
       "n_jobs": 15,
       "gpu_hours": 21.39888888888889,
@@ -119,17 +125,17 @@
       "energy_kwh": 12.41561273622222,
       "carbon_g": 2570.0318363979995
     },
-    "WER multilingual (FLEURS)": {
-      "n_jobs": 26,
-      "gpu_hours": 21.034444444444446,
-      "energy_kwh": 12.353237605333332,
-      "carbon_g": 2557.1201843039994
-    },
     "Diarisation sweep (DER)": {
       "n_jobs": 4,
       "gpu_hours": 3.069444444444444,
       "energy_kwh": 2.3778359944444443,
       "carbon_g": 492.21205084999997
+    },
+    "Case study": {
+      "n_jobs": 9,
+      "gpu_hours": 2.893611111111111,
+      "energy_kwh": 1.9355238024444443,
+      "carbon_g": 400.653427106
     },
     "Disfluency evaluation": {
       "n_jobs": 2,
@@ -143,12 +149,6 @@
       "energy_kwh": 2.118028731888889,
       "carbon_g": 438.43194750099997
     },
-    "Case study": {
-      "n_jobs": 8,
-      "gpu_hours": 2.596111111111111,
-      "energy_kwh": 1.7318652984444443,
-      "carbon_g": 358.496116778
-    },
     "Voice anonymisation": {
       "n_jobs": 9,
       "gpu_hours": 2.493333333333333,
@@ -156,10 +156,10 @@
       "carbon_g": 389.92745765199993
     },
     "Pre-flight runs": {
-      "n_jobs": 29,
-      "gpu_hours": 2.0625,
-      "energy_kwh": 1.3135564617777775,
-      "carbon_g": 271.9061875879999
+      "n_jobs": 30,
+      "gpu_hours": 2.2269444444444444,
+      "energy_kwh": 1.3986673808888885,
+      "carbon_g": 289.5241478439999
     },
     "Timestamp accuracy": {
       "n_jobs": 6,
@@ -186,10 +186,10 @@
       "carbon_g": 15.036500976
     },
     "Test suite and smoke tests": {
-      "n_jobs": 12,
+      "n_jobs": 15,
       "gpu_hours": 0.0,
-      "energy_kwh": 0.08212816922222221,
-      "carbon_g": 17.000531028999998
+      "energy_kwh": 0.1010394255,
+      "carbon_g": 20.9151610785
     },
     "Aggregation (CPU only)": {
       "n_jobs": 2,
@@ -211,7 +211,7 @@
     }
   },
   "equivalence": {
-    "car_km_average_passenger": 116.83582041517353,
+    "car_km_average_passenger": 117.76120320671176,
     "car_g_per_km": 170.0
   }
 }

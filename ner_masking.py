@@ -217,7 +217,7 @@ def load_person_detector(model_name: str = DEFAULT_MODEL,
     :meth:`PersonNameDetector.tokens_in`, and those below had no effect.
     """
     try:
-        from gliner import GLiNER  # noqa: PLC0415
+        from gliner import GLiNER
     except ImportError:
         if not quiet:
             print("   ℹ️  NER masking unavailable: pip install gliner")
@@ -255,7 +255,7 @@ def download_model(model_name: str = DEFAULT_MODEL,
     ImportError
         If gliner is not installed.
     """
-    from gliner import GLiNER  # noqa: PLC0415
+    from gliner import GLiNER
     GLiNER.from_pretrained(model_name,
                            revision=_revision_for(model_name, revision))
 
@@ -268,7 +268,7 @@ def provenance(detector) -> dict:
     it.
     """
     try:
-        import gliner  # noqa: PLC0415
+        import gliner
         version = getattr(gliner, "__version__", None)
     except ImportError:
         version = None

@@ -25,7 +25,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from evaluation import benchmark_timestamps as bt  # noqa: E402
+from evaluation import benchmark_timestamps as bt
 
 _AUDIO = np.zeros(16_000, dtype=np.float32)
 

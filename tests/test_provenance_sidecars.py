@@ -27,9 +27,9 @@ import pytest
 
 pytest.importorskip("numpy")
 
-import provenance  # noqa: E402
-from evaluation import bootstrap_ci, condition_ci  # noqa: E402
-from provenance import sha256_text_file, sidecar_path, write_sidecar  # noqa: E402
+import provenance
+from evaluation import bootstrap_ci, condition_ci
+from provenance import sha256_text_file, sidecar_path, write_sidecar
 
 GIT = shutil.which("git")
 needs_git = pytest.mark.skipif(GIT is None, reason="git not on PATH")

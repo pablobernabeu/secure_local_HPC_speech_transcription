@@ -26,7 +26,7 @@ import pytest
 
 bibtexparser = pytest.importorskip("bibtexparser")
 
-from tools import bib_sentencecase as bsc  # noqa: E402
+from tools import bib_sentencecase as bsc
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 REFERENCES_BIB = PROJECT_ROOT / "manuscript" / "references.bib"

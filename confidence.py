@@ -596,6 +596,30 @@ def _build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv=None) -> int:
+    """Review one transcript JSON from the command line.
+
+    Parameters
+    ----------
+    argv:
+        Arguments to parse instead of ``sys.argv[1:]`` (see
+        :func:`_build_parser`).
+
+    Returns
+    -------
+    int
+        0 once the report is printed, 2 when the transcript cannot be read
+        (missing, not UTF-8, not JSON, or not an object whose ``segments``
+        is a list of objects) or :func:`review_transcript` rejects a
+        setting. A usage error,
+        including ``--repeated-passage-window`` without
+        ``--repeated-passage-words``, exits with argparse's status 2.
+
+    Side effects
+    ------------
+    Reads the transcript, prints the report to stdout and, with
+    ``--json``, writes the full report there, replacing any file of that
+    name and creating its directory. Reconfigures stdout to UTF-8.
+    """
     parser = _build_parser()
     args = parser.parse_args(argv)
     if args.repeated_passage_window_s is None:
@@ -608,8 +632,19 @@ def main(argv=None) -> int:
         pass
     try:
         transcript = json.loads(args.transcript.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+    # ValueError covers json.JSONDecodeError and UnicodeDecodeError: a file
+    # that is not UTF-8 used to end in a traceback with status 1.
+    except (OSError, ValueError) as exc:
         print(f"  Error: cannot read {args.transcript}: {exc}", file=sys.stderr)
+        return 2
+    # Valid JSON of another shape (a top-level list, say) used to fail
+    # inside review_transcript with an AttributeError, also status 1.
+    segments = transcript.get("segments") if isinstance(transcript, dict) else None
+    if (not isinstance(transcript, dict)
+            or not (segments is None or (isinstance(segments, list)
+                                         and all(isinstance(s, dict) for s in segments)))):
+        print(f"  Error: {args.transcript} is not a transcript: expected a JSON "
+              "object whose 'segments' is a list of objects", file=sys.stderr)
         return 2
 
     try:

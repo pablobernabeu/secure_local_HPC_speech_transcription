@@ -34,7 +34,14 @@ back to a rebuilt masker, taking the same masking options as
 
 A run that finds nothing to redact refuses to write its output unless
 ``--allow-empty`` is given, because a file named ``*_redacted.wav`` that is
-a sample-identical copy of the input is worse than no file.
+a sample-identical copy of the input is worse than no file. For the same
+reason a run refuses when a name has no word timestamps and so cannot be
+located in the audio (:func:`count_untimed_names`): a name word Whisper
+left untimed, in a raw transcript, or a placeholder other than ``[TITLE]``
+in a redacted transcript's segment text that no timed word carries. Such
+a name would stay audible in a recording reported as redacted, so the
+tool exits 3 unless ``--allow-untimed-names`` is given, and reports the
+count on stderr either way.
 
 The waveform I/O uses the standard-library :mod:`wave` module for PCM WAV,
 so the core runs with no third-party audio dependency. Non-WAV inputs are
@@ -71,6 +78,12 @@ except ImportError as exc:  # pragma: no cover - numpy is a core dependency
 # which keeps it inside the masker where it cannot be imported; a new
 # placeholder there has to be added here too.
 _PLACEHOLDER_RE = re.compile(r"\[(?:NAME|SURNAME|TITLE)\]")
+# The placeholders that stand for a name. [TITLE] is left out of the count
+# of untimed names: the redacted word list masks each word on its own
+# (transcription._redact_segments), so the title rule, which needs the
+# following name, leaves "Dr" in the words while the segment text masks it
+# as [TITLE], and counting it would raise a false alarm on every honorific.
+_NAME_PLACEHOLDER_RE = re.compile(r"\[(?:NAME|SURNAME)\]")
 # Keys under which a word may carry its text, in the order
 # transcription._TEXT_KEYS gives them. The pipeline's
 # _build_segments_from_chunks writes ``word``; the shipped example
@@ -88,18 +101,22 @@ def word_is_name(word_text: str, mask_fn) -> bool:
     """Return ``True`` when *mask_fn* would redact *word_text* as a name.
 
     A word counts as a name when masking it introduces a bracketed
-    placeholder ([NAME] or [SURNAME]) that
-    :func:`transcription.create_enhanced_name_masker` emits and the word did
-    not already contain one. Passing each word through the very masker used
-    for the text keeps the audio redaction consistent with the transcript
-    redaction.
+    placeholder ([NAME], [SURNAME] or [TITLE], see :data:`_PLACEHOLDER_RE`)
+    that :func:`transcription.create_enhanced_name_masker` emits and the
+    word did not already contain one. Passing each word through the very
+    masker used for the text keeps the audio redaction consistent with the
+    transcript redaction.
+
+    Raises
+    ------
+    Exception
+        Whatever *mask_fn* raises, unchanged. Reading a failure as "not a
+        name" would leave that word audible in a recording reported as
+        redacted.
     """
     if not word_text:
         return False
-    try:
-        masked = mask_fn(word_text)
-    except Exception:
-        return False
+    masked = mask_fn(word_text)
     return bool(_PLACEHOLDER_RE.search(masked)) and \
         _PLACEHOLDER_RE.search(word_text) is None
 
@@ -139,11 +156,8 @@ def _timed_words(transcript: dict):
     """Yield ``(start, end, word)`` for every word with both timestamps."""
     for segment in transcript.get("segments", []) or []:
         for word in segment.get("words", []) or []:
-            start = word.get("start")
-            end = word.get("end")
-            if start is None or end is None:
-                continue
-            yield float(start), float(end), word
+            if _has_times(word):
+                yield float(word["start"]), float(word["end"]), word
 
 
 def find_name_spans(transcript: dict, mask_fn=None, pad_s: float = 0.0) -> list[Span]:
@@ -171,11 +185,14 @@ def find_name_spans(transcript: dict, mask_fn=None, pad_s: float = 0.0) -> list[
         Merged spans in seconds. Words without both a ``start`` and an
         ``end`` are skipped: audio redaction needs word-level times, so a
         segment transcribed without them contributes nothing.
+        :func:`count_untimed_names` counts the names skipped this way.
 
     Raises
     ------
     ValueError
         If *transcript* is raw and *mask_fn* is ``None``.
+    Exception
+        Whatever *mask_fn* raises on a word (see :func:`word_is_name`).
     """
     redacted = is_redacted_transcript(transcript)
     if not redacted and mask_fn is None:
@@ -188,6 +205,98 @@ def find_name_spans(transcript: dict, mask_fn=None, pad_s: float = 0.0) -> list[
         if hit:
             spans.append((start - pad_s, end + pad_s))
     return _merge_spans(spans)
+
+
+def _has_times(word: dict) -> bool:
+    """Whether *word* carries both a start and an end time."""
+    return word.get("start") is not None and word.get("end") is not None
+
+
+def count_untimed_names(transcript: dict, mask_fn=None) -> int:
+    """Count the names in *transcript* that no word timestamp locates.
+
+    :func:`find_name_spans` skips every word without both times, so each
+    name counted here stays audible in the output (review finding SC-18).
+
+    For a *raw* transcript, the count is of name words (judged by
+    :func:`word_is_name` with *mask_fn*, as the spans are) that lack a
+    start or an end, plus the name tokens of a segment that has text but
+    no word list, or of the top-level text when there are no segments.
+
+    For a *redacted* transcript, the count is, segment by segment, of the
+    ``[NAME]`` and ``[SURNAME]`` placeholders in the segment text beyond
+    those its timed words carry, plus those of the top-level text when
+    there are no segments. ``[TITLE]`` is left out (see
+    :data:`_NAME_PLACEHOLDER_RE`). A redacted segment without text
+    contributes nothing, since its words are the only record.
+
+    Raises
+    ------
+    ValueError
+        If *transcript* is raw and *mask_fn* is ``None``.
+    Exception
+        Whatever *mask_fn* raises on a word (see :func:`word_is_name`).
+    """
+    redacted = is_redacted_transcript(transcript)
+    if not redacted and mask_fn is None:
+        raise ValueError("a raw transcript needs a masking function")
+    segments = transcript.get("segments", []) or []
+    if not segments:
+        text = str(transcript.get("text") or "")
+        if redacted:
+            return len(_NAME_PLACEHOLDER_RE.findall(text))
+        return sum(word_is_name(token, mask_fn) for token in text.split())
+    count = 0
+    for segment in segments:
+        words = segment.get("words") or []
+        seg_text = str(segment.get("text") or "")
+        if redacted:
+            if not seg_text:
+                continue
+            carried = sum(len(_NAME_PLACEHOLDER_RE.findall(word_text(w)))
+                          for w in words if _has_times(w))
+            count += max(0, len(_NAME_PLACEHOLDER_RE.findall(seg_text)) - carried)
+        elif words:
+            count += sum(word_is_name(word_text(w), mask_fn)
+                         for w in words if not _has_times(w))
+        else:
+            count += sum(word_is_name(token, mask_fn) for token in seg_text.split())
+    return count
+
+
+def read_transcript(path: Path) -> dict:
+    """Read a transcript JSON the tool can walk, or raise ``ValueError``.
+
+    The file must be UTF-8 JSON whose top level is an object, with
+    ``segments``, when present, a list of objects and each segment's
+    ``words``, when present, a list of objects. A file in another encoding
+    (cp1252, UTF-16) or of another shape used to end the run with a
+    traceback and exit status 1, where the documented status is 2.
+
+    Raises
+    ------
+    OSError
+        If the file cannot be read.
+    ValueError
+        If it is not UTF-8, not JSON (``json.JSONDecodeError`` and
+        ``UnicodeDecodeError`` are both ``ValueError``s) or not of that
+        shape.
+    """
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"the top level is a JSON {type(payload).__name__}, "
+                         "not an object")
+    segments = payload.get("segments")
+    if segments is not None:
+        if not isinstance(segments, list) or not all(
+                isinstance(s, dict) for s in segments):
+            raise ValueError("'segments' is not a list of objects")
+        for segment in segments:
+            words = segment.get("words")
+            if words is not None and (not isinstance(words, list) or not all(
+                    isinstance(w, dict) for w in words)):
+                raise ValueError("a segment's 'words' is not a list of objects")
+    return payload
 
 
 def transcript_diagnostics(transcript: dict) -> dict:
@@ -387,7 +496,7 @@ def load_audio(path: Path) -> tuple[np.ndarray, int]:
     if path.suffix.lower() == ".wav":
         return read_wav(path)
     try:
-        import librosa  # noqa: PLC0415
+        import librosa
     except ImportError as exc:
         raise ImportError(
             f"Reading {path.suffix} requires librosa; install it or supply WAV."
@@ -406,12 +515,28 @@ def _build_parser() -> argparse.ArgumentParser:
     The masking options mirror ``transcription.py``'s own, under the same
     names, so a raw transcript can be redacted with the masker the
     transcription run used when no ``_redacted`` set exists.
+
+    They are copied, not derived, because transcription.py's language list
+    (``curated_name_languages``) is reachable only by importing
+    transcription.py, which imports transformers, and torch and librosa
+    where they are installed, at module level. This tool imports it only
+    when a masker has to be rebuilt, and on that path
+    ``create_enhanced_name_masker`` checks the languages against that list
+    (``normalise_name_languages``), so an unknown language still stops the
+    run with exit 2 and the list of choices.
     """
     p = argparse.ArgumentParser(
         prog="audio_redaction",
         description="Silence or bleep spoken personal names in a recording, "
                     "using the transcript's word timestamps and the "
                     "pipeline's own masking decisions.",
+        epilog="Exit status: 0 when the output was written; 2 when the "
+               "transcript, a redacted sibling, the masker or the audio "
+               "cannot be loaded, or the masker fails on a word; 3 when "
+               "there is nothing to redact (unless --allow-empty), the "
+               "words carry no readable text, or a name has no word "
+               "timestamps (unless --allow-untimed-names). Nothing is "
+               "written on a non-zero status.",
     )
     p.add_argument("--audio", type=Path, required=True,
                    help="Input audio (WAV handled natively; others need librosa).")
@@ -431,6 +556,15 @@ def _build_parser() -> argparse.ArgumentParser:
                    help="Write the output even when no name span is found. "
                         "Without it an empty result is an error, since the "
                         "output would be an unredacted copy.")
+    p.add_argument("--allow-untimed-names", action="store_true",
+                   dest="allow_untimed_names",
+                   help="Write the output even when some names have no word "
+                        "timestamps and so stay audible: name words without "
+                        "a start and end in a raw transcript, or [NAME] and "
+                        "[SURNAME] placeholders in a redacted transcript's "
+                        "segment text that no timed word carries. Without it "
+                        "such a run is an error (exit 3). The count is "
+                        "reported on stderr either way.")
     masking = p.add_argument_group(
         "masker options",
         "Used only when no redacted transcript is available and the masker "
@@ -439,9 +573,12 @@ def _build_parser() -> argparse.ArgumentParser:
                          dest="use_facebook_names")
     masking.add_argument("--use-facebook-surnames-for-masking",
                          action="store_true", dest="use_facebook_surnames")
-    masking.add_argument("--languages-for-name-masking", nargs="*", default=None,
+    # nargs="+" as in transcription.py: with "*", the option given with no
+    # language (an empty shell variable) was read as "every language".
+    masking.add_argument("--languages-for-name-masking", nargs="+", default=None,
                          dest="languages",
-                         help="Curated-list languages (default: all nine).")
+                         help="Curated-list languages (default: every language "
+                              "in data/curated_names.csv).")
     # BooleanOptionalAction as in transcription.py, so the --no- form that
     # switches the filter off for an English run can be mirrored too.
     masking.add_argument("--exclude-common-english-words-from-name-masking",
@@ -479,7 +616,7 @@ def _rebuild_masker(args, transcript: dict):
     transcript, off otherwise. Side effect: the masker prints its
     database-loading report to stdout.
     """
-    from transcription import (  # noqa: PLC0415
+    from transcription import (
         _language_is_english,
         create_enhanced_name_masker,
     )
@@ -506,12 +643,17 @@ def _rebuild_masker(args, transcript: dict):
 def main(argv: list[str] | None = None) -> int:
     """Redact spoken names in ``--audio`` and write ``--out``.
 
-    Returns 0 on success, 2 when the transcript or masker cannot be loaded
-    or the audio cannot be read, and 3 when there is nothing to redact
-    (unless ``--allow-empty``) or the transcript's words carry no readable
-    text. On any non-zero return no output file is written. Side effects:
-    reads the transcript, a redacted sibling beside it and the audio;
-    writes the output WAV; prints a report to stdout and errors to stderr.
+    Returns 0 on success; 2 when the transcript or its redacted sibling
+    cannot be read (not UTF-8 JSON, or not an object of segments and
+    words: see :func:`read_transcript`), the masker cannot be loaded or
+    fails on a word, or the audio cannot be read; and 3 when there is
+    nothing to redact (unless ``--allow-empty``), the transcript's words
+    carry no readable text, or names have no word timestamps (unless
+    ``--allow-untimed-names``; see :func:`count_untimed_names`). On any
+    non-zero return no output file is written. Side effects: reads the
+    transcript, a redacted sibling beside it and the audio; writes the
+    output WAV; prints a report to stdout and errors, and any count of
+    untimed names, to stderr.
     """
     args = _build_parser().parse_args(argv)
     try:
@@ -520,8 +662,8 @@ def main(argv: list[str] | None = None) -> int:
         pass
 
     try:
-        transcript = json.loads(args.transcript.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+        transcript = read_transcript(args.transcript)
+    except (OSError, ValueError) as exc:
         print(f"  Error: could not read the transcript: {exc}", file=sys.stderr)
         return 2
 
@@ -533,8 +675,8 @@ def main(argv: list[str] | None = None) -> int:
         sibling = redacted_sibling(args.transcript)
         if sibling is not None:
             try:
-                candidate = json.loads(sibling.read_text(encoding="utf-8"))
-            except (OSError, json.JSONDecodeError) as exc:
+                candidate = read_transcript(sibling)
+            except (OSError, ValueError) as exc:
                 print(f"  Error: could not read {sibling}: {exc}",
                       file=sys.stderr)
                 return 2
@@ -565,14 +707,29 @@ def main(argv: list[str] | None = None) -> int:
               file=sys.stderr)
         return 3
 
-    spans = find_name_spans(transcript, mask_fn)
-    if not spans:
-        if is_redacted_transcript(transcript) and diagnostics["placeholders_in_text"]:
-            print(f"  Error: the transcript text holds "
-                  f"{diagnostics['placeholders_in_text']} masked placeholder(s) "
-                  "but no timed word carries one, so the names cannot be "
-                  "located in the audio. Nothing written.", file=sys.stderr)
+    try:
+        spans = find_name_spans(transcript, mask_fn)
+        untimed = count_untimed_names(transcript, mask_fn)
+    except Exception as exc:
+        print(f"  Error: the name masker failed on a word ({type(exc).__name__}: "
+              f"{exc}), so its names cannot all be located. Nothing written.",
+              file=sys.stderr)
+        return 2
+    # A name without word timestamps cannot be silenced, and the tool once
+    # wrote its output and exited 0 with that name still audible (SC-18).
+    if untimed:
+        what = ("placeholder(s) in the segment text carried by no timed word"
+                if is_redacted_transcript(transcript)
+                else "name word(s) without word timestamps")
+        if not args.allow_untimed_names:
+            print(f"  Error: {untimed} {what}, so those names cannot be "
+                  "located in the audio and would stay audible. Nothing "
+                  "written; pass --allow-untimed-names to write it anyway.",
+                  file=sys.stderr)
             return 3
+        print(f"  Warning: {untimed} {what}; those names stay audible "
+              "because --allow-untimed-names was given.", file=sys.stderr)
+    if not spans:
         if not args.allow_empty:
             print("  Error: no name words with timestamps found, so the output "
                   "would be an unredacted copy of the input. Nothing written; "
@@ -594,6 +751,7 @@ def main(argv: list[str] | None = None) -> int:
           f"{redacted_duration(removed):.2f}s of audio "
           f"(including {args.pad:.2f}s padding per side), mode={args.mode}")
     print(f"  decisions: {decision}")
+    print(f"  names without word timestamps, left audible: {untimed}")
     print(f"  wrote: {args.out}")
     return 0
 

@@ -38,8 +38,8 @@ _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from evaluation import benchmark_anonymisation as ba  # noqa: E402
-from evaluation.revisions import revision_for  # noqa: E402
+from evaluation import benchmark_anonymisation as ba
+from evaluation.revisions import revision_for
 
 _EVAL = _ROOT / "output" / "evaluation"
 _RUNS = {

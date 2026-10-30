@@ -221,7 +221,8 @@ class TestPinnedFigures:
         under the L40S run's seed, at the CPU run's commit."""
         v100 = cross["meta"]["runs"]["v100_seed0"]
         assert (v100["job"], v100["date"], v100["node"]) == ("8978760", "2026-10-04", "htc-g004")
-        assert (v100["precision"], v100["threads"], v100["code_commit"]) == ("float16", 8, "f2578b8")
+        assert ((v100["precision"], v100["threads"], v100["code_commit"])
+                == ("float16", 8, "f2578b8"))
         assert (v100["driver"].startswith("580.65.06")
                 and v100["cuda_module"].startswith("CUDA/13.0.2"))
         assert v100["seeds"] == [0, 1]

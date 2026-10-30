@@ -5,7 +5,7 @@
 # This file states what the code needs, as >= floors. It is not a record of
 # the environment that produced the committed results; that belongs in a
 # lock file taken from the ARC environment (requirements-lock.txt, audit
-# finding DEPS-01). Development tools (pytest, linters, mypy)
+# finding DEPS-01). Development tools (pytest and the ruff linter)
 # are in requirements-dev.txt.
 #
 # Every entry below is used somewhere in the repository. Packages that

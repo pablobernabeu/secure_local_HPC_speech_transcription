@@ -5,6 +5,155 @@ All notable changes to this project are recorded here. The format follows
 such as `T1-01` refer to the September 2026 codebase audit; the findings that
 were not resolved in code are listed, with their reasons, in `ISSUES.md`.
 
+## [2.1.0] - 2026-10-30
+
+Two passes after release 2.0.0. The first, on 20 and 21 October 2026, was
+made without access to the cluster: it edited the manuscript's prose, checked
+the user documentation against the code and reviewed the code changed since
+the last verified audit. The second, on 29 and 30 October, resolved what the
+first had held back and the open items the cluster's return allowed: the
+Spanish V100 control (NEW-05) and the scheduler ledger's recapture. Every
+finding of either pass is resolved in `ISSUES.md` (CR-06 in code; see
+DOCS-14 for its deposit).
+
+No word error rate, diarisation, timestamp, filler, multilingual, masking
+or anonymisation figure changed. The footprint's totals did, with the
+recaptured ledger, and some result files changed in rows or provenance
+fields only, as listed under Results. `tools/verify_regeneration.py`
+regenerates all eleven CPU artefacts identically from the committed inputs.
+
+### Fixed
+
+- The name masker's honorific rule read any "miss" or "ms" before a name as
+  a title ("I miss Sarah" gave "I [TITLE] [NAME]"), and from the first pass
+  joined a sentence ending in "ms." (the unit) or "MS." (the disease) to the
+  next. "Miss" now needs its capital and "Ms" its spelling; "Mr.", "Mrs.",
+  "Dr." and "Prof." join the next sentence in any case, as at 2.0.0 (CR-01).
+  A title before a possessive name ("Dr. Smith's") is masked with it (CR-02),
+  and `case_insensitive` also relaxes the gate on the name after a title.
+- An exception the NER stage raised after the model call was swallowed
+  uncounted; it is now counted in `n_failures` (SC-17).
+- `audio_redaction` left a word audible in a recording it reported as
+  redacted when the name masker failed on it; that failure now stops the run
+  with exit 2 and no output (SC-03). It also left a name audible when its
+  word had no timestamps; it now refuses with exit 3 unless
+  `--allow-untimed-names` is given, and reports the count on stderr either
+  way (SC-18). A transcript it cannot read, in any encoding or shape, exits
+  2, and `--languages-for-name-masking` with no language exits 2, as in
+  `transcription.py` (SC-04).
+- The residual-PII audit (`evaluation.audit_artefacts`) reported a file it
+  could not read, or the transcripts of a recording whose masking log it
+  could not read in full, as clean. It now marks them not checked, decodes
+  logs with replacement, scans the `_review.json` files the pipeline writes
+  (which copy the text of flagged segments), reports unreadable logs and
+  skipped files on the console and in its JSON (`audit_complete`,
+  `files_not_checked`), and exits 3 when the audit is incomplete (SC-06,
+  SC-07).
+- `setup/Dockerfile` did not copy `versions.csv`, so files written in the
+  container would have recorded the version as "Unknown" (SC-09).
+- `evaluation.wer` dropped a pair it could not score from a directory run
+  without a trace; the summary now records `n_skipped_pairs` and
+  `skipped_pairs` (SC-19).
+- `confidence` and `tools/build_input_deposit.py` exit 2, as documented,
+  for an unusable input, where they ended in a traceback. The fine-tuning
+  script ends through `exit_without_finalising`, as the other streaming
+  jobs do (SC-24).
+- `evaluation.disfluency --audit-conditions` dropped a misspelt condition
+  silently and ignored `--conditions`; it now names the condition with the
+  list of valid names, and honours `--conditions` (SC-08).
+- The Hugging Face token readers, `preflight.resolve_hf_token` and the HPC
+  jobs' `arc_load_hf_token`, now read a file with a UTF-8 byte-order mark or
+  saved as UTF-16, where the mark or the encoding made the token fail.
+- `hpc/evaluate_wer.sh` refused a directory of `.vtt` transcripts, which
+  `evaluation.wer` scores.
+- `tools/build_input_deposit.py` passed `compresslevel=9`, which never
+  reached its members, each written at zlib's default level as the deposited
+  archive was. The argument is gone, the digest is documented as
+  reproducible only under the same deflate implementation, and the detached
+  record names the Python and zlib (compile-time and run-time) that built
+  the archive (CR-03, CR-04). The archive's README gives the aggregate's
+  rebuild command with its arguments (CR-06).
+
+### Added
+
+- The Spanish V100 control of the multilingual wave's fourth arm (NEW-05).
+  ARC jobs 9124739 and 9124863 decoded es_419 again at 6f9bf56 on V100
+  cards, and `evaluation.fleurs_control` compares the decode record by
+  record with the four arms' Spanish summaries.
+  `output/evaluation/fleurs_es419_v100_control.json` shows it matching the
+  third arm on all 908 utterances and differing from the fourth on the same
+  four, so the card, with its node, accounts for the fourth arm's Spanish
+  drift. `hpc/runs/fleurs_es419_v100.env` records the jobs, and
+  `docs/next_control.md` is now the record of the control.
+- `.shellcheckrc`, so that `shellcheck -x` follows the job scripts' shared
+  helpers; it reports nothing for the 24 tracked shell scripts (SC-01).
+- Tests that `setup.py`, `CITATION.cff` and `versions.csv` agree on the
+  release (SC-10), and that the Dockerfile copies the runtime data and
+  modules `setup.py` ships (SC-09).
+
+### Changed
+
+- The manuscript was edited for coherence, concision and paragraphing,
+  section by section against a document-level map of its argument, and
+  checked against its earlier text for any change of meaning: claims stated
+  in several sections are now stated in full once, and the share of
+  sentences over 35 words fell from 24% to 11%. The determinism results are
+  reported in Results (Reproducibility Across Hardware), the literature
+  comparisons have moved from Results to the Discussion, and the Discussion
+  has subheadings and a conclusion. The Methods and the Evaluation Protocol
+  have subheadings, the appendices are lettered in the order the text first
+  cites them (A, the atomic stages; B, the numeric results; C, the
+  per-utterance dispersion), and the availability statements are merged,
+  with every reproduction command in `manuscript/README.md`. Corrected on
+  the way: the diarisation headline is described as the shipped, untuned
+  settings; the AMI series are no longer said to share headsets; the
+  Methods' stage descriptions match `transcription.py`, and the origin of
+  the `undefined` artefact is no longer asserted; the Introduction says
+  which test supports the null on which corpus; and the abstract writes its
+  counts under ten as words, as APA 7 asks. No inline value, citation or
+  chunk computation changed except as listed under Results, and the
+  claims-check passes.
+- The user documentation was checked against the code twice and its prose
+  polished. Among the corrections: the common-word filter drops short names
+  only from the Facebook lists, with "An" and "Ai" the curated exceptions;
+  `--fix-spurious-repetitions` acts only on long runs;
+  `requirements-lock.txt` is the frozen cluster environment, not the record
+  of each result's versions; and a rebuild command in `docs/evaluation.md`
+  no longer writes over a committed result.
+- `requirements-dev.txt` lists ruff, pinned at 0.15.18, in place of flake8,
+  black and mypy, which nothing configured or ran (SC-11, SC-22). ruff now
+  enforces the line length too, after 198 long lines were wrapped with each
+  file's abstract syntax tree checked unchanged (SC-23, LINT-01), and the
+  273 `noqa` directives that suppressed nothing are gone, their reasons kept
+  as comments (SC-20).
+- Docstrings for the command-line entry points that had none, and comments
+  that restated their code removed (SC-12, SC-13, SC-15, SC-16).
+  `fetch_codex_mentis` uses the shared digest helper (SC-21).
+
+### Results
+
+- `arc_job_ledger.csv`, its provenance and the footprint report and summary
+  were recaptured on 30 October 2026 with the same query. They add six jobs
+  of 17 to 19 October (three test-suite runs, the case study's re-run 9124852
+  and the Spanish control's two jobs) to the 197 of 4 October: 203 jobs,
+  157.0 GPU-hours (was 155.7), 96.7 kWh (was 96.0) and 20.02 kg CO2e (was
+  19.86).
+- The four masking arms were regenerated from a clean tree after the
+  honorific fixes: in each report the 66 title-by-possessive rows read
+  "[TITLE] [NAME]'s", and 136 lower-case title rows of the two
+  case-insensitive arms change; every summary field outside `run_metadata`
+  is unchanged, and the NER arms record 1,940 calls and 0 failures.
+- `artefact_audit.csv` and `.json` scan the three example review files,
+  which are clean, and carry the new completeness fields; every count is
+  unchanged.
+- `scorer_sensitivity.json` and `sweep_decode_provenance.json` were
+  regenerated after SC-19's edits to the files whose digests they record:
+  only those digests and the recorded commit changed.
+
+### Removed
+
+- The unused helper `evaluation.fetch_codex_mentis._known_sha` (SC-02).
+
 ## [2.0.0] - 2026-10-18
 
 ### Follow-up on 6 October 2026

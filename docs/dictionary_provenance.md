@@ -39,7 +39,7 @@ The code also offers the optional `names-dataset` package. Its upstream
 [README](https://github.com/philipperemy/name-dataset) describes a much larger
 name collection derived from a Facebook data dump, and its repository has an
 [Apache 2.0 licence](https://github.com/philipperemy/name-dataset/blob/master/LICENSE).
-That collection is a separate, optional source; no committed record
+That collection is a separate, optional source. No committed record
 connects it to this CSV, and the author's account names no source.
 
 What the record still lacks is the selection procedure: how names were

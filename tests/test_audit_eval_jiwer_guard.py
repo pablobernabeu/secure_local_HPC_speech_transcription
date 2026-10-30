@@ -18,9 +18,9 @@ import pytest
 
 np = pytest.importorskip("numpy")
 
-from evaluation import benchmark_anonymisation as ba  # noqa: E402
-from evaluation import benchmark_wer as bw  # noqa: E402
-from evaluation import wer  # noqa: E402
+from evaluation import benchmark_anonymisation as ba
+from evaluation import benchmark_wer as bw
+from evaluation import wer
 
 
 def _never(*args, **kwargs):

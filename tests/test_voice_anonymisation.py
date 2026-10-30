@@ -25,7 +25,7 @@ if str(REPO_ROOT) not in sys.path:
 
 pytest.importorskip("scipy")
 
-from voice_anonymisation import (  # noqa: E402
+from voice_anonymisation import (
     DEFAULT_FRAME_S,
     LIMITER_KNEE,
     anonymise,

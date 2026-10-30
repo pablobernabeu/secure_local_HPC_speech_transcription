@@ -210,11 +210,11 @@
     ],
     "producer": {
       "file": "evaluation/scorer_sensitivity.py",
-      "sha256_lf": "47afa13762b153e887d54054a970e2180651190e902c5cfb42da664676eeb259"
+      "sha256_lf": "8e2b787c503a7066628c331281336c1bb6052f487c847a1c1531d8c21aa694dc"
     },
     "original_scorer": {
       "file": "evaluation/wer.py",
-      "sha256_lf": "795c2535f6fe502d804f68f86de164102113e9f3934ef34779d92250b679d1e8"
+      "sha256_lf": "ac344784d9683a75cd3fc1fa093825800cff66cc517c794d1533dead9f5ddcd2"
     },
     "python": "3.13.7",
     "jiwer": "4.0.0",
@@ -2788,7 +2788,7 @@
     }
   ],
   "run_metadata": {
-    "git_commit": "41fe7125873e3fdab205f4bfa0fcd05f58e565e2",
+    "git_commit": "87d17fbd295a7023298106e5d8ed1793617d9951",
     "git_dirty": false,
     "python": "3.13.7",
     "platform": "Windows-11-10.0.26300-SP0",

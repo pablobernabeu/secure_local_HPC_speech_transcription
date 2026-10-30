@@ -8,6 +8,14 @@ takes precedence over them.
 
 ## Current priorities, 6 October 2026
 
+*Note of 30 October 2026.* The Spanish V100 control ran on 19 October
+and reproduced the third arm's records ([next_control.md](next_control.md)).
+The scheduler ledger was captured again on 30 October, with the six jobs
+run since the capture of 4 October, and now gives 203 jobs, 157.0
+GPU-hours, 96.7 kWh and 20.02 kgCO2e
+(`output/evaluation/footprint_summary.json`). The footprint quoted below
+is that of the earlier capture.
+
 The completed ARC wave is integrated with the manuscript and the local
 verification suite. Reader-cluster intervals and the separate exploratory
 apostrophe-scoring analysis now qualify the original WER findings. All

@@ -371,7 +371,7 @@ def _leaves_reference(condition: str) -> bool:
     Read from the condition registry (``apply_to_reference`` false); an
     unregistered name is not trusted to have left the reference alone.
     """
-    from evaluation.conditions import get_condition  # noqa: PLC0415
+    from evaluation.conditions import get_condition
     try:
         return not get_condition(condition).apply_to_reference
     except KeyError:
@@ -520,8 +520,8 @@ def audit_conditions(condition_names=("raw", "pipeline_full", "whisper_norm",
     Parameters
     ----------
     condition_names:
-        Registered condition names to probe; unregistered names are
-        skipped.
+        Registered condition names to probe; an unregistered name is
+        skipped with a note on stderr.
     language:
         Passed to language-aware conditions.
     tokens:
@@ -542,7 +542,14 @@ def audit_conditions(condition_names=("raw", "pipeline_full", "whisper_norm",
     for name in condition_names:
         try:
             condition = get_condition(name)
-        except Exception:  # noqa: BLE001 - an unregistered name is not fatal
+        except KeyError as exc:
+            # An unregistered name is skipped, not fatal, but said aloud: a
+            # misspelt condition would otherwise vanish from the table.
+            # get_condition's message lists the registered names, which is
+            # what the reader needs to correct it.
+            detail = exc.args[0] if exc.args else ""
+            print(f"  {name!r} is not a registered condition and is left out. "
+                  f"{detail}".rstrip(), file=sys.stderr)
             continue
         kept: dict[str, bool] = {}
         try:
@@ -609,7 +616,10 @@ def main(argv=None) -> int:
     Returns ``0`` on success, ``1`` when the dump holds no filler to
     measure in either the hypotheses or the references, and ``2`` when the
     dump is missing or empty or lacks a condition named in
-    ``--conditions``. Writes the ``--json`` and ``--csv`` outputs when
+    ``--conditions``, or when ``--audit-conditions`` is left with no
+    condition it can run. With ``--audit-conditions``, ``--conditions``
+    chooses the conditions probed (default: those of
+    :func:`audit_conditions`). Writes the ``--json`` and ``--csv`` outputs when
     asked for (overwriting them) and prints the table of each condition's
     own utterances, then that of the shared set when the two differ. The
     JSON holds both blocks of :func:`score_dump_sets`, the dump's path as
@@ -632,7 +642,10 @@ def main(argv=None) -> int:
                         help="comma-separated conditions to score, for "
                              "example raw,pipeline_full,whisper_norm "
                              "(default: every condition in the dump).  The "
-                             "shared utterance set is taken over these alone.")
+                             "shared utterance set is taken over these alone.  "
+                             "With --audit-conditions, the conditions to probe "
+                             "(default: raw, pipeline_full, whisper_norm, "
+                             "filler_strip and filler_bracket).")
     parser.add_argument("--json", dest="json_out", type=Path, default=None,
                         help="write the per-condition summary here")
     parser.add_argument("--csv", dest="csv_out", type=Path, default=None,
@@ -640,7 +653,13 @@ def main(argv=None) -> int:
     args = parser.parse_args(argv)
 
     if args.audit_conditions:
-        audit = audit_conditions()
+        # --conditions used to be ignored here, so a selection silently
+        # probed the default five.
+        audit = (audit_conditions(args.conditions) if args.conditions is not None
+                 else audit_conditions())
+        if not audit:
+            print("  no condition left to audit", file=sys.stderr)
+            return 2
         width = max(len(n) for n in audit) + 2
         header = "  " + "filler".ljust(8) + "".join(
             n.rjust(width) for n in audit)
@@ -658,6 +677,7 @@ def main(argv=None) -> int:
             args.json_out.write_text(json.dumps(
                 {"filler_tokens": list(FILLER_TOKENS),
                  "probe_tokens": list(PROBE_TOKENS),
+                 "conditions_selected": args.conditions,
                  "conditions": audit},
                 indent=2), encoding="utf-8")
             print(f"\n  written to {args.json_out}")
@@ -691,7 +711,7 @@ def main(argv=None) -> int:
     measurable = _warn_if_unmeasurable(summary)
 
     if args.json_out:
-        from provenance import run_metadata, sha256_file  # noqa: PLC0415
+        from provenance import run_metadata, sha256_file
         # Read before either output is written, leaving both out of the
         # dirty check, as provenance.write_sidecar does for the CSV-only
         # writers. Without the ignore list, a second run in place counted

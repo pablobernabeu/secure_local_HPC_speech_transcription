@@ -133,7 +133,7 @@ def git_commit(repo_dir=None, ignore=()) -> tuple[str | None, bool | None]:
     Both are ``None`` when git or the checkout is unavailable; this never
     raises.
     """
-    import subprocess  # noqa: PLC0415
+    import subprocess
 
     cwd = Path(repo_dir) if repo_dir is not None else Path(__file__).resolve().parent
     try:
@@ -173,8 +173,8 @@ def run_metadata(packages=RESULT_PACKAGES, repo_dir=None, ignore=()) -> dict:
     dict
         ``{"git_commit", "git_dirty", "python", "platform", "packages"}``.
     """
-    import platform  # noqa: PLC0415
-    from importlib import metadata  # noqa: PLC0415
+    import platform
+    from importlib import metadata
 
     versions = {}
     for package in packages:

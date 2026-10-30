@@ -14,7 +14,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from test_audit_shell_transcription_wrapper import (  # noqa: I001
+from test_audit_shell_transcription_wrapper import (
     REPO, _copy_lf, _posix, _run, _write_stub, needs_bash,
 )
 

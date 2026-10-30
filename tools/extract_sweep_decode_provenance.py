@@ -16,6 +16,14 @@ from pathlib import Path
 
 
 def _digest(path: Path, *, text: bool = False) -> str:
+    """Return the hex SHA-256 of *path*.
+
+    With *text*, every CRLF is read as LF first, so that a committed text
+    file has one digest on every checkout; otherwise the exact bytes are
+    hashed, as the input receipt records the recovered files. The tool runs
+    as a script, without the repository root on ``sys.path``, so it keeps
+    this copy of provenance.sha256_file and sha256_text_file.
+    """
     digest = hashlib.sha256()
     if text:
         digest.update(path.read_bytes().replace(b"\r\n", b"\n"))
@@ -27,6 +35,19 @@ def _digest(path: Path, *, text: bool = False) -> str:
 
 
 def extract(inputs: Path, aggregate_path: Path, receipt_path: Path) -> dict:
+    """Verify the recovered summaries and return their recorded decode profiles.
+
+    Each aggregate row's summary in *inputs* must be a local file the
+    receipt lists, match its size and SHA-256 there and in the aggregate,
+    name the row's condition and model, and come from the receipt's decoder
+    commit on a clean tree. The grid must be complete (five suites, three
+    models, seventeen conditions), and every condition of a suite/model must
+    record the same dataset, revisions, decode settings and run metadata.
+    Returns the receipt: one profile per suite/model with the digests of its
+    source summaries, and the LF digests of the aggregate, the receipt and
+    this file. Raises ``ValueError`` at the first failed check, and
+    ``KeyError`` or ``FileNotFoundError`` for a missing field or file.
+    """
     aggregate = json.loads(aggregate_path.read_text(encoding="utf-8"))
     receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
     fingerprints = {row["name"]: row for row in receipt["files"]}
@@ -80,7 +101,8 @@ def extract(inputs: Path, aggregate_path: Path, receipt_path: Path) -> dict:
             raise ValueError(f"incomplete condition grid: {suite}/{model}")
         metadata = cells[0][3]
         if any(cell[3] != metadata for cell in cells):
-            raise ValueError(f"recorded decode/environment changes across conditions: {suite}/{model}")
+            raise ValueError("recorded decode/environment changes across conditions: "
+                             f"{suite}/{model}")
         records.append({
             "suite": suite, "model": model,
             "recorded_decode_and_environment": metadata,
@@ -90,22 +112,37 @@ def extract(inputs: Path, aggregate_path: Path, receipt_path: Path) -> dict:
     return {
         "schema_version": 1,
         "decoder_commit": receipt["decoder_commit"],
-        "digest_policy": "Exact recovered summary bytes; LF-normalised committed aggregate and input receipt.",
+        "digest_policy": ("Exact recovered summary bytes; "
+                          "LF-normalised committed aggregate and input receipt."),
         "aggregate_sha256_lf": _digest(aggregate_path, text=True),
         "input_receipt_sha256_lf": _digest(receipt_path, text=True),
         "extractor_sha256_lf": _digest(Path(__file__), text=True),
         "cells_verified": len(seen), "decode_profiles": len(records),
-        "scope": "Recorded metadata extracted from all 255 hash-verified summaries. Each suite/model profile is identical across its 17 conditions. Corpus text and deployment locators are omitted.",
-        "limits": "This is a verified extraction of recorded metadata, not a new decode or a direct inspection of the historical runtime. Settings absent from the source summaries are not inferred.",
+        "scope": ("Recorded metadata extracted from all 255 hash-verified summaries. "
+                  "Each suite/model profile is identical across its 17 conditions. "
+                  "Corpus text and deployment locators are omitted."),
+        "limits": ("This is a verified extraction of recorded metadata, not a new decode "
+                   "or a direct inspection of the historical runtime. "
+                   "Settings absent from the source summaries are not inferred."),
         "profiles": records,
     }
 
 
 def main() -> None:
+    """Write the receipt that :func:`extract` returns to ``--output``.
+
+    Exits with argparse's status 2 and the reason when ``--output`` is
+    inside the inputs or is the aggregate or the receipt, or when
+    :func:`extract` fails a check or meets a missing file, field or
+    unreadable JSON. Side effects: creates the output's directory, replaces
+    the output and prints the counts verified.
+    """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--inputs", type=Path, required=True)
-    parser.add_argument("--aggregate", type=Path, default=Path("output/evaluation/sweep_aggregate.json"))
-    parser.add_argument("--input-manifest", type=Path, default=Path("output/evaluation/sweep_input_manifest.json"))
+    parser.add_argument("--aggregate", type=Path,
+                        default=Path("output/evaluation/sweep_aggregate.json"))
+    parser.add_argument("--input-manifest", type=Path,
+                        default=Path("output/evaluation/sweep_input_manifest.json"))
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     output = args.output.resolve()
@@ -119,7 +156,8 @@ def main() -> None:
         parser.error(str(exc))
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(f"Verified {result['cells_verified']} cells in {result['decode_profiles']} recorded profiles")
+    print(f"Verified {result['cells_verified']} cells in "
+          f"{result['decode_profiles']} recorded profiles")
 
 
 if __name__ == "__main__":

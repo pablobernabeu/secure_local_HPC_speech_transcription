@@ -196,3 +196,9 @@ job_id,job_name,state,elapsed_s,gpus,gpu_type,cpus,mem_gb
 8978760,determinism,COMPLETED,941,1,v100-pcie,8,48
 8983111,pytest_suite,COMPLETED,292,0,,2,8
 8983112,case_study,COMPLETED,1231,1,a6000,4,32
+9124739_2,pf_es419_v100,COMPLETED,592,1,v100-pcie,4,32
+9124828,pytest_suite,FAILED,582,0,,2,8
+9124851,pytest_suite,FAILED,483,0,,2,8
+9124852,case_study,COMPLETED,1071,1,l40s,4,32
+9124863_2,ctl_es419_v100,COMPLETED,3146,1,v100-pcie,4,32
+9134598,pytest_suite,COMPLETED,446,0,,2,8

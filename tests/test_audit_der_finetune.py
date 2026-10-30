@@ -25,7 +25,7 @@ if str(REPO_ROOT) not in sys.path:
 
 pytest.importorskip("soundfile")
 
-from evaluation import finetune_pyannote_segmentation as ft  # noqa: E402
+from evaluation import finetune_pyannote_segmentation as ft
 
 
 def _files(*uris):

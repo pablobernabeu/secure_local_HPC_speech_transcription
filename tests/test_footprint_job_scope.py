@@ -25,15 +25,16 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from evaluation import footprint as fp  # noqa: E402
+from evaluation import footprint as fp
 
-# Every job name of this project that ran in the final dump of 2026-10-04,
-# from 2026-05-16, with its category: the names of the committed ledger. The
+# Every job name of this project that ran in the dump of 2026-10-30, from
+# 2026-05-16, with its category: the names of the committed ledger. The
 # project's jobs were told apart from the shared account's other jobs by
 # sacct WorkDir (a clone of this repository) and, for the five jobs run from
 # elsewhere (every job of four names, and one benchmark_der job), by their
-# scripts and logs on ARC. A fifty-sixth name, wer_postproc, never ran: its
-# only job was cancelled while pending.
+# scripts and logs on ARC. A fifty-eighth name, wer_postproc, never ran: its
+# only job was cancelled while pending. The dump of 2026-10-04 held the
+# first 55; the Spanish V100 control added its two.
 _PROJECT_NAMES = {
     "benchmark_wer": "WER (pilot)",
     "benchmark_wer_gpu": "WER (pilot)",
@@ -54,10 +55,12 @@ _PROJECT_NAMES = {
     "pf_ts_vad": "Pre-flight runs",
     "pf_anon": "Pre-flight runs",
     "pf_ml": "Pre-flight runs",
+    "pf_es419_v100": "Pre-flight runs",
     "sweep_aggregate": "Aggregation (CPU only)",
     "wer_fleurs_ml": "WER multilingual (FLEURS)",
     "au_ml": "WER multilingual (FLEURS)",
     "au_fleurs_diac": "WER multilingual (FLEURS)",
+    "ctl_es419_v100": "WER multilingual (FLEURS)",
     "lang_probe": "Language-detection probe",
     "disfluency": "Disfluency evaluation",
     "benchmark_der": "Diarisation (DER)",
@@ -111,8 +114,8 @@ _OTHER_NAMES = [
 ]
 
 
-def test_the_project_has_55_job_names_that_ran():
-    assert len(_PROJECT_NAMES) == 55
+def test_the_project_has_57_job_names_that_ran():
+    assert len(_PROJECT_NAMES) == 57
 
 
 def test_the_table_holds_the_names_of_the_committed_ledger():
@@ -184,10 +187,12 @@ _ROWS = """\
 7746170|pyannote_probe|educ-intract|COMPLETED|288|2026-05-31T15:01:32|2026-05-31T15:06:20|short|billing=2,cpu=2,gres/gpu=1,mem=16G,node=1|htc-g058|/home/educ1242
 8895714|render|educ-intract|COMPLETED|563|2026-09-25T20:04:14|2026-09-25T20:13:37|short|billing=4,cpu=4,mem=16G,node=1|htc-c065|/data/educ-intract/educ1242
 8913985|pytest_suite|educ-intract|FAILED|707|2026-09-26T23:52:01|2026-09-27T00:03:48|short|billing=2,cpu=2,mem=8G,node=1|htc-c008|/home/educ1242/paper_speech_transcription_audit
-8917982|au_case|educ-intract|CANCELLED by 8707|0|2026-09-27T14:56:31|2026-09-27T14:56:31|short||None assigned|/home/educ1242/paper_speech_transcription_audit
+8917982|au_case|educ-intract|CANCELLED by 8707|0|2026-09-27T14:56:31|2026-09-27T14:56:31|\
+short||None assigned|/home/educ1242/paper_speech_transcription_audit
 8918023|au_case|educ-intract|FAILED|963|2026-09-27T18:11:53|2026-09-27T18:27:56|short|billing=4,cpu=4,gres/gpu=1,mem=32G,node=1|htc-g059|/home/educ1242/paper_speech_transcription_audit
 8976270|diag_diar|educ-intract|COMPLETED|293|2026-10-03T23:49:31|2026-10-03T23:54:24|short|billing=2,cpu=2,mem=8G,node=1|htc-c071|/home/educ1242/diag_diar
-8976354|au_der_default|educ-intract|PENDING|0|Unknown|Unknown|short||None assigned|/home/educ1242/paper_speech_transcription_audit_w2
+8976354|au_der_default|educ-intract|PENDING|0|Unknown|Unknown|short||None assigned|\
+/home/educ1242/paper_speech_transcription_audit_w2
 """
 # A finished job of this project under a name no rule knows (made up).
 _UNKNOWN = ("8999999|new_benchmark|educ-intract|COMPLETED|600|2026-10-05T10:00:00|"
@@ -197,9 +202,11 @@ _UNKNOWN = ("8999999|new_benchmark|educ-intract|COMPLETED|600|2026-10-05T10:00:0
 # the committed one's: a CPU job cancelled while it ran, a GPU job stopped at
 # its time limit, and a job of a name no rule knows, cancelled while pending.
 _FIRST_RUNS = """\
-7663576|benchmark_wer_cpu_full|educ-lift|CANCELLED by 8707|442|2026-05-16T22:45:54|2026-05-16T22:53:16|medium|billing=8,cpu=8,mem=32G,node=1|htc-c059|/home/educ1242/paper_speech_transcription
+7663576|benchmark_wer_cpu_full|educ-lift|CANCELLED by 8707|442|2026-05-16T22:45:54|\
+2026-05-16T22:53:16|medium|billing=8,cpu=8,mem=32G,node=1|htc-c059|/home/educ1242/paper_speech_transcription
 7663579|benchmark_wer_gpu|educ-lift|TIMEOUT|43222|2026-05-16T22:47:42|2026-05-17T10:48:04|short|billing=4,cpu=4,gres/gpu=1,mem=32G,node=1|htc-g033|/home/educ1242/paper_speech_transcription
-7670830|wer_postproc|educ-lift|CANCELLED by 8707|0|2026-05-17T23:13:53|2026-05-17T23:13:53|short||None assigned|/home/educ1242/paper_speech_transcription
+7670830|wer_postproc|educ-lift|CANCELLED by 8707|0|2026-05-17T23:13:53|2026-05-17T23:13:53|\
+short||None assigned|/home/educ1242/paper_speech_transcription
 """
 # Jobs under this project's names that ran from other directories: one of
 # the workflow's transcription jobs before its evaluation, copied from the
@@ -208,6 +215,15 @@ _FIRST_RUNS = """\
 _ELSEWHERE = """\
 6163646_1|transcription|educ-lift|FAILED|7184|2025-10-21T20:12:46|2025-10-21T22:12:30|short|billing=4,cpu=4,gres/gpu=1,mem=32G,node=1|htc-g054|/home/educ1242/speech_transcription
 8999998|au_wer|educ-intract|COMPLETED|900|2026-10-05T09:00:00|2026-10-05T09:15:00|short|billing=4,cpu=4,gres/gpu=1,mem=32G,node=1|htc-g064|/home/educ1242/other_project_audit
+"""
+
+
+# The Spanish V100 control's pre-flight and full split, copied from the dump
+# of 2026-10-30: named outside the audit wave's stages, run from a clone of
+# their own, on the V100 PCIe cards of htc-g003 and htc-g004.
+_CONTROL_ROWS = """\
+9124739_2|pf_es419_v100|educ-intract|COMPLETED|592|2026-10-19T11:26:54|2026-10-19T11:36:46|short|billing=4,cpu=4,gres/gpu:v100=1,gres/gpu=1,mem=32G,node=1|htc-g003|/home/educ1242/paper_speech_transcription_ctl_es419
+9124863_2|ctl_es419_v100|educ-intract|COMPLETED|3146|2026-10-19T11:28:03|2026-10-19T12:20:29|short|billing=4,cpu=4,gres/gpu:v100=1,gres/gpu=1,mem=32G,node=1|htc-g004|/home/educ1242/paper_speech_transcription_ctl_es419
 """
 
 
@@ -284,6 +300,18 @@ def test_the_first_runs_of_the_wer_benchmark_count(tmp_path):
     assert summary["overhead"]["states"] == ["CANCELLED", "TIMEOUT"]
     assert summary["by_category"]["WER (pilot)"]["n_jobs"] == 2
     assert summary["overall"]["gpu_hours"] == pytest.approx(43222 / 3600)
+
+
+def test_the_spanish_control_is_counted_at_its_cards_board(tmp_path):
+    rows = fp.build_ledger(fp.read_sacct(_dump(tmp_path, _HEADER + _CONTROL_ROWS)))
+    # The typed gres/gpu:v100 entry agrees with the nodes, whose logs name a
+    # PCIe card, priced at 250 W, not the 300 W of the SXM2 module.
+    assert [(r["job_id"], r["gpu_type"]) for r in rows] == [
+        ("9124739_2", "v100-pcie"), ("9124863_2", "v100-pcie")]
+    params = fp.FootprintParams()
+    jobs = [fp.estimate_job(r, params) for r in rows]
+    assert [j.category for j in jobs] == ["Pre-flight runs", "WER multilingual (FLEURS)"]
+    assert [j.tdp_w for j in jobs] == [250.0, 250.0]
 
 
 def test_jobs_of_this_projects_names_run_elsewhere_are_left_out(tmp_path):

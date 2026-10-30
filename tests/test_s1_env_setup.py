@@ -41,6 +41,46 @@ def test_dockerfile_pins_base_python_and_packages():
     assert "UNBUILT AND UNVERIFIED" in text
 
 
+def test_dockerfile_copies_the_files_transcription_reads_beside_it():
+    """The image had no versions.csv, so it stamped "Unknown" as the version.
+
+    The same files setup.py's RuntimeDataBuild puts beside the modules in a
+    wheel, the dictionary and the release record, must be in the image.
+    """
+    text = (REPO / "setup" / "Dockerfile").read_text(encoding="utf-8")
+    text = re.sub(r"\\\r?\n\s*", " ", text)       # join continued lines
+    copied = set()
+    for line in re.findall(r"^COPY (.+?)\s*$", text, re.M):
+        # Every token but the last is a source; the last is the destination.
+        copied.update(part.rstrip("/") for part in line.split()[:-1])
+    setup_py = (REPO / "setup.py").read_text(encoding="utf-8")
+    runtime = re.search(r"^_RUNTIME_DATA = \(([^)]*)\)", setup_py, re.M)
+    assert runtime
+    for relative in re.findall(r'"([^"]+)"', runtime.group(1)):
+        top = relative.split("/")[0]
+        assert relative in copied or top in copied, relative
+    # And the top-level modules setup.py installs: the test used to check the
+    # data files alone, so a module added to py_modules but not to the COPY
+    # line would have built an image without it.
+    modules = _setup_py_modules(setup_py)
+    assert "transcription" in modules
+    missing = [m for m in modules if f"{m}.py" not in copied]
+    assert not missing, f"py_modules not copied into the image: {missing}"
+
+
+def _setup_py_modules(setup_py: str) -> list[str]:
+    """The ``py_modules`` list of the ``setup()`` call in setup.py's text."""
+    import ast
+
+    for node in ast.walk(ast.parse(setup_py)):
+        if (isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
+                and node.func.id == "setup"):
+            for keyword in node.keywords:
+                if keyword.arg == "py_modules":
+                    return [ast.literal_eval(element) for element in keyword.value.elts]
+    raise AssertionError("setup.py's setup() call has no py_modules")
+
+
 def test_setup_environment_installs_the_lock():
     text = (REPO / "setup" / "setup_environment.sh").read_text(encoding="utf-8")
     code = "\n".join(line for line in text.splitlines() if not line.lstrip().startswith("#"))

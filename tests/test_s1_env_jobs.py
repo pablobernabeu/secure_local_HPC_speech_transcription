@@ -26,7 +26,7 @@ from pathlib import Path
 
 import pytest
 
-from test_audit_shell_job_exit_status import _PYTHON_STUB  # noqa: I001
+from test_audit_shell_job_exit_status import _PYTHON_STUB
 from test_audit_shell_transcription_wrapper import (
     REPO, _copy_lf, _posix, _run, _write_stub, needs_bash,
 )
@@ -77,6 +77,21 @@ def test_no_live_job_or_helper_installs_packages():
              REPO / "setup" / "docker-entrypoint.sh"]
     offenders = [f.name for f in files if _INSTALL.search(_code_lines(f))]
     assert not offenders, f"in-job package installs remain in {offenders}"
+
+
+def test_the_wer_job_looks_for_the_formats_evaluation_wer_scores():
+    """hpc/evaluate_wer.sh hand-copies evaluation.wer.FORMAT_PREFERENCE into
+    its find command and its message; a format added to one and not the
+    other would refuse a directory the scorer can read, or pass one it
+    cannot."""
+    from evaluation.wer import FORMAT_PREFERENCE
+
+    code = _code_lines(HPC / "evaluate_wer.sh")
+    patterns = tuple(re.findall(r"-iname '\*(\.\w+)'", code))
+    assert patterns == FORMAT_PREFERENCE
+    message = re.search(r"No transcripts \(([^)]*)\)", code)
+    assert message
+    assert tuple(re.findall(r"\.\w+", message.group(1))) == FORMAT_PREFERENCE
 
 
 def test_every_job_script_is_classified():
@@ -445,7 +460,7 @@ def test_determinism_v100_record_changes_only_the_card(tmp_path):
     """The V100 run is there to compare card models under the L40S run's
     seed, so its record must ask for a V100 and otherwise run determinism.env's
     decodes, into a directory of its own."""
-    from test_audit_shell_review_fixes import _sourced  # noqa: PLC0415
+    from test_audit_shell_review_fixes import _sourced
     names = ["DET_SUITE", "DET_LIMIT", "DET_SEEDS", "DET_REPEATS", "DET_DTYPE",
              "MODEL", "SBATCH_GRES", "REPORT_DIR"]
     gpu = _sourced(tmp_path, HPC / "runs" / "determinism.env", names)
@@ -562,6 +577,20 @@ def test_token_file_wins_over_the_environment_and_is_stripped(job):
                           'printf "TOKEN=%s\\n" "$HF_TOKEN"\n', HF_TOKEN="hf_env")
     assert result.returncode == 0, result.stderr
     assert "TOKEN=hf_file" in result.stdout
+
+
+@needs_bash
+@pytest.mark.parametrize("content", [
+    b"\xef\xbb\xbfhf_file\r\n",                   # UTF-8 with a BOM
+    "hf_file\r\n".encode("utf-16"),               # UTF-16 with its BOM
+], ids=["utf8-bom", "utf16"])
+def test_a_token_file_with_a_byte_order_mark_is_read(job, content):
+    # preflight.resolve_hf_token reads both; the jobs must agree with it.
+    (job["repo"] / "hf_token.txt").write_bytes(content)
+    result = _helper(job, f'arc_load_hf_token "{_posix(job["repo"])}"\n'
+                          'printf "TOKEN=[%s]\\n" "$HF_TOKEN"\n', HF_TOKEN="hf_env")
+    assert result.returncode == 0, result.stderr
+    assert "TOKEN=[hf_file]" in result.stdout
 
 
 @needs_bash

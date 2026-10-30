@@ -35,8 +35,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-import preflight  # noqa: E402
-from evaluation.revisions import revision_for  # noqa: E402
+import preflight
+from evaluation.revisions import revision_for
 
 _PIPELINE = "pyannote/speaker-diarization-3.1"
 # config.yaml of pyannote/speaker-diarization-3.1 at its pinned revision, as

@@ -19,8 +19,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-import ner_masking  # noqa: E402
-from ner_masking import PersonNameDetector  # noqa: E402
+import ner_masking
+from ner_masking import PersonNameDetector
 
 
 class _FakeModel:
@@ -41,7 +41,7 @@ def fake_gliner(monkeypatch):
     model = _FakeModel()
     loads = []
 
-    class GLiNER:  # noqa: D401 - stand-in
+    class GLiNER:  # stand-in
         @staticmethod
         def from_pretrained(name, **kwargs):
             loads.append((name, kwargs))

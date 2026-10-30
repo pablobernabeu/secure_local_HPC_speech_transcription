@@ -405,7 +405,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     try:
-        from transcription import create_enhanced_name_masker  # noqa: PLC0415
+        from transcription import create_enhanced_name_masker
         mask_fn, _ = create_enhanced_name_masker()
     except Exception as exc:
         if not args.allow_no_masker:

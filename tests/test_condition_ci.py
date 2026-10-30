@@ -20,7 +20,7 @@ import pytest
 
 pytest.importorskip("numpy")
 
-from evaluation.condition_ci import (  # noqa: E402
+from evaluation.condition_ci import (
     compare_all,
     discover_reports,
     write_rows,

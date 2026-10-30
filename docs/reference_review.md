@@ -17,13 +17,14 @@ abstract can support the bounded finding it states, without giving access to
 all methods or results. This pass did not independently reproduce external
 studies or verify the author's ethical-approval declaration.
 
-Three entries were added after this review and are not part of it:
-`openaiWhisperLargev3ModelCard2023` (17 October 2026), which cites the
-model card at the commit the evaluation pinned, and
-`bernabeuSecureScalableSpeech2026` and
-`bernabeuRecoveredInputsEnglish2026`, the release's own software and data
-records, which the manuscript cites by their reserved DOIs before their
-publication.
+Three entries were added after this review and are not part of it. The
+first, `openaiWhisperLargev3ModelCard2023` (17 October 2026), cites the
+model card at the commit the evaluation pinned. The other two are the
+release's own records: `bernabeuSecureScalableSpeech2026` cites release
+2.0.0 of the software, archived at
+<https://doi.org/10.5281/zenodo.23442766>, and
+`bernabeuRecoveredInputsEnglish2026` cites the recovered inputs of the
+English sweep, deposited at <https://doi.org/10.5281/zenodo.23442874>.
 
 ## Evidence for all 34 entries
 

@@ -21,7 +21,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-import audio_redaction as ar  # noqa: E402
+import audio_redaction as ar
 
 SR = 1000
 
@@ -210,6 +210,47 @@ def test_cli_rejects_a_sibling_from_another_run(transcription_module, tmp_path):
     assert ar.main(["--audio", str(audio), "--transcript", str(raw_json),
                     "--out", str(out)]) == 2
     assert not out.exists()
+
+
+def _failing_mask(text: str) -> str:
+    if "Aaron" in text:
+        raise RuntimeError("masker broke")
+    return text
+
+
+def test_a_masker_failure_is_not_read_as_no_name():
+    """A word the masker fails on was reported as not a name, so it stayed
+    audible in a recording the tool called redacted."""
+    with pytest.raises(RuntimeError, match="masker broke"):
+        ar.word_is_name("Aaron", _failing_mask)
+    segments = [{"words": [{"word": " Hello", "start": 0.0, "end": 0.5},
+                           {"word": " Aaron", "start": 0.5, "end": 1.0}]}]
+    with pytest.raises(RuntimeError, match="masker broke"):
+        ar.find_name_spans({"segments": segments}, _failing_mask)
+
+
+def test_cli_writes_nothing_when_the_masker_fails(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(ar, "_rebuild_masker",
+                        lambda *a, **k: (_failing_mask, "a failing masker"))
+    transcript = tmp_path / "talk_transcript.json"      # no redacted sibling
+    transcript.write_text(json.dumps({"language": "english", "segments": [
+        {"words": [{"word": " Aaron", "start": 0.5, "end": 1.0}]}]}),
+        encoding="utf-8")
+    audio, out = tmp_path / "talk.wav", tmp_path / "out.wav"
+    _write_audio(audio)
+    assert ar.main(["--audio", str(audio), "--transcript", str(transcript),
+                    "--out", str(out), "--allow-empty"]) == 2
+    assert not out.exists()
+    assert "masker failed" in capsys.readouterr().err
+
+
+def test_an_empty_language_list_is_a_usage_error():
+    """As in transcription.py: the option with no language used to mean all."""
+    with pytest.raises(SystemExit) as exc:
+        ar._build_parser().parse_args([
+            "--audio", "a.wav", "--transcript", "t.json", "--out", "o.wav",
+            "--languages-for-name-masking"])
+    assert exc.value.code == 2
 
 
 def test_padded_spans_match_what_is_silenced():

@@ -121,7 +121,7 @@ def ensure_names_dataset():
     it, so the large tables were loaded twice.
     """
     try:
-        import names_dataset  # noqa: F401, PLC0415
+        import names_dataset  # noqa: F401
     except ImportError as e:
         print(f"   ⚠️  names-dataset package not available: {e}")
         print("   📋 Will use enhanced basic names fallback")
@@ -129,14 +129,17 @@ def ensure_names_dataset():
     print("   ✅ names-dataset package found and imported")
     return True
 
-def load_global_names(use_facebook_names=False, use_facebook_surnames=False, selected_languages=None, exclude_common_words=True):
+def load_global_names(use_facebook_names=False, use_facebook_surnames=False,
+                      selected_languages=None, exclude_common_words=True):
     """Load and filter global names database using names-dataset package.
 
     Args:
-        use_facebook_names (bool): If True, use Facebook's global first names database (730K+ names).
+        use_facebook_names (bool): If True, use Facebook's global first names
+                                 database (730K+ names).
                                  If False, use curated multilingual first names.
                                  Default: False (to avoid false positives)
-        use_facebook_surnames (bool): If True, use Facebook's global surnames database (980K+ names).
+        use_facebook_surnames (bool): If True, use Facebook's global surnames
+                                    database (980K+ names).
                                     If False, use curated multilingual surnames.
                                     Default: False (to avoid false positives)
         selected_languages (list): Languages to include from curated database,
@@ -160,7 +163,8 @@ def load_global_names(use_facebook_names=False, use_facebook_surnames=False, sel
 
     # If no Facebook database is requested, use multilingual curated names directly
     if not use_any_facebook:
-        print("   [DATABASE] Using MULTILINGUAL CURATED NAMES DATABASE (Facebook database disabled)")
+        print("   [DATABASE] Using MULTILINGUAL CURATED NAMES DATABASE "
+              "(Facebook database disabled)")
         print("   [INFO] Curated names per language are counted below")
         print("   [SUCCESS] Reduces false positives from global names")
         return create_multilingual_curated_names(selected_languages, exclude_common_words)
@@ -227,18 +231,21 @@ def load_global_names(use_facebook_names=False, use_facebook_surnames=False, sel
     print(f"   📊 Raw extraction: {len(all_first_names)} first names, {len(all_surnames)} surnames")
 
     # Apply filtering to both sets (only if they were loaded)
-    filtered_first_names = filter_problematic_names(all_first_names) if use_facebook_names else set()
+    filtered_first_names = (filter_problematic_names(all_first_names)
+                            if use_facebook_names else set())
     filtered_surnames = filter_problematic_names(all_surnames) if use_facebook_surnames else set()
 
     # Merge with curated multilingual names for the types not requested from Facebook
     if not use_facebook_names or not use_facebook_surnames:
-        basic_first_names, basic_surnames = create_multilingual_curated_names(selected_languages, exclude_common_words)
+        basic_first_names, basic_surnames = create_multilingual_curated_names(
+            selected_languages, exclude_common_words)
         if not use_facebook_names:
             filtered_first_names = basic_first_names
         if not use_facebook_surnames:
             filtered_surnames = basic_surnames
 
-    print(f"   [INFO] Final counts: {len(filtered_first_names)} first names, {len(filtered_surnames)} surnames")
+    print(f"   [INFO] Final counts: {len(filtered_first_names)} first names, "
+          f"{len(filtered_surnames)} surnames")
     if use_facebook_names:
         print(f"   [REMOVED] {len(all_first_names) - len(filtered_first_names)} common first names")
     if use_facebook_surnames:
@@ -277,11 +284,13 @@ def filter_problematic_names(names, drop_short=True):
     # List of common English words that should not be masked
     common_words = {
         # Colours
-        'red', 'blue', 'green', 'yellow', 'orange', 'purple', 'pink', 'brown', 'black', 'white', 'grey', 'gray',
+        'red', 'blue', 'green', 'yellow', 'orange', 'purple', 'pink', 'brown', 'black', 'white',
+        'grey', 'gray',
         'violet', 'rose', 'lily', 'amber', 'jade', 'ruby', 'pearl', 'ivory', 'silver', 'golden',
 
         # Months/Time
-        'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december',
+        'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september',
+        'october', 'november', 'december',
         'jan', 'feb', 'mar', 'apr', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec',
         'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',
         'morning', 'evening', 'dawn', 'dusk',
@@ -503,7 +512,8 @@ def normalise_name_languages(selected_languages, available):
     return requested
 
 
-def create_multilingual_curated_names(selected_languages=None, exclude_common_words=True, csv_path=None):
+def create_multilingual_curated_names(selected_languages=None, exclude_common_words=True,
+                                      csv_path=None):
     """Create a multilingual curated names database from CSV file.
 
     Loads names from data/curated_names.csv which contains columns:
@@ -542,7 +552,6 @@ def create_multilingual_curated_names(selected_languages=None, exclude_common_wo
         if language not in language_stats:
             continue
 
-        # Add to appropriate set
         if name_type == 'first':
             all_first_names.add(name)
             language_stats[language]['first'] += 1
@@ -555,7 +564,8 @@ def create_multilingual_curated_names(selected_languages=None, exclude_common_wo
         stats = language_stats[lang]
         print(f"   [LOADED] {lang.title()}: {stats['first']} first names, {stats['last']} surnames")
 
-    print(f"   [SUCCESS] CSV database loaded: {len(all_first_names)} first names, {len(all_surnames)} surnames")
+    print(f"   [SUCCESS] CSV database loaded: {len(all_first_names)} first names, "
+          f"{len(all_surnames)} surnames")
 
     # Conditionally filter out common English words to prevent false
     # positives. The length filter is for the scraped Facebook sets only;
@@ -571,9 +581,11 @@ def create_multilingual_curated_names(selected_languages=None, exclude_common_wo
         removed_last = len(all_surnames) - len(filtered_surnames)
 
         if removed_first > 0 or removed_last > 0:
-            print(f"   [REMOVED] {removed_first} common first names, {removed_last} common surnames")
+            print(f"   [REMOVED] {removed_first} common first names, "
+                  f"{removed_last} common surnames")
 
-        print(f"   [FINAL] {len(filtered_first_names)} first names, {len(filtered_surnames)} surnames after filtering")
+        print(f"   [FINAL] {len(filtered_first_names)} first names, "
+              f"{len(filtered_surnames)} surnames after filtering")
 
         return filtered_first_names, filtered_surnames
     else:
@@ -597,9 +609,39 @@ _ABBREVIATED_TITLES = frozenset({'mr', 'mrs', 'ms', 'dr', 'prof'})
 
 #: Text ending in one of those abbreviations and a single full stop, the
 #: abbreviation standing as its own token after any opening punctuation.
+#: "Mr.", "Mrs.", "Dr." and "Prof." match in any case, so a transcript that
+#: writes "dr. Smith" keeps its honorific with its name. "Ms." matches only
+#: as written, capital M and lower-case s, because a lower-case "ms." is the
+#: unit and "MS." the disease: a sentence ending "200 ms." or "diagnosed
+#: with MS." must not be joined to the next one, whose first name the
+#: honorific rule would then mask as "[TITLE] [NAME]".
 _ABBREVIATED_TITLE_END_RE = re.compile(
-    r'(?:^|\s)\W*(?:' + '|'.join(sorted(_ABBREVIATED_TITLES)) + r')\.$',
-    re.IGNORECASE)
+    r'(?:^|\s)\W*(?:(?i:'
+    + '|'.join(sorted(_ABBREVIATED_TITLES - {'ms'}))
+    + r')|Ms)\.$')
+
+
+def _is_title_token(token, clean_word):
+    """Return whether *token* is an honorific the title rule may mask.
+
+    *clean_word* is the token lower-cased with its punctuation and any
+    possessive clitic removed, as the masker computes it. Most honorifics
+    count in any case. Two are ordinary words in another spelling: "miss"
+    is the verb ("I miss Sarah") and "ms" the unit ("200 ms"), or in
+    capitals the disease ("MS"). They count only when spelt as the
+    honorific is, "Miss" with an initial capital and "Ms" exactly, whatever
+    ``case_insensitive`` says, since that option relaxes the gate on names
+    and not on what a title is. Before this test the masker read every
+    "miss" or "ms" in front of a name as a title, so "I miss Sarah a lot."
+    became "I [TITLE] [NAME] a lot.".
+    """
+    if clean_word not in TITLE_WORDS:
+        return False
+    if clean_word == 'ms':
+        return re.sub(r'\W', '', re.sub(r"['’]s?(?=\W*$)", '', token)) == 'Ms'
+    if clean_word == 'miss':
+        return _token_is_capitalised(token)
+    return True
 
 
 def _split_sentences_for_masking(text):
@@ -668,7 +710,9 @@ def _wrap_placeholder(token, placeholder):
     return leading + placeholder + (clitic or '') + trailing
 
 
-def create_enhanced_name_masker(use_facebook_names=False, use_facebook_surnames=False, selected_languages=None, exclude_common_words=True, excluded_names=None, case_insensitive=False, ner_detector=None):
+def create_enhanced_name_masker(use_facebook_names=False, use_facebook_surnames=False,
+                                selected_languages=None, exclude_common_words=True,
+                                excluded_names=None, case_insensitive=False, ner_detector=None):
     """Create enhanced name masking with global database and logging.
 
     Args:
@@ -683,7 +727,8 @@ def create_enhanced_name_masker(use_facebook_names=False, use_facebook_surnames=
         exclude_common_words (bool): If True, filter out common English words from name database.
                                     Default: True (recommended for English transcripts).
         excluded_names (set): Set of names (case-insensitive) to exclude from masking.
-                            Useful for preserving public figures, celebrities, or specific participants.
+                            Useful for preserving public figures, celebrities,
+                            or specific participants.
         ner_detector: Optional second stage with a ``tokens_in(text)`` method
                             (see ``ner_masking.PersonNameDetector``) that
                             recognises people by context rather than by
@@ -693,13 +738,22 @@ def create_enhanced_name_masker(use_facebook_names=False, use_facebook_surnames=
                             it proposes further words to mask and can never
                             unmask a dictionary hit, so enabling it may raise
                             recall and may cost precision, and each masking-log
-                            row records which stage was responsible. Its
-                            per-sentence failures are swallowed (here and in
-                            ner_masking.PersonNameDetector) without a count.
+                            row records which stage was responsible. A
+                            sentence it fails on is masked by the dictionary
+                            alone. ner_masking.PersonNameDetector counts a
+                            failure of its model (``n_failures``) and reports
+                            the first on stderr; any other exception that
+                            ``tokens_in`` raises is counted here in the same
+                            ``n_failures`` (and ``first_error``) when the
+                            detector has them, and the first is reported on
+                            stderr, so a benchmark that checks the count
+                            sees every sentence the stage did not read.
         case_insensitive (bool): Drop the capitalisation requirement, for
-                            both stages, so a lower-case dictionary match is
-                            masked too; the benchmark measures the precision
-                            this costs.
+                            both stages and for the name after an honorific,
+                            so a lower-case dictionary match is masked too;
+                            the benchmark measures the precision this costs.
+                            It does not make a lower-case "miss" or "ms" an
+                            honorific (see _is_title_token).
 
     Returns:
         ``(mask, get_log)``. ``mask(text, filename="unknown")`` returns the
@@ -714,7 +768,8 @@ def create_enhanced_name_masker(use_facebook_names=False, use_facebook_surnames=
     """
 
     print("   Loading global name database...")
-    first_names, surnames = load_global_names(use_facebook_names, use_facebook_surnames, selected_languages, exclude_common_words)
+    first_names, surnames = load_global_names(use_facebook_names, use_facebook_surnames,
+                                              selected_languages, exclude_common_words)
 
     # Apply excluded names (case-insensitive)
     if excluded_names:
@@ -732,8 +787,11 @@ def create_enhanced_name_masker(use_facebook_names=False, use_facebook_surnames=
 
     titles = TITLE_WORDS
 
-    # Initialise replacement log
     replacement_log = []
+    # Whether this masker has reported an exception of the NER stage on
+    # stderr, so that a detector without a first_error attribute is
+    # reported once and not once per sentence.
+    ner_failure_reported = [False]
 
     def mask_names_with_logging(text, filename="unknown"):
         """Enhanced name masking function with detailed logging."""
@@ -761,8 +819,26 @@ def create_enhanced_name_masker(use_facebook_names=False, use_facebook_surnames=
             if ner_detector is not None:
                 try:
                     ner_tokens = ner_detector.tokens_in(sentence)
-                except Exception:
+                except Exception as exc:  # never fatal, but counted
+                    # An exception after the model call (a malformed entity
+                    # whose score does not compare with the threshold, or a
+                    # detector of another kind) is counted with the
+                    # detector's model failures, so that
+                    # benchmark_masking._check_ner_ran sees it, and the
+                    # first is reported on stderr as a model failure is
+                    # (review finding SC-17). The sentence is masked by the
+                    # dictionary alone, as after a model failure.
                     ner_tokens = set()
+                    first = getattr(ner_detector, "first_error", None) is None
+                    if hasattr(ner_detector, "n_failures"):
+                        ner_detector.n_failures += 1
+                        if first:
+                            ner_detector.first_error = repr(exc)
+                    if first and not ner_failure_reported[0]:
+                        ner_failure_reported[0] = True
+                        print(f"   ⚠️  NER stage failed ({type(exc).__name__}: "
+                              f"{exc}); those sentences fall back to the name "
+                              "dictionary alone", file=sys.stderr)
 
             for word_idx, word in enumerate(words):
                 original_word = word
@@ -791,7 +867,7 @@ def create_enhanced_name_masker(use_facebook_names=False, use_facebook_surnames=
                 # common-word filter removed it from the dictionary.
                 is_first_name = clean_word in first_names
                 is_surname = clean_word in surnames
-                is_title = clean_word in titles
+                is_title = _is_title_token(word, clean_word)
 
                 # Mask when the token is capitalised and in the dictionary.
                 # The capitalisation requirement is the masker's main recall
@@ -834,11 +910,20 @@ def create_enhanced_name_masker(use_facebook_names=False, use_facebook_surnames=
                     should_mask = True
                     masked_by = "ner"
 
-                # Check for title + name combinations
+                # Check for title + name combinations. The next word is held
+                # to the same capitalisation gate as any name, which
+                # case_insensitive relaxes here too: "Dr. smith" under that
+                # option once gave "Dr. [SURNAME]", the name masked by the
+                # dictionary branch and the title kept.
                 if is_title and word_idx + 1 < len(words):
-                    next_word = re.sub(r'[^\w]', '', words[word_idx + 1].lower())
+                    # The form the name lookup uses, possessive clitic
+                    # removed, so "Dr. Smith's" loses its title as well
+                    # (review finding CR-02).
+                    next_word = re.sub(r'[^\w]', '', re.sub(
+                        r"['’]s?(?=\W*$)", "", words[word_idx + 1].lower()))
                     next_is_capitalized = _token_is_capitalised(words[word_idx + 1])
-                    if next_is_capitalized and (next_word in first_names or next_word in surnames):
+                    if ((next_is_capitalized or case_insensitive)
+                            and (next_word in first_names or next_word in surnames)):
                         # Log the title
                         replacement_log.append({
                             'order': replacement_counter,
@@ -894,7 +979,6 @@ def create_enhanced_name_masker(use_facebook_names=False, use_facebook_surnames=
         """Get the current replacement log."""
         return replacement_log
 
-    # Return both the masking function and the log function
     return mask_names_with_logging, get_replacement_log
 
 #: Columns of a name-masking log. ``source`` records which rule masked the
@@ -1200,8 +1284,13 @@ def detect_and_fix_repetitions(text, max_repetitions=5):
 # byte-for-byte.
 
 #: The four spellings of the "undefined" artefact the stage marks, as whole
-#: words, unless already bracketed. TODO: justify (source unknown) where
-#: the artefact comes from; the list dates from the first commit.
+#: words, unless already bracketed. Where the artefact comes from is not
+#: recorded. The list dates from the repository's first commit (8d8c58e,
+#: November 2025), which already marked these words in the transcription
+#: text as "speech artifacts", and whose speaker-attribution module deleted
+#: "excessive 'undefined' words" from it, so the token had been seen in the
+#: workflow's Whisper output before any history was kept. No transcript or
+#: hypothesis committed under output/ or example_output/ contains it.
 #:
 #: The manuscript describes the pattern as ``\bundefin\w*``. That is not
 #: used, because it would also rewrite ordinary words such as
@@ -1797,7 +1886,7 @@ def _whisper_language_table():
     when transformers is not installed.
     """
     try:
-        from transformers.models.whisper.tokenization_whisper import LANGUAGES  # noqa: PLC0415
+        from transformers.models.whisper.tokenization_whisper import LANGUAGES
     except ImportError:
         return None
     return LANGUAGES
@@ -1893,7 +1982,8 @@ def _transcript_header_lines(*, input_file, original_filename=None,
         else:
             lines.append("Privacy: Personal names masked using internal list (review recommended)")
     if speaker_attribution:
-        lines.append("Speaker attribution: Enabled (accuracy depends on recording quality, speaker count, and speaker similarity)")
+        lines.append("Speaker attribution: Enabled (accuracy depends on recording quality, "
+                     "speaker count, and speaker similarity)")
     return lines
 
 
@@ -1952,10 +2042,8 @@ def create_word_document(text_content, output_path, input_file, *,
         metadata_para2 = doc.add_paragraph()
         metadata_para2.add_run("="*52).bold = True
 
-        # Add blank line before transcription
         doc.add_paragraph()
 
-        # Add the main content
         # Split by double newlines to preserve paragraph structure
         paragraphs = text_content.split("\n\n")
         for paragraph in paragraphs:
@@ -1964,7 +2052,6 @@ def create_word_document(text_content, output_path, input_file, *,
                 # Set line spacing to 1.5
                 para.paragraph_format.line_spacing = 1.5
 
-        # Save the document
         doc.save(output_path)
         return True
     except Exception as e:
@@ -2063,7 +2150,6 @@ def enhance_audio(input_path, output_path):
     if max_val > 0.95:
         audio = audio * (0.95 / max_val)
 
-    # Save enhanced audio
     sf.write(output_path, audio, sr)
     print(f"   Enhanced audio saved to {output_path}")
 
@@ -2234,7 +2320,7 @@ def _pipeline_load_kwargs(from_pretrained, token, offline):
     otherwise offline mode relies on huggingface_hub honouring
     ``HF_HUB_OFFLINE`` itself.
     """
-    import inspect  # noqa: PLC0415
+    import inspect
     try:
         params = inspect.signature(from_pretrained).parameters
     except (TypeError, ValueError):
@@ -2283,14 +2369,14 @@ def _cached_snapshot(checkpoint, filename):
     """
     repo_id, *revision = str(checkpoint).split('@')
     try:
-        from huggingface_hub import try_to_load_from_cache  # noqa: PLC0415
-        from preflight import pyannote_cache_dir  # noqa: PLC0415
+        from huggingface_hub import try_to_load_from_cache
+        from preflight import pyannote_cache_dir
         cache_dir = pyannote_cache_dir()
         if cache_dir is None:
             return None, None
         path = try_to_load_from_cache(repo_id, filename, cache_dir=str(cache_dir),
                                       revision=revision[0] if revision else None)
-    except Exception:  # noqa: BLE001 - see the docstring
+    except Exception:  # see the docstring
         return None, None
     # Not a path: nothing cached, or a marker that the file is known absent.
     if not isinstance(path, str):
@@ -2315,11 +2401,11 @@ def _sub_model_revisions(config_path):
     on the order the config lists the models in.
     """
     try:
-        import yaml  # noqa: PLC0415
+        import yaml
         with open(config_path, encoding='utf-8') as handle:
             params = yaml.safe_load(handle)['pipeline'].get('params') or {}
         values = list(params.values())
-    except Exception:  # noqa: BLE001 - as in _cached_snapshot
+    except Exception:  # as in _cached_snapshot
         return None
     revisions = {}
     for value in values:
@@ -2360,9 +2446,9 @@ def _expected_pipeline_cache_path(checkpoint):
     """
     folder = "models--" + str(checkpoint).split('@')[0].replace('/', '--')
     try:
-        from preflight import pyannote_cache_dir  # noqa: PLC0415
+        from preflight import pyannote_cache_dir
         cache_dir = pyannote_cache_dir()
-    except Exception:  # noqa: BLE001 - only a message depends on it
+    except Exception:  # only a message depends on it
         cache_dir = None
     if cache_dir is None:
         return f"$PYANNOTE_CACHE (or ~/.cache/torch/pyannote)/{folder}"
@@ -2384,7 +2470,7 @@ def _damaged_pipeline_cache(checkpoint):
     depends on it.
     """
     try:
-        from preflight import (  # noqa: PLC0415
+        from preflight import (
             PYANNOTE_PIPELINE_REPOS, damaged_pipeline_configs,
             pipeline_config_remedy, pipeline_damage_heading)
         if str(checkpoint).split('@')[0] != PYANNOTE_PIPELINE_REPOS[0]:
@@ -2397,7 +2483,7 @@ def _damaged_pipeline_cache(checkpoint):
         return (f"{heading[:1].upper()}{heading[1:]}: {found}. Neither a token "
                 f"nor a new download repairs it. Fix: "
                 f"{pipeline_config_remedy(damaged)}.")
-    except Exception:  # noqa: BLE001 - only a message depends on it
+    except Exception:  # only a message depends on it
         return None
 
 
@@ -2850,7 +2936,7 @@ def get_latest_version():
     commit = dirty = None
     if (here / ".git").exists():
         try:
-            from provenance import git_commit  # noqa: PLC0415
+            from provenance import git_commit
         except ImportError:
             git_commit = None
         if git_commit is not None:
@@ -2861,7 +2947,7 @@ def get_latest_version():
     if release:
         return release
     try:
-        from importlib import metadata  # noqa: PLC0415
+        from importlib import metadata
         return metadata.version(_DIST_NAME)
     except Exception:
         return "Unknown"
@@ -3172,7 +3258,6 @@ def transcribe_audio_only(audio_path, model="openai/whisper-large-v3", language=
     """
     print("  Transcribing audio (no diarization)...")
 
-    # Initialize transcription pipeline
     try:
         device = 0 if torch.cuda.is_available() else -1
 
@@ -3197,7 +3282,6 @@ def transcribe_audio_only(audio_path, model="openai/whisper-large-v3", language=
             "ignore_warning": True
         }
 
-        # Add language specification if requested
         if language:
             pipeline_args["generate_kwargs"] = {"language": language}
             print(f"   Language set to {language.title()}")
@@ -3350,7 +3434,7 @@ def _longest_ordered_run(values):
     ahead of its true position would drag every later word up to it; with
     it, the glitched word is the one that moves.
     """
-    import bisect  # noqa: PLC0415
+    import bisect
     tails: list = []      # smallest attainable tail value per run length
     tail_idx: list = []   # index of the element holding that tail
     prev = [None] * len(values)
@@ -3498,7 +3582,7 @@ def _repair_segment_timeline(segments):
         # The fourth pass changed something, which does not by itself mean
         # a fifth would: probe a copy, so the repaired data stay exactly
         # what four passes produce.
-        import copy  # noqa: PLC0415
+        import copy
         probe = copy.deepcopy(segments)
         probe_counts = dict(counts)
         still_changing = _repair_segment_cues(probe, probe_counts)
@@ -3702,7 +3786,8 @@ def write_timestamped_outputs(transcription_result, output_dir, base_name,
     """
     os.makedirs(output_dir, exist_ok=True)
     chunks = transcription_result.get('chunks') if isinstance(transcription_result, dict) else None
-    raw_text = transcription_result.get('text', '') if isinstance(transcription_result, dict) else ''
+    raw_text = (transcription_result.get('text', '')
+                if isinstance(transcription_result, dict) else '')
 
     has_word_chunks = bool(chunks) and any(
         isinstance(c, dict) and c.get('timestamp') and
@@ -3875,7 +3960,7 @@ def _software_provenance():
     matched. A package that is not installed, or a checkout without git,
     is recorded as ``None`` rather than failing the run.
     """
-    from provenance import run_metadata  # noqa: PLC0415
+    from provenance import run_metadata
     meta = run_metadata(packages=('transformers', 'torch', 'pyannote.audio', 'gliner'))
     versions = {'python': meta['python'], **meta['packages']}
     return {'version': get_latest_version(), 'packages': versions,
@@ -3889,7 +3974,7 @@ def _excluded_names_digest(excluded_names):
     many names were excluded and a SHA-256 of the sorted, lower-cased list,
     which lets two runs be compared without disclosing who was kept.
     """
-    import hashlib  # noqa: PLC0415
+    import hashlib
     names = sorted({str(n).strip().lower() for n in excluded_names or ()
                     if str(n).strip()})
     return {
@@ -4036,7 +4121,7 @@ def write_review_file(segments, review_path, audio_duration_s=None,
     artefacts, and under --redacted-timestamps-only it was the one file in
     the tree that still carried the spoken names.
     """
-    from confidence import review_transcript  # noqa: PLC0415
+    from confidence import review_transcript
     review = review_transcript({'segments': segments},
                                audio_duration_s=audio_duration_s,
                                **(review_options or {}))
@@ -4049,7 +4134,16 @@ def write_review_file(segments, review_path, audio_duration_s=None,
     return review
 
 
-def process_audio_file(input_file, mask_names=False, model="openai/whisper-large-v3", language=None, original_filename=None, fix_repetitions=False, output_name=None, save_name_masking_logs=False, save_enhanced_audios=False, enhance_audio_enabled=False, use_facebook_names=False, use_facebook_surnames=False, selected_languages=None, speaker_attribution=False, exclude_common_words=None, excluded_names=None, timestamps=False, diarization_model_path=None, diarization_config=None, vad_onset=None, vad_offset=None, redacted_timestamps_only=False, num_speakers=None, min_speakers=None, max_speakers=None,
+def process_audio_file(input_file, mask_names=False, model="openai/whisper-large-v3",
+                       language=None, original_filename=None, fix_repetitions=False,
+                       output_name=None, save_name_masking_logs=False,
+                       save_enhanced_audios=False, enhance_audio_enabled=False,
+                       use_facebook_names=False, use_facebook_surnames=False,
+                       selected_languages=None, speaker_attribution=False,
+                       exclude_common_words=None, excluded_names=None, timestamps=False,
+                       diarization_model_path=None, diarization_config=None,
+                       vad_onset=None, vad_offset=None, redacted_timestamps_only=False,
+                       num_speakers=None, min_speakers=None, max_speakers=None,
                        source_audio=None, source_derivation=None,
                        review_options=None):
     """Transcribe one recording and write every artefact the flags request.
@@ -4113,7 +4207,6 @@ def process_audio_file(input_file, mask_names=False, model="openai/whisper-large
     print(f" PROCESSING: {input_file}")
     print(f"{'='*80}")
 
-    # Check if audio processing libraries are available
     if not AUDIO_LIBS_AVAILABLE or not TRANSFORMERS_AVAILABLE:
         print(" ❌ Error: Required audio processing libraries not available")
         print(f"    Audio libraries: {'✅' if AUDIO_LIBS_AVAILABLE else '❌'}")
@@ -4276,7 +4369,9 @@ def process_audio_file(input_file, mask_names=False, model="openai/whisper-large
         get_replacement_log_func = None
         if mask_names:
             print("   Initializing enhanced name masking with global database...")
-            mask_names_func, get_replacement_log_func = create_enhanced_name_masker(use_facebook_names, use_facebook_surnames, selected_languages, exclude_common_words, excluded_names)
+            mask_names_func, get_replacement_log_func = create_enhanced_name_masker(
+                use_facebook_names, use_facebook_surnames, selected_languages,
+                exclude_common_words, excluded_names)
 
         # Step 3b: Persist raw, timestamped artefacts *before* any
         # post-processing or privacy filters. This preserves synchronisation
@@ -4369,7 +4464,6 @@ def process_audio_file(input_file, mask_names=False, model="openai/whisper-large
         print("\n🔧 TEXT PROCESSING AND ENHANCEMENT")
         print("-" * 40)
 
-        # Get the main transcription text
         main_text = transcription_result.get('text', '')
 
         # Store base transcription for dual output when speaker attribution is enabled
@@ -4427,13 +4521,13 @@ def process_audio_file(input_file, mask_names=False, model="openai/whisper-large
             mask_fn=mask_names_func, get_log=get_replacement_log_func,
             filename=filename, speaker_turns=speaker_labels_applied)
 
-        # Save the replacement log
         if mask_names_func and get_replacement_log_func:
             if replacement_log and save_name_masking_logs:
                 print(f"   💾 Saving name replacement log ({len(replacement_log)} replacements)")
                 save_replacement_log(replacement_log, filename)
             elif replacement_log and not save_name_masking_logs:
-                print(f"   ℹ️  Name replacement log available ({len(replacement_log)} replacements) - use --save-name-masking-logs to save")
+                print(f"   ℹ️  Name replacement log available ({len(replacement_log)} "
+                      f"replacements) - use --save-name-masking-logs to save")
 
         # Transcripts are written as continuous paragraphs, never wrapped:
         # create_word_document and evaluation/wer.py both rely on blank
@@ -4487,7 +4581,6 @@ def process_audio_file(input_file, mask_names=False, model="openai/whisper-large
                 filename=filename)
             formatted_base_text = base_text_processed.strip()
 
-            # Save base version
             save_transcript_file(output_file_base, formatted_base_text, base_name, input_file,
                                model=model, speaker_attribution=False,
                                **header_settings)
@@ -4502,7 +4595,6 @@ def process_audio_file(input_file, mask_names=False, model="openai/whisper-large
             run_artefacts.append(output_file_speakers)
             print(f"   ✅ Speaker-attributed transcript saved: {output_file_speakers}")
 
-            # Create Word documents for both versions
             word_output_base = Path(output_file_base).with_suffix('.docx').as_posix()
             _save_word_document(formatted_base_text, word_output_base,
                                 False, "Base Word document")
@@ -4517,14 +4609,12 @@ def process_audio_file(input_file, mask_names=False, model="openai/whisper-large
             # announce speaker attribution even when it was requested.
             output_file = f"{TRANSCRIPTS_DIR}/{base_name}_transcript.txt"
 
-            # Save single transcript
             save_transcript_file(output_file, formatted_main_text, base_name, input_file,
                                model=model, speaker_attribution=False,
                                **header_settings)
             run_artefacts.append(output_file)
             print(f"   ✅ Transcript saved: {output_file}")
 
-            # Create Word document
             word_output_file = Path(output_file).with_suffix('.docx').as_posix()
             _save_word_document(formatted_main_text, word_output_file,
                                 False, "Word document")
@@ -4541,7 +4631,7 @@ def process_audio_file(input_file, mask_names=False, model="openai/whisper-large
         # and miss this run's own files when the name holds glob characters
         # ('session[1]'). Signing is opt-in, and integrity needs no key.
         try:
-            from provenance import load_key, write_manifest  # noqa: PLC0415
+            from provenance import load_key, write_manifest
             transcript_dir = TRANSCRIPTS_DIR
             manifest_path = os.path.join(
                 transcript_dir, f"{base_name}_manifest.json")
@@ -4665,9 +4755,11 @@ def main():
     parser.add_argument('--mask-personal-names', action='store_true',
                        help='Enable personal name masking (boolean flag)')
     parser.add_argument('--use-facebook-names-for-masking', action='store_true',
-                       help='Use Facebook global first names database (730K+ names, may cause false positives). Default: use curated basic names only.')
+                       help='Use Facebook global first names database (730K+ names, may cause '
+                            'false positives). Default: use curated basic names only.')
     parser.add_argument('--use-facebook-surnames-for-masking', action='store_true',
-                       help='Use Facebook global surnames database (980K+ surnames, may cause false positives). Default: use curated basic surnames only.')
+                       help='Use Facebook global surnames database (980K+ surnames, may cause '
+                            'false positives). Default: use curated basic surnames only.')
     # The supported languages are read from the CSV itself so that the help
     # text cannot drift from the dictionary. A missing CSV is reported when
     # masking is actually requested, not here, so --help still works.
@@ -4677,21 +4769,27 @@ def main():
         _name_languages = 'the languages in data/curated_names.csv'
     parser.add_argument('--languages-for-name-masking', type=str, nargs='+',
                        default=None, metavar='LANG',
-                       help=f'Languages to include in curated names database (case-insensitive full names). Supported: {_name_languages}. Default: all of them.')
+                       help='Languages to include in curated names database (case-insensitive '
+                            f'full names). Supported: {_name_languages}. Default: all of them.')
     # BooleanOptionalAction adds the --no- form. With store_true there was
     # no way to turn the filter off for an English run, and the documented
     # '=false' spelling was an argparse error.
     parser.add_argument('--exclude-common-english-words-from-name-masking',
                        action=argparse.BooleanOptionalAction, default=None,
-                       help='Exclude common English words (e.g., "will", "long", "art") from name masking. Default: on when the language, given or detected, is English, otherwise off.')
+                       help='Exclude common English words (e.g., "will", "long", "art") from name '
+                            'masking. Default: on when the language, given or detected, is '
+                            'English, otherwise off.')
     parser.add_argument('--exclude-names-from-masking', type=str, default=None,
-                       help='Comma-separated list of names to exclude from masking (e.g., "John,Sarah,Einstein"). Case-insensitive.')
+                       help='Comma-separated list of names to exclude from masking (e.g., '
+                            '"John,Sarah,Einstein"). Case-insensitive.')
     parser.add_argument('--exclude-names-file', type=str, default=None,
-                       help='Path to file containing names to exclude from masking (one name per line). Case-insensitive.')
+                       help='Path to file containing names to exclude from masking (one name per '
+                            'line). Case-insensitive.')
     parser.add_argument('--model', type=str, default="openai/whisper-large-v3",
                        help='HuggingFace model ID (default: openai/whisper-large-v3)')
     parser.add_argument('--language', type=str, default=None,
-                       help='Specify transcription language (e.g., "english", "spanish", "french"). Default: auto-detect language')
+                       help='Specify transcription language (e.g., "english", "spanish", '
+                            '"french"). Default: auto-detect language')
     parser.add_argument('--source-audio', type=str, default=None,
                        help='The original recording the input was derived from (for example '
                             'the .m4a an input WAV was decoded from); its SHA-256 is recorded in '
@@ -4706,51 +4804,97 @@ def main():
     parser.add_argument('--output-name', type=str, default=None,
                        help='Custom name for output files (without extension)')
     parser.add_argument('--save-name-masking-logs', action='store_true',
-                       help='Save detailed logs of name replacements to name_masking_logs/ directory')
+                       help='Save detailed logs of name replacements to '
+                            'name_masking_logs/ directory')
     parser.add_argument('--save-enhanced-audio', action='store_true',
                        help='Save enhanced audio files to output/enhanced_audio/ directory')
     parser.add_argument('--enhance-audio', action='store_true',
-                       help='Enable audio enhancement for better transcription quality (disabled by default)')
+                       help='Enable audio enhancement for better transcription quality '
+                            '(disabled by default)')
     parser.add_argument('--speaker-attribution', action='store_true',
-                       help='Enable speaker diarization/attribution (disabled by default). Note: Accuracy depends on recording quality, number of speakers, and speaker similarity. Implies word timestamps, which also switches the ASR to 30 s decoding windows, so the unlabelled transcript can differ slightly from a plain run.')
+                       help='Enable speaker diarization/attribution (disabled by default). Note: '
+                            'Accuracy depends on recording quality, number of speakers, and '
+                            'speaker similarity. Implies word timestamps, which also switches the '
+                            'ASR to 30 s decoding windows, so the unlabelled transcript can differ '
+                            'slightly from a plain run.')
     parser.add_argument('--diarization-model-path', '--diarisation-model-path',
                        dest='diarization_model_path', type=str, default=None,
-                       help='Local pyannote diarisation pipeline: a config.yaml, or a directory containing one. If it cannot be loaded, the run does not fall back to the Hub model. When omitted, the HuggingFace loader is used: the local cache is checked first and weights are downloaded from the Hub only when absent, which requires a HuggingFace token.')
+                       help='Local pyannote diarisation pipeline: a config.yaml, or a directory '
+                            'containing one. If it cannot be loaded, the run does not fall back to '
+                            'the Hub model. When omitted, the HuggingFace loader is used: the '
+                            'local cache is checked first and weights are downloaded from the Hub '
+                            'only when absent, which requires a HuggingFace token.')
     parser.add_argument('--diarization-config', '--diarisation-config',
                        dest='diarization_config', type=str, default=None,
-                       help='Path to a local pyannote diarisation YAML config file referencing on-disk segmentation and embedding checkpoints. Use this for fully air-gapped operation. Tried before --diarization-model-path; if neither loads, the run does not fall back to the Hub model. Setting HF_HUB_OFFLINE=1 or TRANSFORMERS_OFFLINE=1 makes the HuggingFace loader cache-only, through huggingface_hub honouring those variables.')
+                       help='Path to a local pyannote diarisation YAML config file referencing '
+                            'on-disk segmentation and embedding checkpoints. Use this for fully '
+                            'air-gapped operation. Tried before --diarization-model-path; if '
+                            'neither loads, the run does not fall back to the Hub model. Setting '
+                            'HF_HUB_OFFLINE=1 or TRANSFORMERS_OFFLINE=1 makes the HuggingFace '
+                            'loader cache-only, through huggingface_hub honouring those variables.')
     parser.add_argument('--vad-onset', '--vad-onset-threshold',
                        dest='vad_onset', type=float, default=None,
                        metavar='THRESH',
-                       help='Speech-detection onset threshold, for diarisation pipelines that expose one: a pyannote 3.x speaker-diarisation pipeline with a binary (non-powerset) segmentation model, or a voice-activity pipeline loaded with --diarization-config. The default model, pyannote/speaker-diarization-3.1, has no such threshold, so this option has no effect there and says so at run time rather than appearing to be honoured. Only used when --speaker-attribution is active.')
+                       help='Speech-detection onset threshold, for diarisation pipelines that '
+                            'expose one: a pyannote 3.x speaker-diarisation pipeline with a binary '
+                            '(non-powerset) segmentation model, or a voice-activity pipeline '
+                            'loaded with --diarization-config. The default model, '
+                            'pyannote/speaker-diarization-3.1, has no such threshold, so this '
+                            'option has no effect there and says so at run time rather than '
+                            'appearing to be honoured. Only used when --speaker-attribution is '
+                            'active.')
     parser.add_argument('--vad-offset', '--vad-offset-threshold',
                        dest='vad_offset', type=float, default=None,
                        metavar='THRESH',
-                       help='Speech-detection offset threshold. On pyannote 3.x it applies only to binary-segmentation voice-activity pipelines loaded with --diarization-config; the default diarisation model has no such threshold, and the run says so. Only used when --speaker-attribution is active.')
+                       help='Speech-detection offset threshold. On pyannote 3.x it applies only to '
+                            'binary-segmentation voice-activity pipelines loaded with '
+                            '--diarization-config; the default diarisation model has no such '
+                            'threshold, and the run says so. Only used when --speaker-attribution '
+                            'is active.')
     parser.add_argument('--num-speakers', dest='num_speakers', type=int,
                        default=None, metavar='N',
-                       help='Exact number of speakers in the recording. Speaker confusion is the largest component of diarisation error, and most of it comes from the clustering step having to infer how many speakers there are; a one-to-one interview has exactly two, so state it. Overrides --min-speakers/--max-speakers. Only used when --speaker-attribution is active.')
+                       help='Exact number of speakers in the recording. Speaker confusion is the '
+                            'largest component of diarisation error, and most of it comes from the '
+                            'clustering step having to infer how many speakers there are; a '
+                            'one-to-one interview has exactly two, so state it. Overrides '
+                            '--min-speakers/--max-speakers. Only used when --speaker-attribution '
+                            'is active.')
     parser.add_argument('--min-speakers', dest='min_speakers', type=int,
                        default=None, metavar='N',
-                       help='Lower bound on the number of speakers, for when the exact count is not known. Only used when --speaker-attribution is active.')
+                       help='Lower bound on the number of speakers, for when the exact count is '
+                            'not known. Only used when --speaker-attribution is active.')
     parser.add_argument('--max-speakers', dest='max_speakers', type=int,
                        default=None, metavar='N',
-                       help='Upper bound on the number of speakers. Only used when --speaker-attribution is active.')
+                       help='Upper bound on the number of speakers. Only used when '
+                            '--speaker-attribution is active.')
     parser.add_argument('--timestamps', action='store_true',
-                       help='Emit word- and segment-level timestamps as .json and .vtt alongside the plain text transcript. Captured before name masking and other post-processing to preserve synchronisation. With --mask-personal-names, a redacted parallel set is written alongside them. Timestamps use 30 s decoding windows (15 s otherwise), so the text can differ slightly from a plain run.')
+                       help='Emit word- and segment-level timestamps as .json and .vtt alongside '
+                            'the plain text transcript. Captured before name masking and other '
+                            'post-processing to preserve synchronisation. With '
+                            '--mask-personal-names, a redacted parallel set is written alongside '
+                            'them. Timestamps use 30 s decoding windows (15 s otherwise), so the '
+                            'text can differ slightly from a plain run.')
     parser.add_argument('--redacted-timestamps-only', action='store_true',
-                       help='Write only the redacted timestamped artefacts, suppressing the unredacted .json and .vtt. Requires --mask-personal-names. Use this when the output tree may be exported wholesale and must carry no personal names.')
+                       help='Write only the redacted timestamped artefacts, suppressing the '
+                            'unredacted .json and .vtt. Requires --mask-personal-names. Use this '
+                            'when the output tree may be exported wholesale and must carry no '
+                            'personal names.')
     # The review's optional checks (confidence.py), off by default so that
     # a default run writes the review it always has. They need the
     # timestamped outputs, which the review is computed from.
     parser.add_argument('--review-flag-zero-duration', action='store_true',
-                       help='Also flag, in the review, non-empty cues whose start and end times are equal. Needs --timestamps or --speaker-attribution.')
+                       help='Also flag, in the review, non-empty cues whose start and end times '
+                            'are equal. Needs --timestamps or --speaker-attribution.')
     parser.add_argument('--review-repeated-passage-words', type=int, default=None,
                        metavar='N',
-                       help='Also flag, in the review, both copies of a run of N or more tokens that recurs across cues, as a passage Whisper writes twice does. An apostrophe splits a word, so a contraction counts as two tokens. Suggested: 8. Needs --timestamps or --speaker-attribution.')
+                       help='Also flag, in the review, both copies of a run of N or more tokens '
+                            'that recurs across cues, as a passage Whisper writes twice does. An '
+                            'apostrophe splits a word, so a contraction counts as two tokens. '
+                            'Suggested: 8. Needs --timestamps or --speaker-attribution.')
     parser.add_argument('--review-repeated-passage-window', type=float,
                        default=None, metavar='SECONDS',
-                       help='Maximum gap, in seconds, between the starting cues of two repeated runs (default: 60). Needs --review-repeated-passage-words.')
+                       help='Maximum gap, in seconds, between the starting cues of two repeated '
+                            'runs (default: 60). Needs --review-repeated-passage-words.')
 
     args = parser.parse_args()
 
@@ -4766,7 +4910,7 @@ def main():
         if not (args.timestamps or args.speaker_attribution):
             parser.error("the --review- options need --timestamps or "
                          "--speaker-attribution, which write the review")
-        from confidence import _PASSAGE_WINDOW_S, flag_segments  # noqa: PLC0415
+        from confidence import _PASSAGE_WINDOW_S, flag_segments
         review_options = {
             'flag_zero_duration': bool(args.review_flag_zero_duration),
             'repeated_passage_words': args.review_repeated_passage_words,
@@ -4813,7 +4957,9 @@ def main():
     excluded_names = set()
     if args.exclude_names_from_masking:
         # Parse comma-separated names (case-insensitive)
-        excluded_names.update(name.strip().lower() for name in args.exclude_names_from_masking.split(',') if name.strip())
+        excluded_names.update(name.strip().lower()
+                              for name in args.exclude_names_from_masking.split(',')
+                              if name.strip())
 
     if args.exclude_names_file:
         # Read names from file (one per line, case-insensitive)
@@ -4873,7 +5019,13 @@ def main():
         selected_languages=selected_languages,
         speaker_attribution=speaker_attribution_enabled,
         exclude_common_words=exclude_common_words,
-        excluded_names=excluded_names, timestamps=args.timestamps, diarization_model_path=args.diarization_model_path, diarization_config=args.diarization_config, vad_onset=args.vad_onset, vad_offset=args.vad_offset, redacted_timestamps_only=args.redacted_timestamps_only, num_speakers=args.num_speakers, min_speakers=args.min_speakers, max_speakers=args.max_speakers,
+        excluded_names=excluded_names, timestamps=args.timestamps,
+        diarization_model_path=args.diarization_model_path,
+        diarization_config=args.diarization_config,
+        vad_onset=args.vad_onset, vad_offset=args.vad_offset,
+        redacted_timestamps_only=args.redacted_timestamps_only,
+        num_speakers=args.num_speakers, min_speakers=args.min_speakers,
+        max_speakers=args.max_speakers,
         source_audio=args.source_audio, source_derivation=args.source_derivation,
         review_options=review_options)
 

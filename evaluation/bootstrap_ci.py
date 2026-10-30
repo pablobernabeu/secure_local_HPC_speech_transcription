@@ -435,7 +435,7 @@ def _run(args) -> int:
     rows: list[dict] = []
 
     if args.report:
-        from provenance import (  # noqa: PLC0415
+        from provenance import (
             SIDECAR_PACKAGES, run_metadata, sidecar_path, write_sidecar)
         # The git state is read before the table is written and leaves out
         # the table and its sidecar, so regenerating a committed table in

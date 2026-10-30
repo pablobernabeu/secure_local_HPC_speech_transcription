@@ -313,7 +313,7 @@ def _effective_dictionary(csv_path: Path = _DEFAULT_CSV) -> set[str]:
     (audit finding T1-07). Side effect: the loader's console report is
     discarded.
     """
-    from transcription import (  # noqa: PLC0415
+    from transcription import (
         create_multilingual_curated_names,
         filter_problematic_names,
     )
@@ -366,11 +366,11 @@ def _build_masker_and_detector(case_insensitive: bool = False,
         measuring the dictionary alone and labelling the result as the NER
         arm would be worse than refusing to run.
     """
-    from transcription import create_enhanced_name_masker  # noqa: PLC0415
+    from transcription import create_enhanced_name_masker
 
     detector = None
     if use_ner:
-        from ner_masking import load_person_detector  # noqa: PLC0415
+        from ner_masking import load_person_detector
         detector = load_person_detector()
         if detector is None:
             raise SystemExit(
@@ -702,7 +702,7 @@ def run(
     global RNG state is touched. The NER arm loads a model from the local
     cache.
     """
-    from provenance import run_metadata, sha256_file  # noqa: PLC0415
+    from provenance import run_metadata, sha256_file
 
     suffix = "_caseinsensitive" if case_insensitive else ""
     if use_ner:
@@ -730,7 +730,7 @@ def run(
     summary["run_metadata"] = run_meta
     if detector is not None:
         _check_ner_ran(detector)
-        from ner_masking import provenance  # noqa: PLC0415
+        from ner_masking import provenance
         # Model, revision, threshold, labels and library version, so the
         # numbers can be tied to what produced them.
         summary["ner"] = provenance(detector)

@@ -1,8 +1,21 @@
 # Release and submission readiness
 
+*Note of 30 October 2026.* This record of the review of 6 to 18 October
+2026 is kept as it was written, and its opening sections describe the
+state before the release. Release 2.0.0 was tagged at `658009e` on
+18 October. The software is archived at
+<https://doi.org/10.5281/zenodo.23442766>, and the English sweep's
+inputs, with the decoder source, are deposited at
+<https://doi.org/10.5281/zenodo.23442874>. The licences were settled on
+17 October (see [Rights](#rights-and-retained-personal-information)),
+and the manuscript's availability statements cite both records. The
+Spanish V100 control, still a proposal below, ran on 19 October
+([next_control.md](next_control.md)).
+`ISSUES.md` and `CHANGELOG.md` give the current state of each open item.
+
 This record separates the review checkout from a published release. As of
-6 October 2026, the code and citation metadata still identify release 1.0.0;
-that archive predates the evaluation reported in the manuscript. Version
+6 October 2026, the code and citation metadata still identify release 1.0.0.
+That archive predates the evaluation reported in the manuscript. Version
 2.0.0 is the proposed next release because command-line options have been
 removed and repaired text-processing stages change the output. Neither a
 new release date nor a new DOI has been assigned.
@@ -11,19 +24,19 @@ new release date nor a new DOI has been assigned.
 
 The CPU regeneration gate rebuilds eleven committed artefacts. The pinned
 Linux workflow and its local equivalent are described in [ci.md](ci.md).
-This gate checks statistical derivations and the dictionary benchmark;
-recognition, diarisation and neural name masking require their recorded
+This gate checks statistical derivations and the dictionary benchmark.
+Recognition, diarisation and neural name masking require their recorded
 models and environment. The installed-distribution tests also verify the
 default dictionary masker and release record outside the source checkout.
 
 The full sweep inputs have been recovered from ARC without running new
 decoding jobs: 255 summary JSON files and 15 hypothesis CSV files. Every
 file matches the remote SHA-256 manifest. Strict aggregation reproduces
-the committed 255-row CSV byte for byte and all scientific JSON fields;
-only aggregation time, the input directory and current run metadata differ.
+the committed 255-row CSV byte for byte and all scientific JSON fields.
+Only aggregation time, the input directory and current run metadata differ.
 The recovery and verification manifests are currently under
 `build/recovered_arc_sweep/`, which is ignored. Local recovery establishes
-that the aggregate can be rebuilt; it does not make those inputs publicly
+that the aggregate can be rebuilt, but it does not make those inputs publicly
 available.
 
 The derived public checksum receipt,
@@ -31,7 +44,7 @@ The derived public checksum receipt,
 byte counts and exact input digests, along with the source decoder commit,
 jobs and corpus notices. It omits private deployment locators and records
 the original receipt digests and that derivation. It accompanies the new
-exploratory apostrophe-scoring report; the corresponding corpus text inputs
+exploratory apostrophe-scoring report. The corresponding corpus text inputs
 still await a reviewed deposit.
 
 The study archive must therefore include the recovered input bundle or
@@ -39,25 +52,25 @@ link to a separate versioned deposit containing it. A separate data record
 is preferable: these files contain corpus reference text, transformed
 references and generated hypotheses, with different rights and review
 needs from the software. The 270 inputs occupy 1,021,407,391 bytes
-uncompressed; the recovered `tar.gz` is 62,595,723 bytes. It must retain the
+uncompressed, and the recovered `tar.gz` is 62,595,723 bytes. It must retain the
 summary and hypothesis filenames, remote checksums, model and dataset
 revisions, aggregation recipe and the recorded decoder commit `6f9bf56`.
 Its public README should map the five suite configurations to their source
 corpora, explain the 17 conditions and three models, and link to the exact
 software version used for regeneration. Review every proposed file and its
 metadata before depositing it. The local recovery receipt names a private
-ARC account/path; a public inventory can describe that provenance without
+ARC account/path. A public inventory can describe that provenance without
 repeating the account identifier, while preserving the input hashes and
 recording how the public receipt was derived.
 The recovered TAR also carries ARC ownership metadata. A separate
 metadata-normalised local candidate is prepared under
-`build/release_review/data_candidates/`; all 270 input files retain their
+`build/release_review/data_candidates/`. All 270 input files retain their
 exact bytes and digests. It uses neutral ownership, regular-file permissions
 and fixed timestamps, with no private gzip filename or PAX metadata.
 Its SHA-256 is `e91170f76b82623795333b93612f96b6d197a40d3ed91b44354135fc9f64715a`
 and its compressed size is 62,605,837 bytes. The original recovery archive
 is preserved. The deposit uses the ZIP described below instead of this
-candidate; the bounded content inventory is recorded in
+candidate, and the bounded content inventory is recorded in
 [privacy_review.md](privacy_review.md).
 The decoder commit must also remain recoverable from a persistent source
 deposit, for example a labelled source snapshot of `6f9bf56` in the data
@@ -65,14 +78,14 @@ record. A commit identifier alone does not put that historical code into
 the new release's `git archive`, which contains only its selected tree.
 That snapshot predates the test-cache isolation repair recorded under
 NEW-INC-01. Label it as the historical decoder source and direct users to
-the current isolated verification suite; its old tests must not be run
+the current isolated verification suite. Its old tests must not be run
 against shared model caches. Preserve the source snapshot's original bytes
 and place this context in the surrounding archive README.
 The checked-in source archive also needs the dictionary, `versions.csv`,
 environment locks, normaliser, manuscript source, bibliography, CSL file,
 run records and committed statistical inputs. A wheel alone is not the
 study archive. The raw scheduler export includes unrelated projects and
-must remain outside the public bundle; its query and digest are already
+must remain outside the public bundle. Its query and digest are already
 recorded in the committed ledger provenance.
 
 ## Rights and retained personal information
@@ -81,7 +94,7 @@ The author settled the licence scope on 17 October 2026. The software,
 with the name dictionary it installs, is MIT ([LICENSE](../LICENSE)), and
 `manuscript/`, `docs/`, `output/` and `example_output/` are CC BY 4.0
 ([LICENSE-docs.md](../LICENSE-docs.md), formerly `Licence.md`). Third-party
-materials retain their own terms. The author compiled the dictionary;
+materials retain their own terms. The author compiled the dictionary, and
 its inventory and history are in
 [dictionary_provenance.md](dictionary_provenance.md). The Zenodo version
 lists both licences, where the 1.0.0 record gave CC BY 4.0 alone;
@@ -315,3 +328,29 @@ No new Word manuscript or spreadsheet was produced. The official APA
 site was inaccessible during the review, and the HTML caption script was
 checked through its DOM inputs without execution in a browser. These
 limitations preclude calling every stage complete.
+
+## Release 2.1.0, 30 October 2026
+
+Release 2.1.0 gathers the two passes after 2.0.0 that `CHANGELOG.md`
+describes. Its tree was checked at `3c13116`; the commit that adds this
+section changes nothing else.
+
+- The CI selection of 17 test files passed (409 tests) in a virtual
+  environment built from `requirements-verification.txt` under Python
+  3.13.7, and every test file changed since 2.0.0 passed under the local
+  Python 3.13.7 with the CPU build of torch: 1,677 passed, 20 skipped for
+  absent optional packages or symlink rights, and 1 expected failure.
+  The whole suite was not run on ARC for this release.
+- `tools/verify_regeneration.py` regenerated all eleven CPU artefacts
+  identically, `ruff check .` (0.15.18, line length included) reported
+  nothing, and the HTML and the 97-page PDF rendered with the claims-check
+  passing and no warning or unresolved cross-reference.
+- The input deposit was rebuilt at this tree with the corrected README of
+  CR-06: `sweep_inputs_2026-10.zip`, 62,808,901 bytes, SHA-256
+  `fa45a40305655034de8704c33826bd21b6a0b64c3a66d972acf9356edf09524d`.
+  Its 273 members equal those of the 2.0.0 build (`6474ba29…`) except
+  `README.md`. `decoder_source_6f9bf56.zip` is unchanged (`b66a5119…`).
+- The software record takes one ZIP, the `git archive` of the public
+  snapshot of this tree, whose digest a detached manifest records, as for
+  2.0.0. The reserved DOIs are unchanged: 10.5281/zenodo.23442766 for the
+  software and 10.5281/zenodo.23442874 for the inputs.

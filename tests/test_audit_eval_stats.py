@@ -17,7 +17,7 @@ import pytest
 
 pytest.importorskip("numpy")
 
-from evaluation import bootstrap_ci, condition_ci, determinism, footprint  # noqa: E402
+from evaluation import bootstrap_ci, condition_ci, determinism, footprint
 
 
 def _report(path: Path, rows) -> Path:

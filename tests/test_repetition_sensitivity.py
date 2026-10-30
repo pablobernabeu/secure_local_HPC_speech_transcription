@@ -105,9 +105,11 @@ def _fixture_cell(repair):
     sources, cells = {}, {}
     for condition, rows in pairs.items():
         scores = [PairResult(name=uid, **compute_metrics(normalise_text(ref, strip_header=False),
-                                                       normalise_text(hyp, strip_header=False))) for uid, ref, hyp in rows]
+                                                       normalise_text(hyp, strip_header=False)))
+                  for uid, ref, hyp in rows]
         summary = aggregate(scores)
-        sources[condition] = {"benchmark": {"n_streamed": len(rows), "condition": condition, "model": "fixture-model"},
+        sources[condition] = {"benchmark": {"n_streamed": len(rows), "condition": condition,
+                                            "model": "fixture-model"},
                               "summary": summary, "per_file": [asdict(result) for result in scores],
                               "run_metadata": {"git_commit": HISTORICAL_DECODER_COMMIT}}
         cells[condition] = {"n_utterances": summary["files"], "model": "fixture-model",
@@ -124,7 +126,8 @@ def test_fixed_sample_counts_improvement_harm_and_invisible_text_change(repair):
     for candidate in result["thresholds"]:
         summary, counts = candidate["summary"], candidate["changes"]
         assert summary["total_reference_words"] == baseline["total_reference_words"]
-        assert sum(counts[key] for key in ("wer_improved_from_raw", "wer_worsened_from_raw", "wer_tied_with_raw")) == 4
+        assert sum(counts[key] for key in ("wer_improved_from_raw", "wer_worsened_from_raw",
+                                           "wer_tied_with_raw")) == 4
     default = next(row for row in result["thresholds"] if row["max_repetitions"] == 5)
     assert default["changes"]["wer_improved_from_raw"] == 1
     assert default["changes"]["wer_worsened_from_raw"] == 1
@@ -183,12 +186,15 @@ def tiny_snapshot(tmp_path, repair):
     dump = inputs / "wer_hypotheses_fixture_model.csv"
     with dump.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.writer(handle)
-        writer.writerow(["uid", "condition", "reference_raw", "reference_transformed", "hypothesis_raw", "hypothesis_transformed", "wer"])
+        writer.writerow(["uid", "condition", "reference_raw", "reference_transformed",
+                         "hypothesis_raw", "hypothesis_transformed", "wer"])
         for condition in ("raw", "repetition_fix"):
             for index, (uid, ref, hyp) in enumerate(pairs[condition]):
                 _, raw_ref, raw_hyp = pairs["raw"][index]
-                writer.writerow([uid, condition, raw_ref, ref, raw_hyp, hyp, f"{sources[condition]['per_file'][index]['wer']:.6f}"])
-    records.append({"name": dump.name, "sha256": hashlib.sha256(dump.read_bytes()).hexdigest(), "bytes": dump.stat().st_size})
+                writer.writerow([uid, condition, raw_ref, ref, raw_hyp, hyp,
+                                 f"{sources[condition]['per_file'][index]['wer']:.6f}"])
+    records.append({"name": dump.name, "sha256": hashlib.sha256(dump.read_bytes()).hexdigest(),
+                    "bytes": dump.stat().st_size})
     aggregate_path = tmp_path / "aggregate.json"
     aggregate_path.write_text(json.dumps({"rows": grid, "provenance": {"inputs": digests}}))
     manifest = tmp_path / "manifest.json"
@@ -199,7 +205,8 @@ def tiny_snapshot(tmp_path, repair):
 def test_verified_fixture_writes_only_separate_reports(tmp_path, tiny_snapshot):
     inputs, aggregate_path, manifest, _ = tiny_snapshot
     payload = analyse(inputs, aggregate_path, manifest)
-    csv_path, json_path = tmp_path / "repetition_sensitivity.csv", tmp_path / "repetition_sensitivity.json"
+    csv_path, json_path = (tmp_path / "repetition_sensitivity.csv",
+                           tmp_path / "repetition_sensitivity.json")
     write_outputs(payload, csv_path, json_path)
     with csv_path.open(newline="") as handle:
         rows = list(csv.DictReader(handle))
@@ -235,7 +242,8 @@ def test_changed_dump_is_rejected_even_with_updated_receipt(tiny_snapshot, mutat
     receipt = json.loads(manifest.read_text())
     for record in receipt["files"]:
         if record["name"] == dump.name:
-            record.update(sha256=hashlib.sha256(dump.read_bytes()).hexdigest(), bytes=dump.stat().st_size)
+            record.update(sha256=hashlib.sha256(dump.read_bytes()).hexdigest(),
+                          bytes=dump.stat().st_size)
     manifest.write_text(json.dumps(receipt))
     with pytest.raises(ValueError, match=message):
         analyse(inputs, aggregate_path, manifest)
@@ -256,8 +264,9 @@ def test_cli_cannot_overwrite_sources(tiny_snapshot, tmp_path, protected):
     output = {"aggregate": aggregate_path, "manifest": manifest, "input": dump}[protected]
     previous = output.read_bytes()
     with pytest.raises(ValueError, match="overwrite"):
-        main(["--inputs", str(inputs), "--aggregate", str(aggregate_path), "--input-manifest", str(manifest),
-              "--output-csv", str(output), "--output-json", str(tmp_path / "repetition_sensitivity.json")])
+        main(["--inputs", str(inputs), "--aggregate", str(aggregate_path),
+              "--input-manifest", str(manifest), "--output-csv", str(output),
+              "--output-json", str(tmp_path / "repetition_sensitivity.json")])
     assert output.read_bytes() == previous
 
 

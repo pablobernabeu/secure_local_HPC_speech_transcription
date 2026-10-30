@@ -83,6 +83,10 @@ def score_pairs(pairs, rule: str) -> tuple[dict[str, PairResult], list[str]]:
 
 
 def _relative_gain(baseline, condition):
+    """Return the relative reduction from *baseline* to *condition*.
+
+    ``None`` when *baseline* is zero, where the ratio is undefined.
+    """
     return (baseline - condition) / baseline if baseline else None
 
 
@@ -120,6 +124,13 @@ def gains_on_common(baseline: dict, condition: dict, names=None) -> dict:
 
 
 def _sha256(path: Path) -> str:
+    """Return the hex SHA-256 of the exact bytes of *path*, read in chunks.
+
+    Used for the recovered ARC inputs, whose digests the aggregate and the
+    input manifest record over the raw bytes. Kept here, not taken from
+    provenance.sha256_file, which computes the same digest, because
+    evaluation.repetition_sensitivity imports it from this module.
+    """
     digest = hashlib.sha256()
     with path.open("rb") as handle:
         for block in iter(lambda: handle.read(1024 * 1024), b""):
@@ -128,6 +139,7 @@ def _sha256(path: Path) -> str:
 
 
 def _read_json(path: Path):
+    """Return the parsed JSON document at *path*, read as UTF-8."""
     return json.loads(path.read_text(encoding="utf-8"))
 
 
@@ -144,10 +156,21 @@ def _validate_output_paths(inputs: Path, aggregate_path: Path, input_manifest: P
         raise ValueError("CSV and JSON outputs must be different files")
     protected = {aggregate_path.resolve(), input_manifest.resolve()}
     if any(path in protected or path.is_relative_to(inputs.resolve()) for path in outputs):
-        raise ValueError("outputs must not overwrite the aggregate, input manifest or input snapshot")
+        raise ValueError(
+            "outputs must not overwrite the aggregate, input manifest or input snapshot")
 
 
 def _validate_original(scores, source, cell, name):
+    """Check a rescoring under the original rule against its source records.
+
+    *scores* maps each UID to its :class:`PairResult`; *source* is the
+    condition's recovered summary and *cell* its row of the committed
+    aggregate. The scored UIDs and every per-utterance field must equal the
+    summary's ``per_file`` rows, and the aggregate of *scores* must equal
+    the summary's ``summary`` block and the committed row, all at full
+    precision. Returns that aggregate; raises ``ValueError`` naming *name*
+    at the first difference.
+    """
     recorded = {row["name"]: row for row in source["per_file"]}
     if len(recorded) != len(source["per_file"]) or set(scores) != set(recorded):
         raise ValueError(f"{name}: original scored UID set differs")
@@ -165,6 +188,21 @@ def _validate_original(scores, source, cell, name):
 
 
 def _analyse_cell(pairs, sources, cells, name):
+    """Score one suite/model cell under both rules and compare them.
+
+    *pairs*, *sources* and *cells* are keyed by condition (raw and
+    whisper_norm): the dump's (UID, transformed reference, transformed
+    hypothesis) triples, the recovered summaries and the committed
+    aggregate rows. The original rule must reproduce the committed scores
+    (:func:`_validate_original`) before the edge-apostrophe rule is
+    applied. Returns the cell's per-condition detail, the whisper_norm
+    gains over raw under each rule, both on each rule's own shared sample
+    and on the sample both rules score, and the UIDs that the rule moves
+    in or out of the shared sample. Raises ``ValueError`` when an
+    originally scored reference is empty, when no reference survives the
+    new rule or when the source's ``n_streamed`` is not a count at least as
+    large as the scored set.
+    """
     scores, detail = {}, {}
     for condition in CONDITIONS:
         original, excluded = score_pairs(pairs[condition], "original")
@@ -180,9 +218,11 @@ def _analyse_cell(pairs, sources, cells, name):
                   "error_counts_equal": 0}
         for uid, reference, hypothesis in pairs[condition]:
             counts["reference_strings_changed"] += int(
-                normalise_for_rule(reference, "original") != normalise_for_rule(reference, "edge_apostrophe"))
+                normalise_for_rule(reference, "original")
+                != normalise_for_rule(reference, "edge_apostrophe"))
             counts["hypothesis_strings_changed"] += int(
-                normalise_for_rule(hypothesis, "original") != normalise_for_rule(hypothesis, "edge_apostrophe"))
+                normalise_for_rule(hypothesis, "original")
+                != normalise_for_rule(hypothesis, "edge_apostrophe"))
             if uid in revised:
                 old = original[uid]
                 new = revised[uid]
@@ -206,16 +246,20 @@ def _analyse_cell(pairs, sources, cells, name):
             "n_newly_included": 0, "changes": counts,
             "original_per_utterance_and_aggregate_verified": True,
         }
-    shared = {rule: set(scores["raw"][rule]) & set(scores["whisper_norm"][rule]) for rule in RULES}
+    shared = {rule: set(scores["raw"][rule]) & set(scores["whisper_norm"][rule])
+              for rule in RULES}
     fixed = shared["original"] & shared["edge_apostrophe"]
-    paired = {rule: gains_on_common(scores["raw"][rule], scores["whisper_norm"][rule]) for rule in RULES}
+    paired = {rule: gains_on_common(scores["raw"][rule], scores["whisper_norm"][rule])
+              for rule in RULES}
     fixed_paired = {rule: gains_on_common(scores["raw"][rule], scores["whisper_norm"][rule], fixed)
                     for rule in RULES}
     return {
         "conditions": detail, "paired_gains": paired,
         "cross_rule_sample": {"n_common": len(fixed),
-                              "newly_excluded_shared_uids": sorted(shared["original"] - shared["edge_apostrophe"]),
-                              "newly_included_shared_uids": sorted(shared["edge_apostrophe"] - shared["original"])},
+                              "newly_excluded_shared_uids": sorted(
+                                  shared["original"] - shared["edge_apostrophe"]),
+                              "newly_included_shared_uids": sorted(
+                                  shared["edge_apostrophe"] - shared["original"])},
         "paired_gains_on_fixed_cross_rule_sample": fixed_paired,
     }
 
@@ -234,7 +278,8 @@ def analyse(inputs: Path, aggregate_path: Path, input_manifest: Path) -> dict:
         if key in grid:
             raise ValueError(f"duplicate committed aggregate cell: {key}")
         grid[key] = row
-    recorded_hashes = {entry["source_file"]: entry["sha256"] for entry in committed["provenance"]["inputs"]}
+    recorded_hashes = {entry["source_file"]: entry["sha256"]
+                       for entry in committed["provenance"]["inputs"]}
     manifest = _read_json(input_manifest)
     expected = {entry["name"]: entry["sha256"] for entry in manifest["files"]}
     if len(expected) != len(manifest["files"]):
@@ -283,40 +328,53 @@ def analyse(inputs: Path, aggregate_path: Path, input_manifest: Path) -> dict:
                     raise ValueError(f"{dump_name}: invalid stored WER")
                 recorded = recorded_wers[condition].get(row["uid"])
                 if recorded is None or stored_wer != float(f"{recorded:.6f}"):
-                    raise ValueError(f"{dump_name}/{row['uid']}: stored WER differs from the original six-decimal score")
-                pairs[condition].append((row["uid"], row["reference_transformed"], row["hypothesis_transformed"]))
+                    raise ValueError(f"{dump_name}/{row['uid']}: stored WER differs "
+                                     "from the original six-decimal score")
+                pairs[condition].append((row["uid"], row["reference_transformed"],
+                                         row["hypothesis_transformed"]))
         result = _analyse_cell(pairs, sources, cells, f"{suite}/{model}")
         results.append({"suite": suite, "model_slug": model, **result})
         print(f"verified and analysed {suite}/{model}", flush=True)
     return {
         "schema_version": 1,
-        "analysis": "Exploratory sensitivity to edge apostrophes; original scorer retained in canonical results.",
+        "analysis": ("Exploratory sensitivity to edge apostrophes; "
+                     "original scorer retained in canonical results."),
         "transform": {"after": "evaluation.wer.normalise_text(..., strip_header=False)",
                       "pattern": EDGE_APOSTROPHE_RE.pattern, "replacement": " ",
                       "whitespace": "collapse and strip", "sides": ["reference", "hypothesis"],
                       "word_characters": "Python Unicode \\w (letters, digits and underscore)",
-                      "limits": "Also removes edge elisions and terminal possessive marks. This is not an established gold scorer."},
+                      "limits": ("Also removes edge elisions and terminal possessive marks. "
+                                 "This is not an established gold scorer.")},
         "provenance": {
-            "digest_policy": {"committed_text_and_input_manifest": "SHA-256 with CRLF normalised to LF",
-                              "recovered_arc_inputs": "SHA-256 of exact raw bytes"},
+            "digest_policy": {
+                "committed_text_and_input_manifest": "SHA-256 with CRLF normalised to LF",
+                "recovered_arc_inputs": "SHA-256 of exact raw bytes"},
             "aggregate": _committed_text_record(aggregate_path, aggregate_path.as_posix()),
             "input_manifest": _committed_text_record(input_manifest, input_manifest.as_posix()),
             "input_files": input_records,
             "producer": _committed_text_record(Path(__file__), "evaluation/scorer_sensitivity.py"),
-            "original_scorer": _committed_text_record(Path(__file__).with_name("wer.py"), "evaluation/wer.py"),
-            "python": platform.python_version(), "jiwer": version("jiwer"), "rapidfuzz": version("rapidfuzz"),
+            "original_scorer": _committed_text_record(Path(__file__).with_name("wer.py"),
+                                                      "evaluation/wer.py"),
+            "python": platform.python_version(), "jiwer": version("jiwer"),
+            "rapidfuzz": version("rapidfuzz"),
             "original_scoring_verified": True, "suite_model_cells": len(results),
             "condition_cells": len(results) * len(CONDITIONS),
-            "original_verification": {"per_utterance_fields": "exact",
-                                      "summary_and_aggregate": "exact at full precision",
-                                      "stored_dump_wer": "matches the original score rounded to six decimals"},
+            "original_verification": {
+                "per_utterance_fields": "exact",
+                "summary_and_aggregate": "exact at full precision",
+                "stored_dump_wer": "matches the original score rounded to six decimals"},
         },
         "limits": [
-            "Hypothesis dumps retain originally scored pairs only; historical exclusions are read from the source summaries.",
-            "Removing apostrophes cannot restore an originally empty reference; newly empty references are counted separately.",
-            "Condition transformations and model decoding are not rerun. Historical fraction handling (NEW-03) remains unchanged.",
-            "No sampling confidence interval, reference-correctness uncertainty or effect in other benchmark waves is estimated.",
-            "The source inputs are not yet in the public repository; reproducing this artefact requires the recovered input bundle.",
+            "Hypothesis dumps retain originally scored pairs only; "
+            "historical exclusions are read from the source summaries.",
+            "Removing apostrophes cannot restore an originally empty reference; "
+            "newly empty references are counted separately.",
+            "Condition transformations and model decoding are not rerun. "
+            "Historical fraction handling (NEW-03) remains unchanged.",
+            "No sampling confidence interval, reference-correctness uncertainty "
+            "or effect in other benchmark waves is estimated.",
+            "The source inputs are not yet in the public repository; "
+            "reproducing this artefact requires the recovered input bundle.",
         ],
         "cells": results,
     }
@@ -334,8 +392,10 @@ def write_outputs(payload: dict, csv_path: Path, json_path: Path):
                 summary = detail[rule]
                 row = {"suite": cell["suite"], "model_slug": cell["model_slug"],
                        "condition": condition, "scoring_rule": rule,
-                       "n_streamed": detail["n_streamed"], "n_original_scored": detail["n_original_scored"],
-                       "n_scored": summary["files"], "n_excluded": detail["n_streamed"] - summary["files"],
+                       "n_streamed": detail["n_streamed"],
+                       "n_original_scored": detail["n_original_scored"],
+                       "n_scored": summary["files"],
+                       "n_excluded": detail["n_streamed"] - summary["files"],
                        "n_original_excluded": detail["n_original_excluded"],
                        "n_newly_excluded": detail["n_newly_excluded"] if rule != "original" else 0,
                        "n_newly_included": 0,
@@ -350,14 +410,28 @@ def write_outputs(payload: dict, csv_path: Path, json_path: Path):
         writer = csv.DictWriter(handle, fieldnames=fields)
         writer.writeheader()
         writer.writerows(rows)
-    json_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False, allow_nan=False) + "\n", encoding="utf-8")
+    json_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False, allow_nan=False)
+                         + "\n", encoding="utf-8")
 
 
 def main(argv=None):
+    """Run :func:`analyse` on the recovered inputs and write the two outputs.
+
+    *argv* replaces ``sys.argv[1:]``. Returns 0. Raises ``ValueError``
+    before anything is written when the two outputs are one file or would
+    overwrite the aggregate, the input manifest or a file in the input
+    snapshot, or when an input fails verification. Side effects: reads the
+    input snapshot, the aggregate and the input manifest; runs ``git``
+    through :func:`provenance.run_metadata`; writes the CSV and the JSON,
+    replacing them; prints a line per cell.
+    """
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--inputs", type=Path, required=True, help="Recovered sweep input directory")
-    parser.add_argument("--aggregate", type=Path, default=Path("output/evaluation/sweep_aggregate.json"))
-    parser.add_argument("--input-manifest", type=Path, required=True, help="Checksum receipt with original file hashes")
+    parser.add_argument("--inputs", type=Path, required=True,
+                        help="Recovered sweep input directory")
+    parser.add_argument("--aggregate", type=Path,
+                        default=Path("output/evaluation/sweep_aggregate.json"))
+    parser.add_argument("--input-manifest", type=Path, required=True,
+                        help="Checksum receipt with original file hashes")
     parser.add_argument("--output-csv", type=Path, required=True)
     parser.add_argument("--output-json", type=Path, required=True)
     args = parser.parse_args(argv)

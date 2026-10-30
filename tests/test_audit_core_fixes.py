@@ -21,11 +21,11 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-import audio_io  # noqa: E402
-import confidence  # noqa: E402
-import preflight  # noqa: E402
-import provenance  # noqa: E402
-from provenance import (  # noqa: E402
+import audio_io
+import confidence
+import preflight
+import provenance
+from provenance import (
     KeyFileError,
     load_key,
     verify_manifest,
@@ -230,6 +230,27 @@ def test_core13_env_wins_and_hub_variable_is_read(clean_token_env, monkeypatch):
     monkeypatch.setenv("HUGGING_FACE_HUB_TOKEN", "hf_env")
     token, source = preflight.resolve_hf_token()
     assert token == "hf_env" and "HUGGING_FACE_HUB_TOKEN" in source
+
+
+@pytest.mark.parametrize("encoding", ["utf-8-sig", "utf-16", "utf-16-be-bom"])
+def test_a_token_file_with_a_byte_order_mark_is_read(clean_token_env, encoding):
+    """A UTF-8 mark survived .strip() and became part of the token; a UTF-16
+    file failed the UTF-8 decode and was skipped as if absent."""
+    path = clean_token_env / "hf_token.txt"
+    if encoding == "utf-16-be-bom":
+        path.write_bytes(b"\xfe\xff" + "hf_marked\r\n".encode("utf-16-be"))
+    else:
+        path.write_bytes("hf_marked\r\n".encode(encoding))
+    assert preflight.resolve_hf_token() == ("hf_marked", str(path))
+
+
+def test_an_undecodable_token_file_is_still_skipped(clean_token_env, monkeypatch, tmp_path):
+    (clean_token_env / "hf_token.txt").write_bytes(b"\xff\xfe\x00")   # odd length
+    hf_home = tmp_path / "hfhome"
+    hf_home.mkdir()
+    _touch(hf_home / "token", "hf_fromhome")
+    monkeypatch.setenv("HF_HOME", str(hf_home))
+    assert preflight.resolve_hf_token() == ("hf_fromhome", str(hf_home / "token"))
 
 
 def test_core13_nothing_found(clean_token_env):
@@ -480,16 +501,22 @@ def test_core17_setup_lists_every_top_level_module():
         assert (PROJECT_ROOT / f"{module}.py").is_file()
 
 
+def _requirement_names(path: Path) -> list[str]:
+    """The lower-cased package names a requirements file lists, in order."""
+    lines = (line.strip() for line in path.read_text(encoding="utf-8").splitlines())
+    return [re.split(r"[<>=!~\[; ]", line)[0].lower() for line in lines
+            if line and not line.startswith(("#", "-"))]
+
+
 def test_deps11_runtime_requirements_exclude_dev_tools():
-    req = (PROJECT_ROOT / "requirements.txt").read_text(encoding="utf-8")
-    names = [re.split(r"[<>=\[ ]", line.strip())[0].lower()
-             for line in req.splitlines()
-             if line.strip() and not line.strip().startswith("#")]
-    for dev in ("pytest", "pytest-cov", "black", "flake8", "mypy"):
+    names = _requirement_names(PROJECT_ROOT / "requirements.txt")
+    # Read from requirements-dev.txt, not typed here: a hand-typed tuple
+    # still named flake8 and black after ruff had replaced them (SC-22).
+    dev_tools = _requirement_names(PROJECT_ROOT / "requirements-dev.txt")
+    assert {"pytest", "ruff"} <= set(dev_tools)
+    for dev in dev_tools:
         assert dev not in names
     assert len(names) == len(set(names)), "duplicate requirement"
-    dev_req = (PROJECT_ROOT / "requirements-dev.txt").read_text(encoding="utf-8")
-    assert "pytest" in dev_req
 
 
 def test_deps18_cli_mains_are_documented():

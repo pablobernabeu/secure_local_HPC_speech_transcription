@@ -1,0 +1,477 @@
+{
+  "description": "A control decode of one FLEURS split at the fourth multilingual arm's code, on a card of the family the target arm decoded it on, compared record by record with the arms' raw summaries (evaluation.fleurs_control; audit finding NEW-05; docs/next_control.md).",
+  "config": "es_419",
+  "language": "spanish",
+  "model": "openai/whisper-large-v3",
+  "seed": 42,
+  "target": "3_after_gate",
+  "control": {
+    "utterances": 908,
+    "n_renamed_duplicate_uids": 560,
+    "revisions": {
+      "google/fleurs": "70bb2e84b976b7e960aa89f1c648e09c59f894dd",
+      "openai/whisper-large-v3": "06f233fe06e710322aca913c1bc4249a0d71fce1"
+    },
+    "decode": {
+      "device": "cuda",
+      "dtype": "torch.float16",
+      "model_commit": "06f233fe06e710322aca913c1bc4249a0d71fce1",
+      "torch_cuda": "12.1",
+      "cudnn": 90100,
+      "gpu": "Tesla V100-PCIE-32GB"
+    },
+    "summary": {
+      "files": 908,
+      "macro_wer": 0.02937565607283082,
+      "micro_wer": 0.028730703259005147,
+      "macro_mer": 0.028429183112915788,
+      "micro_mer": 0.028615358332621507,
+      "macro_wil": 0.0467392908821053,
+      "macro_cer": 0.01190387104789618,
+      "total_reference_words": 23320,
+      "total_hypothesis_words": 23306,
+      "total_hits": 22744,
+      "total_substitutions": 468,
+      "total_deletions": 108,
+      "total_insertions": 94
+    },
+    "run_metadata": {
+      "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+      "git_dirty": false,
+      "python": "3.12.12",
+      "platform": "Linux-5.14.0-427.42.2.arc.el9.x86_64-x86_64-with-glibc2.34",
+      "packages": {
+        "torch": "2.5.1+cu121",
+        "torchaudio": "2.5.1+cu121",
+        "transformers": "4.57.1",
+        "pyannote.audio": "3.4.0",
+        "jiwer": "4.0.0",
+        "datasets": "4.8.5",
+        "numpy": "2.3.3",
+        "scipy": "1.16.2",
+        "librosa": "0.11.0",
+        "soundfile": "0.13.1",
+        "gliner": null,
+        "huggingface_hub": "0.35.3"
+      }
+    }
+  },
+  "comparisons": {
+    "1_before_fix": {
+      "code": "9ae40a2",
+      "arc_jobs": [
+        "8166513",
+        "8166514"
+      ],
+      "gpu": "Tesla V100-SXM2-32GB",
+      "raw_macro_wer": 0.02937565607283082,
+      "utterances_compared": 908,
+      "identical": 908,
+      "differing": 0,
+      "summary_identical": true,
+      "differing_utterances": [],
+      "provenance_differences": null,
+      "target_differs_on_the_same_utterances": true
+    },
+    "2_after_fix": {
+      "code": "812552b",
+      "arc_jobs": [
+        "8174224",
+        "8174225"
+      ],
+      "gpu": "Tesla P100-PCIE-16GB",
+      "raw_macro_wer": 0.02926012577362248,
+      "utterances_compared": 908,
+      "identical": 904,
+      "differing": 4,
+      "summary_identical": false,
+      "differing_utterances": [
+        {
+          "uid": "1725",
+          "position": 66,
+          "fields": {
+            "wer": {
+              "control": 0.02702702702702703,
+              "other": 0.0
+            },
+            "mer": {
+              "control": 0.02702702702702703,
+              "other": 0.0
+            },
+            "wil": {
+              "control": 0.05332359386413432,
+              "other": 0.0
+            },
+            "cer": {
+              "control": 0.004830917874396135,
+              "other": 0.0
+            },
+            "hits": {
+              "control": 36,
+              "other": 37
+            },
+            "substitutions": {
+              "control": 1,
+              "other": 0
+            }
+          }
+        },
+        {
+          "uid": "1735",
+          "position": 201,
+          "fields": {
+            "wer": {
+              "control": 0.1016949152542373,
+              "other": 0.05084745762711865
+            },
+            "mer": {
+              "control": 0.1016949152542373,
+              "other": 0.05084745762711865
+            },
+            "wil": {
+              "control": 0.179135008766803,
+              "other": 0.08357685563997652
+            },
+            "cer": {
+              "control": 0.05014749262536873,
+              "other": 0.04129793510324484
+            },
+            "hits": {
+              "control": 53,
+              "other": 56
+            },
+            "substitutions": {
+              "control": 5,
+              "other": 2
+            }
+          }
+        },
+        {
+          "uid": "2004",
+          "position": 501,
+          "fields": {
+            "cer": {
+              "control": 0.034782608695652174,
+              "other": 0.02608695652173913
+            }
+          }
+        },
+        {
+          "uid": "1785",
+          "position": 788,
+          "fields": {
+            "wer": {
+              "control": 0.02702702702702703,
+              "other": 0.0
+            },
+            "mer": {
+              "control": 0.02702702702702703,
+              "other": 0.0
+            },
+            "wil": {
+              "control": 0.05332359386413432,
+              "other": 0.0
+            },
+            "cer": {
+              "control": 0.004608294930875576,
+              "other": 0.0
+            },
+            "hits": {
+              "control": 36,
+              "other": 37
+            },
+            "substitutions": {
+              "control": 1,
+              "other": 0
+            }
+          }
+        }
+      ],
+      "provenance_differences": null,
+      "target_differs_on_the_same_utterances": true
+    },
+    "3_after_gate": {
+      "code": "c0f58c5",
+      "arc_jobs": [
+        "8245204",
+        "8245205"
+      ],
+      "gpu": "Tesla V100-SXM2-32GB",
+      "raw_macro_wer": 0.02937565607283082,
+      "utterances_compared": 908,
+      "identical": 908,
+      "differing": 0,
+      "summary_identical": true,
+      "differing_utterances": [],
+      "provenance_differences": null
+    },
+    "4_after_audit": {
+      "code": "6f9bf56",
+      "arc_jobs": [
+        "8917984"
+      ],
+      "gpu": "NVIDIA L40S",
+      "raw_macro_wer": 0.029237447336847126,
+      "utterances_compared": 908,
+      "identical": 904,
+      "differing": 4,
+      "summary_identical": false,
+      "differing_utterances": [
+        {
+          "uid": "1735",
+          "position": 201,
+          "fields": {
+            "wer": {
+              "control": 0.1016949152542373,
+              "other": 0.05084745762711865
+            },
+            "mer": {
+              "control": 0.1016949152542373,
+              "other": 0.05084745762711865
+            },
+            "wil": {
+              "control": 0.179135008766803,
+              "other": 0.08357685563997652
+            },
+            "cer": {
+              "control": 0.05014749262536873,
+              "other": 0.04129793510324484
+            },
+            "hits": {
+              "control": 53,
+              "other": 56
+            },
+            "substitutions": {
+              "control": 5,
+              "other": 2
+            }
+          }
+        },
+        {
+          "uid": "2004",
+          "position": 501,
+          "fields": {
+            "cer": {
+              "control": 0.034782608695652174,
+              "other": 0.02608695652173913
+            }
+          }
+        },
+        {
+          "uid": "1966",
+          "position": 541,
+          "fields": {
+            "wer": {
+              "control": 0.047619047619047616,
+              "other": 0.0
+            },
+            "mer": {
+              "control": 0.047619047619047616,
+              "other": 0.0
+            },
+            "wil": {
+              "control": 0.09297052154195018,
+              "other": 0.0
+            },
+            "cer": {
+              "control": 0.007518796992481203,
+              "other": 0.0
+            },
+            "hits": {
+              "control": 20,
+              "other": 21
+            },
+            "substitutions": {
+              "control": 1,
+              "other": 0
+            }
+          }
+        },
+        {
+          "uid": "1785",
+          "position": 788,
+          "fields": {
+            "wer": {
+              "control": 0.02702702702702703,
+              "other": 0.0
+            },
+            "mer": {
+              "control": 0.02702702702702703,
+              "other": 0.0
+            },
+            "wil": {
+              "control": 0.05332359386413432,
+              "other": 0.0
+            },
+            "cer": {
+              "control": 0.004608294930875576,
+              "other": 0.0
+            },
+            "hits": {
+              "control": 36,
+              "other": 37
+            },
+            "substitutions": {
+              "control": 1,
+              "other": 0
+            }
+          }
+        }
+      ],
+      "provenance_differences": {
+        "benchmark/decode/gpu": {
+          "control": "Tesla V100-PCIE-32GB",
+          "other": "NVIDIA L40S"
+        }
+      },
+      "target_differs_on_the_same_utterances": true
+    }
+  },
+  "preflight": {
+    "utterances": 5,
+    "gpu": "Tesla V100-PCIE-32GB",
+    "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+    "matches_the_control": true,
+    "matches_the_target": true
+  },
+  "jobs": {
+    "4_after_audit": {
+      "date": "2026-09-28T10:23:45+0100",
+      "host": "htc-g081",
+      "slurm_job_id": "8923454",
+      "slurm_array": "8917984_2",
+      "slurm_job_name": "au_ml",
+      "slurm_cluster": "htc",
+      "slurm_partition": "short",
+      "slurm_account": "educ-lift",
+      "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+      "git_modified_tracked_files": "0",
+      "gpu": "NVIDIA L40S, 580.65.06, 46068 MiB",
+      "modules": [
+        "Anaconda3/2025.06-1",
+        "CUDA/13.0.2"
+      ],
+      "n_packages": 179,
+      "packages_identical_to_control": true
+    },
+    "control": {
+      "date": "2026-10-19T11:31:49+0100",
+      "host": "htc-g004",
+      "slurm_job_id": "9124863",
+      "slurm_array": "9124863_2",
+      "slurm_job_name": "ctl_es419_v100",
+      "slurm_cluster": "htc",
+      "slurm_partition": "short",
+      "slurm_account": "educ-intract",
+      "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+      "git_modified_tracked_files": "0",
+      "gpu": "Tesla V100-PCIE-32GB, 580.65.06, 32768 MiB",
+      "modules": [
+        "Anaconda3/2025.06-1",
+        "CUDA/13.0.2"
+      ],
+      "n_packages": 179
+    },
+    "preflight": {
+      "date": "2026-10-19T11:31:49+0100",
+      "host": "htc-g003",
+      "slurm_job_id": "9124739",
+      "slurm_array": "9124739_2",
+      "slurm_job_name": "pf_es419_v100",
+      "slurm_cluster": "htc",
+      "slurm_partition": "short",
+      "slurm_account": "educ-intract",
+      "git_commit": "6f9bf56a0d5839920537f23d73a166dc0f1e478b",
+      "git_modified_tracked_files": "0",
+      "gpu": "Tesla V100-PCIE-32GB, 580.65.06, 32768 MiB",
+      "modules": [
+        "Anaconda3/2025.06-1",
+        "CUDA/13.0.2"
+      ],
+      "n_packages": 179,
+      "packages_identical_to_control": true
+    }
+  },
+  "finding": {
+    "reproduces_target": true,
+    "differs_from_others_where_target_does": true,
+    "transcripts_compared": false,
+    "outcome": "The control reproduces arm 3_after_gate's raw records of es_419 on all 908 utterances, and differs from each other arm on the utterances where that arm also departs from it. Where an arm records its decode and run metadata, the fields in which it differs from the control are listed under provenance_differences. The summaries keep no transcripts, so the records agree in their alignment counts and error rates, which the same words would give but do not prove."
+  },
+  "inputs": [
+    {
+      "role": "control",
+      "file": "wer_summary_fleurs_es_419_whisper-large-v3.json",
+      "sha256": "58debbc999de47040a1c0164412bd4f63c2dc6e5b345889e33efb212cb403fcd",
+      "sha256_lf": "58debbc999de47040a1c0164412bd4f63c2dc6e5b345889e33efb212cb403fcd"
+    },
+    {
+      "role": "arm",
+      "arm": "1_before_fix",
+      "file": "wer_summary_fleurs_es_419.json",
+      "sha256": "7311b602f06666adf2b4ee0a9538f4727700becc601e8773f34541202f5c519b",
+      "sha256_lf": "7311b602f06666adf2b4ee0a9538f4727700becc601e8773f34541202f5c519b"
+    },
+    {
+      "role": "arm",
+      "arm": "2_after_fix",
+      "file": "wer_summary_fleurs_es_419.json",
+      "sha256": "92d3ba92f5f119b034bc07908713cd3845391605e76eed803f042851cc953aeb",
+      "sha256_lf": "92d3ba92f5f119b034bc07908713cd3845391605e76eed803f042851cc953aeb"
+    },
+    {
+      "role": "arm",
+      "arm": "3_after_gate",
+      "file": "wer_summary_fleurs_es_419.json",
+      "sha256": "7311b602f06666adf2b4ee0a9538f4727700becc601e8773f34541202f5c519b",
+      "sha256_lf": "7311b602f06666adf2b4ee0a9538f4727700becc601e8773f34541202f5c519b"
+    },
+    {
+      "role": "arm",
+      "arm": "4_after_audit",
+      "file": "wer_summary_fleurs_es_419_whisper-large-v3.json",
+      "sha256": "3c21bba3b288e3b97105fefaada3f1c236bac10268f7c62c5b449f4f9bcd765e",
+      "sha256_lf": "3c21bba3b288e3b97105fefaada3f1c236bac10268f7c62c5b449f4f9bcd765e"
+    },
+    {
+      "role": "preflight",
+      "file": "wer_summary_fleurs_es_419_whisper-large-v3.json",
+      "sha256": "c5d6c9cccf91c817d61f9a8425fd99fbd92507dc9203b8e3af92494625cd660a",
+      "sha256_lf": "c5d6c9cccf91c817d61f9a8425fd99fbd92507dc9203b8e3af92494625cd660a"
+    },
+    {
+      "role": "environment",
+      "label": "4_after_audit",
+      "file": "au_ml_8917984_2.txt",
+      "sha256": "3c0e52314cee1923892b943dd686b79d8430de342eaf33491cd5b6ccfffa0fef",
+      "sha256_lf": "3c0e52314cee1923892b943dd686b79d8430de342eaf33491cd5b6ccfffa0fef"
+    },
+    {
+      "role": "environment",
+      "label": "control",
+      "file": "ctl_es419_v100_9124863_2.txt",
+      "sha256": "0afcac451afd8c82137da06d5e30146f8396453a7851464fd241f6dd993cd5ee",
+      "sha256_lf": "0afcac451afd8c82137da06d5e30146f8396453a7851464fd241f6dd993cd5ee"
+    },
+    {
+      "role": "environment",
+      "label": "preflight",
+      "file": "pf_es419_v100_9124739_2.txt",
+      "sha256": "1529ea90aeadee0ab196b02b37a1fbcbe0abeaefd53fadda970c793275d69ddb",
+      "sha256_lf": "1529ea90aeadee0ab196b02b37a1fbcbe0abeaefd53fadda970c793275d69ddb"
+    },
+    {
+      "role": "multilingual_summary",
+      "file": "fleurs_multilingual_summary.json",
+      "sha256": "94e9a516bae595a114d674c2171ae19ce17b47d1a43361a8ba62716e45338583",
+      "sha256_lf": "d6cb981c1af10ea8ed5f6ad0a4b4bd83733a6383da651324c917ece9a344549b"
+    }
+  ],
+  "run_metadata": {
+    "git_commit": "ce1ca7f669ad168d31498bfe157833415c3d61fc",
+    "git_dirty": false,
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "packages": {}
+  }
+}

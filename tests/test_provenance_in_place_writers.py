@@ -28,21 +28,21 @@ import pytest
 
 np = pytest.importorskip("numpy")
 
-import provenance  # noqa: E402
-from evaluation import audit_reconstruction as ar  # noqa: E402
-from evaluation import benchmark_der as bd  # noqa: E402
-from evaluation import benchmark_masking as bm  # noqa: E402
-from evaluation import benchmark_wer as bw  # noqa: E402
-from evaluation import der_metrics as dm  # noqa: E402
-from evaluation import determinism_cross as dc  # noqa: E402
-from evaluation import disfluency  # noqa: E402
-from evaluation import fleurs_diacritics as fd  # noqa: E402
-from evaluation import wer  # noqa: E402
-from test_determinism_cross import _dump  # noqa: E402
-from test_provenance_in_place import (  # noqa: E402
+import provenance
+from evaluation import audit_reconstruction as ar
+from evaluation import benchmark_der as bd
+from evaluation import benchmark_masking as bm
+from evaluation import benchmark_wer as bw
+from evaluation import der_metrics as dm
+from evaluation import determinism_cross as dc
+from evaluation import disfluency
+from evaluation import fleurs_diacritics as fd
+from evaluation import wer
+from test_determinism_cross import _dump
+from test_provenance_in_place import (
     _checkout, _edit_code, _rewrote_tracked_files,
 )
-from test_s1_wer_disfluency import _rows, _write  # noqa: E402
+from test_s1_wer_disfluency import _rows, _write
 
 pytestmark = pytest.mark.skipif(shutil.which("git") is None, reason="git not on PATH")
 

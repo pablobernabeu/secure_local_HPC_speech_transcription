@@ -20,7 +20,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from evaluation import benchmark_podcast as bp  # noqa: E402
+from evaluation import benchmark_podcast as bp
 
 _DURATIONS = {
     "ep01_the-architecture-of-meaning-inside-the-words-we-use": 2305.0,

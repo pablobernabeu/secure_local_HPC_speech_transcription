@@ -12,7 +12,6 @@ from setuptools import setup, find_packages
 from setuptools.command.build_py import build_py
 from pathlib import Path
 
-# Read the README file
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text(encoding='utf-8')
 
@@ -25,6 +24,8 @@ class RuntimeDataBuild(build_py):
     """Keep the installed module's dictionary and release record beside it."""
 
     def run(self):
+        """Build the modules, then copy each :data:`_RUNTIME_DATA` file into
+        the build tree at its repository-relative path."""
         super().run()
         for relative in _RUNTIME_DATA:
             destination = Path(self.build_lib) / relative
@@ -32,6 +33,8 @@ class RuntimeDataBuild(build_py):
             self.copy_file(str(this_directory / relative), str(destination))
 
     def get_outputs(self, include_bytecode=1):
+        """Return the files this command built, the copied runtime data
+        included, so that setuptools counts them among its outputs."""
         return [*super().get_outputs(include_bytecode),
                 *(str(Path(self.build_lib) / relative) for relative in _RUNTIME_DATA)]
 
@@ -52,7 +55,7 @@ _REPO_URL = "https://github.com/pablobernabeu/secure_local_HPC_speech_transcript
 setup(
     name="speech-transcription-system",
     # Kept by hand in step with CITATION.cff and versions.csv (CORE-17).
-    version="2.0.0",
+    version="2.1.0",
     author="Pablo Bernabeu",
     description="Local speech transcription with audio enhancement and speaker attribution",
     long_description=long_description,
@@ -97,7 +100,8 @@ setup(
     package_data={
         "": ["*.md", "*.txt", "*.csv"],
     },
-    keywords="speech recognition, whisper, transcription, audio processing, speaker diarization, privacy protection",
+    keywords=("speech recognition, whisper, transcription, audio processing, "
+              "speaker diarization, privacy protection"),
     project_urls={
         "Bug Reports": f"{_REPO_URL}/issues",
         "Source": _REPO_URL,

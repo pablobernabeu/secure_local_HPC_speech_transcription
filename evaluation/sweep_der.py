@@ -174,7 +174,7 @@ def _pyannote_version() -> str | None:
     try:
         import pyannote.audio as _pa
         return _pa.__version__
-    except Exception:  # noqa: BLE001 - provenance only
+    except Exception:  # provenance only
         return None
 
 
@@ -421,6 +421,16 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """Run :func:`run_sweep` with the command-line arguments.
+
+    *argv* replaces ``sys.argv[1:]`` (see :func:`_parse_args`). Returns 0
+    once the grid is complete. A refused option or a failed step raises
+    ``SystemExit`` with its message; run as a script, the module prints
+    that message and exits with its status through
+    :func:`evaluation.benchmark_der.exit_without_finalising`. Side effects
+    are those of :func:`run_sweep`, whose default ``--output-dir`` is the
+    committed ``output/evaluation``.
+    """
     args = _parse_args(argv)
     run_sweep(
         output_dir=args.output_dir, split=args.split, mix_mode=args.mix_mode,

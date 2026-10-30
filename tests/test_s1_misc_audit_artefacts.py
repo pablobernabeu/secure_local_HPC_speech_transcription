@@ -16,7 +16,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from evaluation import audit_artefacts as aa  # noqa: E402
+from evaluation import audit_artefacts as aa
 
 
 def _log(tree: Path, rows):

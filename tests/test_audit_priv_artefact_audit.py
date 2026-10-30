@@ -18,7 +18,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from evaluation.audit_artefacts import (  # noqa: E402
+from evaluation.audit_artefacts import (
     TYPE_OTHER,
     TYPE_RAW_JSON,
     TYPE_REDACTED_JSON,
@@ -129,6 +129,88 @@ def test_title_rows_are_not_names(tmp_path):
         writer.writerow(["rec", 1, "Prof", "[TITLE]", "Prof Smith.", ])
         writer.writerow(["rec", 2, "Smith", "[SURNAME]", "Prof Smith."])
     assert extract_masked_names(legacy) == {"Smith"}
+
+
+def _log_finding(findings):
+    return next(f for f in findings if f.path.startswith("name_masking_logs/"))
+
+
+def test_a_log_without_the_original_column_is_reported(tmp_path, capsys):
+    """Such a log gave no names, and every file was then reported clean."""
+    path = tmp_path / "name_masking_logs" / "rec" / "name_replacements.csv"
+    path.parent.mkdir(parents=True)
+    path.write_text("filename,order,name,replacement\nrec,1,Alice,[NAME]\n",
+                    encoding="utf-8")
+    (tmp_path / "rec_transcript.txt").write_text("Hello Alice.", encoding="utf-8")
+    findings, names = audit_directory(tmp_path)
+    assert names == set()
+    assert "has no 'original' column" in _log_finding(findings).detail
+    assert "not scanned for" in capsys.readouterr().err
+    # Not "no masking log in tree", nor "nothing to scan for": the log of
+    # this recording holds names that could not be looked for.
+    transcript = {f.path: f for f in findings}["rec_transcript.txt"]
+    assert transcript.detail == (
+        "not checked: the masking log name_masking_logs/rec/name_replacements.csv "
+        "was not read in full, so the names it holds were not all looked for")
+    assert transcript.status == "not_checked"
+
+
+def test_an_undecodable_log_is_reported(tmp_path, capsys):
+    path = tmp_path / "name_masking_logs" / "rec" / "name_replacements.csv"
+    path.parent.mkdir(parents=True)
+    path.write_bytes(b"filename,order,original,replacement\nrec,1,\xff\xfe,[NAME]\n")
+    findings, _ = audit_directory(tmp_path)
+    assert _log_finding(findings).detail.startswith(
+        "masking log held 2 undecodable byte sequence(s), read as U+FFFD")
+    assert "Warning: masking log" in capsys.readouterr().err
+
+
+def test_a_log_that_cannot_be_opened_is_reported(tmp_path, capsys, monkeypatch):
+    _log(tmp_path, "Alice")
+    target = tmp_path / "name_masking_logs" / "rec" / "name_replacements.csv"
+    real_read_bytes = Path.read_bytes
+
+    def read_bytes(self):
+        if self == target:
+            raise PermissionError("denied")
+        return real_read_bytes(self)
+
+    monkeypatch.setattr(Path, "read_bytes", read_bytes)
+    findings, names = audit_directory(tmp_path)
+    assert names == set()
+    assert _log_finding(findings).detail.startswith(
+        "masking log could not be read (PermissionError: denied)")
+    err = capsys.readouterr().err
+    # The warning reads as a sentence ("masking log X is no 'original'
+    # column" did not).
+    assert f"masking log {target} could not be read" in err
+
+
+def test_a_readable_log_has_the_usual_detail(tmp_path, capsys):
+    _log(tmp_path, "Alice")
+    findings, _ = audit_directory(tmp_path)
+    assert _log_finding(findings).detail == (
+        "masking log; stores 1 original name(s) by design (expected, not a leak)")
+    assert capsys.readouterr().err == ""
+
+
+def test_an_unreadable_transcript_is_skipped_not_clean(tmp_path, monkeypatch):
+    """An unreadable file was scanned as empty text and reported clean."""
+    _log(tmp_path, "Alice")
+    target = tmp_path / "rec_transcript.txt"
+    target.write_text("Hello Alice.", encoding="utf-8")
+    real_read_text = Path.read_text
+
+    def read_text(self, *args, **kwargs):
+        if self == target:
+            raise PermissionError("denied")
+        return real_read_text(self, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", read_text)
+    findings, _ = audit_directory(tmp_path)
+    finding = {f.path: f for f in findings}["rec_transcript.txt"]
+    assert finding.detail == "skipped: unreadable file"
+    assert not finding.residual_pii_found
 
 
 def test_a_title_left_in_the_redacted_words_is_not_a_leak(

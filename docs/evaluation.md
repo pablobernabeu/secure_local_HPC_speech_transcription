@@ -1,4 +1,4 @@
-# Systematic Evaluation: Word Error Rate
+# Evaluating word error rate
 
 The `evaluation.wer` module benchmarks hypothesis transcripts against a
 human-prepared reference (or "ground truth") corpus and produces a
@@ -11,7 +11,7 @@ edit-distance alignment used in speech-recognition research.
 A naïve string comparison would penalise the model for differences that
 are immaterial to the meaning of the transcript: smart quotes versus
 ASCII apostrophes, capital letters at the start of a sentence, trailing
-punctuation, or non-breaking spaces. Before scoring, both reference and
+punctuation or non-breaking spaces. Before scoring, both reference and
 hypothesis are passed through the same normalisation function:
 
 1. Unicode `NFKC` normalisation, then conversion of the curly single
@@ -34,7 +34,7 @@ timestamp, ...) cannot inflate or deflate the score.
 For each pair the module records the Word Error Rate (WER), Match Error
 Rate (MER), Word Information Lost (WIL), Character Error Rate (CER), and
 the raw alignment counts (hits, substitutions, deletions, insertions).
-At the corpus level it reports both the macro-averaged WER (mean over
+At the corpus level, it reports both the macro-averaged WER (mean over
 files) and the micro-averaged WER (total errors divided by total
 reference words), which behave differently when file lengths are
 unbalanced.
@@ -57,7 +57,7 @@ retaining every utterance each selected reader supplied. It divides each
 resample's total of per-utterance WERs by its utterance count, preserving
 the macro-WER estimand even though readers contribute unequal numbers of
 utterances. Paired condition differences use the same reader draw for both
-conditions, with exact ID matching; missing rows, duplicate IDs and
+conditions, with exact ID matching. Missing rows, duplicate IDs and
 unusable scores fail explicitly.
 
 The committed `speaker_cluster_sensitivity.json` records 10,000 replicates,
@@ -65,8 +65,8 @@ seed 42, the input paths and SHA-256 digests after normalising CSV line
 endings to LF. Its headline interval is 5.08% to 7.36%, compared with
 5.75% to 6.70% from the original utterance bootstrap. The historical
 contraction and composite costs remain positive under reader resampling.
-These intervals describe sensitivity to reweighting the observed readers;
-they do not measure uncertainty from selecting the corpus, the reference
+These intervals describe sensitivity to reweighting the observed readers.
+They do not measure uncertainty from selecting the corpus, the reference
 transcripts or a new participant population. The original interval files
 are retained. Rebuild the separate report with:
 
@@ -77,7 +77,7 @@ python -m evaluation.speaker_cluster_ci \
     --condition output/evaluation/sweep_reports/wer_report_contraction_fix.csv \
                 output/evaluation/sweep_reports/wer_report_pipeline_full.csv \
     --bootstrap 10000 --seed 42 \
-    --output output/evaluation/speaker_cluster_sensitivity.json
+    --output my_check/speaker_cluster_sensitivity.json
 ```
 
 The module requires LibriSpeech's numeric reader–chapter–utterance IDs.
@@ -97,12 +97,13 @@ python -m evaluation.wer \
 `<reference_dir>` holds one human reference per recording. Pass
 `--report` and `--summary` to put the results where you want them. Their
 defaults are `output/evaluation/wer_report_transcripts.csv` and
-`output/evaluation/wer_summary_transcripts.json`: deliberately not
-`wer_report.csv` and `wer_summary.json`, the LibriSpeech benchmark
-results the manuscript reads, which the defaults once named, so that
-scoring your own recordings replaced the paper's headline result (audit
-finding EWER-11). The summary records what was compared, the normaliser
-settings, and the code commit and package versions of the run.
+`output/evaluation/wer_summary_transcripts.json`. The defaults once
+named `wer_report.csv` and `wer_summary.json`, the LibriSpeech benchmark
+results the manuscript reads, so that scoring your own recordings
+replaced the paper's headline result (audit finding EWER-11). The
+summary records what was compared, the normaliser settings, the code
+commit and package versions of the run, and any matched pair it could
+not score (see [Output](#output)).
 
 Hypothesis and reference may be passed either as directories or as two
 individual files. In directories, files are paired by stem: a hypothesis
@@ -149,7 +150,14 @@ run on CPU (see [hpc_usage.md](hpc_usage.md)).
 The report CSV contains one row per file with all metrics and counts.
 The summary JSON contains the same per-file data plus a `summary` block
 with the corpus-level figures and a `run_metadata` block with the code
-commit and package versions. The committed
+commit and package versions. In a directory run, a pair that cannot be
+scored, such as one whose reference is empty after normalisation or
+whose JSON does not parse, is skipped with a message on stderr. The
+summary block counts such pairs as `n_skipped_pairs`, and a top-level
+`skipped_pairs` list gives each one's hypothesis and reference file names
+with the error. A summary over fewer pairs than were matched therefore
+says so, and the console summary prints the count too. Two files given
+as a single pair are not skipped: a failure stops the run. The committed
 `output/evaluation/wer_summary.json`, which the Quarto manuscript reads to
 populate its tables and figures, is the summary the condition sweep wrote
 for its raw Large v3 cell on LibriSpeech test-clean
@@ -180,30 +188,30 @@ was aggregated in June 2026, before the stage was split out of
 `--conditions` chooses the list explicitly, and `python -m evaluation.sweep
 --list-conditions` prints the registry. The conditions themselves are catalogued in
 `evaluation/conditions.py` and documented in detail in
-[conditions_audit.md](conditions_audit.md). The registry is
-populated by three groups: the production pipeline of the desktop
-application, decomposed into atomic stages and exposed as
-`unicode_strip`, `repetition_fix`, `undefined_tag`, `filler_bracket`,
-`contraction_fix`, `common_phrase_fix`, `whitespace_normalise`,
-`sentence_capitalise`, `pronoun_i_fix`, `punct_space_fix` and the
-composite `pipeline_full`; a diagnostic ablation set comprising `filler_strip`,
-`dedup_window`, `punct_strip` and `case_fold`; and the canonical
-`whisper_norm` reference point. `whisper_norm` is Whisper's own English
+[conditions_audit.md](conditions_audit.md). The registry holds three
+groups. The first is the production pipeline of the desktop application,
+decomposed into atomic stages and exposed as `unicode_strip`,
+`repetition_fix`, `undefined_tag`, `filler_bracket`, `contraction_fix`,
+`common_phrase_fix`, `whitespace_normalise`, `sentence_capitalise`,
+`pronoun_i_fix`, `punct_space_fix` and the composite `pipeline_full`.
+The second is a diagnostic ablation set of `filler_strip`,
+`dedup_window`, `punct_strip` and `case_fold`, and the third is the
+canonical `whisper_norm` reference point. `whisper_norm` is Whisper's own English
 normaliser from transformers together with the British-to-American
 spelling map it is meant to load, `normalizers/english.json` from the
 `openai-whisper` package (20250625 in the job environment), checked
-against a pinned SHA-256. Without that package the condition stops with
+against a pinned SHA-256. Without that package, the condition stops with
 an error. It used to run with an empty map, which standardises nothing,
 and every `whisper_norm` result committed before the audit's re-run of
 the sweep (2e36bf9) was scored that way, the pre-repair files kept as
 history among them (audit finding EWER-05). Conditions for which it is
 meaningful to apply the transformation to the reference (currently
 `punct_strip`, `case_fold` and `whisper_norm`) are flagged
-symmetric; the rest are hypothesis-only. `pipeline_full` is also
+symmetric, and the rest are hypothesis-only. `pipeline_full` is also
 flagged `language_aware`, so the benchmark passes its `--language`
 through and the composite skips its English-only stages on
-non-English corpora; see
-[conditions_audit.md](conditions_audit.md#the-language-gate).
+non-English corpora (see
+[conditions_audit.md](conditions_audit.md#the-language-gate)).
 
 The sweep is invoked locally with
 
@@ -239,20 +247,20 @@ SWEEP_DIR=$OUT sbatch --dependency=afterok:${JID%%;*} hpc/aggregate_sweep.sh
 ```
 
 Without `SWEEP_DIR`, `aggregate_sweep.sh` aggregates the sweep behind the
-committed matrix (`hpc/runs/sweep.env`). `python -m evaluation.sweep_aggregate` writes
-one row per suite, model and condition: the four macro metrics (the
-unweighted mean of per-utterance rates), the reference-word count, the
-source summary relative to the sweep directory and a `pipeline_version`
-column; then the pooled (micro) WER and MER, errors over reference words,
-with the hit, substitution, deletion, insertion and hypothesis-word
-totals behind them, and `wer_invisible`, which marks the conditions whose
-effect the scoring normaliser erases by construction. On AMI a few
+committed matrix (`hpc/runs/sweep.env`). `python -m evaluation.sweep_aggregate` writes one row per suite, model
+and condition. Each row holds the four macro metrics (the unweighted mean
+of per-utterance rates), the reference-word count, the source summary
+relative to the sweep directory and a `pipeline_version` column. It then
+holds the pooled (micro) WER and MER, errors over reference words, with
+the hit, substitution, deletion, insertion and hypothesis-word totals
+behind them, and `wer_invisible`, which marks the conditions whose effect
+the scoring normaliser erases by construction. On AMI, a few
 hallucinated hypotheses against one- or two-word references dominate the
 macro figure, and the pooled columns are what shows it (audit finding
 EWER-08). `pipeline_version` comes from each summary's own record, else
 from the commit in its run metadata, else from `--pipeline-version LABEL`
 for summaries that record neither. The committed matrix's summaries carry
-their commit; the post-fix matrix before it was labelled
+their commit, and the post-fix matrix before it was labelled
 `--pipeline-version "post-fix (af3bee0)"`. The aggregator refuses
 a grid with a repeated cell, which is what two nested sweeps in one
 directory produce, and a grid with a missing cell unless given
@@ -279,20 +287,20 @@ names, so the run passes `--prefix wer_report_ami_whisper-large-v3`, and
 
 `python -m evaluation.fleurs_multilingual` builds
 `output/evaluation/fleurs_multilingual_summary.json`, which the
-manuscript's multilingual section reads, from the per-language FLEURS
-summaries of its four arms (before the Unicode-strip repair, after it,
-with the language gate, and the re-run of the repaired code after the
-September 2026 audit), each passed as `--arm NAME=DIR`. The file was
+manuscript's multilingual section reads. Its inputs are the per-language
+FLEURS summaries of four arms, each passed as `--arm NAME=DIR`: before
+the Unicode-strip repair, after it, with the language gate, and the
+re-run of the repaired code after the September 2026 audit. The file was
 first assembled by hand. The 48 summaries are on ARC, not in the
 repository, and rebuilding from them reproduces every computed value.
 The module reads the file names of the first three arms and the names
 carrying the model slug that the submit script has written since
-a22a864, and refuses an input whose recorded configuration, condition,
+a22a864. It refuses an input whose recorded configuration, condition,
 model, code commit or GPU contradicts its name or its arm. The share of
 words with a diacritic per language is read with `--diacritics` from
 `output/evaluation/fleurs_diacritic_shares.json`, which
 `evaluation.fleurs_diacritics` measured on every reference word of the
-test splits; the first committed shares had been measured outside the
+test splits. The first committed shares had been measured outside the
 repository on an unrecorded sample. The prose `finding` block is carried
 over from the existing file instead of computed. The module docstring
 names the directory of each arm, and its `ARMS` registry the code
@@ -320,17 +328,66 @@ whether taken from the pipeline or loaded alone.
 The order of all the evaluation jobs, and the invocation behind each
 committed result, are in [hpc/README.md](../hpc/README.md). That page
 also lists `hpc/submit_finetune_pyannote.sh`, which fine-tunes the
-diarisation segmentation model; it has never been run for a reported
+diarisation segmentation model. It has never been run for a reported
 result, and the manuscript's diarisation figures come from the released
 model.
+
+## Auditing a run's outputs for residual names
+
+`python -m evaluation.audit_artefacts` looks for the names a run's
+masking logs record in the other files the run wrote. Each file is
+classed by when the pipeline writes it. The `.txt` and `.docx`
+transcripts, the `_transcript_redacted` pair and a `_review.json` whose
+payload carries `"redacted": true` are written after masking, so a logged
+name found in one of them is a leak. The raw `.json` and `.vtt`, and a
+review written without masking, come from the unmasked text and are
+expected to hold the names. The search matches whole words, case
+included. A
+second pass ignores case and lists what it adds under
+`leaked_names_casefold`, for a check by hand, because it also matches
+ordinary words that are names ("will", "mark").
+
+A pipeline run writes `output/` and `name_masking_logs/` under the
+directory it runs from, so audit that directory, which holds both, and
+write the report somewhere else:
+
+```bash
+python -m evaluation.audit_artefacts --dir path/to/run --output-dir path/to/run_audit
+```
+
+Given `output/` alone, the audit finds no masking log, looks for
+nothing and exits 0. Without `--output-dir`, the report goes to
+`output/evaluation/`, where it replaces the committed audit of
+`example_output/`. `artefact_audit.csv` has one row per file. The
+summary in `artefact_audit.json` gives the counts and the recovered
+names. It lists what could not be checked under
+`masking_logs_not_read_in_full`, `skipped_files` (artefacts that could
+not be read, such as a `.docx` without python-docx) and
+`files_not_checked`. `audit_complete` is false when any of the three
+holds a file, and each file's entry gives its own `status`.
+
+A masking log is decoded as UTF-8 with each undecodable byte replaced,
+so a bad byte costs only the name it falls in. A log with such a byte,
+like one that cannot be read or parsed to the end, may still hold names
+the audit cannot look for. The artefacts of its recording, those under a
+directory of that name or whose file name begins with it, are then
+reported as not checked. If no artefact can be tied to the log, all of
+them are. The console summary names up to five files of each kind, and
+stderr carries a warning for each such log.
+
+The exit status is 0 when every artefact was checked against every
+logged name, 2 when `--dir` is not a directory and 3 when the audit is
+incomplete. A leak leaves the status at 0, and the report and the
+console say where it is. The report is written in both the 0 and the 3
+case.
 
 ## How testing proceeds across the post-processing steps
 
 Because the conditions registered in `evaluation/conditions.py` are
 relied upon by the manuscript's headline tables, the test suite is
-structured to catch a different class of failure at each layer. A
-fuller treatment lives in [conditions_audit.md](conditions_audit.md);
-the summary below records the five layers as they are organised in
+structured to catch a different class of failure at each layer.
+[conditions_audit.md](conditions_audit.md) treats it more fully, and the
+summary below records the five layers as they are organised in
 `tests/test_conditions.py`.
 
 The first layer carries per-condition hand-crafted input/output

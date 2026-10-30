@@ -1,4 +1,7 @@
 #!/bin/bash
+# Everything after the `exit 1` below is kept as a record and never runs, so
+# ShellCheck's unreachable-command note (SC2317) is switched off for the file.
+# shellcheck disable=SC2317
 # RETIRED (audit findings XREF-01, SHELL-09): kept only as the record of how
 # the May 2026 wer_report.csv and wer_summary.json were made (array job
 # 7682561), a pair output/evaluation/pilot_may2026/ now keeps (audit finding

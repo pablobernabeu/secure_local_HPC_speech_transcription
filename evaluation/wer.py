@@ -371,12 +371,18 @@ def evaluate_directory(
     *,
     normaliser_kwargs: Mapping | None = None,
     hypothesis_format: str | None = None,
+    skipped: list[dict] | None = None,
 ) -> list[PairResult]:
     """Pair files in two directories by stem and score each pair.
 
     See :func:`_match_files` for the pairing, including which of several
     formats of one recording is scored (*hypothesis_format*). A pair that
-    fails to score is skipped with a message on stderr.
+    fails to score, for example because its reference is empty after
+    normalisation or a JSON file does not parse, is skipped with a message
+    on stderr. When *skipped* is a list, each skipped pair is also appended
+    to it as ``{"hypothesis", "reference", "error"}`` (file names and the
+    exception), so that a summary can say it covers fewer pairs than were
+    matched.
 
     Raises
     ------
@@ -394,8 +400,11 @@ def evaluate_directory(
         try:
             results.append(evaluate_pair(ref, hyp,
                                          normaliser_kwargs=normaliser_kwargs))
-        except Exception as e:  # pragma: no cover
+        except Exception as e:
             print(f"  ⚠️  Skipping {hyp.name}: {e}", file=sys.stderr)
+            if skipped is not None:
+                skipped.append({"hypothesis": hyp.name, "reference": ref.name,
+                                "error": f"{type(e).__name__}: {e}"})
     return results
 
 
@@ -473,22 +482,32 @@ def write_csv(results: Iterable[PairResult], path: Path) -> None:
 
 def write_summary_json(results: Iterable[PairResult], path: Path,
                        evaluation: Mapping | None = None,
-                       run_meta: Mapping | None = None) -> None:
+                       run_meta: Mapping | None = None,
+                       skipped: Iterable[Mapping] | None = None) -> None:
     """Write ``{"summary": aggregate(results), "per_file": [...]}`` to *path*.
 
     *evaluation*, when given, is written as an ``evaluation`` block (what
     was compared and how it was normalised) and *run_meta* as
     ``run_metadata`` (:func:`provenance.run_metadata`). The block is named
     ``evaluation`` and not ``benchmark``, so this summary cannot be taken
-    for a corpus benchmark's. Creates the parent directory and overwrites
-    *path*.
+    for a corpus benchmark's. *skipped*, when given, is the list
+    :func:`evaluate_directory` fills: its length is written into the
+    summary as ``n_skipped_pairs`` and its entries as ``skipped_pairs``,
+    beside ``per_file``, so that a summary over fewer pairs than were
+    matched does not read as complete. Creates the parent directory and
+    overwrites *path*.
     """
     rs = list(results)
     payload: dict = {}
     if evaluation is not None:
         payload["evaluation"] = dict(evaluation)
     payload["summary"] = aggregate(rs)
+    if skipped is not None:
+        skipped = [dict(entry) for entry in skipped]
+        payload["summary"]["n_skipped_pairs"] = len(skipped)
     payload["per_file"] = [asdict(r) for r in rs]
+    if skipped is not None:
+        payload["skipped_pairs"] = skipped
     if run_meta is not None:
         payload["run_metadata"] = dict(run_meta)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -501,6 +520,7 @@ def write_summary_json(results: Iterable[PairResult], path: Path,
 # ---------------------------------------------------------------------------
 
 def _build_parser() -> argparse.ArgumentParser:
+    """Return the parser of the command-line interface (see :func:`main`)."""
     p = argparse.ArgumentParser(
         prog="evaluation.wer",
         description="Compute Word Error Rate (WER) against ground-truth transcripts.",
@@ -544,11 +564,14 @@ def main(argv: list[str] | None = None) -> int:
 
     Scores one file pair or two directories paired by stem, writes the
     ``--report`` CSV and ``--summary`` JSON (overwriting them; the summary
-    records what was compared, the normaliser settings and
+    records what was compared, the normaliser settings, the number of
+    matched pairs that could not be scored and which they were, and
     :func:`provenance.run_metadata`) and prints the corpus summary.
     Returns ``0``; raises ``SystemExit`` when the two paths are not both
     files or both directories, and ``FileNotFoundError`` when two
-    directories share no stem. Runs ``git`` to record the commit.
+    directories share no stem. A single file pair that cannot be scored
+    raises; in a directory such a pair is skipped and counted. Runs
+    ``git`` to record the commit.
     """
     args = _build_parser().parse_args(argv)
     normaliser_kwargs = {
@@ -558,18 +581,20 @@ def main(argv: list[str] | None = None) -> int:
     }
     hyp = Path(args.hypothesis)
     ref = Path(args.reference)
+    skipped: list[dict] = []
 
     if hyp.is_file() and ref.is_file():
         results = [evaluate_pair(ref, hyp, normaliser_kwargs=normaliser_kwargs)]
     elif hyp.is_dir() and ref.is_dir():
         results = evaluate_directory(ref, hyp, normaliser_kwargs=normaliser_kwargs,
-                                     hypothesis_format=args.hypothesis_format)
+                                     hypothesis_format=args.hypothesis_format,
+                                     skipped=skipped)
     else:
         raise SystemExit(
             "Both --hypothesis and --reference must be either files or directories."
         )
 
-    from provenance import run_metadata  # noqa: PLC0415
+    from provenance import run_metadata
 
     report_path, summary_path = Path(args.report), Path(args.summary)
     # The git state is read before either file is written and leaves both
@@ -586,12 +611,14 @@ def main(argv: list[str] | None = None) -> int:
                     "hypothesis_format": args.hypothesis_format,
                     "normaliser": normaliser_kwargs},
         run_meta=run_meta,
+        skipped=skipped,
     )
 
     summary = aggregate(results)
     print("WER evaluation")
     print("--------------")
     print(f"  Files scored:       {summary.get('files', 0)}")
+    print(f"  Pairs skipped:      {len(skipped)}")
     print(f"  Macro-averaged WER: {summary.get('macro_wer', float('nan')):.4f}")
     print(f"  Micro-averaged WER: {summary.get('micro_wer', float('nan')):.4f}")
     print(f"  Macro-averaged MER: {summary.get('macro_mer', float('nan')):.4f}")

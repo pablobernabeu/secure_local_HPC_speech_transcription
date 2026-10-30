@@ -47,7 +47,8 @@ def test_status_changes_keep_a_rename_as_one_change():
 def test_revisions_are_full_shas_and_unknown_repos_are_unpinned():
     for repo, sha in revisions.REVISIONS.items():
         assert re.fullmatch(r"[0-9a-f]{40}", sha), repo
-    assert revisions.revision_for("openai/whisper-large-v3") == revisions.REVISIONS["openai/whisper-large-v3"]
+    assert (revisions.revision_for("openai/whisper-large-v3")
+            == revisions.REVISIONS["openai/whisper-large-v3"])
     assert revisions.revision_for("not/a-repo") is None
     assert revisions.revision_for(None) is None
     assert revisions.revisions_used("openai/whisper-medium", None) == {

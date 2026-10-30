@@ -82,7 +82,7 @@ def _corpus_to_suite() -> dict[tuple[str, str], str]:
     ``librispeech_clean`` entry plus every registered challenge suite), so
     a newly registered suite is labelled without a second list to update.
     """
-    from evaluation.sweep import _all_suite_specs  # noqa: PLC0415
+    from evaluation.sweep import _all_suite_specs
     return {(s.dataset, s.config): s.name for s in _all_suite_specs()}
 
 
@@ -331,7 +331,7 @@ def _wer_invisible(benchmark: dict, condition: str) -> bool | None:
     recorded = benchmark.get("wer_invisible")
     if isinstance(recorded, bool):
         return recorded
-    from evaluation.conditions import get_condition  # noqa: PLC0415
+    from evaluation.conditions import get_condition
     try:
         return bool(get_condition(condition).wer_invisible)
     except KeyError:
@@ -514,7 +514,7 @@ def write_aggregate_json(
     *run_meta* is not given, runs ``git``.
     """
     if run_meta is None:
-        from provenance import run_metadata  # noqa: PLC0415
+        from provenance import run_metadata
         run_meta = run_metadata(ignore=(path,))
 
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -639,7 +639,7 @@ def main(argv: list[str] | None = None) -> None:
     # so a regeneration in place counted the CSV as a change to the tree
     # whenever it differed from the committed one, and the JSON from the
     # second regeneration on, since every run rewrites its time stamp.
-    from provenance import run_metadata  # noqa: PLC0415
+    from provenance import run_metadata
     run_meta = run_metadata(ignore=(args.out_csv, args.out_json))
     write_aggregate_csv(rows, args.out_csv)
     write_aggregate_json(rows, args.out_json, args.sweep_dir, run_meta=run_meta)

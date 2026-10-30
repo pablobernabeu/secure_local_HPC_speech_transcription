@@ -8,9 +8,12 @@
 pytest>=7.4.0
 pytest-cov>=4.1.0
 
-# Code Formatting and Linting
-black>=23.0.0
-flake8>=6.0.0
-
-# Type Checking (Optional)
-mypy>=1.0.0
+# Linting
+# The linter ruff.toml configures. Pinned exactly, unlike the tools above,
+# because each ruff release can add checks to the selected rule families,
+# and the committed code is clean under this one. It replaces flake8, whose
+# pycodestyle and pyflakes checks ruff.toml already selects (E, W, F) and
+# which nothing configured or ran. No formatter or type checker is listed:
+# black and mypy were, with nothing to configure them, and black's defaults
+# would have reformatted code behind committed results (finding SC-22).
+ruff==0.15.18

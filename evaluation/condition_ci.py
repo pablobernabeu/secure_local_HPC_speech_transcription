@@ -177,7 +177,7 @@ def _resolve_primary(
                 f"holds, because {baseline!r} has a file of its own. Pass "
                 "--primary-condition NAME."
             )
-        from evaluation.conditions import get_condition  # noqa: PLC0415
+        from evaluation.conditions import get_condition
         try:
             get_condition(baseline)
         except KeyError as exc:
@@ -553,7 +553,7 @@ def _write_provenance(args, output: Path, run_meta: dict) -> None:
     every report of the cell with its digest, and *run_meta*, the code
     commit as :func:`_run` read it before writing anything.
     """
-    from provenance import write_sidecar  # noqa: PLC0415
+    from provenance import write_sidecar
 
     inputs = list(discover_reports(args.reports, args.prefix).values())
     if args.baseline_file is not None and Path(args.baseline_file) not in inputs:
@@ -572,7 +572,7 @@ def _write_provenance(args, output: Path, run_meta: dict) -> None:
 
 def _run(args) -> int:
     """Carry out the parsed command; input errors propagate as exceptions."""
-    from provenance import SIDECAR_PACKAGES, run_metadata, sidecar_path  # noqa: PLC0415
+    from provenance import SIDECAR_PACKAGES, run_metadata, sidecar_path
 
     # The git state both sidecars record is read once, before either table
     # is written, and leaves out the files this run rewrites. Read after

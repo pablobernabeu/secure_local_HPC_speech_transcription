@@ -24,8 +24,8 @@ if str(REPO_ROOT) not in sys.path:
 
 pytest.importorskip("soundfile")
 
-from evaluation import ami_meetings as am  # noqa: E402
-from evaluation import benchmark_der as bd  # noqa: E402
+from evaluation import ami_meetings as am
+from evaluation import benchmark_der as bd
 
 SR = am.SAMPLE_RATE
 

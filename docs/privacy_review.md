@@ -11,7 +11,7 @@ current example masking logs. Word XML was inspected separately. The
 remaining files were a PNG, an ICO and one legacy shell script, which was
 decoded separately and had no email, user/project-path or deployment-account
 pattern matches. This is a bounded review of the available checkout and
-history; it does not
+history, and it does not
 establish that every personal identifier is absent. Unreachable objects,
 remote-only references, private ARC files and uncommitted ignored files
 were outside the history inventory.
@@ -21,8 +21,8 @@ Gitleaks 8.30.1 was obtained from the
 with its Windows ZIP checked against the published checksum before use.
 Both scans used JSON reports and `--redact`: first with
 `--log-opts=--all`, then with `--log-opts='--all --full-history -m'` to
-include merge diffs. The second scanner run reported 832 processed commits;
-that is distinct from Git's 839 reachable commits and is not a coverage
+include merge diffs. The second scanner run reported 832 processed commits.
+That count is distinct from Git's 839 reachable commits and is not a coverage
 identity. The first scan returned four `generic-api-key` findings and the
 merge-inclusive scan returned eight. Reading the historical source
 classified all eight as bibliography identifiers assigned to
@@ -39,7 +39,7 @@ rewritten.
 
 The following SHA-256 digests identify the scanner and redacted local
 reports. Reports and helper inventories remain in ignored
-`build/privacy_audit/`; their presence is not a publication decision.
+`build/privacy_audit/`, and their presence is not a publication decision.
 
 | Item | SHA-256 |
 | --- | --- |
@@ -52,7 +52,7 @@ The broader text inventory found email-shaped strings in 199 historical
 blob versions, Windows user paths in nine, Unix home/project paths in 120
 and deployment account names in 110. These categories overlap and count
 file versions, not people. Contact addresses occur in the manuscript,
-CSL and dependency metadata; SSH examples also resemble email addresses.
+CSL and dependency metadata, and SSH examples also resemble email addresses.
 Git author/committer metadata contains three distinct names and three
 addresses. Historical bibliography attachments contain local Windows
 paths, although the current bibliography has none. Current provenance
@@ -64,9 +64,9 @@ a future release copy would not remove earlier public history or archives.
 All four current `example_output/transcripts/*/transcript.docx` files were
 opened, including `word/document.xml`, both `docProps` XML files and ZIP
 relationships. Their transcript bodies exactly match their `.txt` twins
-after whitespace normalization. Headers differ in filenames or processing
+after whitespace normalisation. Headers differ in filenames or processing
 timestamps, so the complete files are not text-identical. All four name
-`python-docx` as creator; `behind_the_curtains` additionally has a
+`python-docx` as creator, and `behind_the_curtains` additionally has a
 `lastModifiedBy` identifier containing the public author's name. No
 embedded objects, comments, custom properties, external relationships or
 tracked-change tags were found in these four files or the two older Word
@@ -76,7 +76,7 @@ The [example README](../example_output/transcripts/README.md) and
 [podcast manifest](../data/codex_mentis/manifest.json) identify these as
 historical transcripts of the author's public, synthetic *Codex Mentis*
 episodes, rather than confidential participant recordings. This is their
-documented provenance; the historical input audio digests were not retained
+documented provenance. The historical input audio digests were not retained
 and the original audio bytes could not be independently matched to those
 episodes. Their three
 current masking logs contain 11 rows with the original tokens and context
@@ -88,16 +88,22 @@ surname three times. A four-row older log, deleted in `d44f79b` on
 11 November 2025, remains reachable at
 `name_masking_logs/name_replacements_Behind the curtains_ Methods used to investigate conceptual processing_enhanced.csv`.
 It contains the author's tokens and an additional dictionary-matched
-first-name token in a fragmentary sentence; that token's identity has not
+first-name token in a fragmentary sentence. That token's identity has not
 been established. The deleted JSON/VTT plain-example outputs in `f041d21`
 were also inspected. All originals have been left intact so the historical
 masking audit remains reproducible.
+
+*Note of 30 October 2026.* The artefact audit now also scans the review
+reports and names the files it could not check (1d2f2ac, 81e57dd). Its
+regeneration over `example_output/` (7f867ad) adds the three variants'
+`example_review.json` files as masked artefacts and finds them clean. It
+still finds the surname in the two `behind_the_curtains` bodies.
 
 The NotebookLM infographic formerly embedded in the root README at
 `docs/Beyond the cloud_ Reclaiming data sovereignty in speech transcription.png`
 was moved, with its bytes preserved, to
 [`docs/historical/Beyond the cloud_ Reclaiming data sovereignty in speech transcription.png`](<historical/Beyond the cloud_ Reclaiming data sovereignty in speech transcription.png>).
-The README embed was removed; the
+The README embed was removed, and the
 [historical note](historical/README.md) explains that its claims about
 guaranteed GDPR compliance, impossible cloud replication, unlimited scale
 and removal of AI-generated errors exceed the evidence. Targeted searches
@@ -105,7 +111,7 @@ found no other Markdown, QMD or HTML image references. Its compressed APP1
 profile was decoded and inspected: it contains software and image-identifier
 tags, with no GPS IFD and no email, local-path, deployment-account or
 recognisable secret-token pattern matches. These checks are limited to the
-inspected metadata and visible image; the graphic remains explicitly
+inspected metadata and visible image, and the graphic remains explicitly
 historical.
 
 Corpus licences were checked at their primary sources on 6 October 2026.
@@ -122,10 +128,10 @@ Any separately archived hypothesis/reference dumps should identify their
 exact corpus, split and producing run, retain supplied attribution and
 licence notices, and state that hypotheses are generated transcriptions
 which may contain errors. CC BY 4.0 requires attribution and disclosure of
-modifications; it does not grant general privacy or personality rights.
+modifications, but it does not grant general privacy or personality rights.
 See the [primary legal code](https://creativecommons.org/licenses/by/4.0/legalcode.en),
 sections 2(b) and 3(a). The recovered dumps themselves still need a content
-inventory before a publication decision; this licence review is not a
+inventory before a publication decision. This licence review is not a
 review of their individual rows.
 
 The remaining author decisions are to retain or omit the public podcast
@@ -135,7 +141,7 @@ deployment accounts/local paths in new archives is necessary. Public
 podcast names can be retained as explicitly documented historical examples
 if the author accepts that disclosure; deployment identifiers have a
 different provenance purpose and should be considered separately. A
-sanitized release copy, if chosen, needs documented transformations and
+sanitised release copy, if chosen, needs documented transformations and
 new digests while preserving the audited originals. Publication of any
 new hypothesis archive also awaits its content and attribution inventory.
 These decisions are unresolved; the review supports a partly resolved G6,

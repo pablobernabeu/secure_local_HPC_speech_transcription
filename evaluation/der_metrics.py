@@ -287,7 +287,8 @@ def aggregate_der(results: Iterable[dict]) -> dict:
     total_missed = sum(r["_missed_abs"] for r in rows)
     total_fa = sum(r["_fa_abs"] for r in rows)
     total_confusion = sum(r["_confusion_abs"] for r in rows)
-    micro_der = (total_missed + total_fa + total_confusion) / total_duration if total_duration else 0.0
+    micro_der = ((total_missed + total_fa + total_confusion) / total_duration
+                 if total_duration else 0.0)
 
     return {
         "n_meetings": n,

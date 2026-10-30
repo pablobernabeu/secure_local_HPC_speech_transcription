@@ -436,22 +436,38 @@ class TestDerPerRowDecomposition:
 # ---------------------------------------------------------------------------
 
 _PINNED_DER: dict[str, dict] = {
-    "EN2002a": {"der": 0.228197, "missed": 0.138256, "fa": 0.008521, "confusion": 0.081419, "duration_s": 2142.37, "hyp_speakers": 8},
-    "EN2002b": {"der": 0.238898, "missed": 0.121387, "fa": 0.008839, "confusion": 0.108672, "duration_s": 1786.59, "hyp_speakers": 9},
-    "EN2002c": {"der": 0.197617, "missed": 0.12365, "fa": 0.002023, "confusion": 0.071944, "duration_s": 2889.64, "hyp_speakers": 9},
-    "EN2002d": {"der": 0.270383, "missed": 0.156768, "fa": 0.00796, "confusion": 0.105655, "duration_s": 2207.85, "hyp_speakers": 9},
-    "ES2004a": {"der": 0.230978, "missed": 0.109838, "fa": 0.011357, "confusion": 0.109783, "duration_s": 1049.04, "hyp_speakers": 8},
-    "ES2004b": {"der": 0.09146, "missed": 0.036556, "fa": 0.019098, "confusion": 0.035806, "duration_s": 2341.96, "hyp_speakers": 6},
-    "ES2004c": {"der": 0.09069, "missed": 0.037402, "fa": 0.024872, "confusion": 0.028416, "duration_s": 2331.79, "hyp_speakers": 8},
-    "ES2004d": {"der": 0.185013, "missed": 0.071655, "fa": 0.019876, "confusion": 0.093481, "duration_s": 2222.25, "hyp_speakers": 9},
-    "IS1009a": {"der": 0.157102, "missed": 0.078232, "fa": 0.011408, "confusion": 0.067462, "duration_s": 805.72, "hyp_speakers": 5},
-    "IS1009b": {"der": 0.104352, "missed": 0.046667, "fa": 0.009573, "confusion": 0.048112, "duration_s": 2026.9, "hyp_speakers": 6},
-    "IS1009c": {"der": 0.075147, "missed": 0.028942, "fa": 0.00987, "confusion": 0.036336, "duration_s": 1789.19, "hyp_speakers": 8},
-    "IS1009d": {"der": 0.153002, "missed": 0.057642, "fa": 0.011537, "confusion": 0.083822, "duration_s": 1925.75, "hyp_speakers": 7},
-    "TS3003a": {"der": 0.181194, "missed": 0.108399, "fa": 0.008681, "confusion": 0.064114, "duration_s": 1476.39, "hyp_speakers": 5},
-    "TS3003b": {"der": 0.072245, "missed": 0.032551, "fa": 0.022989, "confusion": 0.016705, "duration_s": 2149.36, "hyp_speakers": 7},
-    "TS3003c": {"der": 0.136777, "missed": 0.061886, "fa": 0.015296, "confusion": 0.059595, "duration_s": 2280.36, "hyp_speakers": 8},
-    "TS3003d": {"der": 0.23709, "missed": 0.101972, "fa": 0.017568, "confusion": 0.11755, "duration_s": 2591.56, "hyp_speakers": 6},
+    "EN2002a": {"der": 0.228197, "missed": 0.138256, "fa": 0.008521, "confusion": 0.081419,
+                "duration_s": 2142.37, "hyp_speakers": 8},
+    "EN2002b": {"der": 0.238898, "missed": 0.121387, "fa": 0.008839, "confusion": 0.108672,
+                "duration_s": 1786.59, "hyp_speakers": 9},
+    "EN2002c": {"der": 0.197617, "missed": 0.12365, "fa": 0.002023, "confusion": 0.071944,
+                "duration_s": 2889.64, "hyp_speakers": 9},
+    "EN2002d": {"der": 0.270383, "missed": 0.156768, "fa": 0.00796, "confusion": 0.105655,
+                "duration_s": 2207.85, "hyp_speakers": 9},
+    "ES2004a": {"der": 0.230978, "missed": 0.109838, "fa": 0.011357, "confusion": 0.109783,
+                "duration_s": 1049.04, "hyp_speakers": 8},
+    "ES2004b": {"der": 0.09146, "missed": 0.036556, "fa": 0.019098, "confusion": 0.035806,
+                "duration_s": 2341.96, "hyp_speakers": 6},
+    "ES2004c": {"der": 0.09069, "missed": 0.037402, "fa": 0.024872, "confusion": 0.028416,
+                "duration_s": 2331.79, "hyp_speakers": 8},
+    "ES2004d": {"der": 0.185013, "missed": 0.071655, "fa": 0.019876, "confusion": 0.093481,
+                "duration_s": 2222.25, "hyp_speakers": 9},
+    "IS1009a": {"der": 0.157102, "missed": 0.078232, "fa": 0.011408, "confusion": 0.067462,
+                "duration_s": 805.72, "hyp_speakers": 5},
+    "IS1009b": {"der": 0.104352, "missed": 0.046667, "fa": 0.009573, "confusion": 0.048112,
+                "duration_s": 2026.9, "hyp_speakers": 6},
+    "IS1009c": {"der": 0.075147, "missed": 0.028942, "fa": 0.00987, "confusion": 0.036336,
+                "duration_s": 1789.19, "hyp_speakers": 8},
+    "IS1009d": {"der": 0.153002, "missed": 0.057642, "fa": 0.011537, "confusion": 0.083822,
+                "duration_s": 1925.75, "hyp_speakers": 7},
+    "TS3003a": {"der": 0.181194, "missed": 0.108399, "fa": 0.008681, "confusion": 0.064114,
+                "duration_s": 1476.39, "hyp_speakers": 5},
+    "TS3003b": {"der": 0.072245, "missed": 0.032551, "fa": 0.022989, "confusion": 0.016705,
+                "duration_s": 2149.36, "hyp_speakers": 7},
+    "TS3003c": {"der": 0.136777, "missed": 0.061886, "fa": 0.015296, "confusion": 0.059595,
+                "duration_s": 2280.36, "hyp_speakers": 8},
+    "TS3003d": {"der": 0.23709, "missed": 0.101972, "fa": 0.017568, "confusion": 0.11755,
+                "duration_s": 2591.56, "hyp_speakers": 6},
 }
 
 
@@ -475,7 +491,8 @@ class TestDerPinnedPerMeetingValues:
 
     def test_pinned_missed_speech_per_meeting(self):
         for mid, exp in _PINNED_DER.items():
-            assert float(self.rows[mid]["missed_speech"]) == pytest.approx(exp["missed"], rel=1e-4), (
+            assert float(self.rows[mid]["missed_speech"]) == pytest.approx(
+                exp["missed"], rel=1e-4), (
                 f"{mid}: missed_speech changed from pinned value {exp['missed']}"
             )
 
@@ -487,13 +504,15 @@ class TestDerPinnedPerMeetingValues:
 
     def test_pinned_confusion_per_meeting(self):
         for mid, exp in _PINNED_DER.items():
-            assert float(self.rows[mid]["speaker_confusion"]) == pytest.approx(exp["confusion"], rel=1e-4), (
+            assert float(self.rows[mid]["speaker_confusion"]) == pytest.approx(
+                exp["confusion"], rel=1e-4), (
                 f"{mid}: speaker_confusion changed from pinned value {exp['confusion']}"
             )
 
     def test_pinned_duration_per_meeting(self):
         for mid, exp in _PINNED_DER.items():
-            assert float(self.rows[mid]["duration_s"]) == pytest.approx(exp["duration_s"], rel=1e-3), (
+            assert float(self.rows[mid]["duration_s"]) == pytest.approx(
+                exp["duration_s"], rel=1e-3), (
                 f"{mid}: duration_s changed from pinned value {exp['duration_s']}"
             )
 

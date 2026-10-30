@@ -12,7 +12,7 @@ as `wer_report_librispeech_whisper-large-v3_raw.csv` and
 
 - `submit_benchmark_wer.sh` is the first CPU benchmark. ARC holds four logs
   matching its log pattern, all from 2026-05-16 (jobs 7662692, 7662812,
-  7662816 and 7662825); which committed files, if any, they produced is not
+  7662816 and 7662825). Which committed files, if any, they produced is not
   recorded.
 - `submit_benchmark_wer_gpu.sh` is the three-model GPU array. Task 0 of
   array job 7682561 (2026-05-18, an NVIDIA L40S) wrote the two canonical
@@ -55,13 +55,13 @@ and one of the dataset. They are the revisions the sweep pins, downloaded
 on 2026-05-16, and the cache's `main` references were last written that
 day. The environment's only transformers is 4.57.1, the version the sweep
 records, and pip's record of installing it is dated 2025-10-21. Task 0
-started 85 seconds after de13451, which made the script an array job, and
-the code at de13451 decodes the audio, builds the pipeline and normalises
-the text for scoring in the same way as 6f9bf56, except that 6f9bf56 names
-the revision. Each of the five utterances the May report and the sweep's
-raw Large v3 test-clean report score differently therefore has a
-different hypothesis, and of what was recorded only the card separates
-the two decodes: an L40S in May, a Tesla V100 in the sweep. The two L40S
+started 85 seconds after de13451, the commit that made the script an array
+job. The code at de13451 decodes the audio, builds the pipeline and
+normalises the text for scoring in the same way as 6f9bf56, except that
+6f9bf56 names the revision. Each of the five utterances that the May
+report and the sweep's raw Large v3 test-clean report score differently
+therefore has a different hypothesis. Of what was recorded, only the card
+separates the two decodes: an L40S in May, a Tesla V100 in the sweep. The two L40S
 runs agree on every utterance, although only task 0 ran with the seed and
 with deterministic cuDNN and cuBLAS settings. A third decode, the
 pre-repair sweep's on an H100 (job 7729882, task 0), differs from the May

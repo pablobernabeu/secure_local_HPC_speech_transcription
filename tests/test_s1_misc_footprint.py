@@ -21,12 +21,13 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from evaluation import footprint as fp  # noqa: E402
+from evaluation import footprint as fp
 
 _SACCT = """\
 JobID|JobName|Account|State|ElapsedRaw|Start|End|Partition|AllocTRES|NodeList
 7721017|pilot_benchmark_wer|educ-intract|COMPLETED|761|2026-05-25T23:28:32|2026-05-25T23:41:13|short|billing=4,cpu=4,gres/gpu=1,mem=32G,node=1|htc-g053
-7725869_4|wer_sweep|educ-intract|CANCELLED by 8707|26429|2026-05-26T11:50:29|2026-05-26T19:10:58|short|billing=4,cpu=4,gres/gpu=1,mem=32G,node=1|htc-g033
+7725869_4|wer_sweep|educ-intract|CANCELLED by 8707|26429|2026-05-26T11:50:29|2026-05-26T19:10:58|\
+short|billing=4,cpu=4,gres/gpu=1,mem=32G,node=1|htc-g033
 7729883|sweep_aggregate|educ-intract|COMPLETED|16|2026-05-27T06:02:17|2026-05-27T06:02:33|short|billing=2,cpu=2,mem=8G,node=1|htc-c068
 9000001|claps_databased2|educ-intract|COMPLETED|100|2026-05-27T06:02:17|2026-05-27T06:04:17|short|billing=2,cpu=2,mem=8G,node=1|htc-c068
 8554985|determinism|educ-intract|COMPLETED|789|2026-08-12T16:11:55|2026-08-12T16:25:04|short|billing=8,cpu=8,gres/gpu=1,mem=48G,node=1|htc-g058

@@ -72,7 +72,7 @@ _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from evaluation.ami_meetings import SAMPLE_RATE  # noqa: E402,F401
+from evaluation.ami_meetings import SAMPLE_RATE  # noqa: E402
 from voice_anonymisation import DEFAULT_FRAME_S, LIMITER_KNEE, anonymise  # noqa: E402
 
 # The single-meeting configuration, committed in
@@ -759,8 +759,8 @@ def _load_utterances(limit, hf_token, per_meeting=None, skipped=None):
     ``channel``, ``audio`` and ``reference``; the per-meeting counts follow
     from ``meeting``. Side effects: streams the dataset over the network.
     """
-    from evaluation.ami_meetings import group_rows_by_meeting  # noqa: PLC0415
-    from evaluation.benchmark_der import _decode_audio_bytes, _stream_ami  # noqa: PLC0415
+    from evaluation.ami_meetings import group_rows_by_meeting
+    from evaluation.benchmark_der import _decode_audio_bytes, _stream_ami
     if skipped is None:
         skipped = {}
     for key in ("undecodable", "wrong_sample_rate", "too_short"):
@@ -769,7 +769,7 @@ def _load_utterances(limit, hf_token, per_meeting=None, skipped=None):
     def accept(mid, row):
         try:
             audio, sample_rate = _decode_audio_bytes(row["audio"])
-        except Exception:  # noqa: BLE001
+        except Exception:  # counted under "undecodable"
             skipped["undecodable"] += 1
             return None
         if sample_rate != SAMPLE_RATE:
@@ -871,7 +871,7 @@ def _load_embedder(hf_token, failures=None):
                         or "speaker-diarization-3.1 bundled embedding")
                 source = f"{name}{_VIA_PIPELINE}"
                 print(f"  embeddings from {source}", flush=True)
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:  # recorded; the next candidate is tried
         failures[DIARISATION_PIPELINE] = _failure(exc)
     if DIARISATION_PIPELINE in failures:
         print(f"  could not reuse the diarisation pipeline "
@@ -889,7 +889,7 @@ def _load_embedder(hf_token, failures=None):
                 source = name
                 print(f"  embeddings from {name}", flush=True)
                 break
-            except Exception as exc:  # noqa: BLE001
+            except Exception as exc:  # recorded; the next candidate is tried
                 embedder = None
                 failures[name] = _failure(exc)
                 print(f"  could not load {name} ({failures[name]})",
@@ -1044,7 +1044,7 @@ def run(output_dir: Path, limit: int, alphas, hf_token=None,
         except ImportError:
             # A missing scorer is not an unscorable utterance.
             raise
-        except Exception:  # noqa: BLE001
+        except Exception:  # unscorable: None, as for an empty reference
             return None
 
     print("  transcribing the originals...", flush=True)

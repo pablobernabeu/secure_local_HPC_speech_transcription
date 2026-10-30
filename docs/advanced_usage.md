@@ -1,35 +1,26 @@
-# Advanced Usage
+# Advanced usage
 
-## Speaker Attribution
+## Speaker attribution
 
-**Feature:** Automatic speaker diarisation (also called speaker attribution) using pyannote/speaker-diarization-3.1 model from HuggingFace.
+Speaker attribution labels who spoke when, using the pyannote pipeline
+`pyannote/speaker-diarization-3.1` from HuggingFace. *Diarisation* is the
+technical term for the step, and this documentation uses the two names
+for the same thing ([glossary.md](glossary.md)). It needs a HuggingFace
+token and a one-off model download, which the interactive wizard sets up
+in ten to fifteen minutes. [PYANNOTE_SETUP_GUIDE.md](../PYANNOTE_SETUP_GUIDE.md)
+covers the setup step by step, its common problems and the HPC specifics.
 
-**Technical Note:** *Diarisation* is the technical term for determining "who spoke when" in an audio recording. In this context, *attribution* means the same thing, that is, assigning speech segments to different speakers. Both terms are used interchangeably.
-
-**Output format:** When speaker attribution is enabled, the system produces **two sets of transcripts**:
-
-1. **Base transcripts** (standard filenames):
-   - `filename_transcript.txt`
-   - `filename_transcript.docx`
-   - Clean transcription without speaker labels
-   - Use for readability or when speaker identity not needed
-
-2. **Speaker-attributed transcripts** (with `_with_speakers` suffix):
-   - `filename_transcript_with_speakers.txt`
-   - `filename_transcript_with_speakers.docx`
-   - Includes speaker labels like `[SPEAKER_00]`, `[SPEAKER_01]`, etc. before each speaker's segment
-   - Use for analysing who said what
-
-**Why both versions?** Speaker labels can make transcripts harder to read, so clean versions are provided alongside attributed versions. You can choose which to use based on your needs.
-
-**Setup guide:** See [PYANNOTE_SETUP_GUIDE.md](../PYANNOTE_SETUP_GUIDE.md) for setup instructions and troubleshooting.
-
-**Quick Setup:**
 ```bash
 python setup/setup_pyannote.py  # Interactive setup wizard (10-15 minutes)
 ```
 
-**Usage:**
+With speaker attribution, a run writes two sets of transcripts. The base
+`filename_transcript.txt` and `.docx` carry no speaker labels and are the
+easier to read. `filename_transcript_with_speakers.txt` and `.docx` put a
+label such as `[SPEAKER_00]` before each speaker's turn, for analysing
+who said what. The run also writes the timestamped outputs, because the
+labels are placed from word timings.
+
 ```bash
 # For single files with Python
 python transcription.py "interview.wav" --speaker-attribution
@@ -41,7 +32,11 @@ hpc/submit_transcription.sh --speaker-attribution
 hpc/submit_transcription.sh --mask-personal-names --speaker-attribution --language english
 ```
 
-**Constraining the number of speakers (measure before you trust it):**
+### Constraining the number of speakers
+
+Measure the effect of these options on your own recordings before you
+trust them:
+
 ```bash
 # A one-to-one interview: interviewer and participant
 python transcription.py "interview.wav" --speaker-attribution --num-speakers 2
@@ -55,45 +50,38 @@ python transcription.py "focus_group.wav" --speaker-attribution \
 `--min-speakers`/`--max-speakers`, which express a range when only the
 range is known. All three apply only with `--speaker-attribution`.
 
-It is tempting to treat this as a free improvement. Left alone, the model
-reliably finds more speakers than a recording contains, so telling it the
-true number looks as though it can only help. On the AMI benchmark it did
-not. Supplying the true count raised macro diarisation error from 16.6%
-to 25.0%, worsening ten of the sixteen meetings, and in the worst case
-took a meeting from 7.2% to 45.7%. All of that came from speaker
-confusion. The reason is that clustering forced to stop at exactly *n*
-must merge until it gets there, and merging two distinct speakers is
-far more damaging than leaving a few spurious small clusters,
-which contribute comparatively little error.
+Left alone, the model reliably finds more speakers than a recording
+contains, so telling it the true number looks as though it can only
+help. On the AMI benchmark, it did harm. Supplying the true count raised
+macro diarisation error from 16.6% to 25.0%, worsening ten of the
+sixteen meetings, and in the worst case took a meeting from 7.2% to
+45.7%. All of the increase came from speaker confusion. Clustering
+forced to stop at exactly *n* must merge until it gets there, and merging
+two distinct speakers costs far more than leaving a few small spurious
+clusters, which contribute comparatively little error.
 
 Those meetings had four speakers each, so the finding does not
-automatically transfer to a two-person interview, where there is much
-less scope for a harmful merge. The honest position is that the option is
-available because the count is often known in advance, not because setting
-it is advisable by default. If speaker labels matter to your analysis,
-run a recording both ways and compare before adopting either.
+automatically transfer to a two-person interview, where a harmful merge
+has much less scope. The option exists because the count is often known
+in advance, and setting it is not advisable by default. If speaker
+labels matter to your analysis, run a recording both ways and compare
+before adopting either.
 
-**Accuracy factors:**
-- **Recording quality**: clear audio with minimal background noise produces better results
-- **Number of speakers**: works best with 2-4 speakers; accuracy decreases with more speakers
-- **Speaker similarity**: similar-sounding voices (e.g., same gender, age, accent) are harder to distinguish
-- **Speaker overlap**: simultaneous speech reduces attribution accuracy
-- **Microphone setup**: single-microphone recordings are more challenging than multi-mic setups
+### Accuracy, and when to use it
 
-**When to use:**
-- Multi-speaker interviews or focus groups
-- Panel discussions or meetings
-- Conversations with distinct voices
-- High-quality recordings with clear speakers
+Accuracy is best on clear recordings of two to four distinct voices with
+little background noise, and falls with more speakers, similar voices
+(of the same gender, age or accent), overlapping speech and a single
+microphone. Speaker attribution therefore suits clearly recorded
+interviews, focus groups, panels and meetings, and adds nothing to a
+recording of one speaker. On noisy audio, or with many similar voices,
+expect the labels to need checking.
 
-**When not to use:**
-- Single-speaker recordings (unnecessary)
-- Poor-quality audio with heavy background noise
-- Many speakers with similar voices
+The labels are arbitrary. The same voice should keep the same label
+through a recording, but a label does not identify a person, and
+diarisation does not recognise voices across recordings. For a short
+interview, the base transcript (`filename_transcript.txt`) reads:
 
-**Example output:**
-
-**Base transcript** (`filename_transcript.txt`):
 ```
 Hello and welcome to today's interview. Thank you for joining us.
 
@@ -104,7 +92,9 @@ Let's start with your background. Can you tell us about your research?
 Certainly. I've been working on computational linguistics for the past five years...
 ```
 
-**Speaker-attributed transcript** (`filename_transcript_with_speakers.txt`):
+and the speaker-attributed transcript
+(`filename_transcript_with_speakers.txt`):
+
 ```
 [SPEAKER_00] Hello and welcome to today's interview. Thank you for joining us.
 
@@ -115,47 +105,42 @@ Certainly. I've been working on computational linguistics for the past five year
 [SPEAKER_01] Certainly. I've been working on computational linguistics for the past five years...
 ```
 
-**Need help?** See [PYANNOTE_SETUP_GUIDE.md](../PYANNOTE_SETUP_GUIDE.md) for:
-- Step-by-step setup instructions
-- Common issues and solutions
-- HPC-specific guidance
-- Performance optimisation tips
-
 ### Air-gapped and offline operation
 
-The diarisation model can be loaded entirely from local storage so that
-no network call is made at run time. The resolution policy in
-`perform_speaker_diarization` tries, in order, an explicit YAML config
-file passed through `--diarization-config PATH`, then an explicit local
-pipeline passed through `--diarization-model-path PATH` (its
-`config.yaml`, or a directory holding one), and finally the
-HuggingFace loader for the configured `model_id`. The HuggingFace loader
-is used only when neither local option was given: if you name a local
-pipeline and it cannot be loaded, the Hub model is not tried in its
-place, and the run writes the transcript without speaker labels and
-reports itself incomplete. Setting the
-environment variable `HF_HUB_OFFLINE=1` or `TRANSFORMERS_OFFLINE=1`
-forces the HuggingFace loader to operate cache-only by requesting
-`local_files_only=True`; when the model is absent from the cache the
-error message names the expected cache directory and the flags that
-would resolve the situation. The JSON sidecar records the path that was
-taken under the keys `diarization_model_source` (one of `'local_config'`,
-`'local_path'`, `'hf_loader'`, `'hf_loader_offline'` or `'unavailable'`),
+The diarisation model can be loaded entirely from local storage, so that
+no network call is made at run time. `perform_speaker_diarization` tries,
+in order, a YAML configuration file given with `--diarization-config
+PATH`, a local pipeline given with `--diarization-model-path PATH` (its
+`config.yaml`, or a directory holding one), and the HuggingFace loader
+for the configured `model_id`. The HuggingFace loader is used only when
+neither local option was given. If you name a local pipeline and it
+cannot be loaded, the Hub model is not tried in its place: the run writes
+the transcript without speaker labels and reports itself incomplete.
+
+Setting the environment variable `HF_HUB_OFFLINE=1` or
+`TRANSFORMERS_OFFLINE=1` makes the HuggingFace loader read the cache
+only, by requesting `local_files_only=True`. When the model is absent
+from the cache, the error message names the expected cache directory and
+the options that would resolve the situation.
+
+The JSON sidecar records the route taken under `diarization_model_source`
+(one of `'local_config'`, `'local_path'`, `'hf_loader'`,
+`'hf_loader_offline'` or `'unavailable'`), together with
 `diarization_model_id`, `diarization_model_path`,
-`diarization_offline_mode` and an optional `diarization_error`; the
-labels are defined in the [glossary](glossary.md). It also records the
-Hub snapshots the load used, `diarization_model_revision` for the
-pipeline and `diarization_sub_model_revisions` for the segmentation and
+`diarization_offline_mode` and, when loading failed, `diarization_error`.
+The [glossary](glossary.md) defines the labels. The sidecar also records
+the Hub snapshots the load used: `diarization_model_revision` for the
+pipeline, and `diarization_sub_model_revisions` for the segmentation and
 embedding models its configuration names. They are read back from the
 cache without pinning the load, so an offline machine whose cache holds
 another snapshot still diarises and says which snapshot it used.
 
-## Redacting names from the audio, not only the transcript
+## Redacting names from the audio
 
-Masking removes names from the text the workflow writes. The recording
-still says them. For a dataset that will be shared or archived, that is
-the gap that matters, because the audio is the copy that carries a voice
-as well as a name.
+Masking removes names from the text the workflow writes, but the
+recording still says them. For a dataset that will be shared or
+archived, that gap matters most, because the audio carries a voice as
+well as a name.
 
 `audio_redaction.py` closes it using two things the workflow already
 produces: the word-level timestamps written by `--timestamps`, and the
@@ -177,39 +162,47 @@ its placeholders are the run's own masking decisions, so the audio is
 redacted exactly where the text was. Given the raw `_transcript.json`,
 the command uses the redacted file beside it when there is one, and only
 otherwise rebuilds a masker, which then needs the same masking options
-the run used (`python -m audio_redaction --help` lists them). A run that
-finds no name to redact refuses to write its output unless
-`--allow-empty` is given, because a `_redacted.wav` identical to the
-input would be misleading.
+the run used (`python -m audio_redaction --help` lists them).
 
-`--mode silence` (the default) writes silence instead of a tone. `--pad`
+Two checks stop the command from writing a file that only looks
+redacted. A run that finds no name to redact refuses to write its output
+unless `--allow-empty` is given, because a `_redacted.wav` identical to
+the input would be misleading. A name can be silenced only where a word
+timestamp places it, so a run that finds names it cannot place refuses as
+well. With `--allow-untimed-names` it writes the output, and those names
+stay audible. In a raw transcript, such a name is a name word without a
+start or an end time. In a redacted one, it is a `[NAME]` or `[SURNAME]`
+in a segment's text that no timed word carries. `[TITLE]` is not
+counted, because the redacted word list keeps the honorific itself as a
+word. The count is printed on stderr either way, and the report of a
+finished run gives it again.
+
+Each refusal exits with status 3, as does a transcript whose words carry
+no readable text. A run exits with status 2 when the transcript, or the
+redacted file beside it, cannot be read or is not UTF-8 JSON holding an
+object whose segments and words are lists of objects. A masker that
+cannot be loaded or fails on a word, and audio that cannot be read, give
+status 2 as well. Nothing is written on a non-zero status.
+
+`--mode silence` (the default) writes silence in place of a tone. `--pad`
 (default 0.05 s) widens each span slightly, so a timestamp that clips the
-start or end of a word still covers the whole of it.
+start or end of a word still covers the whole of it. Redaction is a
+separate command, so a recording can be redacted from a transcript
+produced earlier without transcribing it again.
 
-It is a separate command rather than a flag on the transcriber, so a
-recording can be redacted from a transcript produced earlier without
-transcribing it again.
+The redaction is only as good as the masking that drives it, so a name
+the dictionary never knew is spoken in the output as well as written in
+the transcript. The optional named-entity stage described in the README
+exists for that case. It is also only as good as the timestamps, whose
+accuracy the manuscript's timestamp benchmark measures. The pairing of
+the two has not itself been scored, so listen to a sample of the output
+before releasing a corpus.
 
-Two limits are worth stating plainly. The redaction is only as good as the
-masking that drives it, so a name the dictionary never knew is spoken in
-the output as well as written in the transcript; the optional
-named-entity stage described in the README exists for exactly that case. And it is only as good as the
-timestamps, whose accuracy is measured in the manuscript's timestamp
-benchmark. The pairing of the two has not itself been scored, so treat
-the output as a strong default rather than a guarantee, and listen to a
-sample before releasing a corpus.
+## Repetition fixing
 
-## Repetition Fixing
-
-**Problem:** Whisper models sometimes introduce spurious repetitions or get stuck in repetitive patterns, especially with challenging audio or when processing longer segments.
-
-**Examples of repetition artefacts:**
-- Repeated phrases: "And then, and then, and then he said..."
-- Stuck patterns: "The the the meeting will start"
-- Echo effects: "Hello hello, how are you you?"
-- Loop artefacts: Entire sentences repeated multiple times
-
-**Solution:** Use the `--fix-spurious-repetitions` flag to enable advanced repetition detection and removal:
+Whisper models sometimes get stuck in a loop, especially on difficult
+audio or long recordings, and write the same sentence, phrase or word
+over and over. `--fix-spurious-repetitions` cuts such loops back:
 
 ```bash
 # For single files with Python
@@ -222,41 +215,87 @@ hpc/submit_transcription.sh --fix-spurious-repetitions
 hpc/submit_transcription.sh --mask-personal-names --fix-spurious-repetitions --language english
 ```
 
-**How it works:**
-- Detects and removes repetitive word patterns
-- Identifies and fixes stuck transcription loops
-- Preserves intentional repetitions (like emphasis or natural speech patterns)
-- Uses context-aware algorithms to distinguish between artefacts and genuine repetition
+The repair, `detect_and_fix_repetitions` in `transcription.py`, acts
+only on long runs, so the ordinary repetition of speech ("the the
+meeting", "and then, and then") passes through unchanged. A sentence
+repeated more than five times in a row is kept once, followed by `[...]`
+when it ran to more than ten copies. A phrase of two to six words
+repeated more than ten times in a row is kept once and followed by
+`[...]`, and a word repeated more than five times in a row is kept twice.
+A counting sequence ("one two three ... nine") that recurs three or more
+times becomes `[...]`, and a run of six or more identical symbols is cut
+to three. These are the function's defaults, and the source of their
+values is not recorded. The option is off by default. It is most useful
+on noisy or long recordings, or when a first transcript shows loops.
 
-**When to use:**
-- Poor-quality audio with background noise
-- Long audio files (>30 minutes) where models may get unstable
-- Technical or challenging content where models struggle
-- When you notice repetitive artefacts in initial transcriptions
-- Less useful for high-quality, short audio files
+## Checking repeated passages
 
-## Multilingual Name Masking
+The review that a run with `--timestamps` or `--speaker-attribution`
+writes, `<name>_review.json`, uses the established checks for repeated
+cues, short decoding loops and implausible speech rates. Two further
+checks are off by default. `transcription.py` runs them with
+`--review-flag-zero-duration` and `--review-repeated-passage-words` (see
+the README's option table), and `python -m confidence` runs them on a
+timestamped JSON already written:
 
-### Overview
+```bash
+python -m confidence output/transcripts/interview_transcript.json \
+    --flag-zero-duration --repeated-passage-words 8 \
+    --repeated-passage-window 60 --json review_extended.json
+```
 
-The system includes a multilingual name database loaded from `data/curated_names.csv` with curated names from 9 languages, providing safer and more targeted name masking than the much larger Facebook global database. The CSV format allows the name database to be expanded and maintained easily.
+This flags non-empty cues with equal start and end times, and both copies
+of a matching run of eight or more tokens, even when the run crosses cue
+boundaries. The window compares the start times of the cues containing
+each copy's first token. Case and punctuation are ignored, but numbers
+are kept, so a change in a reported quantity can tell two passages
+apart. An apostrophe splits a word, so a contraction such as *don't*
+counts as two tokens, and a shared clause of six or seven spoken words
+with contractions can reach the eight-token setting. Missing, invalid or
+decreasing times interrupt the passage search. The report records the
+chosen settings and links a flagged cue to the indices of a matching
+partner. The command writes a separate review and leaves the transcript
+and its timings unedited. It exits with status 2 when the transcript
+cannot be read or is not UTF-8 JSON holding an object whose `segments`
+is a list of objects, and when a setting is rejected.
 
-### Supported languages
+Eight tokens and sixty seconds are provisional settings motivated by the
+unflagged passages in the case study, not thresholds fitted to annotated
+speech. A speaker may repeat a long clause intentionally, and a copy
+with altered wording or outside the window can be missed, so listen to
+both passages before deciding what happened. Estimating precision and
+recall will require recordings with independently annotated repetitions
+and recognition errors. Both checks are off by default so that the
+archived reviews and their reported counts remain reproducible, and the
+desktop application does not offer them.
 
-English, Chinese (romanised Pinyin), French, German, Hindi (romanised), Spanish, Italian, Arabic and Polynesian. Each entry is tagged as a first name or a surname and with its language, written as a full lower-case name such as `english`.
+## Multilingual name masking
 
-The dictionary holds 1,793 names: 967 English, 180 French, 176 Spanish, 143 Chinese, 141 German, 141 Hindi, 21 Italian, 13 Arabic and 11 Polynesian.
+The masker draws on a curated multilingual dictionary,
+`data/curated_names.csv`, of 1,793 names in nine languages: 967 English,
+180 French, 176 Spanish, 143 Chinese, 141 German, 141 Hindi, 21 Italian,
+13 Arabic and 11 Polynesian. It is far smaller than the optional Facebook
+lists described below, and so masks fewer ordinary words by mistake.
+Each entry is tagged as a first name or a surname and with its language,
+written as a full lower-case name such as `english`. Chinese names are
+romanised in Pinyin and Hindi names written in Latin script. The CSV is
+UTF-8, so accented names such as "Clément" keep their accents, and the
+names are sorted within each language. It can be extended by adding
+rows, and [dictionary_provenance.md](dictionary_provenance.md) records
+where it came from.
 
-### Default behaviour
+### Choosing the languages
 
-**Without language specification (RECOMMENDED):**
-- Uses all 9 languages for broad coverage
-- Balances coverage against false positives
-- Suitable for international content with diverse speakers
-
-### Language Selection Options
-
-Use the `--languages-for-name-masking` argument to select specific languages for the curated database. Languages are given as full names, in any letter case (`english`, `Spanish`). A name the dictionary does not contain, or an ISO code such as `en`, stops the run with an error listing the valid names, because silently loading no names would mask nothing while the transcript header still said names were masked.
+By default, the masker uses all nine languages, which gives the widest
+coverage and suits recordings whose speakers' backgrounds are varied or
+unknown. `--languages-for-name-masking` restricts it to the languages
+you name, which reduces false positives when you know the speakers'
+linguistic backgrounds or the recording has a regional focus. Languages
+are given as full names, in any letter case (`english`, `Spanish`). A
+name the dictionary does not contain, or an ISO code such as `en`, stops
+the run with an error listing the valid names, because silently loading
+no names would mask nothing while the transcript header still said names
+were masked.
 
 ```bash
 # Use all languages (default behaviour)
@@ -275,78 +314,60 @@ python transcription.py interview.wav --mask-personal-names --languages-for-name
 hpc/submit_transcription.sh --mask-personal-names --languages-for-name-masking english french german
 ```
 
-### Language Selection Examples
+The masker itself produced the outputs below. The first two have the
+common-word filter on, as it is for an English transcript. The third has
+it off, as for a non-English transcript, although none of its names is on
+the filter's list, so it would come out the same with the filter on.
+With all languages, the default:
 
-These outputs were produced by the masker itself. The first two use the
-common-word filter, which is on for an English transcript; the third
-has it off, as for a non-English transcript, because the filter also
-drops every name shorter than three letters, such as "Li" and "Yu".
-
-#### All Languages (Default):
 ```
 Input:  "Hello Maria Rodriguez, this is John Smith and Wei Chen speaking with Raj Patel and François Dubois."
 Output: "Hello [NAME] [SURNAME], this is [NAME] [SURNAME] and [SURNAME] [SURNAME] speaking with [NAME] [SURNAME] and François [SURNAME]."
 ```
 
-#### English Only:
+With English only:
+
 ```
 Input:  "Hello Maria Rodriguez, this is John Smith and Wei Chen speaking with Raj Patel and François Dubois."
 Output: "Hello Maria [SURNAME], this is [NAME] [SURNAME] and Wei Chen speaking with Raj [SURNAME] and François Dubois."
 ```
 
-"Rodriguez" and "Patel" are in the English list as surnames; "Maria",
-"Raj" and "Dubois" are not.
+"Rodriguez" and "Patel" are in the English list as surnames, and
+"Maria", "Raj" and "Dubois" are not. With Chinese and Spanish only:
 
-#### Chinese + Spanish Only:
 ```
 Input:  "Li Wei and Zhang Yu were talking to Carlos Martinez and Ana Rodriguez."
 Output: "[SURNAME] [SURNAME] and [SURNAME] [SURNAME] were talking to [NAME] [SURNAME] and [NAME] [SURNAME]."
 ```
 
-### When to Use Language Selection
-
-**Use specific languages when:**
-- You know the linguistic background of speakers
-- Processing content with a specific regional focus
-- Minimising false positives for particular language contexts
-- Working with specialised international content
-
-**Use all languages (default) when:**
-- Processing diverse international content
-- Uncertain about speaker backgrounds
-- Maximum name coverage is needed
-- Working with multicultural environments
-
-### Technical implementation
-
-- **Unicode support**: handles non-Latin scripts
-- **Romanisation**: Chinese (Pinyin) and Hindi names in Latin script
-- **Alphabetical organisation**: names sorted within each language set
-- **Memory efficient**: only selected languages loaded into memory
-- **Quality control**: curated names per language
-
-### Combining with Facebook Database
-
-You can combine language selection with Facebook database options:
+Each Facebook flag, described below, replaces the curated first names or
+surnames with its own list, so the language selection then applies only
+to the half the curated dictionary still supplies. With both flags, it
+matters only if the Facebook lists fail to load and the run falls back
+to the curated dictionary.
 
 ```bash
 # Facebook first names + selected languages for surnames
 python transcription.py interview.wav --mask-personal-names --use-facebook-names-for-masking --languages-for-name-masking english spanish
 
-# Facebook surnames + selected languages for first names  
+# Facebook surnames + selected languages for first names
 python transcription.py interview.wav --mask-personal-names --use-facebook-surnames-for-masking --languages-for-name-masking chinese hindi
 
 # Both Facebook databases + language selection (for curated backup)
 python transcription.py interview.wav --mask-personal-names --use-facebook-names-for-masking --use-facebook-surnames-for-masking --languages-for-name-masking english
 ```
 
-**Note**: When Facebook databases are enabled, the `--languages-for-name-masking` parameter affects the curated database used as a backup/supplement.
+### The common-word filter
 
-### Common English Word Filtering
-
-Some names, such as "Will", "Grace", "Long" and "Hall", are also English words. The masker only ever masks capitalised words, so the lower-case word in "they will continue" is safe either way; the problem is the capitalised word, at the start of a sentence, in a title or as part of a place name. The common-word filter removes from the dictionary about 660 common English words, together with every name shorter than three letters.
-
-With all languages selected, the masker gives:
+Some names, such as "Will", "Grace", "Long" and "Hall", are also English
+words. The masker only ever masks capitalised words, so the lower-case
+word in "they will continue" is safe either way. The problem is the
+capitalised word, at the start of a sentence, in a title or as part of a
+place name. The common-word filter removes about 660 common English words
+from the dictionary. Short names stay: the curated dictionary's "Li",
+"Yu" and "Ed" were listed on purpose, and only the scraped Facebook lists
+also lose every name shorter than three letters. With all languages
+selected, the masker gives:
 
 ```
 Input:            "Then Will said that Grace and Art would meet Pablo in Long Hall."
@@ -354,22 +375,27 @@ Filter off:       "Then [NAME] said that [NAME] and [NAME] would meet [NAME] in 
 Filter on:        "Then Will said that Grace and [NAME] would meet [NAME] in Long Hall."
 ```
 
-"Art" is masked either way, because it is not on the list of common words.
+"Art" is masked either way, because it is not on the list of common
+words. The list, in `filter_problematic_names` in `transcription.py`,
+covers colours, months and days, common verbs and nouns and similar
+words that double as names, for example will, may, can, is, was, long,
+page, hall, west, north, south, june, august, parker, amber, grace, rose,
+ruby, fox, bill, joy and hope. It also holds the two short tokens "an"
+and "ai", which capitalised at a sentence start or as an acronym would
+otherwise be masked as names. Other short names, such as "Li" and "Yu",
+stay in the dictionary.
 
-#### Smart Default Behaviour
-
-The system applies these defaults automatically:
-
-- **English transcripts (`--language english`)**: filtering is on by default, to prevent false positives
-- **Other languages**: filtering is off by default, to preserve legitimate names such as the Chinese names "An" and "Long"
-- **No language specified**: the decision follows the language detected from
-  the audio, so an English recording gets filtering ON and a non-English one gets
-  it OFF, exactly as if the language had been stated. Detection is a guess,
-  though, and the terminal warns you when one was made; pass `--language` to be
-  certain. The same detected language also governs which post-processing stages
-  run (see [conditions_audit.md](conditions_audit.md#the-language-gate)).
-
-#### Usage Examples
+The filter's default follows the transcript language. It is on for
+English (`--language english`), to prevent false positives, and off for
+other languages, to keep legitimate names such as the Chinese "An" and
+"Long". Without `--language`, the default follows the language detected
+from the audio, exactly as if it had been stated. Detection is a guess,
+and the terminal warns when one was made, so pass `--language` to be
+certain. The same language also governs which post-processing stages run
+(see [conditions_audit.md](conditions_audit.md#the-language-gate)).
+`--exclude-common-english-words-from-name-masking` and its `--no-` form
+set the filter either way, on the command line and through the HPC
+wrapper alike:
 
 ```bash
 # English transcript: filtering on automatically
@@ -394,118 +420,87 @@ python transcription.py interview.wav --mask-personal-names --language spanish \
 hpc/submit_transcription.sh --mask-personal-names --language english
 ```
 
-The HPC wrapper, `hpc/submit_transcription.sh`, does not yet accept the
-`--no-` form, so on the cluster the filter can be forced on but not off.
+Keep the filter on for English audio, and switch it on for any
+recording in which words such as "will", "may" and "long" are being
+masked. Keep it off where names that are also English words, such as
+the Chinese "An" or "Long", are expected.
 
-#### Filtered Words
+### Honorifics
 
-The list, in `filter_problematic_names` in `transcription.py`, covers
-colours, months and days, common verbs and nouns and similar words that
-double as names, for example: will, may, can, is, was, long, page, hall,
-west, north, south, june, august, parker, amber, grace, rose, ruby, fox,
-bill, joy and hope. Names shorter than three letters, such as "An", "Li"
-and "Yu", are removed along with them.
+An honorific before a masked name is masked with it, as `[TITLE]`, so
+that the title does not survive beside the placeholder. The honorifics
+are Mr, Mrs, Ms, Miss, Dr, Prof, Professor, Sir, Madam, Lord and Lady
+(`TITLE_WORDS` in `transcription.py`), and one is masked only when the
+next word is a capitalised dictionary name. A name the dictionary does
+not hold leaves its title in place, even when the named-entity stage
+masks the name itself. A possessive name takes its title with it, as
+the last sentence here shows:
 
-#### When to Use
+```
+Input:  "Thanks to Dr. Smith and Miss Garcia. I miss Sarah. It was Dr. Smith's idea."
+Output: "Thanks to [TITLE] [SURNAME] and [TITLE] [SURNAME]. I miss [NAME]. It was [TITLE] [SURNAME]'s idea."
+```
 
-**Enable filtering (or use `--language english`) when:**
-- Transcribing English-language audio
-- False positives are causing readability issues
-- Common words like "will", "may", "long" appear frequently in context
+The full stop after an abbreviated title (Mr, Mrs, Ms, Dr and Prof)
+does not end the sentence, and it goes into the placeholder with the
+title. Every honorific but two counts in any case, so "dr Smith" and
+"DR Smith" lose the title too. The two are also ordinary words, so they
+count only when spelt as the honorific is. "Miss" needs its capital,
+since "I miss Sarah" holds the verb, and "Ms" must be spelt exactly so,
+since "200 ms" is the unit and "MS" the disease. A lower-case "ms." or
+an "MS." therefore ends its sentence like any other word. The masker's
+`case_insensitive` parameter lifts the capitalisation requirement for
+the name after an honorific, as it does for any name, so "dr smith"
+becomes "[TITLE] [SURNAME]". It does not make a lower-case "miss" or
+"ms" an honorific.
 
-**Disable filtering (or avoid `--language english`) when:**
-- Transcribing non-English audio with English loanwords
-- Names like Chinese "An" or "Long" are expected
-- Working with international speakers using English names
-- Processing multilingual content with diverse name origins
+### Excluding specific names
 
-### Excluding Specific Names from Masking
+Some names can be left unmasked while the rest are masked: public
+figures such as "Einstein" or "Darwin" whose names give the transcript
+essential context, or a participant who has agreed to be named. List
+them on the command line, in a file with one name per line, or both.
+Matching ignores case ("Einstein", "einstein" and "EINSTEIN" are the
+same), and an excluded name is removed from the first names and the
+surnames, from the curated dictionary and the Facebook lists alike.
+Every other name is still masked.
 
-Sometimes you may want to preserve certain names in your transcripts whilst masking others. This is useful for keeping public figures, celebrities or specific participants identifiable.
-
-**Use case**: Mask most names for privacy but preserve well-known public figures (e.g., "Einstein", "Darwin") or specific participants for reference.
-
-#### Command-Line Options
-
-**Option 1: Comma-separated list**
 ```bash
+# A comma-separated list
 python transcription.py interview.wav --mask-personal-names \
   --exclude-names-from-masking "Einstein,Darwin,Newton"
+
+# A file with one name per line
+python transcription.py interview.wav --mask-personal-names \
+  --exclude-names-file excluded_names.txt
+
+# Both together
+python transcription.py interview.wav --mask-personal-names \
+  --exclude-names-file celebrities.txt \
+  --exclude-names-from-masking "ResearcherName"
 
 # HPC batch processing
 hpc/submit_transcription.sh --mask-personal-names \
   --exclude-names-from-masking "Einstein,Curie"
-```
-
-**Option 2: File with name list** (one name per line)
-```bash
-python transcription.py interview.wav --mask-personal-names \
-  --exclude-names-file excluded_names.txt
-
-# HPC batch processing
 hpc/submit_transcription.sh --mask-personal-names \
   --exclude-names-file excluded_names.txt
 ```
 
-**Option 3: Combine both methods**
-```bash
-python transcription.py interview.wav --mask-personal-names \
-  --exclude-names-file celebrities.txt \
-  --exclude-names-from-masking "ResearcherName"
-```
+Leave exclusions out when every participant needs the same protection,
+when you are unsure which names may be kept, or for highly sensitive
+material.
 
-#### Behaviour
+### The Facebook name lists
 
-- **Case-insensitive**: "Einstein", "einstein", "EINSTEIN" all treated identically
-- **Applies to both first and surnames**: Excluded names removed from both databases
-- **Works with all database options**: Compatible with curated and Facebook databases
-- **Only specified names excluded**: All other names still masked normally
-
-#### When to Use
-
-**Recommended for:**
-- Content referencing well-known public figures (Einstein, Shakespeare, Darwin)
-- Preserving specific participants whilst masking others
-- Educational materials where certain names provide essential context
-- Names already in the public domain
-
-**Avoid when:**
-- All participants require equal privacy protection
-- Unsure which names should be preserved
-- Processing highly sensitive content requiring maximum privacy
-
-### Facebook Names Database Option
-
-#### Overview
-
-The system includes optional names databases sourced from Facebook's `names-dataset` package, containing over **1.7 million names**:
-- **730,000+ first names** from 106 countries
-- **980,000+ surnames** from global datasets
-
-**Database source:** The names database is provided by Philippe Remy's `name-dataset` project, available at: https://github.com/philipperemy/name-dataset
-
-**The Facebook database is disabled by default** because of high false positive rates when masking common English words.
-
-#### Current default behaviour
-
-**Without Facebook database flags (RECOMMENDED):**
-- Uses the curated database loaded from `data/curated_names.csv` (1,793 names across 9 languages)
-- Organised by language: `english`, `chinese`, `french`, `german`, `hindi`, `spanish`, `italian`, `arabic`, `polynesian`
-- Each entry tagged as 'first' or 'last' name with a language code
-- Fewer false positives (common English words excluded)
-- Better precision for privacy protection
-- Maintains conversation flow and readability
-- Expandable by adding entries to the CSV file
-
-#### Enabling Facebook Names Databases
-
-**Granular control:**
-- `--use-facebook-names-for-masking`: use Facebook's 730K+ first names database only
-- `--use-facebook-surnames-for-masking`: use Facebook's 980K+ surnames database only
-- Use both flags together for full Facebook database coverage
-- Higher risk of false positives when enabled
-
-#### Usage Examples
+The optional `names-dataset` package, from Philippe Remy's
+[name-dataset](https://github.com/philipperemy/name-dataset) project,
+holds lists extracted from a Facebook data dump: over 730,000 first
+names and 980,000 surnames. `--use-facebook-names-for-masking` replaces
+the curated first names with its first names, and
+`--use-facebook-surnames-for-masking` replaces the curated surnames with
+its surnames. The curated dictionary supplies whichever of the two is
+not replaced. Both are off by default, because lists that large contain
+many ordinary capitalised words, and the masker then hides them.
 
 ```bash
 # Default behaviour (recommended) - uses curated names only
@@ -517,7 +512,7 @@ hpc/submit_transcription.sh --mask-personal-names
 # Enable Facebook FIRST NAMES only (surnames remain curated)
 python transcription.py interview.wav --mask-personal-names --use-facebook-names-for-masking
 
-# Enable Facebook SURNAMES only (first names remain curated) 
+# Enable Facebook SURNAMES only (first names remain curated)
 python transcription.py interview.wav --mask-personal-names --use-facebook-surnames-for-masking
 
 # Enable BOTH Facebook databases (wider coverage but more false positives)
@@ -530,90 +525,70 @@ hpc/submit_transcription.sh --mask-personal-names --use-facebook-names-for-maski
 hpc/submit_transcription.sh --mask-personal-names --use-facebook-names-for-masking --use-facebook-surnames-for-masking
 ```
 
-#### When to Use Facebook Names Database
+With the default curated dictionary, "The meeting will begin soon.
+Thank you for joining, Mark." becomes "The meeting will begin soon.
+Thank you for joining, [NAME]." The Facebook lists always pass through
+the common-word filter, whatever its setting, so words on its list, "The"
+and "Thank" among them, are never masked. Capitalised words that are not
+on the list can be, and the lists are large enough to hold many of them.
 
-**Warning:** The Facebook database option markedly increases false positives compared with the curated database. Manual quality review is essential when using this option.
+The Facebook lists suit recordings whose names come from beyond the nine
+languages, or where coverage matters more than readability, provided
+someone reviews the output by hand. They suit informal conversation
+poorly. When you use them, save the masking log and check both the
+transcript and the log for ordinary words replaced by `[NAME]` or
+`[SURNAME]`:
 
-**Consider using when:**
-- Processing international content with diverse name origins beyond the 9 supported languages
-- Maximum name coverage is critical for privacy compliance
-- You can manually review transcripts for false positives
-- Processing technical or formal content with fewer conversation words
+```bash
+# Enable detailed logging when using Facebook database
+python transcription.py interview.wav --mask-personal-names --use-facebook-names-for-masking --save-name-masking-logs
 
-**Avoid when:**
-- Processing conversational speech with common English words
-- Automated processing without manual review capability
-- Readability and natural flow are priorities
-- Working with informal interviews or casual conversations
+# Review the logs before finalising
+ls name_masking_logs/
+# Check: name_replacements_interview.csv
+```
 
-#### Expected Differences
+The dictionary is built by `load_global_names(use_facebook_names,
+use_facebook_surnames, selected_languages, exclude_common_words)` in
+`transcription.py`. If `names-dataset` is not installed or its tables do
+not load, the run prints an error and falls back to the curated
+dictionary for both first names and surnames. For most users, the
+curated dictionary gives the better balance of protection and
+readability.
 
-With the default curated dictionary, "The meeting will begin soon. Thank you for joining, Mark." becomes "The meeting will begin soon. Thank you for joining, [NAME]." The Facebook lists are large enough to contain many ordinary capitalised words, so with them enabled, sentence-initial words such as "The" or "Thank" can be masked as well; check the masking log to see what was.
+## Optional outputs
 
-#### Required Special Attention
+### Name masking logs
 
-**When using `--use-facebook-names-for-masking`, carefully review:**
+When names are masked, the run keeps a record of each replacement but
+saves it only with `--save-name-masking-logs`. The log is one CSV per
+recording, `name_masking_logs/name_replacements_<recording>.csv`,
+relative to the directory the command runs from, and a later run on a
+recording of the same name replaces it. It has one row per masked word,
+with the columns `filename`, `order`, `original`, `replacement`,
+`context_sentence` and `source`. `source` records which rule masked the
+word: `dictionary`, `ner` (the optional named-entity stage) or `title`
+(an honorific before a name). The logs hold the names themselves, so
+treat them as confidential. Git ignores the directory, so a log cannot be
+committed by accident. A log is the
+audit trail of what was masked and the place to look for masking errors.
 
-1. **Transcripts:** Check for over-masking of common words
-   - Look for `[NAME]` and `[SURNAME]` replacing common words
-   - Verify conversation flow remains readable
-   - Check if context clues remain for understanding
-
-2. **Name Masking Logs:** Use `--save-name-masking-logs` for detailed tracking
-   - Review `name_masking_logs/` CSV files for false positives
-   - Audit masked terms to identify problematic patterns
-   - Use logs to fine-tune masking for specific content types
-
-3. **Quality Control Workflow:**
-   ```bash
-   # Enable detailed logging when using Facebook database
-   python transcription.py interview.wav --mask-personal-names --use-facebook-names-for-masking --save-name-masking-logs
-   
-   # Review the logs before finalising
-   ls name_masking_logs/
-   # Check: name_replacements_interview.csv
-   ```
-
-#### Technical Implementation
-
-The dictionary is built by `load_global_names(use_facebook_names, use_facebook_surnames, selected_languages, exclude_common_words)` in `transcription.py`. Each Facebook flag replaces the curated first names or surnames with the corresponding `names-dataset` list, which is always passed through the common-word filter whatever the filter setting; the curated dictionary supplies whichever of the two is not replaced. If `names-dataset` is not installed or its tables do not load, the run prints an error and falls back to the curated dictionary for both.
-
-#### Recommendation
-
-**For most users:** Stick with the default curated database (1,793 names across 9 languages) for a better balance of privacy protection and readability. The curated database covers English, Chinese, French, German, Hindi, Spanish, Italian, Arabic and Polynesian names whilst minimising false positives. Only enable the Facebook database when global name coverage beyond these languages is essential and you can invest time in manual quality review.
-
-## Optional Output Features
-
-### Name Masking Logs
-
-By default, when name masking is enabled, the system tracks which names were replaced but doesn't save detailed logs. Use `--save-name-masking-logs` to enable detailed logging:
-
-**Feature:**
-- Saves one CSV per recording, `name_masking_logs/name_replacements_<recording>.csv`, relative to the directory the command runs from, replacing any earlier log for a recording of the same name
-- One row per masked word, with the columns `filename`, `order`, `original`, `replacement`, `context_sentence` and `source`
-- `source` records which rule masked the word: `dictionary`, `ner` (the optional named-entity stage) or `title` (an honorific before a name)
-- The logs hold the names themselves, so treat them as confidential; the directory is ignored by git
-
-**When to use:**
-- When you need audit trails for privacy compliance
-- For reviewing masking accuracy and false positives
-- When processing sensitive content requiring documentation
-- Not needed for casual transcription
-
-**Example:**
 ```bash
 # Save name masking logs
 python transcription.py "interview.wav" --mask-personal-names --save-name-masking-logs
 hpc/submit_transcription.sh --mask-personal-names --save-name-masking-logs
 ```
 
-### Enhanced Audio Files
+### Enhanced audio files
 
-Audio enhancement is off by default and runs only with `--enhance-audio`. The enhanced recording is then written to a temporary file that is deleted after the run. Add `--save-enhanced-audio` to keep it as `output/enhanced_audio/<name>_enhanced.wav`, for example to listen to what the enhancement did; without `--enhance-audio` the flag has no effect.
+Audio enhancement is off by default and runs only with `--enhance-audio`.
+The enhanced recording is then written to a temporary file that is
+deleted after the run. Add `--save-enhanced-audio` to keep it as
+`output/enhanced_audio/<name>_enhanced.wav`, for example to listen to
+what the enhancement did. Without `--enhance-audio` the flag has no
+effect.
 
 ```bash
 python transcription.py "interview.wav" --enhance-audio --save-enhanced-audio
 hpc/submit_transcription.sh --enhance-audio --save-enhanced-audio
 ```
-
-**Note:** Both features are OFF by default to conserve storage space and focus on essential transcription output.

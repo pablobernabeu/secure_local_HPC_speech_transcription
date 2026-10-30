@@ -32,9 +32,9 @@ if str(PROJECT_ROOT) not in sys.path:
 # layer inspects whatever module is registered as torch.
 pytest.importorskip("scipy.signal")
 
-from evaluation import benchmark_anonymisation as ba  # noqa: E402
-from evaluation import wer  # noqa: E402
-from evaluation.revisions import revision_for  # noqa: E402
+from evaluation import benchmark_anonymisation as ba
+from evaluation import wer
+from evaluation.revisions import revision_for
 
 SR = ba.SAMPLE_RATE
 

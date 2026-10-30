@@ -20,7 +20,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from evaluation.disfluency import (  # noqa: E402
+from evaluation.disfluency import (
     aggregate,
     count_fillers,
     score_dump,
@@ -233,6 +233,34 @@ class TestConditionAudit:
         kept = audit["whisper_norm"]
         assert not kept["um"] and not kept["uh"]
         assert kept["er"] and kept["ah"]
+
+    def test_an_unregistered_name_is_left_out_aloud(self, capsys):
+        """A misspelt condition used to vanish from the table without a word."""
+        from evaluation.disfluency import audit_conditions
+        audit = audit_conditions(("raw", "pipline_full"))
+        assert list(audit) == ["raw"]
+        err = capsys.readouterr().err
+        assert "'pipline_full' is not a registered condition" in err
+        # The registered names, which say what the misspelling should be.
+        assert "Available conditions:" in err and "pipeline_full" in err
+
+    def test_the_audit_honours_conditions(self, tmp_path):
+        """--audit-conditions used to ignore --conditions and probe the
+        default five whatever was asked."""
+        import json
+
+        from evaluation.disfluency import main
+        out = tmp_path / "audit.json"
+        assert main(["--audit-conditions", "--conditions", "filler_strip,raw",
+                     "--json", str(out)]) == 0
+        written = json.loads(out.read_text(encoding="utf-8"))
+        assert list(written["conditions"]) == ["filler_strip", "raw"]
+        assert written["conditions_selected"] == ["filler_strip", "raw"]
+
+    def test_an_audit_with_nothing_to_run_exits_2(self, capsys):
+        from evaluation.disfluency import main
+        assert main(["--audit-conditions", "--conditions", "pipline_full"]) == 2
+        assert "no condition left to audit" in capsys.readouterr().err
 
 
 # ---------------------------------------------------------------------------

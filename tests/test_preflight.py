@@ -18,8 +18,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-import preflight  # noqa: E402
-from preflight import (  # noqa: E402
+import preflight
+from preflight import (
     FAIL,
     OK,
     WARN,

@@ -213,7 +213,7 @@ def _asr_result(_audio_path, _model=None, _language=None,
     ``evaluation.revisions`` pins for the model, which is what a run from a
     cache filled by ``setup/download_model.py`` loads.
     """
-    from evaluation.revisions import revision_for  # noqa: PLC0415
+    from evaluation.revisions import revision_for
 
     words, _, duration = _timeline()
     result = {"text": "".join(f" {token}" for token, _, _ in words),
@@ -236,8 +236,8 @@ def _diarisation(t):
     which is what a cache filled by ``setup/cache_pyannote_arc.py`` holds as
     ``main``; that script exits 2 when the Hub has moved from them.
     """
-    from evaluation.revisions import revision_for  # noqa: PLC0415
-    from preflight import PYANNOTE_PIPELINE_REPOS  # noqa: PLC0415
+    from evaluation.revisions import revision_for
+    from preflight import PYANNOTE_PIPELINE_REPOS
 
     plan = t._resolve_diarization_strategy(env={"HF_HUB_OFFLINE": "1"})
     source = {
@@ -272,7 +272,7 @@ class _PinnedClock(datetime):
     """``datetime`` whose ``now()`` always returns :data:`PINNED_TIME`."""
 
     @classmethod
-    def now(cls, tz=None):  # noqa: D401 - mirrors datetime.now
+    def now(cls, tz=None):  # mirrors datetime.now
         return cls(*PINNED_TIME.timetuple()[:6], tzinfo=tz)
 
 
@@ -348,7 +348,7 @@ def import_pipeline():
     if hide:
         sys.modules["transformers"] = None
     try:
-        import transcription  # noqa: PLC0415
+        import transcription
     finally:
         if hide and sys.modules.get("transformers", 0) is None:
             del sys.modules["transformers"]
@@ -371,7 +371,7 @@ def generate_variant(variant: str, destination: Path) -> list[Path]:
         RuntimeError: the pipeline did not exit 0; the message carries its
             console output.
     """
-    import provenance  # noqa: PLC0415
+    import provenance
 
     t = import_pipeline()
     flags = VARIANTS[variant]

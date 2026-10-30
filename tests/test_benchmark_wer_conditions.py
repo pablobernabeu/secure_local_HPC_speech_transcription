@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from evaluation import benchmark_wer as b  # noqa: E402
+from evaluation import benchmark_wer as b
 
 
 # ---------------------------------------------------------------------------

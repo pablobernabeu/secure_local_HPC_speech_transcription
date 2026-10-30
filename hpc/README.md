@@ -4,7 +4,7 @@ This directory holds the SLURM job scripts. They were written for the
 University of Oxford's ARC service: every script targets the `htc`
 cluster (`--clusters=htc`) and its `short` partition, whose limit is
 12 hours. ARC users with more than one project choose which to charge with
-`--account`; the evaluation scripts' usage lines use
+`--account`. The evaluation scripts' usage lines use
 `--account=educ-intract`, and either project account works. To run the
 scripts elsewhere, see [HPC_SETUP_GUIDE.md](HPC_SETUP_GUIDE.md).
 
@@ -13,7 +13,7 @@ repository path from `SLURM_SUBMIT_DIR` and write their logs to
 `logs/<job name>_<job id>.out` and `.err` under it, so a submission from
 another directory cannot find the code or its logs. Each script's header
 comment lists every environment variable it reads, with its default, and
-the outputs it writes; this page is the map between them.
+the outputs it writes. This page is the map between them.
 
 ## How every job starts
 
@@ -62,7 +62,7 @@ from outside the environment.
 
 `submit_transcription.sh` is the entry point for transcribing your own
 recordings. It runs on the login node, freezes the list of recordings in
-`logs/filelist_<timestamp>.txt` and submits one array task per recording
+`logs/filelist_<timestamp>_<pid>.txt` and submits one array task per recording
 to `batch_transcription.sh`, which runs `transcription.py` on CPU. No GPU
 is requested and `CUDA_VISIBLE_DEVICES` is emptied, so a GPU node gives the
 worker nothing. It runs the CPU preflight before transcribing, and Slurm's
@@ -88,17 +88,17 @@ committed. The order matters where one stage reads another's output.
 | Sweep aggregation | `aggregate_sweep.sh` | every task of the sweep | no | 30 min | `sweep_aggregate.csv`, `sweep_aggregate.json` in `SWEEP_DIR` (default `audit2026/sweep/`) |
 | Multilingual WER on FLEURS | `submit_benchmark_wer_multilingual.sh` (array 0-5) | nothing | yes | 12 h per task | `wer_report_fleurs_<config>_<model>*.csv` and summaries |
 | Timestamp accuracy | `submit_benchmark_timestamps.sh` | nothing | yes | 4 h | `timestamp_report.csv`, `timestamp_skipped.csv`, `timestamp_summary.json` |
-| Filler preservation | `submit_disfluency.sh` | nothing | yes | 12 h | `wer_hypotheses_ami.csv`, `disfluency_summary.json`, `disfluency_report.csv` (a fresh decode; the committed pair is scored locally from the sweep's AMI dump instead, see `evaluation/disfluency.py`) |
-| Run-to-run determinism | `submit_determinism.sh` | nothing | yes | 8 h | `determinism/` (job 8978760, on a V100, took 16 min; its summaries, `gpu.txt` and WER report are committed in `determinism/v100_8978760/`) |
-| Run-to-run determinism on a processor | `submit_determinism_cpu.sh` | nothing | no | 12 h | `determinism_cpu/` (job 8978759 took 1 h 17 min; its summaries, `cpu.txt` and WER report are committed in `determinism/cpu_8978759/`) |
+| Filler preservation | `submit_disfluency.sh` | nothing | yes | 12 h | `wer_hypotheses_ami.csv`, `disfluency_summary.json`, `disfluency_report.csv`, from a fresh decode. The committed pair is scored locally from the sweep's AMI dump instead (see `evaluation/disfluency.py`) |
+| Run-to-run determinism | `submit_determinism.sh` | nothing | yes | 8 h | `determinism/` (job 8978760, on a V100, took 16 min, and its summaries, `gpu.txt` and WER report are committed in `determinism/v100_8978760/`) |
+| Run-to-run determinism on a processor | `submit_determinism_cpu.sh` | nothing | no | 12 h | `determinism_cpu/` (job 8978759 took 1 h 17 min, and its summaries, `cpu.txt` and WER report are committed in `determinism/cpu_8978759/`) |
 | Voice anonymisation trade-off | `submit_anonymisation.sh` | nothing | yes | 8 h | `anonymisation_summary.json`, `anonymisation_report.csv` |
-| Worked example on a podcast episode | `submit_case_study.sh` | the episode's audio in `$DATA/codex_mentis/audio/`, fetched with `python -m evaluation.fetch_codex_mentis --dest $DATA/codex_mentis`, and a corpus manifest (below) | yes | 2 h | transcripts in the repository's `output/transcripts/` (git-ignored); `podcast_eval_*` in `$DATA/speech_transcription_env/output/case_study/` |
+| Worked example on a podcast episode | `submit_case_study.sh` | the episode's audio in `$DATA/codex_mentis/audio/`, fetched with `python -m evaluation.fetch_codex_mentis --dest $DATA/codex_mentis`, and a corpus manifest (below) | yes | 2 h | transcripts in the repository's `output/transcripts/` (git-ignored), and `podcast_eval_*` in `$DATA/speech_transcription_env/output/case_study/` |
 
 The case study's structural evaluation reads each episode's duration from
 a corpus manifest. The job takes `CASE_MANIFEST` when it is set, then
 `$DATA/codex_mentis/manifest.json` when it exists (the fetch writes it),
 and otherwise the repository's own `data/codex_mentis/manifest.json`
-(ca75ced), whose episode 5 entry holds the SHA-256 and size of the
+(ca75ced). That file's episode 5 entry holds the SHA-256 and size of the
 recording on ARC, where no fetch manifest exists. The job stops with exit
 2 before transcribing when the manifest it chose does not exist. Until
 ca75ced it knew only the fetch manifest, so re-run 8978758 transcribed
@@ -107,9 +107,10 @@ and then failed its structural evaluation (NEW-06).
 The case study used to write its evaluation into the repository's tracked
 `output/case_study/`, which left the ARC clone with a modified file after
 every run. A new result is now copied in by hand when it is to be
-committed: `cp "$DATA"/speech_transcription_env/output/case_study/podcast_eval_* output/case_study/`
-for the evaluation, and the run's `codex_mentis_ep05_review.json` and
-`codex_mentis_ep05_manifest.json` from `output/transcripts/`, byte for
+committed. The evaluation is copied with
+`cp "$DATA"/speech_transcription_env/output/case_study/podcast_eval_* output/case_study/`,
+and the run's `codex_mentis_ep05_review.json` and
+`codex_mentis_ep05_manifest.json` from `output/transcripts/` byte for
 byte, so that the review keeps the SHA-256 the manifest records for it.
 
 The sweep and its aggregation can be chained with a dependency, which is
@@ -148,16 +149,18 @@ they replaced. `submit_benchmark_der.sh` and `submit_der_sweep.sh` ask for
 any GPU, so the commands in `hpc/runs/der_*.env` add `--gres=gpu:l40s:1`.
 
 Several committed results need no cluster and are rebuilt locally from
-committed inputs: the masking benchmark (`python -m
+committed inputs. They are the masking benchmark (`python -m
 evaluation.benchmark_masking`, seed 42 by default), the bootstrap
 intervals (`python -m evaluation.bootstrap_ci` and `python -m
-evaluation.condition_ci`), the compute footprint (`python -m
+evaluation.condition_ci`), the reader-cluster sensitivity (`python -m
+evaluation.speaker_cluster_ci`), the compute footprint (`python -m
 evaluation.footprint`, from `output/evaluation/arc_job_ledger.csv`) and the
-artefact audit (`python -m evaluation.audit_artefacts`). Each of these
-writes into `output/evaluation/` by default, so running one there replaces
-the committed file; pass `--output-dir` (or `--output`) to write elsewhere.
+artefact audit (`python -m evaluation.audit_artefacts`). All but
+`condition_ci` and `speaker_cluster_ci`, which require `--output`, write
+into `output/evaluation/` by default, so running one there replaces the
+committed file. Pass `--output-dir` (or `--output`) to write elsewhere.
 
-Four more are assembled locally from job outputs copied off ARC. The
+Five more are assembled locally from job outputs copied off ARC. The
 committed `sweep_aggregate.csv` and `sweep_aggregate.json` were not written
 by `aggregate_sweep.sh`: `python -m evaluation.sweep_aggregate` built them
 at commit 7214e77 from copies of the 255 summaries in `audit2026/sweep/`,
@@ -167,16 +170,24 @@ sweep's AMI hypothesis dump, as the next section describes.
 `output/evaluation/fleurs_multilingual_summary.json` is rebuilt from the 48
 per-language FLEURS summaries on ARC (six languages, two conditions, four
 arms, the fourth from array 8917984 in `audit2026/fleurs_ml/`) by
-`python -m evaluation.fleurs_multilingual` with the options its docstring
-gives, which reproduces the committed file apart from
-`benchmark.assembled_by`, the record of the rebuild's own run. It was first
-assembled by hand.
+`python -m evaluation.fleurs_multilingual`, with the options its
+docstring gives. The rebuild reproduces the committed file apart from
+`benchmark.assembled_by`, the record of the rebuild's own run. The file
+was first assembled by hand.
 `output/evaluation/determinism/determinism_cross_accelerator.json` is
 rebuilt by `python -m evaluation.determinism_cross` from hypothesis dumps,
 WER reports and a job log copied from ARC, which
 `determinism_cross_accelerator_runs.json` names together with the command.
 The result names each input by the SHA-256 of its bytes and with CRLF read
 as LF.
+`python -m evaluation.fleurs_control`, with the options its docstring
+gives, writes `output/evaluation/fleurs_es419_v100_control.json`. It
+reads the Spanish control's two summaries and environment records, from
+`controls/` on ARC, the four arms' Spanish summaries and the fourth
+arm's environment record. An arm's summary whose SHA-256 is not the one
+`fleurs_multilingual_summary.json` records for that arm is refused.
+[docs/next_control.md](../docs/next_control.md) is the record of the
+control.
 
 The job ledger behind the compute footprint is built from a read-only
 sacct dump taken with
@@ -202,14 +213,20 @@ from a clone under a new name stops the build until it is given a
 category. Name the jobs of a re-run wave `au_<stage>` and their
 pre-flights `pf_<stage>`, with a stage that `_STAGE_CATEGORY` lists, and
 submit them from a clone. The committed ledger was captured this way on
-2026-10-04 at 13:45 BST, after the evaluation's last job had finished,
-and holds 197 jobs. Its provenance,
+2026-10-30 at 00:02 GMT, after the evaluation's last job, the full split
+of the Spanish V100 control (9124863), had finished, and holds 203 jobs.
+Its first 197 are those of the capture of 2026-10-04, unchanged. The
+other six ran from 17 to 19 October: the case study's re-run, three runs
+of the test suite and the control's two jobs. Its provenance,
 `output/evaluation/arc_job_ledger_provenance.json`, holds the query and
 the dump's SHA-256 and lists the jobs of this project left out, each
-under its reason: seven, all cancelled while pending. The dump is not
-committed, since it lists the shared account's other projects. The
-estimate is then made from the committed ledger with `python -m
-evaluation.footprint`.
+under its reason: seven, all cancelled while pending. One more was never
+in the dump. A case-study submission of 17 October (9124829) was
+cancelled while it waited on a dependency that could no longer be met.
+It never became eligible to run, and the query's time window selects
+jobs by when they become eligible. The dump is not committed, since it
+lists the shared account's other projects. The estimate is then made
+from the committed ledger with `python -m evaluation.footprint`.
 
 ### Which invocation produced each committed result
 
@@ -227,6 +244,7 @@ those files, with the ARC job ID and date, are recorded in `hpc/runs/`:
 | `der_sweep2*.csv`, `der_sweep2_selection.json` | `hpc/runs/der_sweep2.env` |
 | `sweep_aggregate.csv`, `sweep_aggregate.json`, `sweep_reports_postfix/`, `sweep_reports_postfix_ami/`, `wer_report.csv`, `wer_summary.json` | `hpc/runs/sweep.env` |
 | `fleurs_multilingual_summary.json`, its fourth arm | `hpc/runs/fleurs_ml.env` |
+| `fleurs_es419_v100_control.json`, the Spanish V100 control (jobs 9124739 and 9124863) | `hpc/runs/fleurs_es419_v100.env` |
 | `timestamp_report.csv`, `timestamp_summary.json`, `timestamp_skipped.csv` | `hpc/runs/timestamps.env` |
 | `../evaluation_vad_refine/` | `hpc/runs/timestamps_vad.env` |
 | `determinism/` (the H100 files at its top level) and `determinism/l40s_8781724/` | `hpc/runs/determinism.env` |
@@ -314,11 +332,11 @@ case-study run, job 8441879, which the case study's README names, and
 the commit that added it (50314de) names no job. Results kept only as
 history are traced in `output/evaluation/README.md`.
 `output/evaluation/arc_job_ledger.csv` lists every job of the evaluation,
-7662519 to 8983112, and gives each GPU job the board of the node it ran
+7662519 to 9134598, and gives each GPU job the board of the node it ran
 on. The ledger it replaced, captured on 2026-06-27, listed only jobs
 7721017 to 7995595 and recorded every GPU job as `a100`. For a job that
 asked for any GPU (`--gres=gpu:1`), the batch step's allocation reads
-`gres/gpu:a100` whatever card ran it: jobs 7737896 and 7746221 ran on
+`gres/gpu:a100` whatever card ran it. Jobs 7737896 and 7746221 ran on
 Tesla P100s and jobs 7746137 and 7746138 on an H100 PCIe, as their logs
 say, and the ledger now records them as `p100-pcie` and `h100-pcie`. The
 code commit a job ran was not recorded for any job before
@@ -331,8 +349,9 @@ record of the Python stack, loaded modules, GPU and git commit to an
 Two checks are written down here so that they can be repeated as they
 stand, with the record of their last runs.
 
-**The test suite on ARC (TESTS-01).** Recorded runs, each from a clean
-checkout of the commit named:
+### The test suite on ARC (TESTS-01)
+
+Recorded runs, each from a clean checkout of the commit named:
 
 | Job | Commit | Result |
 | --- | --- | --- |
@@ -340,9 +359,24 @@ checkout of the commit named:
 | 8918061 | d0edd03 | 1658 passed, 1 skipped, 1 xfailed |
 | 8978757 | f2578b8 | 2032 passed, 1 skipped, 1 xfailed |
 | 8983111 | c4c7b38 | 2058 passed, 1 skipped, 1 xfailed |
+| 9124851 | fc652ab | 2355 passed, 1 skipped, 1 xfailed, 1 failed |
+| 9134598 | c17367b | 2367 passed, 1 skipped, 1 xfailed |
+
+Job 9134598 checked the release 2.0.0 tree on 18 October 2026. The
+failure in 9124851 was expected. `tests/test_audit_priv_podcast.py` runs
+the masker over the case study's committed text and compares its count
+with the committed summary. That summary still held the three redactions
+of job 8983112, and the masker found a fourth, the `[TITLE]` that the
+re-run, job 9124852, was made to show
+([output/case_study/README.md](../output/case_study/README.md)). Job
+9124828, at c817634 earlier that evening, failed six tests. Two were
+that count, in this test and in `tests/test_s1_txt_short_names.py`,
+whose pin 05e0530 then raised to four. The other four were the example
+variants, whose manifests had gained a `review_settings` key that
+05e0530 writes only when a review check is on.
 
 The skip is `tests/test_s1_misc_footprint.py:159`, which needs a raw sacct
-dump committed under `output/evaluation/`; the expected failure is
+dump committed under `output/evaluation/`. The expected failure is
 `tests/test_privacy_masking_interaction.py::test_real_masker_keeps_turn_separators`.
 Until the audit's runs of September 2026, the last run had been on
 2026-05-16, before most of the jiwer- and pyannote-dependent tests existed.
@@ -363,8 +397,8 @@ Test jobs 8913985 (commit 76d9489, 54 failed) and 8917186 (commit 2e5e852,
 18 failed) are not in the table, and they did more than fail. In each, the
 pyannote pre-cache test in `tests/test_s1_env_setup.py` was handed the real
 `~/.cache/torch/pyannote`, because an earlier test had imported
-pyannote.audio, and its stand-in for the Hugging Face Hub wrote a stub
-`config.yaml` that names no pipeline through the snapshot's link into the
+pyannote.audio. Its stand-in for the Hugging Face Hub then wrote a stub
+`config.yaml` that names no pipeline, through the snapshot's link, into the
 cached pipeline config (blob `5402e3ca` of
 `pyannote/speaker-diarization-3.1`). Every load of the pipeline then failed
 until the blob was restored on 2026-10-04 (incident NEW-INC-01). Case-study
@@ -382,7 +416,9 @@ prints the blob's own name. Seven tests in
 need symlinks and skip where none can be made, as on Windows without that
 privilege. Job 8978757 was their first run on ARC, and all seven passed.
 
-**A CPU smoke test of the segmentation fine-tuning (EDER-FT).** Phase 2 of
+### A CPU smoke test of the segmentation fine-tuning (EDER-FT)
+
+Phase 2 of
 `evaluation/finetune_pyannote_segmentation.py` was rewritten against the
 pyannote.audio 3.4.0 source. It has passed twice on ARC: job 8913986
 (commit 76d9489) and job 8918331 (commit 6f9bf56, loading the base model at
@@ -440,7 +476,7 @@ cited in [docs/conditions_audit.md](../docs/conditions_audit.md), and
 writes only under `pilot/`. `submit_finetune_pyannote.sh` fine-tunes the
 segmentation model and has never produced a reported result.
 `evaluate_wer.sh` scores a directory of your own transcripts against
-references (see [docs/evaluation.md](../docs/evaluation.md)). By default it
+references (see [docs/evaluation.md](../docs/evaluation.md)). By default, it
 reads `output/transcripts/` in the repository and writes
 `wer_report_transcripts.csv` and `wer_summary_transcripts.json` to
 `$DATA/speech_transcription_env/output/evaluation/inhouse/`, never the

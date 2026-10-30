@@ -23,7 +23,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from evaluation.footprint import (  # noqa: E402
+from evaluation.footprint import (
     FootprintParams,
     estimate_job,
     load_ledger,

@@ -32,8 +32,8 @@ rewritten, unless the Status names another commit.
 The counts below were made by a script that reads the opening words of every Status
 paragraph in this file, section by section, and checks that each entry has exactly
 one. In the Blocking section, 36 are Resolved and 1 Partly resolved. In the Major
-section, 81 are Resolved and 3 Partly resolved, and in the Minor section, 33 are
-Resolved, 1 Partly resolved and 1 Open. Of the areas the audit did not cover, 2 are
+section, 81 are Resolved and 3 Partly resolved, and in the Minor section all 35 are
+Resolved, NEW-05 and LINT-01 since 30 October 2026. Of the areas the audit did not cover, 2 are
 Resolved and 4 Partly resolved. No entry is Pending re-run, since every ARC job
 and the scheduler capture the statuses waited on have finished and their results are
 committed, and none is Withdrawn. The same script sorts the 146 Why deferred
@@ -43,6 +43,15 @@ or tests outside what that pass changed. NEW-03 to NEW-12 and the areas G1 to G6
 have no such paragraph. What is left of the release, which is the author's, is set
 out as a checklist under DOCS-14. The section on observations from ARC records what
 read-only checks on the cluster found, the incident NEW-INC-01 among them.
+
+The pass of 20 October 2026, made after release 2.0.0 and without access to the
+cluster, has a section of its own below the Minor section, so that the counts above
+stay those of the audit. It holds ten entries: CR-02 and CR-06 from a correctness
+review of the 49 commits after `1f9f22e`, and SC-17 to SC-24 from a code pass. A
+second pass on 29 and 30 October 2026, with the cluster reachable again, resolved
+nine of them and CR-06 in code, as each Status records, together with NEW-05 and
+LINT-01 above. `CHANGELOG.md` summarises both passes; line numbers are those of the
+commit each entry names.
 
 ## Blocking (37)
 
@@ -418,7 +427,7 @@ read-only checks on the cluster found, the incident NEW-INC-01 among them.
 
 `versions.csv:2` · BLOCKING · HIGH-RISK · touches end product · verified confirmed, panel upheld
 
-**Status.** Resolved. CHANGELOG.md records the audit and re-run changes, and now also identifies the earlier result-affecting fixes f6e708e, c0f58c5, c83162f, af3bee0, 5f1a3ea, f7c85b0, 25068a8 and f023ddb. Transcript stamps carry the release and source commit (5b15a6a). The release order below was corrected on 6 October 2026 to reserve the new DOI before freezing the cited source tree, and release 2.0.0 followed it. On 17 October 2026 the version DOI 10.5281/zenodo.23442766 was reserved in the existing record family (concept DOI 10.5281/zenodo.17592924) and the DOI 10.5281/zenodo.23442874 in a separate data record for the inputs, and the two drafts were cross-linked. versions.csv, CITATION.cff, setup.py, the README citation and the changelog's heading then gave 2.0.0, dated 18 October 2026, and the new DOI, before the tree was frozen and tagged v2.0.0. The author settled the licence scope and the dictionary's rights the same day (DOCS-16, G3). docs/release_readiness.md records the archives and their digests; the author publishes the two records from this tree.
+**Status.** Resolved. CHANGELOG.md records the audit and re-run changes, and now also identifies the earlier result-affecting fixes f6e708e, c0f58c5, c83162f, af3bee0, 5f1a3ea, f7c85b0, 25068a8 and f023ddb. Transcript stamps carry the release and source commit (5b15a6a). The release order below was corrected on 6 October 2026 to reserve the new DOI before freezing the cited source tree, and release 2.0.0 followed it. On 17 October 2026 the version DOI 10.5281/zenodo.23442766 was reserved in the existing record family (concept DOI 10.5281/zenodo.17592924) and the DOI 10.5281/zenodo.23442874 in a separate data record for the inputs, and the two drafts were cross-linked. versions.csv, CITATION.cff, setup.py, the README citation and the changelog's heading then gave 2.0.0, dated 18 October 2026, and the new DOI, before the tree was frozen and tagged v2.0.0. The author settled the licence scope and the dictionary's rights the same day (DOCS-16, G3). docs/release_readiness.md records the archives and their digests; the author publishes the two records from this tree. Release 2.1.0 (30 October 2026) followed the same order: the version moved in setup.py, CITATION.cff, versions.csv, the software reference and the README together (34fca36), the example variants were restamped (3c13116), and docs/release_readiness.md records its checks and the rebuilt input deposit (fa45a403..., README only, for CR-06).
 
 **Release checklist.** The steps left to the author, written on 2026-10-04 at fb22ece and rewritten on 2026-10-06 (41fe712):
 
@@ -912,7 +921,7 @@ Run the required tests, gate and renders, then freeze the final source commit an
 
 `hpc/evaluate_wer.sh:78` · MAJOR · HIGH-RISK · touches end product · verified confirmed
 
-**Status.** Resolved. ea0ddd3 retires hpc/legacy/submit_benchmark_wer.sh and submit_benchmark_wer_gpu.sh, each of which now exits 1 before doing anything, and makes hpc/evaluate_wer.sh write wer_report_transcripts.csv and wer_summary_transcripts.json into .../output/evaluation/inhouse/ and refuse to overwrite a summary without OVERWRITE=1. evaluation.wer writes those names by default (a5fa9c1), benchmark_wer requires its output paths (63be123), and the sweep writes the bare names only with --legacy-primary-paths (0d77156). tests/test_s1_env_jobs.py checks the job's output names, its refusal to overwrite and the retired scripts' refusal to run, and tests/test_s1_wer_scoring.py and tests/test_audit_eval_sweep.py check the default names of evaluation.wer and the sweep. The manuscript reads the bare names, which now hold the sweep's raw cell (e3cb675), and stops on a summary of any other run (70926fa).
+**Status.** Resolved. ea0ddd3 retires hpc/legacy/submit_benchmark_wer.sh and submit_benchmark_wer_gpu.sh, each of which now exits 1 before doing anything, and makes hpc/evaluate_wer.sh write wer_report_transcripts.csv and wer_summary_transcripts.json into .../output/evaluation/inhouse/ and refuse to overwrite a summary without OVERWRITE=1. evaluation.wer writes those names by default (a5fa9c1), benchmark_wer requires its output paths (63be123), and the sweep writes the bare names only with --legacy-primary-paths (0d77156). tests/test_s1_env_jobs.py checks the job's output names, its refusal to overwrite and the retired scripts' refusal to run, and tests/test_s1_wer_scoring.py and tests/test_audit_eval_sweep.py check the default names of evaluation.wer and the sweep. The manuscript reads the bare names, which now hold the sweep's raw cell (e3cb675), and stops on a summary of any other run (70926fa). manuscript/README.md's warning, which still described the old defaults, now matches them (06e7b46).
 
 **Why deferred.** Fixing it would change a committed number or an end product, so it waits for a deliberate re-run under the sign-off policy.
 
@@ -1520,7 +1529,7 @@ Run the required tests, gate and renders, then freeze the final source commit an
 
 `hpc/run_tests.sh:4` · MAJOR · verified plausible
 
-**Status.** Resolved. 7dc96aa makes hpc/run_tests.sh run pytest with -rs, so every remaining skip is printed with its reason. The suite has since run to completion on ARC four times, each with one skip, tests/test_s1_misc_footprint.py:159, which needs a committed sacct dump, and one expected failure. Jobs 8917831 at eaef44a (1,649 passed) and 8918061 at d0edd03 (1,658), which 9cca826 records in hpc/README.md, ran in September, and 8978757 at f2578b8 (2,032) and 8983111 (2,058), from a clone that includes ca75ced, ran on 2026-10-04. Two earlier runs, 8913985 and 8917186, overwrote the cached pyannote pipeline config on ARC (NEW-INC-01), and efa2962, d41cd96 and 109e7ab now keep the tests out of every real model cache. d63aa57 makes the preflight fail a diarisation job whose cached config cannot load, and after both October runs the config's blob still hashed to its own name (git hash-object on ARC, read-only).
+**Status.** Resolved. 7dc96aa makes hpc/run_tests.sh run pytest with -rs, so every remaining skip is printed with its reason. The suite has since run to completion on ARC four times, each with one skip, tests/test_s1_misc_footprint.py:159, which needs a committed sacct dump, and one expected failure. Jobs 8917831 at eaef44a (1,649 passed) and 8918061 at d0edd03 (1,658), which 9cca826 records in hpc/README.md, ran in September, and 8978757 at f2578b8 (2,032) and 8983111 (2,058), from a clone that includes ca75ced, ran on 2026-10-04. Two earlier runs, 8913985 and 8917186, overwrote the cached pyannote pipeline config on ARC (NEW-INC-01), and efa2962, d41cd96 and 109e7ab now keep the tests out of every real model cache. d63aa57 makes the preflight fail a diarisation job whose cached config cannot load, and after both October runs the config's blob still hashed to its own name (git hash-object on ARC, read-only). Later runs are recorded in hpc/README.md: 9124851 (fc652ab; one expected failure, the case-study count) and 9134598 (c17367b, the release tree: 2,367 passed, 1 skipped, 1 xfailed).
 
 **Why deferred.** The next step needs the author's decision or an ARC run. hpc/run_tests.sh now reports every skip. The last ARC run of the suite was 2026-05-16; submitting it on ARC, where the 24 locally skipped tests can run, needs the author's go-ahead.
 
@@ -2145,7 +2154,7 @@ In the manuscript the rule would move these figures, re-derived on 2026-10-04 fr
 
 `ruff.toml:1` · MINOR · verified observed after the audit
 
-**Status.** Partly resolved. 7cbedae and 7924a60 cleared the remaining ruff violations by hand, and ruff 0.15.18 with ruff.toml reports none at f2578b8, fd7b0a7 or fb22ece (run on 2026-10-04). df7e87d cleared the one warning (SC2155) and the four SC2086 notes that shellcheck 0.11.0 then reported in the tracked shell scripts, leaving notes of two other kinds, SC2317 and SC1091. Thirteen scripts have changed since, among them hpc/submit_determinism_cpu.sh, hpc/submit_case_study.sh and hpc/submit_der_sweep.sh, and only the thirteenth, hpc/submit_finetune_pyannote.sh (changed in 309f1d0), has a recorded re-run: shellcheck 0.11.0 reports only SC1091 for it at 1f9f22e. E501 is still ignored, and 121 lines exceed 100 characters at 1f9f22e (`ruff check --select E501`), against 89 at fb22ece, 87 at fd7b0a7 and 74 when this entry was written. Of the 33 added since fb22ece (one in setup.py was shortened, a net 32), 30 are in evaluation/scorer_sensitivity.py (26) and tests/test_scorer_sensitivity.py (4) and three in tests/test_audit_der_finetune_script.py; wrapping the module's lines would change the producer digest that scorer_sensitivity.json records. No R or Dockerfile linter has been run, and nothing runs the linters automatically (G4).
+**Status.** Resolved. 87d17fb (with the regeneration of the outputs that record its digests), e378f6d and e4cc39e wrapped every line over 100 characters, and e4cc39e enabled E501 in ruff.toml, so ruff 0.15.18 now reports nothing, line length included. Every file those commits touched parses to the same abstract syntax tree as before, apart from whitespace in docstrings, and tools/verify_regeneration.py passes. The shellcheck sentence is superseded by SC-23 (ed26529). No R or Dockerfile linter has been run, and CI (cpu-verification.yml) still runs no linter (G4).
 
 **Why deferred.** The next step needs the author's decision or an ARC run. Recorded by the lint step.
 
@@ -2169,7 +2178,7 @@ In the manuscript the rule would move these figures, re-derived on 2026-10-04 fr
 
 `output/evaluation/fleurs_multilingual_summary.json:1` · MINOR · touches end product · verified observed after the audit
 
-**Status.** Open. The deciding decode needs a GPU job. The exact commands for the preflight and the full split are now prepared in docs/next_control.md. Read-only checks on 6 October 2026 verified the clean historical source checkout, all 178 current environment pins and both original Spanish summaries (908 utterances and their recorded digests). V100 nodes were in mixed use and P100s still drained; no new job has been submitted. The check first proposed, on a P100 as in arm 3, cannot be made: ARC's three P100 nodes (htc-g032 to htc-g034) have been drained since 2026-09-04 with the reason "to be decommissioned" (sinfo, 2026-10-04), and no other node has one. The Spanish check under Proposed fix needs only a V100. The manuscript keeps the summary's hedge: it says that no pair of arms on one model of GPU isolates the fourth arm's GPUs and the nodes that hold them (manuscript.qmd:3518-3527 at e515421; 5275137, fbb7b56).
+**Status.** Resolved. The Spanish V100 control ran on 19 October 2026 at 6f9bf56 from the clean clone ~/paper_speech_transcription_ctl_es419: ARC jobs 9124739 (pre-flight, five utterances, htc-g003) and 9124863 (the whole split, htc-g004), both on Tesla V100-PCIE-32GB cards, with the same 179 packages, version for version, as the fourth arm's Spanish task (8917984_2); the summaries' decode and run metadata differ from that task's in the card alone. evaluation/fleurs_control.py (ce1ca7f) compares the decode with the four arms' Spanish summaries, each checked against the digest fleurs_multilingual_summary.json records, and 79d1e9c commits output/evaluation/fleurs_es419_v100_control.json with hpc/runs/fleurs_es419_v100.env. The control's records equal the third arm's (V100-SXM2-32GB, c0f58c5) and the first arm's on all 908 utterances, and its summary block equals the third arm's (raw macro WER 0.02937565607283082); against the fourth arm's L40S decode it differs on the same four utterances as the third arm (1735, 2004, 1966, 1785). Under docs/next_control.md's rule the card, with the node that holds it, accounts for the fourth arm's Spanish drift, and the code between the arms does not move the raw decode. The control cannot separate the card from its node, covers Spanish alone and compares scores, not transcripts. 1dde8df reports this in the multilingual section with a check of each claim, and 20df0e6 makes docs/next_control.md the record, including two departures from its commands (the full split ran beside the pre-flight, with a 2 h limit; it took 52 min). The multilingual summary is unchanged.
 
 **Failure scenario.** Arm 4 (ARC job 8917984 at 6f9bf56) decoded on L40S, H100 and A100 cards, none of which arms 1 to 3 used. Its raw scores differ from arm 3's on 1 to 4 utterances per language, so raw WER moves by up to 0.0003 across the four arms against 0.0002 across the first three. The summary's control paragraph attributes the drift to the GPU as the only known difference, while saying that no pair of arms on the same architecture isolates it. Arms 1 to 3 recorded no package versions or dtype, so the attribution rests on the size of the drift and on the earlier arms, where every same-architecture pair wrote a byte-identical raw summary.
 
@@ -2248,6 +2257,184 @@ In the manuscript the rule would move these figures, re-derived on 2026-10-04 fr
 **Proposed fix.** Add two checks to confidence.flag_segments: a flag for a cue of zero duration, which the rate flags skip, and a flag for a run of, say, eight or more words that occurs twice within a minute of transcript, across cue boundaries, marking both copies. Choose the run length and the window by what they flag on the case study and on ordinary speech, where a speaker may restate a short clause, and add tests for both. Adopting them changes the committed case-study review, whose SHA-256 the run manifest records, so it would take a re-run of the job.
 
 **Committed results affected.** None unless it is adopted. Then output/case_study/codex_mentis_ep05_review.json gains flags beyond its four, so its flagged count and flag_rate (0.0099) move, and so do the run manifest that records the review's digest, the case-study README's account of the flags and the check of them in tests/test_s1_txt_review.py. The reviews of the example variants would need checking against the new flags too, since tests/test_example_variants.py regenerates them.
+
+## The pass of 20 October 2026 (10)
+
+### CR-02: The honorific rule keeps "Dr." before a possessive name
+
+`transcription.py:838-841` (at bd37445) · MINOR · high-risk · touches end product · verified observed in the correctness review of 20 October 2026
+
+**Status.** Resolved. 808307f strips the possessive clitic in the honorific rule's look-ahead as proposed; tests in tests/test_masker_abbreviated_titles.py ("Dr. Smith's", "Dr Smith's", curly apostrophe) fail without it. d6a5746 regenerates the four masking arms (seed 42; NER arms with gliner 0.2.28 and revision 4e091416): the 66 title-by-possessive rows of each report now read "[TITLE] [NAME]'s", and 136 lower-case title rows of the two case-insensitive arms change through 47540a5, which lets case_insensitive relax the gate on the name after a title. Every summary field outside run_metadata is unchanged, and tools/verify_regeneration.py passes.
+
+**Why deferred.** The fix rewrites the `masked` column of 66 rows in each committed `masking_report*.csv`, which the regeneration gate compares, so it waits for the author's sign-off and a re-run of the masking benchmark.
+
+**Failure scenario.** The name lookup strips a possessive clitic before it checks the dictionary (`stem = re.sub(r"['’]s?(?=\W*$)", "", ...)`), but the honorific rule's look-ahead does not: it turns "Smith's" into `smiths`, which neither dictionary holds, so the title stays while the name after it is masked. "It was Dr. Smith's idea." gives "It was Dr. [SURNAME]'s idea.", and "Dr Smith's" behaves the same. The committed benchmark shows it in every title-by-possessive row ("The referral was signed by Dr [NAME]'s this morning."). The benchmark leaves honorifics out of its precision, so no summary figure ever counted it, but it contradicts the 2.0.0 changelog's account that an abbreviated honorific followed by a name is masked as `[TITLE]`.
+
+**Proposed fix.**
+```diff
+                 if is_title and word_idx + 1 < len(words):
+-                    next_word = re.sub(r'[^\w]', '', words[word_idx + 1].lower())
++                    # The form the name lookup uses, possessive clitic
++                    # removed, so "Dr. Smith's" loses its title as well.
++                    next_word = re.sub(r'[^\w]', '', re.sub(
++                        r"['’]s?(?=\W*$)", "", words[word_idx + 1].lower()))
+```
+with the test case `("It was Dr. Smith's idea.", "It was [TITLE] [SURNAME]'s idea.")` in tests/test_masker_abbreviated_titles.py. Then re-run `python -m evaluation.benchmark_masking --seed 42` for the four arms (the two NER arms need gliner) and `python tools/verify_regeneration.py`.
+
+**Committed results affected.** The `masked` column of 66 rows each in output/evaluation/masking_report.csv and masking_report_caseinsensitive.csv, and presumably in the two NER reports. A scratch run of the default and case-insensitive arms with the fix left both summaries equal to the committed ones.
+
+### CR-06: The input deposit's README gives the aggregate's rebuild command without its arguments
+
+`tools/build_input_deposit.py:98-100` (at bd37445) · MINOR · touches end product · verified observed in the correctness review of 20 October 2026
+
+**Status.** Resolved in code. 7323b64 makes the README template give `--sweep-dir`, `--out` and `--out-json`, and say that the manifest's `availability` field predates the deposit; the command reproduces the committed sweep_aggregate.csv byte for byte. Whether the deposited archive is rebuilt with it is recorded under DOCS-14 and in docs/release_readiness.md.
+
+**Why deferred.** Any fix changes the bytes of the deposit archive and so its SHA-256 (`6474ba29…`), which docs/release_readiness.md records. The Zenodo record is still an unpublished draft, so rebuilding and re-uploading it is cheap now, but whether to do so is the author's decision.
+
+**Failure scenario.** The README inside `sweep_inputs_2026-10.zip` says the aggregate's rows are rebuilt by `python -m evaluation.sweep_aggregate`. With its defaults that command scans `output/evaluation`, not the deposit, and would write over the committed `sweep_aggregate.{csv,json}`; its grid check stops it first. A reader following the README therefore cannot rebuild the rows, although the README's other two commands give their inputs and outputs. The archive also ships the committed `sweep_input_manifest.json`, whose `availability` field ("Checksum inventory only … await a versioned public deposit") is stale inside the deposit; editing that field would change the receipt digest that sweep_decode_provenance.json and scorer_sensitivity.json record, so a note in the README is the better fix.
+
+**Proposed fix.**
+```diff
+ The summaries' digests are those recorded in the repository's
+-`output/evaluation/sweep_aggregate.json`, whose rows
+-`python -m evaluation.sweep_aggregate` rebuilds from them.
++`output/evaluation/sweep_aggregate.json`, whose rows this rebuilds from
++them:
++
++    python -m evaluation.sweep_aggregate \\
++        --sweep-dir build/recovered_arc_sweep/inputs \\
++        --out my_check/sweep_aggregate.csv \\
++        --out-json my_check/sweep_aggregate.json
++
++The manifest's `availability` field predates this deposit.
+```
+Then rebuild the archive, replace the file in the Zenodo draft, and update its digest and size in docs/release_readiness.md and DOCS-14.
+
+**Committed results affected.** None of the results. The deposit archive's digest and byte count change.
+
+### SC-17: An exception in the NER stage other than a model failure is swallowed without a count
+
+`transcription.py:764` (at 83553b1) · MAJOR · high-risk · changes numbers · verified observed in the code pass of 20 October 2026
+
+**Status.** Resolved. 73ac761 applies the proposed fix and reports the first such exception on stderr; tests in tests/test_ner_masking.py (a malformed score; a counted failure making _check_ner_ran refuse) fail without it. The NER arms re-run in d6a5746 record 1,940 calls and 0 failures each, with summaries identical outside run_metadata, so no committed NER figure was measured on dictionary-only sentences.
+
+**Why deferred.** If such an exception ever occurred in a committed NER run, benchmark_masking._check_ner_ran would refuse that run once the fix is in, so the fix needs the NER arms re-run.
+
+**Failure scenario.** ner_masking.PersonNameDetector.tokens_in counts an exception the model raises (`n_failures`) and reports the first on stderr. An exception raised after the model call, for example by a malformed entity whose score does not compare with the threshold, or by another detector with a tokens_in method, reaches the masker's `except Exception: ner_tokens = set()` and is swallowed. That sentence is then masked by the dictionary alone, with no count and no message, and a benchmark that checks `n_failures` reports the NER arm as clean.
+
+**Proposed fix.**
+```diff
+-                except Exception:
++                except Exception as exc:
++                    # Counted with the detector's model failures, so that
++                    # benchmark_masking._check_ner_ran sees it; never fatal.
++                    if hasattr(ner_detector, "n_failures"):
++                        ner_detector.n_failures += 1
++                        if getattr(ner_detector, "first_error", None) is None:
++                            ner_detector.first_error = repr(exc)
+                     ner_tokens = set()
+```
+Then re-run the four NER masking arms on a processor (`python -m evaluation.benchmark_masking --ner`, with and without `--case-insensitive`, gliner 0.2.28 and the pinned model) and compare them with the committed NER summaries.
+
+**Committed results affected.** None, unless the re-run shows that such an exception occurred; then the NER rows of masking_summary_ner.json and masking_summary_caseinsensitive_ner.json were measured with some sentences masked by the dictionary alone.
+
+### SC-18: audio_redaction leaves a name audible when its word has no timestamps, and says nothing
+
+`audio_redaction.py:142` (at 83553b1) · MAJOR · verified observed in the code pass of 20 October 2026
+
+**Status.** Resolved. 5bdf6a9 counts untimed name words in a raw transcript (and names in a segment without words) and, per segment of a redacted one, [NAME] and [SURNAME] placeholders beyond those its timed words carry ([TITLE] excluded). It refuses with exit 3 unless the new --allow-untimed-names is given, and reports the count on stderr either way; tests/test_audio_redaction_untimed.py covers an untimed final name, a redacted transcript with more placeholders than timed words, and the pipeline's redacted honorific (no alarm). 18dc947 makes an unreadable transcript or sibling exit 2.
+
+**Why deferred.** The next step is the author's decision: whether the tool should warn or refuse, and how a `[TITLE]` placeholder counts.
+
+**Failure scenario.** `_timed_words` skips every word without both a start and an end. In a raw transcript, a name word whose timestamp Whisper left as None (in the final chunk, for example) never reaches the masker, so it stays audible while the other names are silenced, and the tool writes its output and exits 0. In a redacted transcript, a placeholder in the segment text that no timed word carries is reported only when no timed word carries one at all. Comparing the two counts would raise false alarms, because the per-word redaction leaves an honorific such as "Dr" that the segment text masks as `[TITLE]`.
+
+**Proposed fix.** Count the name words, or the placeholders other than `[TITLE]`, that no timed word carries, and either report them on stderr or refuse with exit 3, as for an empty result, unless `--allow-empty` is given. Add tests for an untimed final name word in a raw transcript and for a redacted transcript whose text holds more placeholders than its timed words.
+
+**Committed results affected.** None. No committed result uses this tool.
+
+### SC-19: Three source files that committed outputs record by digest carry small defects that cannot be fixed in place
+
+`evaluation/wer.py:396` (at 83553b1) · MINOR · touches end product · verified observed in the code pass of 20 October 2026
+
+**Status.** Resolved. 87d17fb gives evaluation.wer.evaluate_directory an optional `skipped` list, so the command line's summary records `summary.n_skipped_pairs` and a top-level `skipped_pairs` list (hypothesis, reference, error); aggregate() and every other consumer are unchanged. It also adds the missing docstrings, wraps the long lines (abstract syntax trees identical) and removes the unused noqa directives. ae6ff88 regenerates scorer_sensitivity.json and .csv and sweep_decode_provenance.json from the recovered inputs: only the three source digests and the recorded commit changed, the CSV is byte-identical, and no number moved.
+
+**Why deferred.** output/evaluation/scorer_sensitivity.json records the SHA-256 (LF) of evaluation/scorer_sensitivity.py and evaluation/wer.py, and output/evaluation/sweep_decode_provenance.json that of tools/extract_sweep_decode_provenance.py. Any edit, a docstring included, would leave those records describing code that is no longer in the tree.
+
+**Failure scenario.** wer.evaluate_directory drops a pair whose scoring raises, printing one stderr line, and the summary of the evaluation.wer command line records no count of skipped pairs, so a summary over fewer files than were given reads as complete. scorer_sensitivity.main and the two functions of extract_sweep_decode_provenance.py have no docstring, and 33 of the repository's 198 lines over 100 characters are in these files.
+
+**Proposed fix.** At the next deliberate regeneration of scorer_sensitivity.json and sweep_decode_provenance.json (both need the recovered input bundle in build/recovered_arc_sweep/), record `n_skipped_pairs` and the skipped names in the evaluation.wer summary, add the three docstrings and wrap the long lines, then regenerate both outputs so that their digests describe the new files.
+
+**Committed results affected.** The producer and original-scorer digests in scorer_sensitivity.json and `extractor_sha256_lf` in sweep_decode_provenance.json, rewritten by the regeneration. No number changes.
+
+### SC-20: 265 noqa directives name rules the committed ruff configuration does not enable
+
+`ruff.toml:14` · MINOR · verified observed in the code pass of 20 October 2026
+
+**Status.** Resolved. 2ab2757 removed the unused directives outside the masking files (219, keeping 14 reasons as comments), 87d17fb one more, and a8b233c the remaining 53 (PLC0415, BLE001, D401, and E402 in tests/), keeping six more reasons as plain comments. `ruff check --extend-select RUF100 .` reports nothing, every touched file parses to an identical abstract syntax tree, and the three files of SC-19 changed only with the regeneration of their records.
+
+**Why deferred.** The next step is the author's decision.
+
+**Failure scenario.** `ruff check --extend-select RUF100` lists 265 directives that suppress nothing: 127 E402 in tests/, which the per-file ignore already covers, 109 PLC0415, 17 BLE001, 5 I001, 2 D401, 2 N802, and one F401 that is itself unused (evaluation/benchmark_anonymisation.py:75, since SAMPLE_RATE is used). A reader takes them as evidence that those checks run.
+
+**Proposed fix.** Either enable PLC0415 and BLE001 in ruff.toml, so that the directives mean something and new sites must justify themselves, or remove them with `ruff check --extend-select RUF100 --fix`, leaving out the three files of SC-19, in a commit of its own.
+
+**Committed results affected.** None.
+
+### SC-21: Four copies of the chunked SHA-256 helper
+
+`evaluation/fetch_codex_mentis.py:258` · MINOR · verified observed in the code pass of 20 October 2026
+
+**Status.** Resolved. 7cecd95 makes fetch_codex_mentis import provenance.sha256_file. The extractor's and the scorer's copies stay, with the reason recorded in 87d17fb: the extractor runs as a script, and repetition_sensitivity imports scorer_sensitivity._sha256.
+
+**Why deferred.** Two of the copies are in files frozen by committed digests (SC-19), and the gain from the others is small.
+
+**Failure scenario.** fetch_codex_mentis._sha256_file, build_input_deposit._sha256, scorer_sensitivity._sha256 and extract_sweep_decode_provenance._digest each reimplement provenance.sha256_file. They agree today, since the digest does not depend on the chunk size, but a fix to one would not reach the others.
+
+**Proposed fix.** Import provenance.sha256_file in fetch_codex_mentis, which runs with `-m` from the repository root. Leave the tool scripts, which do not put the root on sys.path, and the frozen copies.
+
+**Committed results affected.** None.
+
+### SC-22: requirements-dev.txt lists black and mypy, which nothing configures or runs
+
+`requirements-dev.txt:12` · MINOR · verified observed in the code pass of 20 October 2026
+
+**Status.** Resolved. 9533195 drops black and mypy and keeps ruff==0.15.18, and c312ce1 makes test_deps11 read the tool names from requirements-dev.txt.
+
+**Why deferred.** The next step is the author's decision.
+
+**Failure scenario.** A contributor who installs the development requirements gets two tools the repository has no configuration for. black's defaults would reformat code behind committed results, and mypy's would report thousands of findings, with nothing to say which outcome is wanted.
+
+**Proposed fix.** Drop both, or configure them: black or `ruff format` in a commit of its own, after the regeneration gate, and a mypy configuration scoped to the modules meant to be typed.
+
+**Committed results affected.** None.
+
+### SC-23: LINT-01's count of long lines is out of date
+
+`ISSUES.md` (LINT-01, Status) · MINOR · verified observed in the code pass of 20 October 2026
+
+**Status.** Resolved. 87d17fb, e378f6d and e4cc39e wrapped all 198 long lines, each file's abstract syntax tree checked identical (docstring whitespace aside), and e4cc39e enabled E501 in ruff.toml; LINT-01 records the result. Since ed26529, `shellcheck -x` 0.11.0 reports nothing for the 24 tracked shell scripts (`git ls-files '*.sh'`; the count of 30 first given here was wrong).
+
+**Why deferred.** The audit's Status paragraphs are a record of their date, so the correction is entered here.
+
+**Failure scenario.** LINT-01 records 121 lines over 100 characters at 1f9f22e. `ruff check --select E501` finds 198 at bd37445 and at 83553b1: 57 in evaluation/repetition_sensitivity.py, added after LINT-01 was written, 45 in transcription.py, 26 in evaluation/scorer_sensitivity.py and 19 in tests/test_benchmark_results.py. Its sentence on shellcheck is superseded: since ed26529, `shellcheck -x` 0.11.0 reports nothing for the 30 tracked scripts.
+
+**Proposed fix.** Wrap the long lines outside the files of SC-19 in a style-only commit, and update LINT-01's Status with these counts and with ed26529.
+
+**Committed results affected.** None.
+
+### SC-24: The fine-tuning script does not exit through exit_without_finalising although it streams AMI
+
+`evaluation/finetune_pyannote_segmentation.py:1041` (at 83553b1) · MINOR · verified observed in the code pass of 20 October 2026
+
+**Status.** Resolved. 25cd6ff ends the script as sweep_der does; a runpy test checks that `--help` passes status 0 and a usage error status 2 to exit_without_finalising.
+
+**Why deferred.** The next step is the author's decision. The two processor smoke runs on ARC (8913986, 8918331) exited cleanly, so the abort has not been seen in this script.
+
+**Failure scenario.** benchmark_der and sweep_der end through exit_without_finalising, because the datasets streaming stack leaves a native thread that can abort the interpreter at shutdown with status 134 after every result is written. finetune_pyannote_segmentation streams the AMI train split in its first phase and ends with a plain main(), so a GPU run that hits the abort would be reported as failed after saving its checkpoint.
+
+**Proposed fix.** End the script as sweep_der does: catch SystemExit around main() and call evaluation.benchmark_der.exit_without_finalising with the status. Nothing in the script registers an atexit handler.
+
+**Committed results affected.** None. No GPU fine-tuning result is committed.
 
 ## Observations from ARC
 

@@ -143,6 +143,7 @@ from evaluation.ami_meetings import (  # noqa: E402
     mix_meeting,
     stream_ami,
 )
+from evaluation.benchmark_der import exit_without_finalising  # noqa: E402
 
 _DEFAULT_OUTPUT_DIR = _ROOT / "output" / "finetune"
 _AMI_TRAIN_SPLIT = "train"
@@ -232,8 +233,9 @@ def _series_of(meeting_id: str) -> str:
     """Return the AMI series a meeting belongs to.
 
     AMI meeting ids are a series plus a session letter (``ES2002a`` to
-    ``ES2002d``), and the sessions of one series share their participants,
-    room and headsets.
+    ``ES2002d``), and the sessions of one series share their participants
+    and room. They need not share headset channels: some EN2002 speakers
+    change channel between meetings (evaluation/benchmark_anonymisation.py).
     """
     return re.sub(r"[a-z]$", "", meeting_id)
 
@@ -579,7 +581,7 @@ def _library_versions() -> dict:
                           ("pyannote_audio", "pyannote.audio")):
         try:
             versions[label] = __import__(module, fromlist=["__version__"]).__version__
-        except Exception:  # noqa: BLE001 - provenance only
+        except Exception:  # provenance only
             versions[label] = None
     return versions
 
@@ -711,7 +713,7 @@ def _finetune(
     # At the revision evaluation/revisions.py pins (spelt "<repo>@<sha>" for
     # pyannote 3.x), with the token keyword this pyannote takes (audit
     # findings DEPS-04, DEPS-10).
-    from evaluation.hub_loading import pinned_checkpoint, token_kwargs  # noqa: PLC0415
+    from evaluation.hub_loading import pinned_checkpoint, token_kwargs
 
     checkpoint, pin = pinned_checkpoint(Model.from_pretrained, _BASE_MODEL)
     model = Model.from_pretrained(
@@ -960,6 +962,24 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 
 def main(argv: list[str] | None = None) -> None:
+    """Run the three phases from the command line.
+
+    *argv* replaces ``sys.argv[1:]`` (see :func:`_parse_args`). Phase 1
+    builds the AMI training and development meetings
+    (:func:`_build_and_save_ami`), or reloads them with
+    ``--skip-data-prep`` (:func:`_reload_from_disk`); phase 2 fine-tunes
+    the segmentation model (:func:`_finetune`); phase 3, unless
+    ``--skip-eval``, scores it with the DER benchmark (:func:`_evaluate`).
+    A missing HuggingFace token is warned about on stderr, and the run
+    carries on without one.
+
+    Returns ``None``. A phase that refuses its input or setup raises
+    ``SystemExit`` with its message; other errors propagate. Side
+    effects: creates ``--output-dir`` (``output/finetune`` by default)
+    and writes the meetings, checkpoints, logs and evaluation the phases
+    document there; prints progress and the commands that use the
+    checkpoint.
+    """
     args = _parse_args(argv)
     output_dir: Path = args.output_dir
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -1021,4 +1041,20 @@ def main(argv: list[str] | None = None) -> None:
 
 
 if __name__ == "__main__":
-    main()
+    # Ended as benchmark_der and sweep_der end. Phase 1 streams the AMI
+    # train split, and phase 3 the test split unless --eval-cache-dir is
+    # given; the datasets streaming stack can leave a native thread that
+    # aborts the interpreter at shutdown with status 134 after every file
+    # is written, so a run that saved its checkpoint would be reported as
+    # failed. exit_without_finalising skips atexit handlers: nothing here
+    # registers one, and Lightning's Trainer.fit finalises its loggers
+    # before it returns. A phase's SystemExit keeps its status and message;
+    # any other exception still propagates with its traceback.
+    try:
+        main()
+        _status = 0
+    except SystemExit as _exc:
+        if _exc.code not in (0, None):
+            print(f"error: {_exc}", file=sys.stderr)
+        _status = _exc.code if isinstance(_exc.code, int) else 1
+    exit_without_finalising(_status or 0)

@@ -17,7 +17,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from confidence import (  # noqa: E402
+from confidence import (
     _max_immediate_repeat,
     _tokens,
     flag_segments,
@@ -212,3 +212,23 @@ def test_thresholds_are_adjustable():
 
 def _flags_for_with(segments, **kwargs):
     return {r["index"]: set(r["flags"]) for r in flag_segments(segments, **kwargs)}
+
+
+@pytest.mark.parametrize(("content", "message"), [
+    (b'{"segments": [', "cannot read"),                              # not JSON
+    ("caf\u00e9".encode("latin-1"), "cannot read"),                  # not UTF-8
+    (b"[1, 2]", "is not a transcript"),                              # a JSON list
+    (b'{"segments": ["text"]}', "is not a transcript"),              # not objects
+])
+def test_an_unreadable_transcript_exits_2_without_a_traceback(tmp_path, capsys,
+                                                              content, message):
+    """main promised status 2 for a transcript it cannot read, but caught
+    only OSError and JSONDecodeError: a file that was not UTF-8, or JSON of
+    another shape, ended in a traceback with status 1."""
+    import confidence
+
+    path = tmp_path / "t.json"
+    path.write_bytes(content)
+    assert confidence.main([str(path)]) == 2
+    assert message in capsys.readouterr().err
+    assert confidence.main([str(tmp_path / "absent.json")]) == 2

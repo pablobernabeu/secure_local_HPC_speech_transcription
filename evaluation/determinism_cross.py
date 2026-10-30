@@ -106,7 +106,7 @@ _LOG_SUMMARY = re.compile(r"^  \[(?P<condition>[^\]]+)\]\s+n=(?P<n>\d+)\s+WER=(?
 
 def _digests(path: Path) -> dict:
     """Name an input by file name and both digests (see the module notes)."""
-    from provenance import sha256_file, sha256_text_file  # noqa: PLC0415
+    from provenance import sha256_file, sha256_text_file
     return {"file": Path(path).name, "sha256": sha256_file(path),
             "sha256_lf": sha256_text_file(path)}
 
@@ -522,7 +522,7 @@ def build(dumps: dict, reports: dict, logs: dict, subset: str,
             # per-utterance lines read here.
             summary_wer[label]["logged_macro_wer"] = read_logs[label]["logged_macro_wer"]
 
-    from provenance import run_metadata, sha256_text_file  # noqa: PLC0415
+    from provenance import run_metadata, sha256_text_file
     result = {
         "description": (
             "The same decode on different hardware, utterance by utterance. "
@@ -655,7 +655,7 @@ def main(argv=None) -> int:
     if missing:
         print(f"  no such input(s): {missing}", file=sys.stderr)
         return 2
-    from provenance import run_metadata  # noqa: PLC0415
+    from provenance import run_metadata
     # Read before the result is written, leaving it out of the dirty check,
     # as provenance.write_sidecar does for the CSV-only writers. Read inside
     # build without the ignore list, as it was, a second comparison in

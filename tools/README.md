@@ -31,32 +31,30 @@ own digest.
 The script calls `transcription.main`, so argument parsing,
 `process_audio_file`, segmentation, timeline repair, speaker assignment,
 the clean-up stages, name masking and every writer are the pipeline's own
-code. What it replaces, and why, is listed in its docstring. In short:
-
-- the two model calls return a synthetic result, and the recording is an
-  empty placeholder WAV, so the manifest's `input_audio` digest is of that
-  placeholder;
-- the Word documents are not written, because a `.docx` is a zip archive
-  stamped with the time it was made and never matches between runs. A real
-  run also writes `example_transcript.docx` (and, with speaker
-  attribution, `example_transcript_with_speakers.docx`) and lists them in
-  the manifest;
-- the clock, the version string (the release in `versions.csv` alone, as
-  an installed copy without git prints it) and the manifest's software
-  block (the versions in `requirements-lock.txt`, git fields empty) are
-  pinned, and no signing key is used;
-- files are written with LF line endings on every platform, so the
-  manifests' SHA-256 digests do not depend on the machine.
-  `.gitattributes` keeps these files LF on checkout, and
-  `python -m provenance verify example_output/variants/02_timestamps/example_manifest.json`
-  passes on them.
+code. What it replaces, and why, is listed in its docstring. In short,
+the two model calls return a synthetic result, and the
+recording is an empty placeholder WAV, so the manifest's `input_audio`
+digest is of that placeholder. The Word documents are not written,
+because a `.docx` is a zip archive stamped with the time it was made and
+never matches between runs. A real run also writes
+`example_transcript.docx` (and, with speaker attribution,
+`example_transcript_with_speakers.docx`) and lists them in the manifest.
+The clock, the version string (the release in `versions.csv` alone, as
+an installed copy without git prints it) and the manifest's software
+block (the versions in `requirements-lock.txt`, git fields empty) are
+pinned, and no signing key is used. Files are written with LF line
+endings on every platform, so the manifests' SHA-256 digests do not
+depend on the machine. `.gitattributes` keeps these files LF on
+checkout, and
+`python -m provenance verify example_output/variants/02_timestamps/example_manifest.json`
+passes on them.
 
 The masking log is not included: it is written only with
 `--save-name-masking-logs`, and into `name_masking_logs/`, not beside the
 transcripts. The interview names two fictional people, so the raw `.json`
 and `.vtt` keep the names while the `.txt` files and the redacted pair
 show placeholders. The interview text quotes no figures. An earlier
-version quoted evaluation results that later changed; the paper and
+version quoted evaluation results that later changed, and the paper and
 `output/evaluation/` hold those.
 
 Run it from the repository root after editing the interview text or
@@ -77,7 +75,7 @@ re-run, therefore fails the test suite.
 
 Checks that the current code still produces the committed results that
 need no GPU. Most files in `output/evaluation/` come from GPU jobs on
-ARC; eleven are derived on the CPU from other committed files or from a
+ARC. Eleven are derived on the CPU from other committed files or from a
 seeded synthetic benchmark, and this script re-runs their producers and
 compares the output with the committed copies:
 
@@ -114,7 +112,11 @@ platform. A copy written on Windows before a8420df spelt it with
 backslashes, so the script accepts that one difference in that column,
 and says so when it is what made the file match. The script prints
 `IDENTICAL`, `DIFFERS`, `MISSING` or `FAILED` per file and exits 0 only
-when every file matches.
+when every file matches. A producer that exits with a non-zero status is
+reported as `FAILED`. The artefact audit does so, with status 3, when it
+could not check every file against every logged name, as for a `.docx`
+without python-docx
+([docs/evaluation.md](../docs/evaluation.md#auditing-a-runs-outputs-for-residual-names)).
 
 The dictionary summary has one additional portable comparison: an LF or
 CRLF digest is accepted only when both hashes identify the current
@@ -126,13 +128,13 @@ runs the focused tests and this gate automatically.
 Their producer, `evaluation.scorer_sensitivity`, requires the recovered
 ARC hypothesis and summary bundle, which is not part of this checkout.
 It therefore remains outside the eleven-artefact gate. Its CPU contracts
-are tested in CI; the input-dependent regeneration command and limits
+are tested in CI. The input-dependent regeneration command and limits
 are recorded in [the evaluation README](../output/evaluation/README.md).
 
 A `DIFFERS` means a change moved a result, or the environment differs
 from `requirements-lock.txt`. For a file that
 [output/evaluation/README.md](../output/evaluation/README.md) lists as
-pending regeneration it is expected until that file has been re-run.
+pending regeneration, it is expected until that file has been re-run.
 The masking benchmark imports `transcription.py`, so on a machine with
 transformers installed its first import is slow even though no model is
 loaded.
@@ -154,10 +156,22 @@ Writes that input bundle for its public data deposit: the 270 recovered
 files, each checked against `output/evaluation/sweep_input_manifest.json`
 and stored byte for byte, with the manifest, a `SHA256SUMS` file and a
 README giving their provenance, corpus licences and use. It stops at a
-file that differs from the manifest or that the manifest does not list.
-The archive is deterministic, so the same inputs give the same digest,
-which a JSON record beside the archive gives. The public repository holds
-releases, not the decoder commit `6f9bf56` that wrote the files, so the
+file that differs from the manifest or that the manifest does not list,
+and at an input directory, decoder source, manifest or output path it
+cannot use. Each time it exits with status 2 and prints the reason on
+stderr.
+Members are written in name order with a fixed timestamp, so the same
+inputs give the same archive bytes and digest, provided the same deflate
+implementation compresses them. The ZIP format does not fix the deflate
+stream, and CPython's Windows builds, for one, compress with zlib-ng from
+3.14 on. The JSON record beside the archive therefore gives its digest
+and, under `built_with`, the versions that built it. They are Python's,
+those of the zlib headers the interpreter was compiled against (`zlib`)
+and of the zlib library that deflated the archive (`zlib_runtime`), and
+zlib-ng's where there is one (`zlib_ng`). The two zlib versions differ
+when a shared zlib was upgraded after the interpreter was built. The
+public repository holds releases, not the decoder commit `6f9bf56` that
+wrote the files, so the
 deposit also carries a `git archive` of that commit as a second file.
 `--decoder-source` checks that the ZIP's comment is the manifest's decoder
 commit, and the README then describes the file, gives its digest and warns
@@ -182,7 +196,7 @@ and `eventtitle` in title case. In both groups it protects acronyms,
 proper nouns and words with distinctive casing by wrapping them in braces,
 together with the terms listed in `manuscript/protected_terms.json`.
 `booktitle` is set in title case although APA 7 puts book and
-proceedings-volume titles in sentence case; the script's docstring leaves
+proceedings-volume titles in sentence case. The script's docstring leaves
 that change to the maintainer, because it would rewrite the committed
 bibliography.
 
@@ -195,7 +209,7 @@ python tools/bib_sentencecase.py --in-place
 ```
 
 The bibliography argument defaults to `manuscript/references.bib` and
-`--protected` to `manuscript/protected_terms.json`; pass either to use
+`--protected` to `manuscript/protected_terms.json`. Pass either to use
 another file. It needs `bibtexparser` (in `requirements.txt`). The
 conversion is idempotent, and `tests/test_bib_sentencecase.py` asserts
 that a second run changes nothing.

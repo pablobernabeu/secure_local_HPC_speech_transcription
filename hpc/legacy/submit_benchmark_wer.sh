@@ -1,4 +1,7 @@
 #!/bin/bash
+# Everything after the `exit 1` below is kept as a record and never runs, so
+# ShellCheck's unreachable-command note (SC2317) is switched off for the file.
+# shellcheck disable=SC2317
 # RETIRED (audit findings XREF-01, SHELL-09): kept only as the record of how
 # the legacy wer_report.csv and wer_summary.json were first made. It wrote
 # those names, which the manuscript reads, by default and even for a

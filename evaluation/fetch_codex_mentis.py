@@ -45,7 +45,8 @@ first fetch into ``$DATA``), the committed ``data/codex_mentis/manifest.json``.
 A ``--limit`` run leaves an existing ``manifest.json`` alone and writes
 ``manifest.limited.json``.
 
-Dependencies: standard library only (urllib, xml.etree, hashlib).
+Dependencies: standard library only (urllib, xml.etree, hashlib), and the
+repository's ``provenance`` module for the file digest.
 """
 
 from __future__ import annotations
@@ -61,6 +62,11 @@ from dataclasses import asdict, dataclass
 from email.utils import parsedate_to_datetime
 from pathlib import Path
 from xml.etree import ElementTree as ET
+
+# The repository's one chunked file digest (provenance.py, itself standard
+# library only); the module runs as `python -m evaluation.fetch_codex_mentis`
+# from the repository root, which puts provenance on sys.path.
+from provenance import sha256_file
 
 _PODCAST_ID = "1837010092"
 _LOOKUP_URL = "https://itunes.apple.com/lookup?id={id}"
@@ -255,15 +261,6 @@ def _download_stream(url: str, dest: Path) -> tuple[int, str]:
     raise RuntimeError(f"download failed after {_RETRIES} attempts: {url}") from last_exc
 
 
-def _sha256_file(path: Path) -> str:
-    """Return the hex SHA-256 of the file at *path*, read in chunks."""
-    digest = hashlib.sha256()
-    with open(path, "rb") as handle:
-        for chunk in iter(lambda: handle.read(_CHUNK), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
 def _load_manifest(path: Path) -> dict:
     """Return the manifest at *path*, or ``{}`` when absent.
 
@@ -288,11 +285,6 @@ def _prior_record(manifest: dict, guid: str) -> dict:
         if ep.get("guid") == guid:
             return ep
     return {}
-
-
-def _known_sha(manifest: dict, guid: str) -> str | None:
-    """Return the recorded SHA-256 for *guid*, or ``None``."""
-    return _prior_record(manifest, guid).get("sha256")
 
 
 def fetch(dest: Path, podcast_id: str, limit: int | None, list_only: bool,
@@ -392,7 +384,7 @@ def fetch(dest: Path, podcast_id: str, limit: int | None, list_only: bool,
         extra: dict = {}
         if not list_only:
             audio_dir.mkdir(parents=True, exist_ok=True)
-            on_disk = _sha256_file(target) if target.exists() else None
+            on_disk = sha256_file(target) if target.exists() else None
             if on_disk is not None and known is not None and on_disk == known:
                 nbytes, status = target.stat().st_size, "cached"
             elif on_disk is not None and known is None:

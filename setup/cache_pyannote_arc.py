@@ -212,7 +212,7 @@ def main(argv=None) -> int:
     cache_dir.mkdir(parents=True, exist_ok=True)
     print(f"pyannote cache: {cache_dir}")
 
-    from huggingface_hub import snapshot_download  # noqa: PLC0415
+    from huggingface_hub import snapshot_download
 
     moved = cache_all(cache_dir, token, snapshot_download)
 

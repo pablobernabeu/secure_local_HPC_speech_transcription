@@ -301,6 +301,13 @@ class TranscriptionApp(ttk.Frame):
 
 
 def main() -> int:
+    """Open the window and run the Tk event loop until it is closed.
+
+    Returns 1, before any window opens, when ``transcription.py`` is not
+    beside this package, and 0 once the window is closed. Side effects:
+    opens a Tk window, and on each run starts ``transcription.py`` as a
+    child process in the repository root, which writes its outputs there.
+    """
     if not TRANSCRIPTION_SCRIPT.is_file():
         sys.stderr.write(
             f"Cannot find transcription.py at {TRANSCRIPTION_SCRIPT}. "

@@ -196,3 +196,9 @@ job_id,job_name,category,state,productive,gpu_type,tdp_w,runtime_h,gpu_hours,ene
 8978760,determinism,Determinism check,COMPLETED,True,v100-pcie,250,0.2614,0.2614,0.15884,32.88
 8983111,pytest_suite,Test suite and smoke tests,COMPLETED,True,,0,0.0811,0.0000,0.00365,0.76
 8983112,case_study,Case study,COMPLETED,True,a6000,300,0.3419,0.3419,0.20553,42.54
+9124739_2,pf_es419_v100,Pre-flight runs,COMPLETED,True,v100-pcie,250,0.1644,0.1644,0.08511,17.62
+9124828,pytest_suite,Test suite and smoke tests,FAILED,False,,0,0.1617,0.0000,0.00728,1.51
+9124851,pytest_suite,Test suite and smoke tests,FAILED,False,,0,0.1342,0.0000,0.00605,1.25
+9124852,case_study,Case study,COMPLETED,True,l40s,350,0.2975,0.2975,0.20366,42.16
+9124863_2,ctl_es419_v100,WER multilingual (FLEURS),COMPLETED,True,v100-pcie,250,0.8739,0.8739,0.45230,93.63
+9134598,pytest_suite,Test suite and smoke tests,COMPLETED,True,,0,0.1239,0.0000,0.00558,1.16

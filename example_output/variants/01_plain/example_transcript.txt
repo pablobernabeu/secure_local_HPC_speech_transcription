@@ -3,7 +3,7 @@ example
 
 Input file: example.wav
 Processed: 2026-09-27 12:00:00
-Transcription system version: 2.0.0
+Transcription system version: 2.1.0
 Model: openai/whisper-large-v3
 Language: English
 Edited to remove likely spurious repetitions.

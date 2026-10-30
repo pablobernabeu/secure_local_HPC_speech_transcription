@@ -25,7 +25,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from transcription import _redact_segments, write_timestamped_outputs  # noqa: E402
+from transcription import _redact_segments, write_timestamped_outputs
 
 _NAMES = ("Bernabeu", "David")
 
@@ -84,7 +84,8 @@ def test_both_sets_written_and_flagged(tmp_path):
         assert key in written, f"missing {key}"
         assert Path(written[key]).exists()
     assert json.loads(Path(written["json"]).read_text(encoding="utf-8"))["redacted"] is False
-    assert json.loads(Path(written["json_redacted"]).read_text(encoding="utf-8"))["redacted"] is True
+    assert json.loads(
+        Path(written["json_redacted"]).read_text(encoding="utf-8"))["redacted"] is True
 
 
 def test_no_name_survives_anywhere_in_redacted(tmp_path):

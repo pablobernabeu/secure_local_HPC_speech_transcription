@@ -74,6 +74,9 @@ elif [ -f "$PROJECT_DIR/venv/bin/activate" ]; then
         echo "⚠️  Could not load $_ARC_PYTHON_MODULE, the module setup/setup_environment.sh builds the venv with"
     fi
     echo "Activating venv at $PROJECT_DIR/venv"
+    # The venv's activate script is created on ARC, outside the repository,
+    # so ShellCheck has nothing to follow (SC1091).
+    # shellcheck source=/dev/null
     source "$PROJECT_DIR/venv/bin/activate"
 else
     echo "⚠️  No Python environment found at $PROJECT_DIR"

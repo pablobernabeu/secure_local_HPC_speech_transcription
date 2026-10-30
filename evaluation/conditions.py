@@ -140,24 +140,24 @@ production list into line with another would move committed word error
 rates, which is a decision for the maintainer (audit findings EWER-15
 and XREF-08).
 
-=====================================  ========================================  ======================
-Inventory                              Tokens (all matched case-insensitively)   Used by
-=====================================  ========================================  ======================
-``transcription.FILLER_TOKENS``        um uh er ah hmm mm mhm uhuh uhhuh; and    ``filler_bracket``,
-                                       ``BACKCHANNEL_TOKENS`` uh-huh mm-hmm      ``pipeline_full``
-                                       uh-uh mm-mm, bracketed whole
-``conditions._FILLER_RE``              um uh uhm umm erm er ah mm mhm hmm hm,    ``filler_strip``
-                                       each also lengthened (ummm, uhhh)
-``disfluency._FILLER_STEM``            the union of the two rows above, with     filler retention and
-                                       lengthened spellings, hyphenated and      reference recall
-                                       unhyphenated backchannels (mm-hmm,        (``evaluation.
-                                       mmhmm, uh-huh) and ``huh`` only as the    disfluency``)
-                                       second element of a compound
-``wer._FILLER_WORDS``                  uh um erm ah eh mm hmm                    ``python -m evaluation.
-                                                                                 wer --remove-fillers``
-Whisper ``EnglishTextNormalizer``      hmm mm mhm mmm uh um (its                 ``whisper_norm``, both
-                                       ``ignore_patterns``)                      sides
-=====================================  ========================================  ======================
+=================================  =======================================  ======================
+Inventory                          Tokens (all matched case-insensitively)  Used by
+=================================  =======================================  ======================
+``transcription.FILLER_TOKENS``    um uh er ah hmm mm mhm uhuh uhhuh; and   ``filler_bracket``,
+                                   ``BACKCHANNEL_TOKENS`` uh-huh mm-hmm     ``pipeline_full``
+                                   uh-uh mm-mm, bracketed whole
+``conditions._FILLER_RE``          um uh uhm umm erm er ah mm mhm hmm hm,   ``filler_strip``
+                                   each also lengthened (ummm, uhhh)
+``disfluency._FILLER_STEM``        the union of the two rows above, with    filler retention and
+                                   lengthened spellings, hyphenated and     reference recall
+                                   unhyphenated backchannels (mm-hmm,       (``evaluation.
+                                   mmhmm, uh-huh) and ``huh`` only as the   disfluency``)
+                                   second element of a compound
+``wer._FILLER_WORDS``              uh um erm ah eh mm hmm                   ``python -m evaluation.
+                                                                            wer --remove-fillers``
+Whisper ``EnglishTextNormalizer``  hmm mm mhm mmm uh um (its                ``whisper_norm``, both
+                                   ``ignore_patterns``)                     sides
+=================================  =======================================  ======================
 
 Why each differs:
 
@@ -519,9 +519,9 @@ def _whisper_norm(text: str) -> str:
     """
     global _WHISPER_NORM_SINGLETON, _WHISPER_NORM_PROVENANCE
     if _WHISPER_NORM_SINGLETON is None:
-        from importlib import metadata  # noqa: PLC0415
+        from importlib import metadata
 
-        from transformers.models.whisper.english_normalizer import (  # noqa: PLC0415
+        from transformers.models.whisper.english_normalizer import (
             EnglishTextNormalizer,
         )
         source = whisper_spelling_map_path()
@@ -1142,7 +1142,7 @@ def default_sweep_conditions() -> tuple[str, ...]:
     Imports :mod:`transcription` (and so its optional audio stack) on
     first call.
     """
-    from transcription import CLEAN_TEXT_STAGES  # noqa: PLC0415
+    from transcription import CLEAN_TEXT_STAGES
     stages = tuple(stage.__name__.lstrip("_") for stage in CLEAN_TEXT_STAGES)
     return _SWEEP_HEAD + stages + _SWEEP_TAIL
 

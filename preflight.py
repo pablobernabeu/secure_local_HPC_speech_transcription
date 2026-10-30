@@ -43,6 +43,7 @@ repaired from inside a job.
 from __future__ import annotations
 
 import argparse
+import codecs
 import hashlib
 import json
 import os
@@ -148,7 +149,7 @@ def check_python() -> CheckResult:
 def check_numpy() -> CheckResult:
     """numpy underlies every audio buffer; without it nothing runs."""
     try:
-        import numpy  # noqa: PLC0415
+        import numpy
         return CheckResult("numpy", OK, numpy.__version__)
     except ImportError:
         return CheckResult("numpy", FAIL, "not importable",
@@ -163,7 +164,7 @@ def check_audio() -> CheckResult:
     behaviour it describes.
     """
     try:
-        from audio_io import audio_support  # noqa: PLC0415
+        from audio_io import audio_support
     except (Exception, SystemExit) as exc:
         # SystemExit too: an import-time exit in any module this check
         # imports must become a FAIL, not end the report (CORE-02).
@@ -213,7 +214,7 @@ def cuda_reinstall_remedy(torch_version: str) -> str:
     Returns a runnable ``pip install`` command when the CUDA index for this
     torch series is known, otherwise a description of the constraint.
     """
-    import importlib.util  # noqa: PLC0415
+    import importlib.util
 
     base = torch_version.split("+", 1)[0]
     parts = _parse_version(base)
@@ -246,7 +247,7 @@ def check_torch(gpu_required: bool = False) -> CheckResult:
     module exists to prevent.
     """
     try:
-        import torch  # noqa: PLC0415
+        import torch
     except ImportError:
         return CheckResult("torch", FAIL, "not importable",
                            "pip install torch  (transcription cannot run)")
@@ -301,7 +302,7 @@ def check_torch(gpu_required: bool = False) -> CheckResult:
 def check_transformers() -> CheckResult:
     """transformers: import, version floor, and the return_language trap."""
     try:
-        import transformers  # noqa: PLC0415
+        import transformers
     except ImportError:
         floor = ".".join(str(part) for part in _TRANSFORMERS_FLOOR)
         return CheckResult("transformers", FAIL, "not importable",
@@ -374,6 +375,25 @@ def _token_file_candidates() -> list[tuple[Path, str]]:
     return candidates
 
 
+def _read_token_file(path: Path) -> str:
+    """Return the text of a token file, without a byte-order mark or blanks.
+
+    A token saved by a Windows editor can begin with a byte-order mark.
+    UTF-8's, read as UTF-8, is the character U+FEFF, which ``str.strip``
+    keeps because it is not whitespace, so it was returned as part of the
+    token. UTF-16's made the UTF-8 decode fail, and the file was skipped as
+    if it held no token. A file that starts with a UTF-16 mark is decoded as
+    UTF-16, and any other as UTF-8 with a leading mark dropped. Raises
+    ``UnicodeDecodeError`` for a file that is neither.
+    """
+    raw = path.read_bytes()
+    if raw.startswith((codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE)):
+        text = raw.decode("utf-16")
+    else:
+        text = raw.decode("utf-8-sig")
+    return text.lstrip("﻿").strip()
+
+
 def resolve_hf_token() -> tuple[str | None, str | None]:
     """Return ``(token, source)`` for the HuggingFace token, or ``(None, None)``.
 
@@ -404,7 +424,7 @@ def resolve_hf_token() -> tuple[str | None, str | None]:
     for path, label in _token_file_candidates():
         try:
             if path.is_file():
-                value = path.read_text(encoding="utf-8").strip()
+                value = _read_token_file(path)
                 if value:
                     return value, label
         except (OSError, UnicodeDecodeError):
@@ -568,14 +588,14 @@ def _load_problem(text: str) -> str | None:
     the name. Returns ``None`` when the config would load.
     """
     try:
-        import yaml  # noqa: PLC0415
+        import yaml
     except ImportError:
         if _pipeline_name_without_yaml(text):
             return None
         return "has no pipeline.name, so Pipeline.from_pretrained cannot load it"
     try:
         config = yaml.safe_load(text)
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         # Whatever stops the parser stops pyannote's load too. PyYAML's
         # own errors carry the problem and its position; anything else is
         # reported as it prints.
@@ -906,7 +926,7 @@ def check_diarisation(diarisation_required: bool = False) -> CheckResult:
     """
     degraded = FAIL if diarisation_required else WARN
     try:
-        import pyannote.audio  # noqa: F401, PLC0415
+        import pyannote.audio  # noqa: F401
     except ImportError:
         return CheckResult(
             "diarisation", degraded, "pyannote.audio not installed",
@@ -944,7 +964,7 @@ def check_diarisation(diarisation_required: bool = False) -> CheckResult:
 
 def check_optional() -> list[CheckResult]:
     """Optional dependencies that degrade specific features when absent."""
-    import importlib.util  # noqa: PLC0415
+    import importlib.util
     wanted = (
         ("librosa", "librosa", "higher-quality resampling",
          "pip install librosa"),
@@ -977,7 +997,7 @@ def _module_origin(name: str) -> str | None:
     without running it. ``None`` when the package is absent or its origin
     cannot be determined (a stand-in object in ``sys.modules``, say).
     """
-    import importlib.util  # noqa: PLC0415
+    import importlib.util
 
     module = sys.modules.get(name)
     origin = getattr(module, "__file__", None) if module is not None else None
@@ -1082,7 +1102,7 @@ def check_lock(lock_path: Path) -> CheckResult:
     Returns a FAIL listing the first mismatches when any pin differs or is
     missing, or when the file cannot be read or holds no pins.
     """
-    from importlib import metadata  # noqa: PLC0415
+    from importlib import metadata
 
     try:
         pins, skipped = _read_lock(lock_path)

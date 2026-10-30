@@ -15,7 +15,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from evaluation import benchmark_wer as b  # noqa: E402
+from evaluation import benchmark_wer as b
 
 # --report and --summary are required (EWER-11); run_benchmark is stubbed, so
 # nothing is written.

@@ -290,12 +290,12 @@ def _build_asr_pipeline(model_id: str, language: str = "english",
     # keeps the English benchmarks bit-for-bit unchanged, and a non-English
     # value (e.g. "french") is what drives the multilingual FLEURS wave.
     try:
-        from transformers import pipeline as hf_pipeline  # noqa: PLC0415
+        from transformers import pipeline as hf_pipeline
     except ImportError as exc:
         raise SystemExit(
             "transformers is required.  Install with:  pip install transformers"
         ) from exc
-    from evaluation.revisions import revision_for  # noqa: PLC0415
+    from evaluation.revisions import revision_for
     precision: dict = {}
     if dtype not in (None, "auto"):
         if dtype not in _DTYPES:
@@ -334,9 +334,9 @@ def _processor_name() -> str | None:
     except OSError:
         pass
     try:
-        import platform  # noqa: PLC0415
+        import platform
         return platform.processor() or None
-    except Exception:  # noqa: BLE001 - metadata must never fail a run
+    except Exception:  # metadata must never fail a run
         return None
 
 
@@ -373,7 +373,7 @@ def _decode_environment(asr: object, device: str | None = None,
                 env["cudnn"] = _torch.backends.cudnn.version()
             if env["device"] == "cuda" and _torch.cuda.is_available():
                 env["gpu"] = _torch.cuda.get_device_name(0)
-    except Exception:  # noqa: BLE001 - metadata must never fail a run
+    except Exception:  # metadata must never fail a run
         pass
     return env
 
@@ -463,14 +463,14 @@ def _iter_samples(
     (``main`` when it pins none).
     """
     try:
-        import datasets as hf_datasets  # noqa: PLC0415
-        from datasets import Audio as _HFAudio  # noqa: PLC0415
+        import datasets as hf_datasets
+        from datasets import Audio as _HFAudio
     except ImportError as exc:
         raise SystemExit(
             "The 'datasets' package is required.  "
             "Install with:  pip install datasets>=2.14.0"
         ) from exc
-    from evaluation.revisions import revision_for  # noqa: PLC0415
+    from evaluation.revisions import revision_for
     ds = hf_datasets.load_dataset(
         dataset_name,
         config,
@@ -782,16 +782,16 @@ def run_benchmark(
 
     # Resolve registry objects up front so an unknown name fails before any
     # GPU work is done.
-    from evaluation.conditions import (  # noqa: PLC0415
+    from evaluation.conditions import (
         condition_provenance,
         get_condition,
     )
-    from evaluation.revisions import revisions_used  # noqa: PLC0415
-    from evaluation.wer import (  # noqa: PLC0415
+    from evaluation.revisions import revisions_used
+    from evaluation.wer import (
         normalise_text, compute_metrics, aggregate, PairResult, write_csv,
         require_jiwer,
     )
-    from provenance import run_metadata  # noqa: PLC0415
+    from provenance import run_metadata
     conditions = [(r, get_condition(r.condition_name)) for r in runs]
     # evaluation.wer imports without jiwer, so a missing scorer would
     # otherwise surface only after the model had loaded and decoded.
@@ -809,7 +809,7 @@ def run_benchmark(
                 cond.transform("probe")
         except _FATAL_ERRORS:
             raise
-        except Exception:  # noqa: BLE001, S110 - counted per utterance below
+        except Exception:  # counted per utterance below
             pass
     if run_meta is None:
         # Before anything is written, and leaving out what this call
@@ -1179,7 +1179,7 @@ def _print_conditions() -> None:
     ``--list-conditions`` flags of this module and :mod:`evaluation.sweep`,
     so the two listings cannot diverge.
     """
-    from evaluation.conditions import list_conditions  # noqa: PLC0415
+    from evaluation.conditions import list_conditions
     print(f"  {'Condition':<20}  {'ref?':<5}  {'wer?':<5}  Description")
     print("  " + "─" * 98)
     for c in list_conditions():
@@ -1200,7 +1200,7 @@ def main(argv: list[str] | None = None) -> None:
     args = _build_parser().parse_args(argv)
 
     if args.list_suites:
-        from evaluation.challenge_suites import list_suites  # noqa: PLC0415
+        from evaluation.challenge_suites import list_suites
         print(f"  {'Suite':<30}  {'Category':<20}  Description")
         print("  " + "─" * 98)
         for s in list_suites():
@@ -1220,7 +1220,7 @@ def main(argv: list[str] | None = None) -> None:
     split        = args.split
 
     if args.suite is not None:
-        from evaluation.challenge_suites import get_suite  # noqa: PLC0415
+        from evaluation.challenge_suites import get_suite
         suite_obj    = get_suite(args.suite)
         dataset_name = suite_obj.dataset
         config       = suite_obj.config

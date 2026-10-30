@@ -64,8 +64,10 @@ echo "   Creating fresh virtual environment..."
 python3 -m venv venv
 echo "   Virtual environment created"
 
-# venv's activate script is not written for `set -u`.
+# venv's activate script is not written for `set -u`. It is created by the
+# line above, so ShellCheck has nothing to follow (SC1091).
 set +u
+# shellcheck source=/dev/null
 source venv/bin/activate
 set -u
 echo "   ✅ Virtual environment activated: $VIRTUAL_ENV"

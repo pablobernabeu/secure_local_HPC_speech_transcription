@@ -37,7 +37,7 @@ def _speaker_re() -> re.Pattern:
     Either way the pattern is the production one, not a copy.
     """
     try:
-        from evaluation.wer import _SPEAKER_RE  # noqa: PLC0415
+        from evaluation.wer import _SPEAKER_RE
         return _SPEAKER_RE
     except ImportError:
         pass

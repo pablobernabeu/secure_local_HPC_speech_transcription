@@ -37,7 +37,7 @@ def _load_pipeline(Pipeline, model_id, token):
     ``use_auth_token`` on pyannote 3.x and ``token`` on 4.x (audit findings
     DEPS-04, DEPS-10).
     """
-    from evaluation.hub_loading import pinned_checkpoint, token_kwargs  # noqa: PLC0415
+    from evaluation.hub_loading import pinned_checkpoint, token_kwargs
 
     checkpoint, pin = pinned_checkpoint(Pipeline.from_pretrained, model_id)
     return Pipeline.from_pretrained(
@@ -77,8 +77,8 @@ def install_pyannote():
     print("\nInstalling pyannote.audio and required dependencies...")
     print("This may take a few minutes...\n")
 
-    # Check if in virtual environment
-    in_venv = hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)
+    in_venv = hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix')
+                                              and sys.base_prefix != sys.prefix)
     if not in_venv and not os.environ.get('VIRTUAL_ENV'):
         print("⚠️  WARNING: Not in a virtual environment!")
         print("On HPC: Make sure you've activated the environment:")
@@ -143,7 +143,7 @@ def get_hf_token():
     wizard and the tools that later need the token agree on where it is
     (CORE-13).
     """
-    from preflight import resolve_hf_token  # noqa: PLC0415
+    from preflight import resolve_hf_token
     return resolve_hf_token()[0]
 
 
@@ -166,7 +166,6 @@ def setup_hf_token():
     """Interactive HuggingFace token setup."""
     print_step(2, "HuggingFace Token Setup")
 
-    # Check if token already exists
     existing_token = get_hf_token()
     if existing_token:
         print(f"✅ HuggingFace token found: hf_...{existing_token[-4:]}")
@@ -186,7 +185,6 @@ def setup_hf_token():
     print("  3. Also visit: https://huggingface.co/pyannote/segmentation-3.0")
     print("  4. Click 'Agree and access repository' there too")
 
-    # Get token from user
     print("\n" + "─" * 70)
     token = input("Enter your HuggingFace token (or press Enter to skip): ").strip()
 
@@ -201,7 +199,6 @@ def setup_hf_token():
         print("\n⚠️  Warning: Token should start with 'hf_'")
         print("Your token may not work correctly.")
 
-    # Save token to file
     try:
         token_file = save_token_file(token)
         print(f"\n✅ Token saved to: {token_file}")
@@ -240,7 +237,8 @@ def verify_model_access(token):
             return True
         except Exception as e:
             error_str = str(e).lower()
-            if 'gated' in error_str or 'access' in error_str or '401' in error_str or '403' in error_str:
+            if ('gated' in error_str or 'access' in error_str or '401' in error_str
+                    or '403' in error_str):
                 print("\n❌ Model access denied!")
                 print("\nYou need to accept the model licence:")
                 print(f"  1. Visit: https://huggingface.co/{model_id}")
@@ -272,7 +270,7 @@ def download_and_cache_models(token):
     print("This will download ~2GB of models (one-time operation)...")
     # pyannote.audio 3.x caches in $PYANNOTE_CACHE or ~/.cache/torch/pyannote,
     # not under HF_HOME as this message used to say (CORE-R3).
-    from preflight import pyannote_cache_dir  # noqa: PLC0415
+    from preflight import pyannote_cache_dir
     print(f"Models will be cached in {pyannote_cache_dir()}")
 
     try:

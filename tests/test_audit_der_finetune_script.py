@@ -15,7 +15,7 @@ from pathlib import Path
 
 import pytest
 
-from test_audit_shell_transcription_wrapper import (  # noqa: I001
+from test_audit_shell_transcription_wrapper import (
     REPO, _copy_lf, _posix, _run, _write_stub, needs_bash,
 )
 
@@ -50,13 +50,35 @@ def test_the_suggested_commands_name_the_exported_checkpoint(tmp_path: Path, dat
               if line.strip().startswith("python -m evaluation.benchmark_der ")]
     expected = (f"{_posix(data)}/speech_transcription_env/output/finetune"
                 f"/segmentation_model/{_BEST_CHECKPOINT_NAME}")
-    assert suggested == [[f"SEGMENTATION_MODEL={expected}", "sbatch", "hpc/submit_benchmark_der.sh"]]
-    assert direct == [["python", "-m", "evaluation.benchmark_der", "--segmentation-model", expected]]
+    assert suggested == [[f"SEGMENTATION_MODEL={expected}", "sbatch",
+                          "hpc/submit_benchmark_der.sh"]]
+    assert direct == [["python", "-m", "evaluation.benchmark_der", "--segmentation-model",
+                       expected]]
     training = [shlex.split(line.removeprefix("Command: "))
                 for line in result.stdout.splitlines() if line.startswith("Command: ")]
     assert len(training) == 1
     output_index = training[0].index("--output-dir")
-    assert training[0][output_index + 1] == f"{_posix(data)}/speech_transcription_env/output/finetune"
+    assert (training[0][output_index + 1]
+            == f"{_posix(data)}/speech_transcription_env/output/finetune")
+
+
+@pytest.mark.filterwarnings("ignore::RuntimeWarning")    # runpy re-executes the module
+@pytest.mark.parametrize(("argv", "status"), [(["--help"], 0), (["--epochs", "x"], 2)])
+def test_the_script_ends_through_exit_without_finalising(monkeypatch, capsys, argv, status):
+    """SC-24: the script streams AMI like benchmark_der and sweep_der, so it
+    must end as they do, or the streaming stack's abort at shutdown (status
+    134) would fail a run that had saved its checkpoint."""
+    import runpy
+    import sys
+
+    from evaluation import benchmark_der
+
+    exits: list[int] = []
+    monkeypatch.setattr(benchmark_der, "exit_without_finalising", exits.append)
+    monkeypatch.setattr(sys, "argv", ["finetune_pyannote_segmentation", *argv])
+    runpy.run_module("evaluation.finetune_pyannote_segmentation", run_name="__main__")
+    assert exits == [status]
+    assert ("error: 2" in capsys.readouterr().err) == (status == 2)
 
 
 def test_python_suggested_command_preserves_a_checkpoint_path_with_spaces_and_quotes(

@@ -30,10 +30,10 @@ import pytest
 
 np = pytest.importorskip("numpy")
 
-import provenance  # noqa: E402
-from evaluation import benchmark_timestamps as bt  # noqa: E402
-from evaluation import sweep_aggregate as agg  # noqa: E402
-from evaluation import wer  # noqa: E402
+import provenance
+from evaluation import benchmark_timestamps as bt
+from evaluation import sweep_aggregate as agg
+from evaluation import wer
 
 GIT = shutil.which("git")
 pytestmark = pytest.mark.skipif(GIT is None, reason="git not on PATH")

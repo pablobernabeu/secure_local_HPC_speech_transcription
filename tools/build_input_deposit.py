@@ -17,9 +17,14 @@ is written, and the build stops at the first mismatch or at a file the
 manifest does not list. The files are not transformed, so the digests that
 ``sweep_aggregate.json`` and ``scorer_sensitivity.json`` record still
 identify them. Members are written in name order with a fixed timestamp
-(the manifest's recovery date), so the same inputs always give the same
-archive bytes and the same archive digest, which a detached JSON record
-beside the archive gives.
+(the manifest's recovery date), so the same inputs give the same archive
+bytes and the same archive digest, which a detached JSON record beside
+the archive gives, provided the same deflate implementation compresses
+them. The deflate stream is not fixed by the format: CPython's Windows
+builds use zlib-ng from 3.14, for one, so the record names the Python
+version and both zlib versions: that of the headers the interpreter was
+compiled against (``zlib``) and that of the library that deflated the
+archive (``zlib_runtime``).
 
 The decoder commit is not in the public repository, which holds releases
 only, so the deposit also carries a ``git archive`` of that commit as a
@@ -43,8 +48,10 @@ import argparse
 import datetime as dt
 import hashlib
 import json
+import platform
 import sys
 import zipfile
+import zlib
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
@@ -96,8 +103,18 @@ unpacked into its `build/recovered_arc_sweep/`, so that the files sit in
         --output my_check/sweep_decode_provenance.json
 
 The summaries' digests are those recorded in the repository's
-`output/evaluation/sweep_aggregate.json`, whose rows
-`python -m evaluation.sweep_aggregate` rebuilds from them.
+`output/evaluation/sweep_aggregate.json`, whose rows this rebuilds from
+them:
+
+    python -m evaluation.sweep_aggregate \\
+        --sweep-dir build/recovered_arc_sweep/inputs \\
+        --out my_check/sweep_aggregate.csv \\
+        --out-json my_check/sweep_aggregate.json
+
+The manifest's `availability` field predates this deposit: it was
+written while these files awaited one. It is left as written, because the
+scorer-sensitivity and decode-provenance reports record the manifest's
+digest.
 
 {decoder_source}## Licences and attribution
 
@@ -159,9 +176,10 @@ def build(inputs: Path, output: Path, manifest_path: Path = MANIFEST,
     (also written beside it as ``<archive>.json``).
 
     Raises:
-        ValueError: a listed file is missing or differs from the manifest,
-            the input directory holds a file the manifest does not list, or
-            the decoder source is not an archive of the decoder commit.
+        ValueError: *inputs* is not a directory, a listed file is missing
+            or differs from the manifest, the input directory holds a file
+            the manifest does not list, or the decoder source is missing,
+            is not a ZIP archive or is not an archive of the decoder commit.
     """
     # A Windows checkout can hold the manifest with CRLF endings. The
     # committed blob has LF, so the deposit carries that form wherever it
@@ -169,6 +187,8 @@ def build(inputs: Path, output: Path, manifest_path: Path = MANIFEST,
     manifest_bytes = manifest_path.read_bytes().replace(b"\r\n", b"\n")
     manifest = json.loads(manifest_bytes.decode("utf-8"))
     listed = {entry["name"]: entry for entry in manifest["files"]}
+    if not inputs.is_dir():
+        raise ValueError(f"input directory not found: {inputs}")
     present = {p.name for p in inputs.iterdir() if p.is_file()}
     if present - set(listed):
         raise ValueError(f"files not in the manifest: {sorted(present - set(listed))}")
@@ -181,8 +201,12 @@ def build(inputs: Path, output: Path, manifest_path: Path = MANIFEST,
 
     source = None
     if decoder_source is not None:
-        with zipfile.ZipFile(decoder_source) as snapshot:
-            comment = snapshot.comment.decode("ascii", "replace")
+        try:
+            with zipfile.ZipFile(decoder_source) as snapshot:
+                comment = snapshot.comment.decode("ascii", "replace")
+        except (OSError, zipfile.BadZipFile) as exc:
+            raise ValueError(f"cannot read the decoder source {decoder_source} "
+                             f"as a ZIP archive: {exc}") from exc
         if comment != manifest["decoder_commit"]:
             raise ValueError(f"{decoder_source.name} is not an archive of "
                              f"{manifest['decoder_commit']} (its comment is {comment!r})")
@@ -210,7 +234,11 @@ def build(inputs: Path, output: Path, manifest_path: Path = MANIFEST,
     sums = "".join(f"{listed[name]['sha256']}  inputs/{name}\n" for name in sorted(listed))
 
     output.parent.mkdir(parents=True, exist_ok=True)
-    with zipfile.ZipFile(output, "w", compresslevel=9) as archive:
+    # Each member is written through its own ZipInfo, whose compression
+    # level is unset, so zlib's default level (6) applies: a ZipFile
+    # compresslevel never reaches such a member. The deposited archive was
+    # written this way, and setting a level would change its digest.
+    with zipfile.ZipFile(output, "w") as archive:
         archive.writestr(_member("README.md", when), readme)
         archive.writestr(_member("SHA256SUMS", when), sums)
         archive.writestr(_member("sweep_input_manifest.json", when), manifest_bytes)
@@ -229,6 +257,17 @@ def build(inputs: Path, output: Path, manifest_path: Path = MANIFEST,
         "manifest_sha256": hashlib.sha256(manifest_bytes).hexdigest(),
         "decoder_commit": manifest["decoder_commit"],
         **({"decoder_source": source} if source else {}),
+        # The archive's digest reproduces only under the same deflate
+        # implementation (see the module docstring). "zlib" is
+        # zlib.ZLIB_VERSION, the version of the zlib headers the
+        # interpreter was compiled against; "zlib_runtime" is
+        # zlib.ZLIB_RUNTIME_VERSION, the library actually loaded, which did
+        # the deflating. They differ when a shared zlib was upgraded after
+        # the interpreter was built.
+        "built_with": {"python": platform.python_version(),
+                       "zlib": zlib.ZLIB_VERSION,
+                       "zlib_runtime": zlib.ZLIB_RUNTIME_VERSION,
+                       "zlib_ng": getattr(zlib, "ZLIBNG_VERSION", None)},
     }
     output.with_name(output.name + ".json").write_text(
         json.dumps(record, indent=2) + "\n", encoding="utf-8")
@@ -236,9 +275,17 @@ def build(inputs: Path, output: Path, manifest_path: Path = MANIFEST,
 
 
 def main(argv=None) -> int:
+    """Build the deposit from the command line and print its record.
+
+    *argv* replaces ``sys.argv[1:]``. Returns 0 once the archive and its
+    JSON record are written, and 2, with the reason on stderr, when
+    :func:`build` refuses the inputs or the decoder source or a file
+    cannot be read or written (an unreadable manifest, for one). Side
+    effects are those of :func:`build`.
+    """
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("--inputs", type=Path, required=True,
-                        help="directory holding the 270 recovered files")
+                        help="directory holding the recovered files the manifest lists")
     parser.add_argument("--output", type=Path, required=True,
                         help="the ZIP archive to write")
     parser.add_argument("--manifest", type=Path, default=MANIFEST,
@@ -251,7 +298,9 @@ def main(argv=None) -> int:
     try:
         record = build(args.inputs, args.output, args.manifest, args.software_doi,
                        args.decoder_source)
-    except ValueError as exc:
+    except (ValueError, OSError) as exc:
+        # ValueError is build's refusal (a malformed manifest's JSON among
+        # them); OSError a manifest or output path that cannot be used.
         print(f"Error: {exc}", file=sys.stderr)
         return 2
     print(json.dumps(record, indent=2))

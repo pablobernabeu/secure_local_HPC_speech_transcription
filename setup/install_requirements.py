@@ -20,17 +20,16 @@ def check_hpc_environment():
         "/data",
     ]
 
-    on_hpc = any(os.path.exists(path) for path in hpc_indicators) or bool(os.environ.get('SLURM_JOB_ID'))
+    on_hpc = (any(os.path.exists(path) for path in hpc_indicators)
+              or bool(os.environ.get('SLURM_JOB_ID')))
 
     if on_hpc:
         print("   ✅ HPC environment detected")
 
-        # Check if Python module is loaded
         python_path = subprocess.run(['which', 'python3'], capture_output=True, text=True)
         if python_path.returncode == 0:
             print(f"   Python location: {python_path.stdout.strip()}")
 
-            # Check if it's a module-loaded Python
             if 'GCCcore' in python_path.stdout or '/apps' in python_path.stdout:
                 print("   ✅ Python module appears to be loaded")
             else:
@@ -229,8 +228,8 @@ def main():
     print("Welcome to HPC Speech Transcription Setup!")
     print()
 
-    # Check if we're in virtual environment
-    in_venv = hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)
+    in_venv = hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix')
+                                              and sys.base_prefix != sys.prefix)
     if not in_venv and not os.environ.get('VIRTUAL_ENV'):
         print("⚠️  Warning: You don't appear to be in a virtual environment")
         print("It's recommended to use a virtual environment:")

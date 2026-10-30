@@ -19,7 +19,7 @@ import pytest
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "tools"))
 
-import build_input_deposit as deposit  # noqa: E402
+import build_input_deposit as deposit
 
 
 def _manifest(tmp_path: Path, files: dict[str, bytes]) -> Path:
@@ -66,6 +66,14 @@ def test_the_archive_holds_every_file_unchanged(tmp_path, inputs):
         assert archive.read("sweep_input_manifest.json") == manifest.read_bytes()
         readme = archive.read("README.md").decode("utf-8")
     assert "jobs 1, 2 and 3" in readme and "AMI: CC-BY-4.0" in readme
+    # CR-06: the aggregate's rebuild command gives its inputs and outputs,
+    # as the other two commands do; with its defaults it scanned
+    # output/evaluation and would have written over the committed files.
+    assert ("python -m evaluation.sweep_aggregate \\\n"
+            "        --sweep-dir build/recovered_arc_sweep/inputs \\\n"
+            "        --out my_check/sweep_aggregate.csv \\\n"
+            "        --out-json my_check/sweep_aggregate.json\n") in readme
+    assert "`availability` field predates this deposit" in readme
     assert record["files"] == 2
     detached = json.loads((tmp_path / "out" / "deposit.zip.json").read_text("utf-8"))
     assert detached == record
@@ -111,6 +119,17 @@ def test_a_source_archive_of_another_commit_is_refused(tmp_path, inputs):
     assert not (tmp_path / "a.zip").exists()
 
 
+def test_the_record_names_both_zlib_versions(tmp_path, inputs):
+    """ZLIB_VERSION is the compile-time headers' version; the library that
+    deflated the archive is ZLIB_RUNTIME_VERSION, recorded beside it."""
+    import zlib
+
+    folder, _, manifest = inputs
+    built = deposit.build(folder, tmp_path / "a.zip", manifest)["built_with"]
+    assert built["zlib"] == zlib.ZLIB_VERSION
+    assert built["zlib_runtime"] == zlib.ZLIB_RUNTIME_VERSION
+
+
 def test_the_same_inputs_give_the_same_archive(tmp_path, inputs):
     folder, _, manifest = inputs
     first = deposit.build(folder, tmp_path / "a" / "deposit.zip", manifest)
@@ -139,6 +158,29 @@ def test_a_changed_or_unlisted_file_is_refused(tmp_path, inputs):
     (folder / "stray.txt").write_bytes(b"x")
     with pytest.raises(ValueError, match="not in the manifest"):
         deposit.build(folder, tmp_path / "out.zip", manifest)
+
+
+@pytest.mark.parametrize("problem", ["not a zip", "missing source", "missing inputs",
+                                     "missing manifest"])
+def test_an_unusable_path_exits_2_without_a_traceback(tmp_path, inputs, capsys, problem):
+    """main promised status 2 when build refuses its inputs, but a decoder
+    source that is not a ZIP or is absent, or an absent --inputs directory,
+    ended in a traceback."""
+    folder, _, manifest = inputs
+    argv = ["--inputs", str(folder), "--output", str(tmp_path / "out.zip"),
+            "--manifest", str(manifest)]
+    if problem == "not a zip":
+        (tmp_path / "source.zip").write_bytes(b"not a zip archive")
+        argv += ["--decoder-source", str(tmp_path / "source.zip")]
+    elif problem == "missing source":
+        argv += ["--decoder-source", str(tmp_path / "absent.zip")]
+    elif problem == "missing inputs":
+        argv[1] = str(tmp_path / "absent")
+    else:
+        argv[5] = str(tmp_path / "absent.json")
+    assert deposit.main(argv) == 2
+    assert capsys.readouterr().err.startswith("Error: ")
+    assert not (tmp_path / "out.zip").exists()
 
 
 def test_a_missing_file_is_refused(tmp_path, inputs):

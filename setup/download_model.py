@@ -8,8 +8,9 @@ Default: openai/whisper-large-v3
 The files the transformers pipeline loads are fetched with
 ``huggingface_hub.snapshot_download`` into ``$HF_HOME``, restricted to
 :data:`WEIGHT_PATTERNS`, at the revision ``evaluation.revisions`` pins for
-the model (the branch head for a model it does not list). Loadability is then confirmed by running the ASR
-pipeline on one second of silence, and any exception counts as failure. The
+the model (the branch head for a model it does not list). Loadability is
+then confirmed by running the ASR pipeline on one second of silence, and
+any exception counts as failure. The
 previous check called the pipeline on a string that was not a file and
 treated the resulting error as success when its message happened to contain
 the input text, which depended on how transformers words that error (audit
@@ -26,7 +27,7 @@ from pathlib import Path
 # The script runs as setup/download_model.py, so the repository root (where
 # evaluation.revisions lives) is not on sys.path by default.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from evaluation.revisions import revision_for  # noqa: E402
+from evaluation.revisions import revision_for
 
 DEFAULT_MODEL = "openai/whisper-large-v3"
 
@@ -60,7 +61,7 @@ def download_model(model_name=DEFAULT_MODEL):
         print(f"   Revision: {revision}")
 
     try:
-        from huggingface_hub import snapshot_download  # noqa: PLC0415
+        from huggingface_hub import snapshot_download
         path = snapshot_download(model_name, revision=revision,
                                  allow_patterns=WEIGHT_PATTERNS)
         print(f"SUCCESS: Model {model_name} downloaded to {path}")
@@ -69,8 +70,8 @@ def download_model(model_name=DEFAULT_MODEL):
         return False
 
     try:
-        import numpy as np  # noqa: PLC0415
-        from transformers import pipeline  # noqa: PLC0415
+        import numpy as np
+        from transformers import pipeline
 
         print(">> Testing model load...")
         transcriber = pipeline(

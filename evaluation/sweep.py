@@ -130,7 +130,7 @@ def _all_suite_specs() -> list[_SuiteSpec]:
     alphabetical order.  Existing SLURM array indices therefore never move
     when a suite is added.
     """
-    from evaluation.challenge_suites import list_suites  # noqa: PLC0415
+    from evaluation.challenge_suites import list_suites
     by_name: dict[str, _SuiteSpec] = {
         _LIBRISPEECH_CLEAN_SPEC.name: _LIBRISPEECH_CLEAN_SPEC,
     }
@@ -281,7 +281,7 @@ def run_suite(
     ``CUBLAS_WORKSPACE_CONFIG`` and reseeds the global RNGs. Raises
     ``SystemExit`` if any condition scored no utterance.
     """
-    from evaluation.benchmark_wer import run_benchmark, _ConditionRun  # noqa: PLC0415
+    from evaluation.benchmark_wer import run_benchmark, _ConditionRun
 
     output_dir.mkdir(parents=True, exist_ok=True)
     report_primary, summary_primary = _primary_paths(
@@ -344,7 +344,7 @@ def run_sweep(
     output directory is created and every report, summary and optional
     dump is written, and the global RNGs are reseeded.
     """
-    from evaluation.conditions import (  # noqa: PLC0415
+    from evaluation.conditions import (
         default_sweep_conditions,
         list_conditions,
     )
@@ -521,7 +521,7 @@ def main(argv: list[str] | None = None) -> bool:
         return False
 
     if args.list_conditions:
-        from evaluation.benchmark_wer import _print_conditions  # noqa: PLC0415
+        from evaluation.benchmark_wer import _print_conditions
         _print_conditions()
         return False
 

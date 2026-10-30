@@ -25,8 +25,8 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from evaluation import finetune_pyannote_segmentation as ft  # noqa: E402
-from evaluation.ami_meetings import mix_meeting  # noqa: E402
+from evaluation import finetune_pyannote_segmentation as ft
+from evaluation.ami_meetings import mix_meeting
 
 SR = 1000
 

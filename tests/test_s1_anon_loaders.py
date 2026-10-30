@@ -19,8 +19,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from evaluation import benchmark_anonymisation as ba  # noqa: E402
-from evaluation.revisions import revision_for  # noqa: E402
+from evaluation import benchmark_anonymisation as ba
+from evaluation.revisions import revision_for
 
 PINNED = revision_for(ba.DIARISATION_PIPELINE)
 
@@ -149,7 +149,7 @@ def test_the_fallback_embedding_gets_the_keyword_its_signature_names(monkeypatch
         def from_pretrained(cls, checkpoint, token=None):
             raise RuntimeError("gated")
 
-    def PretrainedSpeakerEmbedding(embedding, device=None, token=None):  # noqa: N802
+    def PretrainedSpeakerEmbedding(embedding, device=None, token=None):
         seen.update(embedding=embedding, token=token)
         return lambda tensor: tensor
 
@@ -183,7 +183,7 @@ def _pipeline_returning(result=None, error=None):
 
 def _embedding_loading(*failing):
     """PretrainedSpeakerEmbedding that fails for the names in *failing*."""
-    def PretrainedSpeakerEmbedding(embedding, device=None, use_auth_token=None):  # noqa: N802
+    def PretrainedSpeakerEmbedding(embedding, device=None, use_auth_token=None):
         if embedding in failing:
             raise OSError(f"{embedding} is not cached")
         return lambda tensor: tensor

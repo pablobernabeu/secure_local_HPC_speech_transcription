@@ -12,6 +12,10 @@ example_output/variants/** text eol=lf
 # or on a $'\r' in the first command (audit gap G4).
 *.sh text eol=lf
 
+# ShellCheck reads its configuration line by line; checked out with CRLF,
+# the source path becomes "SCRIPTDIR\r", which names no directory.
+.shellcheckrc text eol=lf
+
 # The run recipes are sourced by bash on ARC. Checked out with CRLF on
 # Windows, a recipe copied to ARC sets every value with a trailing carriage
 # return: ANON_PRESET becomes $'multi-meeting\r', which

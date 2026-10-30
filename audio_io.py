@@ -78,7 +78,7 @@ def find_ffmpeg() -> str | None:
     found = shutil.which("ffmpeg")
     if not found:
         try:
-            import imageio_ffmpeg  # noqa: PLC0415
+            import imageio_ffmpeg
             candidate = imageio_ffmpeg.get_ffmpeg_exe()
             if candidate and Path(candidate).exists():
                 found = candidate
@@ -158,7 +158,7 @@ def _private_shim_dir(exe: str) -> Path | None:
     environments never share a shim. On POSIX it is created with mode 0700
     and rejected if another user owns it or it is group/world writable.
     """
-    import hashlib  # noqa: PLC0415
+    import hashlib
 
     user = str(os.getuid()) if hasattr(os, "getuid") else (
         os.environ.get("USERNAME") or os.environ.get("USER") or "user")
@@ -248,7 +248,7 @@ def _resample(data: np.ndarray, src_sr: int, dst_sr: int) -> np.ndarray:
             [_resample(np.ascontiguousarray(data[:, c]), src_sr, dst_sr)
              for c in range(data.shape[1])], axis=1)
     try:
-        import librosa  # noqa: PLC0415
+        import librosa
         return librosa.resample(data, orig_sr=src_sr, target_sr=dst_sr)
     except ImportError:
         n_out = int(round(len(data) * dst_sr / float(src_sr)))

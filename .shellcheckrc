@@ -1,0 +1,14 @@
+# ShellCheck configuration for every tracked script (shellcheck -x <files>).
+#
+# The job scripts source the shared helpers through a path built at run time
+# ("$REPO_DIR/hpc/common/arc_common.sh"), so each carries the directive
+# "# shellcheck source=common/arc_common.sh". That path is relative to the
+# script, which ShellCheck only reads it as when SCRIPTDIR is on the source
+# path; without this line it looks in the current directory, reports SC1091
+# and checks no call against the helpers.
+source-path=SCRIPTDIR
+
+# SC2119 fires where arc_require_gpu is called with no arguments. Its
+# arguments are optional preflight options that it passes on ("$@"), so a
+# bare call is the intended use, not a forgotten "$@".
+disable=SC2119

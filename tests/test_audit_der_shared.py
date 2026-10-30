@@ -21,10 +21,10 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from evaluation import ami_meetings as am  # noqa: E402
-from evaluation import benchmark_der as bd  # noqa: E402
-from evaluation import der_metrics as dm  # noqa: E402
-from evaluation import sweep_der as sd  # noqa: E402
+from evaluation import ami_meetings as am
+from evaluation import benchmark_der as bd
+from evaluation import der_metrics as dm
+from evaluation import sweep_der as sd
 
 
 class TestOneCopyOfEachHelper:

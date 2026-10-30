@@ -20,11 +20,13 @@ import io
 import sys
 from pathlib import Path
 
+import pytest
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from ner_masking import (  # noqa: E402
+from ner_masking import (
     DEFAULT_THRESHOLD,
     PersonNameDetector,
     load_person_detector,
@@ -33,7 +35,7 @@ from ner_masking import (  # noqa: E402
 
 def _masker(**kwargs):
     """Build a masker without its loading chatter on stdout."""
-    from transcription import create_enhanced_name_masker  # noqa: PLC0415
+    from transcription import create_enhanced_name_masker
     with contextlib.redirect_stdout(io.StringIO()):
         return create_enhanced_name_masker(**kwargs)
 
@@ -188,6 +190,47 @@ def test_a_crashing_detector_does_not_break_masking():
     masker, _ = _masker(ner_detector=Exploding())
     out = masker("Maria spoke today.")
     assert "[NAME]" in out          # the dictionary stage still worked
+
+
+def test_an_exception_after_the_model_call_is_counted(capsys):
+    """SC-17: a malformed entity whose score does not compare with the
+    threshold raises inside tokens_in, after the model call. The masker
+    once swallowed it without a count, so a benchmark that checks
+    n_failures reported the NER arm as clean."""
+    def predict(text, labels, threshold):
+        return [{"text": "Kowalczyk", "score": "high", "label": "person"}]
+
+    detector = PersonNameDetector(predict)
+    masker, _ = _masker(ner_detector=detector)
+    out = masker("Maria met Kowalczyk. Maria left.")
+    assert "[NAME] met Kowalczyk." in out      # the dictionary alone
+    assert detector.n_calls == 2
+    assert detector.n_failures == 2
+    assert "TypeError" in detector.first_error
+    # Reported once on stderr, not once per sentence.
+    assert capsys.readouterr().err.count("NER stage failed") == 1
+
+
+def test_a_counted_exception_makes_the_benchmark_refuse_the_arm():
+    """The count reaches benchmark_masking._check_ner_ran."""
+    from evaluation.benchmark_masking import _check_ner_ran
+
+    class Faulty:
+        n_calls = 1
+        n_failures = 0
+        first_error = None
+
+        def tokens_in(self, text):
+            raise KeyError("text")
+
+    detector = Faulty()
+    masker, _ = _masker(ner_detector=detector)
+    with contextlib.redirect_stderr(io.StringIO()):
+        masker("Maria spoke today.")
+    assert detector.n_failures == 1
+    assert detector.first_error == "KeyError('text')"
+    with pytest.raises(SystemExit):
+        _check_ner_ran(detector)
 
 
 def test_load_person_detector_returns_none_when_unavailable(monkeypatch):

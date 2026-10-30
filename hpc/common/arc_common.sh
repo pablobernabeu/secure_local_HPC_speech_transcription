@@ -187,6 +187,9 @@ arc_require_gpu() {
 # download need. hf_token.txt in the repository root wins over an HF_TOKEN
 # already in the environment, as in every script this replaces; whitespace
 # (a trailing newline, a Windows line ending) is stripped from the file.
+# A byte-order mark is handled as preflight.resolve_hf_token handles it: a
+# UTF-8 one is removed, and a UTF-16 file is converted with iconv, or
+# refused with the remedy where iconv is missing.
 #
 # Parameters:
 #   repo_dir   the repository root holding hf_token.txt
@@ -199,12 +202,30 @@ arc_load_hf_token() {
     local token_file="${1:-.}/hf_token.txt"
     local token=""
     if [[ -f "$token_file" ]]; then
+        # Windows PowerShell 5 writes UTF-16 by default. Read as bytes, its
+        # NULs would be dropped by bash with a warning, leaving a token that
+        # fails authentication without saying why.
+        local bom=""
+        bom="$(head -c 2 "$token_file" | od -An -tx1 | tr -d ' \n')"
+        if [[ "$bom" == "fffe" || "$bom" == "feff" ]]; then
+            if ! command -v iconv > /dev/null 2>&1; then
+                echo "$token_file is UTF-16 and iconv is missing: save it as" \
+                     "plain UTF-8 (PYANNOTE_SETUP_GUIDE.md)." >&2
+                return 1
+            fi
+            if ! token="$(iconv -f UTF-16 -t UTF-8 < "$token_file" \
+                          | tr -d '[:space:]')"; then
+                echo "Cannot read $token_file as UTF-16" >&2
+                return 1
+            fi
         # Assigned apart from `export`: `export VAR="$(...)"` returns
         # export's status and hides a failed read (the old finetune copy).
-        if ! token="$(tr -d '[:space:]' < "$token_file")"; then
+        elif ! token="$(tr -d '[:space:]' < "$token_file")"; then
             echo "Cannot read $token_file" >&2
             return 1
         fi
+        # A UTF-8 byte-order mark ("UTF-8 with BOM") survives tr.
+        token="${token#$'\xef\xbb\xbf'}"
     fi
     if [[ -n "$token" ]]; then
         HF_TOKEN="$token"

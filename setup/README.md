@@ -56,12 +56,13 @@ script.
 python setup/setup_pyannote.py
 ```
 
-The interactive wizard for speaker attribution. It checks that
-pyannote.audio is installed and offers to install it, asks for a
-HuggingFace token and saves it to `hf_token.txt` in the repository root,
-checks that the token can reach `pyannote/speaker-diarization-3.1`,
-downloads and caches the pipeline, and runs it on a short test signal.
-See [PYANNOTE_SETUP_GUIDE.md](../PYANNOTE_SETUP_GUIDE.md).
+The interactive wizard for speaker attribution, which
+[PYANNOTE_SETUP_GUIDE.md](../PYANNOTE_SETUP_GUIDE.md) describes. It
+checks that pyannote.audio is installed, and offers to install it if not.
+It asks for a HuggingFace token and saves it to `hf_token.txt` in the
+repository root, checks that the token can reach
+`pyannote/speaker-diarization-3.1`, downloads and caches the pipeline,
+and runs it on a short test signal.
 
 ## `cache_pyannote_arc.py`
 
@@ -93,16 +94,17 @@ differ, the Hub has moved since the committed results: the pinned
 snapshot is downloaded as well and the script exits 2.
 
 A download skips a file the cache already holds, so a damaged one
-survives a re-run. When the cached pipeline `config.yaml` is damaged (it
-cannot load, or no longer matches the file the Hub served), or a file in
-the pipeline's `blobs` directory no longer hashes to the name it is
-stored under, the script names the file to delete or restore and exits 3
-instead of reporting success. It exits 1 without a token or a cache
-directory, and 0 otherwise.
+survives a re-run. The script therefore checks for two kinds of damage: a
+cached pipeline `config.yaml` that cannot load or no longer matches the
+file the Hub served, and a file in the pipeline's `blobs` directory that
+no longer hashes to the name it is stored under. For either, it names the
+file to delete or restore and exits 3, so that the run does not report
+success. It exits 1 without a token or a cache directory, and 0
+otherwise.
 
 It finds the token through the workflow's shared lookup and stores it in
 `$HF_HOME/token` with owner-only permissions, unless `--no-save-token` is
-given; a different token already stored there is kept unless
+given. A different token already stored there is kept unless
 `--overwrite-token` is given. Written for the ARC login node, whose
 compute nodes cannot download, but it works on any machine with network
 access.
@@ -117,11 +119,11 @@ python setup/download_model.py --model openai/whisper-medium
 Downloads a Whisper model into `$HF_HOME` with
 `huggingface_hub.snapshot_download`, limited to the configuration,
 tokeniser and safetensors files the transformers pipeline loads (about
-3 GB for Large v3, against about 25 GB for the whole repository), then
-runs it once on a second of silence to confirm that it loads. It exits
-non-zero if either step fails. It fetches the default branch, not the
-revision pinned in `evaluation/revisions.py`. It downloads no pyannote
-model; use `cache_pyannote_arc.py` for those.
+3 GB for Large v3, against about 25 GB for the whole repository). It then
+runs the model once on a second of silence to confirm that it loads, and
+exits non-zero if either step fails. It fetches the default branch, not
+the revision pinned in `evaluation/revisions.py`. It downloads no
+pyannote model, so use `cache_pyannote_arc.py` for those.
 
 ## `Dockerfile` and `docker-entrypoint.sh`
 
@@ -141,20 +143,22 @@ docker run --gpus all -v "$PWD/audio:/app/audio_input" \
 **The image has never been built or run.** No container runtime was
 available where the Dockerfile was written, locally or on ARC, so treat
 the first successful build as its test. As written, it starts from
-`nvidia/cuda:12.1.1-devel-ubuntu22.04` pinned by the digest that tag
-resolved to on Docker Hub on 2026-09-26, adds Python 3.12 from the
-deadsnakes PPA (Ubuntu 22.04's own Python 3.10 is below the workflow's
-3.11 floor), installs `requirements-lock.txt` into a virtual environment
-with the CUDA 12.1 wheel index, and copies the top-level modules,
-`evaluation/` and `data/`. The build then runs
+`nvidia/cuda:12.1.1-devel-ubuntu22.04`, pinned by the digest that tag
+resolved to on Docker Hub on 2026-09-26, and adds Python 3.12 from the
+deadsnakes PPA, since Ubuntu 22.04's own Python 3.10 is below the
+workflow's 3.11 floor. It installs `requirements-lock.txt` into a virtual
+environment with the CUDA 12.1 wheel index and copies the top-level
+modules, `evaluation/`, `data/` and `versions.csv`. `transcription.py`
+reads the release it records in every transcript and run manifest from
+`versions.csv`. The build then runs
 `python -m preflight --lock requirements-lock.txt`, so an installed
 version that differs from the lock fails the build. The apt packages
 (ffmpeg, sox and the Python patch release among them) are not pinned, so
 two builds can differ there.
 
-With no arguments the entry point transcribes every recording in
-`/app/audio_input` with name masking and English as the language; with
-arguments it runs `transcription.py` once with them. It exits non-zero
+With no arguments, the entry point transcribes every recording in
+`/app/audio_input` with name masking and English as the language. With
+arguments, it runs `transcription.py` once with them. It exits non-zero
 when a transcription fails, when there is nothing to transcribe, or when
 the provenance, review-flag or audio modules cannot be imported. The
 image produced none of the committed results, which all ran in the ARC

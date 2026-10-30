@@ -17,8 +17,8 @@ import pytest
 
 pytest.importorskip("numpy")
 
-from evaluation import benchmark_wer as b  # noqa: E402
-from evaluation import wer  # noqa: E402
+from evaluation import benchmark_wer as b
+from evaluation import wer
 
 
 # ---------------------------------------------------------------------------

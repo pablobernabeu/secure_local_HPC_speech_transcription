@@ -11,13 +11,12 @@ extend-exclude = ["build", ".claude", "example_output", "output"]
 
 [lint]
 # pycodestyle errors and warnings, pyflakes, bugbear, pyupgrade, simplify.
+# E501 (the line-length above) has been enforced since October 2026. The
+# last long lines were then wrapped in style-only commits, each file parsing
+# to the same AST as before, and while the rule was ignored their count had
+# grown from 74 to 198 (LINT-01, SC-23). Enforcing it keeps the count at zero.
 select = ["E", "F", "W", "B", "UP", "SIM"]
 ignore = [
-    # Long lines are mostly prose in docstrings, argparse help and test
-    # fixtures. Wrapping them by hand would touch hundreds of lines of code
-    # behind committed results for no behavioural gain; ISSUES.md records the
-    # count.
-    "E501",
     # try/except/pass versus contextlib.suppress, and nested with-statements,
     # are equivalent; rewriting them only churns code behind committed results.
     "SIM105",

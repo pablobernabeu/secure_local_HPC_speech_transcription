@@ -86,11 +86,17 @@ if [[ ! -d "$REFERENCE_DIR" ]]; then
     echo "❌ Reference directory not found: $REFERENCE_DIR" >&2
     exit 1
 fi
-# evaluation.wer scores the .txt and .json files at the top of the directory;
-# with none there it would write an empty report and exit 0.
+# evaluation.wer scores the .txt, .json and .vtt files at the top of the
+# directory (FORMAT_PREFERENCE in evaluation/wer.py, which
+# tests/test_s1_env_jobs.py keeps this list equal to). With none there it
+# raises FileNotFoundError ("No matching reference/hypothesis pairs"), as
+# it does when no transcript shares a name with a reference, so the job
+# would end with a traceback and status 1, after arc_record_env had
+# written into the report directory. This check stops it first, with the
+# reason, and exits 4.
 if [[ ! -d "$HYPOTHESIS_DIR" ]] || [[ -z "$(find "$HYPOTHESIS_DIR" -maxdepth 1 -type f \
-        \( -iname '*.txt' -o -iname '*.json' \) -print -quit)" ]]; then
-    echo "❌ No transcripts (.txt or .json) in $HYPOTHESIS_DIR." >&2
+        \( -iname '*.txt' -o -iname '*.json' -o -iname '*.vtt' \) -print -quit)" ]]; then
+    echo "❌ No transcripts (.txt, .json or .vtt) in $HYPOTHESIS_DIR." >&2
     echo "   Pass the directory holding them as the first argument." >&2
     exit 4
 fi

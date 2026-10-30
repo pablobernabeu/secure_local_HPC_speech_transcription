@@ -3,16 +3,16 @@
 This page covers transcribing your own recordings with the SLURM scripts
 in `hpc/`. The Oxford ARC specifics (storage layout, first-time setup,
 the diarisation model cache) are in
-[ARC_USAGE_GUIDE.md](../ARC_USAGE_GUIDE.md); moving the scripts to another
-cluster is covered by [hpc/HPC_SETUP_GUIDE.md](../hpc/HPC_SETUP_GUIDE.md);
-and the evaluation jobs behind the manuscript are mapped in
-[hpc/README.md](../hpc/README.md).
+[ARC_USAGE_GUIDE.md](../ARC_USAGE_GUIDE.md), and
+[hpc/HPC_SETUP_GUIDE.md](../hpc/HPC_SETUP_GUIDE.md) covers moving the
+scripts to another cluster. The evaluation jobs behind the manuscript
+are mapped in [hpc/README.md](../hpc/README.md).
 
 ## How a submission works
 
 `hpc/submit_transcription.sh` runs on the login node and only submits. In
 batch mode it lists the recordings in the input directory, writes the
-sorted list to `logs/filelist_<timestamp>.txt`, and submits a job array
+sorted list to `logs/filelist_<timestamp>_<pid>.txt`, and submits a job array
 with one task per recording. Each task runs `hpc/batch_transcription.sh`,
 which activates the environment, reads its own entry from that frozen
 list, runs `python -m preflight` and then `transcription.py` on the
@@ -68,7 +68,7 @@ hpc/submit_transcription.sh --single-file /path/to/interview.wav \
 
 The path is resolved relative to the directory you run the command from.
 `--output-name` sets the base name of the output files and is accepted
-only with `--single-file`; in batch mode each recording keeps its own
+only with `--single-file`. In batch mode, each recording keeps its own
 name.
 
 ## Options
@@ -78,7 +78,7 @@ The wrapper consumes `--single-file`, `--output-name`, `--time-limit` and
 unchanged, so the options are those listed by `python transcription.py
 --help` and in the [README](../README.md#command-line-options). It
 checks each option against that list before submitting, so a mistyped
-option fails at once and not hours later in the queue.
+option fails at once, before it can wait hours in the queue.
 `hpc/submit_transcription.sh --help` prints the wrapper's own summary.
 
 ## Outputs and logs
@@ -105,7 +105,7 @@ The wrapper prints the exact monitoring commands after it submits.
 ## Submitting the worker directly
 
 `hpc/batch_transcription.sh` can be submitted on its own, from the
-repository root. With `--single-file <path>` it transcribes that file.
+repository root. With `--single-file <path>`, it transcribes that file.
 As an array job without a file list it lists
 `$DATA/speech_transcription_env/audio_input` when the task starts, which
 is only safe if nothing is added or removed while tasks are queued:
@@ -123,29 +123,28 @@ The wrapper is the safer route.
 ## First-time setup
 
 On ARC, activate the project environment before installing anything, so
-that packages go to project storage and not to your home quota:
+that packages go to project storage, outside your home quota:
 
 ```bash
 source activate_project_env_arc.sh
 python setup/install_requirements.py
 ```
 
-`setup/install_requirements.py` upgrades pip, installs
-`requirements.txt` into the active environment, checks that torch,
-transformers, librosa, soundfile and numpy import, and then offers to run
-the speaker-attribution wizard, `setup/setup_pyannote.py`, which can also
-be run later. It does not create an environment (it warns and asks before
-continuing outside one) and installs whatever torch build
-`requirements.txt` resolves to, with no CUDA index. To reproduce the
-environment behind the published results exactly, install
-`requirements-lock.txt` instead (it needs
+`setup/install_requirements.py` installs `requirements.txt` into the
+active environment, checks that the core packages import and offers to
+run the speaker-attribution wizard, which can also be run later. It does
+not create an environment, and it installs whatever torch build
+`requirements.txt` resolves to, with no CUDA index
+([setup/README.md](../setup/README.md) has the details). To reproduce the
+ARC job environment as it stood on 2026-09-26, when it was frozen,
+install `requirements-lock.txt` instead (it needs
 `--extra-index-url https://download.pytorch.org/whl/cu121`) and check it
 with `python -m preflight --lock requirements-lock.txt`. The jobs never
 install anything themselves, so the environment must be complete before
 the first submission. Speaker attribution on compute nodes, which have no
-internet access, also needs the model weights cached beforehand; see
+internet access, also needs the model weights cached beforehand (see
 [ARC_USAGE_GUIDE.md](../ARC_USAGE_GUIDE.md#speaker-diarisation-on-arc)
-and [PYANNOTE_SETUP_GUIDE.md](../PYANNOTE_SETUP_GUIDE.md).
+and [PYANNOTE_SETUP_GUIDE.md](../PYANNOTE_SETUP_GUIDE.md)).
 
 To fetch the Whisper weights on the login node before a batch, so that no
 task waits on a download:
@@ -164,17 +163,17 @@ Read the task's `.out` and `.err` files in `logs/` first. A task that
 stops at once with "transcription.py not found" or "Activation script not
 found" was submitted from outside the repository. "No audio files found"
 at submission means the input directory is empty or not the one you
-meant; the wrapper prints which directory it read. A task that ends in
+meant, and the wrapper prints which directory it read. A task that ends in
 SLURM's `TIMEOUT` state needs a larger `--time-limit`, and one killed for
 memory a larger `--memory`. A task that exits 2 within seconds failed its
 preflight, and the report near the top of its `.out` names each failed
 check and its remedy. To run the same check by hand, run
 `source activate_project_env_arc.sh && python -m preflight` in an
-interactive session on a compute node (the
+interactive session on a compute node, which the
 [ARC user guide](https://arc-user-guide.readthedocs.io/) describes how to
-start one): the ARC login nodes cap virtual memory at 2 GB, under which
-the environment's CUDA build of torch cannot load, so there the check
-reports torch as broken.
+start. On a login node the check reports torch as broken, because the ARC
+login nodes cap virtual memory at 2 GB, under which the environment's
+CUDA build of torch cannot load.
 
 For the cluster itself, see the
 [ARC user guide](https://arc-user-guide.readthedocs.io/).

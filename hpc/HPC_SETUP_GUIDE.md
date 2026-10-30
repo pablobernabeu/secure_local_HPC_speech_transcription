@@ -30,13 +30,13 @@ submission.
 
 `activate_project_env_arc.sh` is the one place where the site layout is
 written down. It expects an environment variable `$DATA` pointing at
-project storage, sets `PROJECT_DIR="$DATA/speech_transcription_env"`, puts
-the model caches (`HF_HOME`, `TORCH_HOME`) and pip's cache under it, turns
-off the user site (`PYTHONNOUSERSITE=1`) so nothing in `~/.local` can
-shadow the environment, and activates the Python environment it finds
-there: a conda environment at `$PROJECT_DIR/bin/python`, or a virtual
-environment at `$PROJECT_DIR/venv`. If neither exists it stops with an
-error.
+project storage and sets `PROJECT_DIR="$DATA/speech_transcription_env"`,
+with the model caches (`HF_HOME`, `TORCH_HOME`) and pip's cache under it.
+It turns off the user site (`PYTHONNOUSERSITE=1`), so that nothing in
+`~/.local` can shadow the environment, and activates the Python
+environment it finds there: a conda environment at
+`$PROJECT_DIR/bin/python`, or a virtual environment at
+`$PROJECT_DIR/venv`. If neither exists, it stops with an error.
 
 ## Setting up
 
@@ -82,7 +82,7 @@ If your site has no `$DATA`, either export one before sourcing the script
 or edit `PROJECT_DIR` in `activate_project_env_arc.sh`. Changing
 `PROJECT_DIR` moves the environment and the model caches. It does not
 move the default input directory of `hpc/submit_transcription.sh`, which
-is `$DATA/speech_transcription_env/audio_input`; set
+is `$DATA/speech_transcription_env/audio_input`. Set
 `TRANSCRIPTION_AUDIO_DIR` to point it elsewhere.
 
 ## Adjusting the job settings
@@ -128,12 +128,13 @@ A job that stops at once with "Activation script not found" or "No
 Python environment found" was submitted from outside the repository, or
 the environment is not where the activation script looks. A job that
 stops within seconds with exit 2 failed its preflight: the report at the
-top of its log names each failing check and its remedy. On a GPU job the
+top of its log names each failing check and its remedy. On a GPU job, the
 usual causes are a node with no usable CUDA device (the report says
 whether torch is a CUDA build) or a CPU-only torch. A package loaded from
 outside the environment shows as an `isolation` failure. Apply the
 remedy from a login node and resubmit, since no job repairs the
-environment itself. Scripts are not timed in this guide: run one recording, or one
-evaluation job with its `LIMIT`-style override, and read the elapsed time
-from `sacct -j <job_id> --format=JobID,Elapsed` before sizing a larger
-run.
+environment itself.
+
+This guide gives no run times. Before sizing a larger run, run one
+recording, or one evaluation job with its `LIMIT`-style override, and
+read the elapsed time from `sacct -j <job_id> --format=JobID,Elapsed`.

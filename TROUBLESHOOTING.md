@@ -1,36 +1,44 @@
 # Troubleshooting
 
-Start with `python -m preflight`. In a few seconds it checks the Python
-version, torch and CUDA, transformers, audio decoding including ffmpeg,
-pyannote and the HuggingFace token, and whether torch, transformers and
-pyannote load from the active environment, and it prints a remedy for
-each problem it finds. Add `--gpu-required` on a GPU node, or
-`--diarisation-required` when you need speaker attribution, to make those
-checks fail rather than warn. `--lock requirements-lock.txt` also compares
-every installed version with the lock. Every HPC job runs it before doing
-any work and stops with exit 2 (exit 4 in the case study) when it fails,
-so the report at the top of a failed job's log is the place to start. On
-ARC, run it on a compute node rather than a login node: the login nodes
-cap virtual memory at 2 GB, under which the environment's CUDA build of
-torch cannot load.
+Start with `python -m preflight`, which takes a few seconds. It checks
+the Python version, torch and CUDA, transformers, audio decoding
+including ffmpeg, pyannote and the HuggingFace token, and whether torch,
+transformers and pyannote load from the active environment. It prints a
+remedy for each problem it finds. Add `--gpu-required` on a GPU node, or
+`--diarisation-required` when you need speaker attribution, to turn
+those warnings into failures. `--lock requirements-lock.txt` also
+compares every installed version with the lock. Every HPC job runs the
+check before doing any work and stops with exit 2 (exit 4 in the case
+study) when it fails, so the report at the top of a failed job's log is
+the place to start. On ARC, run it in an interactive session on a
+compute node, from the repository, as
+`source activate_project_env_arc.sh && python -m preflight`. Without the
+activation, the account's `~/.local` packages shadow the environment's,
+so the check would not test what the jobs run. The login nodes will not
+do, because they cap virtual memory at 2 GB, under which the
+environment's CUDA build of torch cannot load.
 
 ## Versions
 
 `requirements.txt` gives the lowest versions the code supports: Python
-3.11 or later, transformers 4.56 or later (the language detection the
-post-processing relies on needs 4.45, and the timestamp benchmark's
-`pipeline(dtype=...)` needs 4.56) and pyannote.audio 3.1 or later, below 4.
-The environment that produced the published results is recorded in
-`requirements-lock.txt`, and each HPC job that writes results records
-the versions it ran with in an `environment/` subdirectory beside them.
+3.11 or later, transformers 4.56 or later and pyannote.audio 3.1 or
+later, below 4. The language detection the post-processing relies on
+needs transformers 4.45, and the timestamp benchmark's
+`pipeline(dtype=...)` needs 4.56.
+`requirements-lock.txt` is a `pip freeze` of the ARC job environment
+taken on 2026-09-26. That environment was changed in place during the
+project, so the lock is not a record of what every past job ran. Each
+result records its own versions: the evaluation summaries in their run
+metadata, and each HPC job that writes results in an `environment/`
+subdirectory beside them.
 The committed diarisation results were produced with pyannote.audio
 3.4.0, the version recorded in `output/evaluation/der_summary.json`.
 
-pyannote.audio 4.x is not supported; install with
+pyannote.audio 4.x is not supported, so install it with
 `pip install "pyannote.audio>=3.1,<4"`. For GPU use, torch and torchaudio
-must be CUDA builds of matching versions; `python -m preflight` prints the
-install command for the torch it finds. Between transformers 4.48 and 5.6
-the ASR pipeline's own language report is always empty, which is why the
+must be CUDA builds of matching versions, and `python -m preflight` prints
+the install command for the torch it finds. Between transformers 4.48 and
+5.6, the ASR pipeline's own language report is always empty, which is why the
 workflow asks the model directly and why preflight flags those versions.
 The HPC jobs never install anything: repair the environment from a login
 node, ideally by installing `requirements-lock.txt`, and resubmit.
@@ -52,11 +60,11 @@ read, and `python -m audio_io recording.m4a` tries one file. Installing
 
 Model weights are cached under `HF_HOME` (by default
 `~/.cache/huggingface`). Set `HF_HOME` to a directory with enough space
-and use the same value for downloading and for every run; on ARC,
+and use the same value for downloading and for every run. On ARC,
 `activate_project_env_arc.sh` sets it to
 `$DATA/speech_transcription_env/.huggingface_cache`. `TRANSFORMERS_CACHE`
 is deprecated and would override `HF_HOME` for some libraries, so leave
-it unset; the HPC jobs unset it.
+it unset, as the HPC jobs do.
 
 For offline use, or before a batch on nodes without network access,
 fetch the models first:
@@ -105,14 +113,14 @@ report to the first.
 
 To repair the cache, delete the damaged blob and the snapshot's link to
 it (or, where the snapshot holds the file itself, that file), then run
-`setup/cache_pyannote_arc.py` again, which exits 3 while anything it
-checks is still damaged. A damaged blob that no snapshot links to is
+`setup/cache_pyannote_arc.py` again. It exits 3 while anything it checks
+is still damaged. A damaged blob that no snapshot links to is
 deleted on its own, since a download would link it again. Alternatively,
 restore the file from an intact copy in the Hugging Face hub cache.
 preflight names such a copy when it finds one that still hashes to its
-blob's name. For a blob, it otherwise says where the hub cache's blob of
-the same name would be, to be used only after `git hash-object` on it
-(`sha256sum` for a blob named after a SHA-256) prints that name.
+blob's name. Otherwise, for a blob, it says where the hub cache's blob of
+the same name would be. Use that copy only after `git hash-object` on it
+(`sha256sum` for a blob named after a SHA-256) prints the blob's name.
 
 Speaker-attribution problems (tokens, gated models, offline loading) are
 covered in [PYANNOTE_SETUP_GUIDE.md](PYANNOTE_SETUP_GUIDE.md).
@@ -137,7 +145,7 @@ environment.
 
 Every job script writes its log to `logs/` in the repository. A
 transcription task writes `logs/transcription_<job_id>_<task_id>.out` and
-`.err`; a single-file job is not an array, so match its log with
+`.err`. A single-file job is not an array, so match its log with
 `logs/transcription_<job_id>_*.out`. The wrapper prints the exact
 monitoring commands after it submits. The end of a task's `.out` lists
 the files it wrote, or says which requested artefacts are missing.
@@ -148,8 +156,9 @@ Pass `--language` on every run: it also selects the post-processing
 rules, and a wrong guess from language detection applies the wrong ones.
 `--fix-spurious-repetitions` removes repetition loops, and
 `--enhance-audio` may help noisy recordings at the cost of time. With
-`--timestamps`, the `_review.json` file flags the segments most likely to
-be hallucinated; listen to those passages.
+`--timestamps` or `--speaker-attribution`, the `_review.json` file flags
+the segments most likely to be hallucinated, and those are the passages
+to listen to.
 
 Name masking that hides ordinary words is usually the common-word
 filter being off. It is on by default for English, and

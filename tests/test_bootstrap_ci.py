@@ -18,7 +18,7 @@ import pytest
 
 np = pytest.importorskip("numpy")
 
-from evaluation.bootstrap_ci import (  # noqa: E402
+from evaluation.bootstrap_ci import (
     align_reports,
     bootstrap_macro,
     paired_delta,

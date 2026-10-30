@@ -418,7 +418,8 @@ def build_corpus(
                 raise SystemExit(f"{cache / (mid + '.wav')} is at {sr} Hz, "
                                  f"expected {SAMPLE_RATE} Hz")
             payload = json.loads((cache / f"{mid}.json").read_text(encoding="utf-8"))
-            yield mid, np.asarray(audio, dtype=np.float32), payload["reference"], payload["statistics"]
+            yield (mid, np.asarray(audio, dtype=np.float32), payload["reference"],
+                   payload["statistics"])
         return
 
     if cache is not None:
@@ -950,7 +951,7 @@ def run_benchmark(
     try:
         import pyannote.audio as _pa
         summary["pyannote_audio_version"] = _pa.__version__
-    except Exception:  # noqa: BLE001
+    except Exception:  # provenance only; the key is then absent
         pass
     # Which snapshots produced the figures, and the code and packages
     # (audit findings DEPS-04, OUTPUTS-12). The pipeline and AMI are loaded
@@ -1106,6 +1107,16 @@ def exit_without_finalising(code: int) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """Run :func:`run_benchmark` with the command-line arguments.
+
+    *argv* replaces ``sys.argv[1:]`` (see :func:`_parse_args`). Returns 0
+    once the run is complete. A refused option or a failed step raises
+    ``SystemExit`` with its message; run as a script, the module prints
+    that message and exits with its status through
+    :func:`exit_without_finalising`. Side effects are those of
+    :func:`run_benchmark`, whose default ``--output-dir`` is the committed
+    ``output/evaluation``.
+    """
     args = _parse_args(argv)
     run_benchmark(
         output_dir=args.output_dir,

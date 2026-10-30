@@ -2,10 +2,11 @@
   "summary": {
     "files_audited": 39,
     "counts_by_type": {
-      "other": 10,
+      "other": 7,
       "name_masking_log_csv": 3,
       "transcript_docx": 4,
       "transcript_txt": 10,
+      "redacted_review_json": 3,
       "raw_transcript_json": 3,
       "vtt_captions": 3,
       "redacted_transcript_json": 3,
@@ -22,7 +23,12 @@
     "masked_artefacts_leaking": 2,
     "raw_artefacts_leaking": 0,
     "masked_artefacts_casefold_only": 0,
-    "docx_reader_available": true
+    "docx_reader_available": true,
+    "n_masking_logs": 3,
+    "masking_logs_not_read_in_full": [],
+    "skipped_files": [],
+    "files_not_checked": [],
+    "audit_complete": true
   },
   "per_file": [
     {
@@ -32,7 +38,8 @@
       "residual_pii_found": false,
       "detail": "not an audited artefact type",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "not_audited"
     },
     {
       "path": "name_masking_logs/architecture_of_meaning/name_replacements.csv",
@@ -41,7 +48,8 @@
       "residual_pii_found": false,
       "detail": "masking log; stores 2 original name(s) by design (expected, not a leak)",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "masking_log"
     },
     {
       "path": "name_masking_logs/behind_the_curtains/name_replacements.csv",
@@ -50,7 +58,8 @@
       "residual_pii_found": false,
       "detail": "masking log; stores 3 original name(s) by design (expected, not a leak)",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "masking_log"
     },
     {
       "path": "name_masking_logs/modular_mini_grammar/name_replacements.csv",
@@ -59,7 +68,8 @@
       "residual_pii_found": false,
       "detail": "masking log; stores 3 original name(s) by design (expected, not a leak)",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "masking_log"
     },
     {
       "path": "transcripts/.gitkeep",
@@ -68,7 +78,8 @@
       "residual_pii_found": false,
       "detail": "not an audited artefact type",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "not_audited"
     },
     {
       "path": "transcripts/architecture_of_meaning/transcript.docx",
@@ -77,7 +88,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "transcripts/architecture_of_meaning/transcript.txt",
@@ -86,7 +98,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "transcripts/behind_the_curtains/transcript.docx",
@@ -97,7 +110,8 @@
       "leaked_names": [
         "Bernabeu"
       ],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "transcripts/behind_the_curtains/transcript.txt",
@@ -108,7 +122,8 @@
       "leaked_names": [
         "Bernabeu"
       ],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "transcripts/l3_learning/transcript.docx",
@@ -117,7 +132,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "transcripts/l3_learning/transcript.txt",
@@ -126,7 +142,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "transcripts/modular_mini_grammar/transcript.docx",
@@ -135,7 +152,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "transcripts/modular_mini_grammar/transcript.txt",
@@ -144,7 +162,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "transcripts/README.md",
@@ -153,7 +172,8 @@
       "residual_pii_found": false,
       "detail": "not an audited artefact type",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "not_audited"
     },
     {
       "path": "variants/01_plain/example_manifest.json",
@@ -162,7 +182,8 @@
       "residual_pii_found": false,
       "detail": "not an audited artefact type",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "not_audited"
     },
     {
       "path": "variants/01_plain/example_transcript.txt",
@@ -171,7 +192,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "variants/02_timestamps/example_manifest.json",
@@ -180,16 +202,18 @@
       "residual_pii_found": false,
       "detail": "not an audited artefact type",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "not_audited"
     },
     {
       "path": "variants/02_timestamps/example_review.json",
-      "artefact_type": "other",
-      "masked_by_design": false,
+      "artefact_type": "redacted_review_json",
+      "masked_by_design": true,
       "residual_pii_found": false,
-      "detail": "not an audited artefact type",
+      "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "variants/02_timestamps/example_transcript.json",
@@ -198,7 +222,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "variants/02_timestamps/example_transcript.txt",
@@ -207,7 +232,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "variants/02_timestamps/example_transcript.vtt",
@@ -216,7 +242,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "variants/02_timestamps/example_transcript_redacted.json",
@@ -225,7 +252,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "variants/02_timestamps/example_transcript_redacted.vtt",
@@ -234,7 +262,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "variants/03_diarisation/example_manifest.json",
@@ -243,16 +272,18 @@
       "residual_pii_found": false,
       "detail": "not an audited artefact type",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "not_audited"
     },
     {
       "path": "variants/03_diarisation/example_review.json",
-      "artefact_type": "other",
-      "masked_by_design": false,
+      "artefact_type": "redacted_review_json",
+      "masked_by_design": true,
       "residual_pii_found": false,
-      "detail": "not an audited artefact type",
+      "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "variants/03_diarisation/example_transcript.json",
@@ -261,7 +292,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "variants/03_diarisation/example_transcript.txt",
@@ -270,7 +302,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "variants/03_diarisation/example_transcript.vtt",
@@ -279,7 +312,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "variants/03_diarisation/example_transcript_redacted.json",
@@ -288,7 +322,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "variants/03_diarisation/example_transcript_redacted.vtt",
@@ -297,7 +332,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "variants/03_diarisation/example_transcript_with_speakers.txt",
@@ -306,7 +342,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "variants/04_diarisation_and_timestamps/example_manifest.json",
@@ -315,16 +352,18 @@
       "residual_pii_found": false,
       "detail": "not an audited artefact type",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "not_audited"
     },
     {
       "path": "variants/04_diarisation_and_timestamps/example_review.json",
-      "artefact_type": "other",
-      "masked_by_design": false,
+      "artefact_type": "redacted_review_json",
+      "masked_by_design": true,
       "residual_pii_found": false,
-      "detail": "not an audited artefact type",
+      "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "variants/04_diarisation_and_timestamps/example_transcript.json",
@@ -333,7 +372,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "variants/04_diarisation_and_timestamps/example_transcript.txt",
@@ -342,7 +382,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "variants/04_diarisation_and_timestamps/example_transcript.vtt",
@@ -351,7 +392,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "variants/04_diarisation_and_timestamps/example_transcript_redacted.json",
@@ -360,7 +402,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "variants/04_diarisation_and_timestamps/example_transcript_redacted.vtt",
@@ -369,7 +412,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     },
     {
       "path": "variants/04_diarisation_and_timestamps/example_transcript_with_speakers.txt",
@@ -378,7 +422,8 @@
       "residual_pii_found": false,
       "detail": "clean: no logged original name found",
       "leaked_names": [],
-      "leaked_names_casefold": []
+      "leaked_names_casefold": [],
+      "status": "scanned"
     }
   ]
 }

@@ -53,7 +53,7 @@ def measure(text: str, predict, sentences_of, is_capitalised, masker_form,
     The model is reached only through *predict* ``(text, labels,
     threshold)``, so a test can supply a fake one.
     """
-    from ner_masking import PersonNameDetector  # noqa: PLC0415
+    from ner_masking import PersonNameDetector
 
     sentences = [s for s in sentences_of(text) if s.strip()]
     results = {}
@@ -78,16 +78,25 @@ def measure(text: str, predict, sentences_of, is_capitalised, masker_form,
 
 
 def main(argv=None) -> int:
+    """Measure every label set on the case study and write the report.
+
+    *argv* replaces ``sys.argv[1:]``. Returns 0. Needs gliner and the
+    pinned model in the local Hugging Face cache (it is loaded with
+    ``local_files_only``), and raises when either is missing. Side
+    effects: runs ``git`` through :func:`provenance.run_metadata`, reads
+    the case-study text, writes ``--output`` with LF line endings,
+    replacing it, and prints the capitalised words each label set covers.
+    """
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
 
-    import ner_masking  # noqa: PLC0415
-    from provenance import run_metadata  # noqa: PLC0415
+    import ner_masking
+    from provenance import run_metadata
     metadata = run_metadata(ignore=[args.output])
     with contextlib.redirect_stdout(io.StringIO()):
-        import transcription  # noqa: PLC0415
-    from gliner import GLiNER  # noqa: PLC0415
+        import transcription
+    from gliner import GLiNER
 
     model = GLiNER.from_pretrained(ner_masking.DEFAULT_MODEL,
                                    revision=ner_masking.DEFAULT_REVISION,

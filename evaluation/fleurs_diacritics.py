@@ -81,9 +81,9 @@ def _references(config: str):
     Streams only the reference column where the loader allows it, so no
     audio is downloaded; otherwise streams the rows with audio decoding off.
     """
-    import datasets as hf_datasets  # noqa: PLC0415
+    import datasets as hf_datasets
 
-    from evaluation.revisions import revision_for  # noqa: PLC0415
+    from evaluation.revisions import revision_for
 
     kwargs = dict(split=SPLIT, streaming=True, trust_remote_code=False,
                   revision=revision_for(DATASET))
@@ -107,8 +107,8 @@ def measure(languages=LANGUAGES, references=_references,
     (:func:`main` does). ``None`` reads it here, which counts a rewritten
     copy of the record in the checkout as a change.
     """
-    from evaluation.revisions import revision_for  # noqa: PLC0415
-    from provenance import run_metadata  # noqa: PLC0415
+    from evaluation.revisions import revision_for
+    from provenance import run_metadata
 
     return {
         "dataset": DATASET,
@@ -131,7 +131,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--out", type=Path, required=True,
                    help="Output JSON.")
     args = p.parse_args(argv)
-    from provenance import run_metadata  # noqa: PLC0415
+    from provenance import run_metadata
     # Read before the record is written, leaving it out of the dirty check,
     # as provenance.write_sidecar does for the CSV-only writers. Read inside
     # measure without the ignore list, as it was, a second measurement in

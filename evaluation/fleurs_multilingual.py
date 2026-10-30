@@ -376,7 +376,7 @@ def assemble(arms: dict[str, Path], languages=LANGUAGES,
             k: diacritics.get(k) for k in ("dataset", "revision", "split",
                                            "reference_field", "definition")}
     if record_inputs:
-        from provenance import run_metadata  # noqa: PLC0415
+        from provenance import run_metadata
         benchmark["inputs"] = inputs
         benchmark["assembled_by"] = run_metadata()
 

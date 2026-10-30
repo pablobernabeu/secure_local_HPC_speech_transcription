@@ -18,7 +18,8 @@ from evaluation.wer import aggregate
 
 def test_internal_unicode_contractions_and_digit_apostrophes_are_preserved():
     text = "‘don't’ o’clock l’homme c’était 1990’s _x'y_"
-    assert normalise_for_rule(text, "edge_apostrophe") == "don't o'clock l'homme c'était 1990's _x'y_"
+    assert (normalise_for_rule(text, "edge_apostrophe")
+            == "don't o'clock l'homme c'était 1990's _x'y_")
 
 
 def test_quotes_edge_elisions_and_terminal_possessives_are_removed_symmetrically():
@@ -27,7 +28,8 @@ def test_quotes_edge_elisions_and_terminal_possessives_are_removed_symmetrically
     revised, _ = score_pairs([("dialogue", "'now' she said", "now she said")], "edge_apostrophe")
     assert original["dialogue"].substitutions == 1
     assert revised["dialogue"].wer == 0
-    reversed_sides, _ = score_pairs([("dialogue", "now she said", "'now' she said")], "edge_apostrophe")
+    reversed_sides, _ = score_pairs([("dialogue", "now she said", "'now' she said")],
+                                    "edge_apostrophe")
     assert reversed_sides["dialogue"].wer == 0
 
 
@@ -170,9 +172,11 @@ def tiny_snapshot(tmp_path):
     dump = inputs / "wer_hypotheses_fixture_model.csv"
     with dump.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.writer(handle)
-        writer.writerow(["uid", "condition", "reference_transformed", "hypothesis_transformed", "wer"])
+        writer.writerow(["uid", "condition", "reference_transformed", "hypothesis_transformed",
+                         "wer"])
         for condition in ("raw", "whisper_norm"):
-            writer.writerow([*pairs[0][:1], condition, *pairs[0][1:], f"{source['per_file'][0]['wer']:.6f}"])
+            writer.writerow([*pairs[0][:1], condition, *pairs[0][1:],
+                             f"{source['per_file'][0]['wer']:.6f}"])
     records.append({"name": dump.name, "sha256": hashlib.sha256(dump.read_bytes()).hexdigest()})
     aggregate_path = tmp_path / "aggregate.json"
     aggregate_path.write_text(json.dumps({"rows": grid, "provenance": {"inputs": digests}}))

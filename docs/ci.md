@@ -49,13 +49,13 @@ python -m pip check
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q \
   tests/test_bootstrap_ci.py tests/test_condition_ci.py \
   tests/test_speaker_cluster_ci.py tests/test_scorer_sensitivity.py \
-  tests/test_footprint.py \
+  tests/test_repetition_sensitivity.py tests/test_footprint.py \
   tests/test_footprint_job_scope.py tests/test_benchmark_masking.py \
   tests/test_wer_normalisation.py tests/test_wer_aggregate.py \
   tests/test_confidence.py tests/test_review_repeated_passages.py \
   tests/test_provenance.py tests/test_example_variants.py \
   tests/test_installed_distribution.py \
-  tests/test_verify_regeneration.py
+  tests/test_verify_regeneration.py tests/test_build_input_deposit.py
 python tools/verify_regeneration.py --keep
 ```
 
@@ -101,5 +101,7 @@ original raw and Whisper-normalised per-utterance score and aggregate before
 applying the alternative apostrophe rule. It reports gains on shared
 utterances under each rule, a fixed sample shared across rules and any new
 empty-reference exclusions. The exploratory outputs are separate from the
-canonical WER results. Their inputs are not yet publicly archived, so this
-analysis remains outside the eleven-artefact automatic regeneration gate.
+canonical WER results. Their inputs are deposited in a separate data
+record (<https://doi.org/10.5281/zenodo.23442874>), not in this
+checkout, so this analysis remains outside the eleven-artefact automatic
+regeneration gate.

@@ -26,8 +26,8 @@ _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from evaluation import benchmark_podcast as bp  # noqa: E402
-from provenance import canonical_json, sha256_bytes  # noqa: E402
+from evaluation import benchmark_podcast as bp
+from provenance import canonical_json, sha256_bytes
 
 _CASE = _ROOT / "output" / "case_study"
 _COMMIT = "fc652ab8714435260bdea037efcf83b277c22115"

@@ -135,3 +135,55 @@ def test_the_summary_says_what_it_scored(tmp_path):
     wer.write_summary_json([r], path)
     assert set(json.loads(path.read_text(encoding="utf-8"))) == {
         "summary", "per_file"}
+
+
+def _unscorable_pairs(tmp_path: Path) -> tuple[Path, Path]:
+    """Two matched pairs that fail before jiwer is needed: an empty
+    reference (ValueError) and a hypothesis JSON that does not parse."""
+    refs, hyps = tmp_path / "ref", tmp_path / "hyp"
+    refs.mkdir()
+    hyps.mkdir()
+    (refs / "empty.txt").write_text("  ,  ", encoding="utf-8")
+    (hyps / "empty.txt").write_text("hello", encoding="utf-8")
+    (refs / "broken.txt").write_text("hello world", encoding="utf-8")
+    (hyps / "broken.json").write_text("{not json", encoding="utf-8")
+    return refs, hyps
+
+
+def test_a_skipped_pair_is_counted_and_named(tmp_path, capsys):
+    """SC-19: a pair that failed to score left only a stderr line, so a
+    summary over fewer pairs than were matched read as complete."""
+    refs, hyps = _unscorable_pairs(tmp_path)
+    skipped: list[dict] = []
+    assert wer.evaluate_directory(refs, hyps, skipped=skipped) == []
+    assert [(s["hypothesis"], s["reference"]) for s in skipped] == [
+        ("broken.json", "broken.txt"), ("empty.txt", "empty.txt")]
+    assert skipped[0]["error"].startswith("JSONDecodeError: ")
+    assert skipped[1]["error"].startswith("ValueError: Reference text is empty")
+    assert capsys.readouterr().err.count("Skipping") == 2
+    # Without a list the call behaves as it always has.
+    assert wer.evaluate_directory(refs, hyps) == []
+
+
+def test_the_summary_records_the_skipped_pairs(tmp_path):
+    refs, hyps = _unscorable_pairs(tmp_path)
+    report, summary = tmp_path / "out" / "r.csv", tmp_path / "out" / "s.json"
+    assert wer.main(["--hypothesis", str(hyps), "--reference", str(refs),
+                     "--report", str(report), "--summary", str(summary)]) == 0
+    payload = json.loads(summary.read_text(encoding="utf-8"))
+    assert payload["summary"] == {"n_skipped_pairs": 2}
+    assert [s["hypothesis"] for s in payload["skipped_pairs"]] == [
+        "broken.json", "empty.txt"]
+    assert payload["per_file"] == []
+
+
+def test_a_summary_with_nothing_skipped_says_so(tmp_path):
+    r = wer.PairResult(name="a", wer=0.5, mer=0.5, wil=0.5, cer=0.1, hits=1,
+                       substitutions=1, deletions=0, insertions=0,
+                       reference_words=2, hypothesis_words=2)
+    path = tmp_path / "s.json"
+    wer.write_summary_json([r], path, skipped=[])
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    assert payload["summary"]["n_skipped_pairs"] == 0
+    assert payload["summary"]["files"] == 1
+    assert payload["skipped_pairs"] == []

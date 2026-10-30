@@ -382,7 +382,7 @@ def mix_meeting(
     for begin, end, row in usable:
         try:
             audio, sr_in = decode(row)
-        except Exception:  # noqa: BLE001 - one bad clip must not lose a meeting
+        except Exception:  # one bad clip must not lose a meeting
             skipped += 1
             continue
         audio = _resample(_as_mono(audio), int(sr_in), sample_rate)
@@ -464,7 +464,7 @@ def concat_meeting(
     for row in selected:
         try:
             audio, sr_in = decode(row)
-        except Exception:  # noqa: BLE001
+        except Exception:  # counted in skipped_utterances
             skipped += 1
             continue
         audio = _resample(_as_mono(audio), int(sr_in), sample_rate)

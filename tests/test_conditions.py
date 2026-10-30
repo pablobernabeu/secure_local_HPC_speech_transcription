@@ -121,7 +121,8 @@ def test_condition_dataclass_is_immutable():
 def test_known_conditions_are_registered():
     """The seven core conditions must all be present."""
     names = {c.name for c in list_conditions()}
-    assert {"raw", "repetition_fix", "whisper_norm", "filler_strip", "dedup_window", "punct_strip", "case_fold"}.issubset(names), (
+    assert {"raw", "repetition_fix", "whisper_norm", "filler_strip", "dedup_window",
+            "punct_strip", "case_fold"}.issubset(names), (
         f"Missing core conditions; found {names}"
     )
 

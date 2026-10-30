@@ -18,7 +18,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from evaluation.fetch_codex_mentis import (  # noqa: E402
+from evaluation.fetch_codex_mentis import (
     parse_feed,
     resolve_feed_url,
     _parse_duration,

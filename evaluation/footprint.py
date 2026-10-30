@@ -94,13 +94,22 @@ Which jobs the ledger counts (OUTPUTS-05):
   the cluster, under categories of their own, so that the breakdown keeps
   them apart from the runs that produced results.
 
-The committed ledger was captured with the query above on 2026-10-04 at
-13:45 BST, after every job of the evaluation had finished, the last to
-end (8978760) at 11:38. It holds 197 jobs, 7662519 (2026-05-16) to
-8983112 (2026-10-04), and its provenance holds the query, the dump's
-SHA-256 and the seven jobs of this project left out, all cancelled while
-pending. The dump is not committed, since it lists the shared account's
-other projects.
+The committed ledger was captured with the query above on 2026-10-30 at
+00:02 GMT, after every job of the evaluation had finished, the last to
+end being the Spanish V100 control (9124863, 2026-10-19 12:20 BST). It
+holds 203 jobs, from 7662519 (2026-05-16) to the six of 17 to 19 October
+2026 that the previous capture, of 2026-10-04 at 13:45 BST, preceded:
+three test-suite runs (9124828, 9124851 and 9134598), the case study's
+re-run (9124852) and the control's pre-flight and full split (9124739,
+9124863). Its first 197 rows are that capture's ledger unchanged. Its
+provenance holds the query, the dump's SHA-256 and the seven jobs of this
+project left out, all cancelled while pending. One more such job is not
+in the dump at all: a case-study submission of 2026-10-17 (9124829),
+cancelled while it waited on a dependency that could no longer be met,
+never became eligible to run (sacct Eligible ``Unknown``), and sacct's
+time window, without ``--state``, selects jobs by when they were
+eligible. It held no allocation and drew no power. The dump is not
+committed, since it lists the shared account's other projects.
 
 It replaced a 38-job ledger captured on 2026-06-27 (06f2fa7), which
 recorded ``a100`` for every GPU job. The nodes those jobs ran on are P100,
@@ -389,6 +398,14 @@ _CATEGORY: dict[str, str] = {
     # The determinism check on a processor without a GPU
     # (hpc/submit_determinism_cpu.sh), first run as job 8978759 (2026-10-04).
     "determinism_cpu": "Determinism check (CPU only)",
+    # The Spanish V100 control of the multilingual wave (audit finding
+    # NEW-05, hpc/runs/fleurs_es419_v100.env): its five-utterance pre-flight,
+    # 9124739, and the full split, 9124863, run on 2026-10-19 from the clone
+    # ~/paper_speech_transcription_ctl_es419. The pre-flight's name has the
+    # wave's pf_ prefix but no stage _STAGE_CATEGORY knows, so both names
+    # are listed here.
+    "pf_es419_v100": "Pre-flight runs",
+    "ctl_es419_v100": "WER multilingual (FLEURS)",
 }
 
 #: Names of this project's jobs that ran from outside its directories, each

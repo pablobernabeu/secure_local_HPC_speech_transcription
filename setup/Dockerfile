@@ -92,6 +92,11 @@ COPY transcription.py audio_io.py confidence.py provenance.py preflight.py \
      ner_masking.py audio_redaction.py voice_anonymisation.py ./
 COPY evaluation/ ./evaluation/
 COPY data/ ./data/
+# transcription.py reads the release from versions.csv beside it, as the
+# wheel that setup.py builds ships it. Without the file, and with no git
+# checkout or installed distribution in the image, every transcript and run
+# manifest would record the version as "Unknown".
+COPY versions.csv ./
 
 # Build-time check: the image fails to build rather than failing at run time
 # when an installed version differs from the lock or a package loads from

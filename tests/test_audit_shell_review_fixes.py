@@ -18,7 +18,7 @@ from pathlib import Path
 
 import pytest
 
-from test_audit_shell_job_exit_status import _PYTHON_STUB  # noqa: I001
+from test_audit_shell_job_exit_status import _PYTHON_STUB
 from test_audit_shell_transcription_wrapper import (
     REPO, _copy_lf, _posix, _run, _write_stub, needs_bash,
 )
@@ -388,7 +388,8 @@ def test_each_der_record_sets_what_its_committed_run_ran_with(
     if summary["mix_mode"] == "timeline":
         assert values["CACHE_DIR"] == "/d/ami_cache"
     else:
-        assert values["CACHE_DIR"].startswith("/d/speech_transcription_env/output/evaluation/repro/")
+        assert values["CACHE_DIR"].startswith(
+            "/d/speech_transcription_env/output/evaluation/repro/")
 
 
 @pytest.mark.parametrize("prefix", ["der_sweep", "der_sweep2"])

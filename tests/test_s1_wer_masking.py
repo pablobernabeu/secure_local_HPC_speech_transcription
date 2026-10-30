@@ -19,7 +19,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from evaluation import benchmark_masking as bm  # noqa: E402
+from evaluation import benchmark_masking as bm
 
 
 def _csv(tmp_path: Path, rows) -> Path:

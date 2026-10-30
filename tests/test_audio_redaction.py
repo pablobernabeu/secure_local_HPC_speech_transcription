@@ -21,7 +21,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from audio_redaction import (  # noqa: E402
+from audio_redaction import (
     find_name_spans,
     read_wav,
     redact_spans,

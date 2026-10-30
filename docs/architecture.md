@@ -2,11 +2,13 @@
 
 The workflow is a set of top-level Python modules with one entry point,
 `transcription.py`, and an evaluation package that measures what it does.
-`transcription.py` holds the pipeline itself; the other modules each own
-one concern that the pipeline, the evaluation code or a user calls
+`transcription.py` holds the pipeline itself, and the other modules each
+own one concern that the pipeline, the evaluation code or a user calls
 separately. The terms used here are defined in [glossary.md](glossary.md).
 
 ## Modules
+
+The table gives each module's role.
 
 | Module | Role |
 | --- | --- |
@@ -23,7 +25,7 @@ separately. The terms used here are defined in [glossary.md](glossary.md).
 | `hpc/`, `setup/`, `tools/` | SLURM job scripts, installation and model-download scripts, and maintenance scripts. |
 
 `setup.py` installs the top-level modules through `py_modules` and
-`evaluation` and `local_app` as packages; `transcription.py` imports
+`evaluation` and `local_app` as packages. `transcription.py` imports
 `audio_io`, `confidence` and `provenance`, so all of them must be present
 for a run to write its review file and manifest.
 
@@ -38,7 +40,7 @@ for a run to write its review file and manifest.
    `output/enhanced_audio/` with `--save-enhanced-audio`.
 2. Speaker diarisation, only with `--speaker-attribution`. The pipeline is
    loaded from `--diarization-config`, then `--diarization-model-path`,
-   then the HuggingFace loader; if a named local pipeline fails, the Hub
+   then the HuggingFace loader. If a named local pipeline fails, the Hub
    is not tried. The recording is decoded with `audio_io` and handed to
    pyannote as a waveform.
 3. Speech recognition with the Whisper model given by `--model`
@@ -65,7 +67,7 @@ for a run to write its review file and manifest.
    `CLEAN_TEXT_STAGES` (the English-only ones skipped for other
    languages), then name masking.
 8. The transcript as `.txt` and `.docx`, and with speaker labels a second
-   `_with_speakers` pair; with `--save-name-masking-logs`, the masking log.
+   `_with_speakers` pair, and with `--save-name-masking-logs`, the masking log.
 9. The manifest, `_manifest.json`, covering every artefact the run wrote.
 
 A run that could not produce something it was asked for, such as speaker
@@ -76,16 +78,29 @@ missing and reports itself incomplete.
 
 Masking works word by word, sentence by sentence. A word is masked when
 it is capitalised and is in the name dictionary, and replaced with
-`[SURNAME]` for a dictionary surname and `[NAME]` otherwise; an honorific
-followed by a capitalised dictionary name becomes `[TITLE]`. The
+`[SURNAME]` for a dictionary surname and `[NAME]` otherwise. An honorific
+(`TITLE_WORDS`) followed by a capitalised dictionary name becomes
+`[TITLE]`, before a possessive too ("Dr. Smith's" becomes
+"[TITLE] [SURNAME]'s"). An abbreviated title's full stop does not end
+the sentence. Honorifics count in any case except "Miss", which counts
+only capitalised, and "Ms", only so spelt. The verb in "I miss Sarah"
+therefore stays, and a lower-case "ms." (the unit) or "MS." ends its
+sentence ([advanced_usage.md](advanced_usage.md#honorifics) gives
+examples). The
 capitalisation requirement is deliberate: it is what keeps ordinary
 lower-case words from being masked, and it is also why a name
 transcribed in lower case is not masked. The masker's `case_insensitive`
-parameter drops the requirement, but no command-line option sets it.
+parameter drops the requirement, for the name after an honorific as
+well, but no command-line option sets it.
 The common-word filter removes from the dictionary names that are also
-common English words, and names shorter than three letters. The optional
-named-entity stage adds further masks and never removes one. Each
-masking-log row records which rule applied.
+common English words, among them the curated Chinese names "An" and "Ai",
+which a sentence-initial article or the acronym AI would otherwise match.
+The Facebook lists also lose every name shorter than three letters, but
+the curated dictionary keeps its other short names, such as "Li" and
+"Ed". [advanced_usage.md](advanced_usage.md#the-common-word-filter) gives
+the filter's default and an example. The optional named-entity stage adds
+further masks and never removes one. Each masking-log row records which
+rule applied.
 
 ## Output artefacts
 
@@ -96,6 +111,9 @@ with the options that produce them, in the README's output structure.
 
 ## Enhancement parameters
 
+The table lists the constants of `enhance_audio`, which calls them the
+'interview_clarity' preset. The source of their values is not recorded.
+
 | Parameter | Value | Description |
 | --- | --- | --- |
 | Sampling rate | 16 kHz | Rate the audio is resampled to |
@@ -104,6 +122,3 @@ with the options that produce them, in the README's output structure.
 | Compression | 4:1 above 0.1 | Dynamic range compression |
 | Gain | 3.61x | Amplification, applied first |
 | Peak limit | 0.95 | Level the output is scaled down to when it exceeds it |
-
-These are the constants of `enhance_audio`, which calls them the
-'interview_clarity' preset. The source of their values is not recorded.

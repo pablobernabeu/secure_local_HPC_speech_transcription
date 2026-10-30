@@ -4,7 +4,7 @@
   "digest_policy": "Exact recovered summary bytes; LF-normalised committed aggregate and input receipt.",
   "aggregate_sha256_lf": "5a4626c49fff01f42adfc9077ed59433779175f5969230739771a98c3ec8dba9",
   "input_receipt_sha256_lf": "b532f9892255a1ab6c83c9dca5b9c66bca76ffbc654617a3331dc7ccea6ff146",
-  "extractor_sha256_lf": "e2f8ff33c675c60570c34d76aa2443a4e4efd835ebeb547df2d41d49b2cbd30e",
+  "extractor_sha256_lf": "cfba05f2dd07b3530422d4dc56e8e74525f391d6b0ed9e58b53ab4f53730b478",
   "cells_verified": 255,
   "decode_profiles": 15,
   "scope": "Recorded metadata extracted from all 255 hash-verified summaries. Each suite/model profile is identical across its 17 conditions. Corpus text and deployment locators are omitted.",

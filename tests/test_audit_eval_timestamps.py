@@ -19,7 +19,7 @@ import pytest
 np = pytest.importorskip("numpy")
 pytest.importorskip("torch")
 
-from evaluation import benchmark_timestamps as bt  # noqa: E402
+from evaluation import benchmark_timestamps as bt
 
 _AUDIO = np.zeros(16_000, dtype=np.float32)
 

@@ -17,8 +17,8 @@ if str(REPO_ROOT) not in sys.path:
 
 pytest.importorskip("soundfile")
 
-from evaluation import audit_reconstruction as ar  # noqa: E402
-from evaluation import benchmark_der as bd  # noqa: E402
+from evaluation import audit_reconstruction as ar
+from evaluation import benchmark_der as bd
 
 SR = 16_000
 

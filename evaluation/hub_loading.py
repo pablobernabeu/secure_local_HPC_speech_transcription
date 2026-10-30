@@ -63,7 +63,7 @@ def pinned_checkpoint(loader, repo_id):
     spelt ``"<repo>@<revision>"``, the form pyannote.audio 3.x parses. A
     repository with no pinned revision, or a local path, loads as given.
     """
-    from evaluation.revisions import revision_for  # noqa: PLC0415
+    from evaluation.revisions import revision_for
 
     revision = revision_for(repo_id)
     if revision is None:

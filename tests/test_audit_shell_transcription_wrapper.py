@@ -344,7 +344,8 @@ def _worker_setup(fake_repo: dict, exit_code: int = 0) -> tuple[Path, Path]:
     _write_stub(fake_repo["stubs"] / "module", "exit 0\n")
     _write_stub(fake_repo["stubs"] / "python",
                 'if [[ "$1" == "--version" ]]; then echo "Python 3.12"; exit 0; fi\n'
-                'if [[ "${1:-} ${2:-}" == "-m preflight" ]]; then exit "${STUB_RC_preflight:-0}"; fi\n'
+                'if [[ "${1:-} ${2:-}" == "-m preflight" ]]; then '
+                'exit "${STUB_RC_preflight:-0}"; fi\n'
                 f'printf "%s\\0" "$@" > "{_posix(record)}"\n'
                 f"exit {exit_code}\n")
     return repo, record

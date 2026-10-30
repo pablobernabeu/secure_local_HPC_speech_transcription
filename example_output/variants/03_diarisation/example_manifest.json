@@ -53,7 +53,7 @@
       "error": null
     },
     "software": {
-      "version": "2.0.0",
+      "version": "2.1.0",
       "packages": {
         "python": "3.12.12",
         "transformers": "4.57.1",
@@ -79,7 +79,7 @@
     {
       "path": "example_transcript.txt",
       "bytes": 2716,
-      "sha256": "fd4ca7c5b760b2293ec073cdc42880d7fe662784a8a5fab813f1d5f1bcb7a8ce"
+      "sha256": "44c6ad26acb1b8f19bd7a2692f8cf481db4e15f5d013cc97b210e210c1caa25d"
     },
     {
       "path": "example_transcript.vtt",
@@ -99,7 +99,7 @@
     {
       "path": "example_transcript_with_speakers.txt",
       "bytes": 3033,
-      "sha256": "27e0a36cd44a38c5cd51e58397f3ba8f32cc5c18841fe858a5ee2282f5ace7fa"
+      "sha256": "473fe616ec6aec4de73442903317408724385974d3906fb9b5d5a16c6db8bde6"
     }
   ],
   "input_audio": {
@@ -107,5 +107,5 @@
     "bytes": 44,
     "sha256": "ba584a378b11d9e9c98736fd8c256fe1453a84ee4139416d24b07acff424f0fb"
   },
-  "manifest_sha256": "6e053e7a712998a6fc69defd9c14184489fdf4469069227df7e49dca06a69db9"
+  "manifest_sha256": "a5182c0477202151b125baf4f4d63dd45476c72909574c7e7ea9281b72184f9b"
 }

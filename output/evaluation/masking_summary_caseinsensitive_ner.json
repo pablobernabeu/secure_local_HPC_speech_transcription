@@ -236,23 +236,23 @@
   "ner_stage": true,
   "curated_names_sha256": "e60dec823e338a7084bfed812b9259bbc081cceebec3c1ad1df6e7da6c130a0a",
   "run_metadata": {
-    "git_commit": "eaef44ae17722bb40eac9d22cc0eeb175f2c6716",
-    "git_dirty": true,
+    "git_commit": "1d2f2acfa6428eaade8a45c81fac132cd85809b3",
+    "git_dirty": false,
     "python": "3.13.7",
-    "platform": "Windows-11-10.0.26200-SP0",
+    "platform": "Windows-11-10.0.26300-SP0",
     "packages": {
       "torch": "2.12.1",
       "torchaudio": null,
       "transformers": "5.13.1",
       "pyannote.audio": null,
       "jiwer": null,
-      "datasets": null,
+      "datasets": "5.1.0",
       "numpy": "2.3.2",
       "scipy": "1.17.1",
       "librosa": null,
       "soundfile": "0.13.1",
       "gliner": "0.2.28",
-      "huggingface_hub": "1.22.0"
+      "huggingface_hub": "1.33.0"
     }
   },
   "ner": {

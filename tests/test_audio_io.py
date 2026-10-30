@@ -23,8 +23,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-import audio_io  # noqa: E402
-from audio_io import (  # noqa: E402
+import audio_io
+from audio_io import (
     audio_support,
     ensure_ffmpeg_on_path,
     find_ffmpeg,

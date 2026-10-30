@@ -20,7 +20,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-import confidence  # noqa: E402
+import confidence
 
 _OLD_WORD_RE = re.compile(r"[^\W\d_]+", re.UNICODE)
 
