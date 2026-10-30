@@ -1,5 +1,5 @@
 {
-  "cache_dir": "/data/educ-lift/educ1242/ami_cache/test_timeline_full",
+  "cache_dir": "$DATA/ami_cache/test_timeline_full",
   "manifest": {
     "split": "test",
     "mix_mode": "timeline",

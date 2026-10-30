@@ -10,13 +10,14 @@
 #
 # Usage (from the repository root on ARC):
 #
-# Account: either project account is valid; the examples use educ-intract.
-# Choose by current load, which changes: see the BALANCE note in .hpc-plan.yaml.
+# Account: pass your own project account with --account. With more than
+# one, choose by current load, which changes: see the BALANCE note in
+# .hpc-plan.yaml.
 #
-#   sbatch --account=educ-intract hpc/submit_ami_cache.sh
+#   sbatch --account='<your-project>' hpc/submit_ami_cache.sh
 #
 #   # One split only
-#   SPLITS=validation sbatch --account=educ-intract hpc/submit_ami_cache.sh
+#   SPLITS=validation sbatch --account='<your-project>' hpc/submit_ami_cache.sh
 #
 # Overrides (set before sbatch): SPLITS ("validation test"), MIX_MODE
 # (timeline), MAX_MINUTES (unset = whole meetings), CACHE_DIR

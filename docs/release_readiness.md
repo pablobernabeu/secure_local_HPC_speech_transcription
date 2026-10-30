@@ -235,8 +235,10 @@ and the limits of the format review are recorded in
 [journal_profile.json](../manuscript/journal_profile.json).
 The author supplied the funding statement (no specific grant) and the
 corresponding postal address on 17 October 2026 and gives no telephone
-number. Optional ORCID information can be added when supplied. The availability statements cite release 2.0.0 and the input deposit,
-whose records are described above.
+number. Optional ORCID information can be added when supplied. The
+availability statements cite the release the manuscript is rendered from
+and the input deposit, whose records are described above and, for 2.1.1,
+in the last section.
 
 The remaining empirical issues are recorded individually in `ISSUES.md`.
 Scorer sensitivity can be assessed from retained hypotheses without new
@@ -354,3 +356,39 @@ section changes nothing else.
   snapshot of this tree, whose digest a detached manifest records, as for
   2.0.0. The reserved DOIs are unchanged: 10.5281/zenodo.23442766 for the
   software and 10.5281/zenodo.23442874 for the inputs.
+
+## Release 2.1.1, 30 October 2026
+
+Release 2.1.1 carries the corrections of the pre-publication gate, which
+`ISSUES.md` lists as PG-01 to PG-32 and `CHANGELOG.md` summarises. Release
+2.1.0 was tagged on GitHub (7bb5ff8) but never deposited, so 2.1.1 takes
+its reserved DOI. Its tree was checked at 4404c12; the commit that adds
+this section changes nothing else.
+
+- ARC job 9217052 ran the whole suite on a clean clone of 155d240, whose
+  code 4404c12 shares: 2,503 passed, 1 skipped, 1 expected failure and 1
+  failure, `tests/test_installed_distribution.py` expecting 2.1.0 by a copy
+  of the old same-date rule (PG-32). 4404c12 corrects that test alone, and
+  it passes locally. Locally, under Python 3.13.7 with the CPU build of
+  torch, the whole suite passed at 5b46974, before the version bump: 2,395
+  passed, 43 skipped for absent optional packages or symlink rights, and 1
+  expected failure. The CI selection of 20 test files at 155d240 gave 377
+  passed, 4 skipped for the absent jiwer, and the same one failure.
+- `tools/verify_regeneration.py` regenerated all eleven CPU artefacts
+  identically, `ruff check .` reported nothing, and the HTML and the
+  98-page PDF rendered at 4404c12 with the claims-check passing and no
+  unresolved cross-reference.
+- The data record holds three files:
+  `sweep_inputs_2026-10.zip` (62,808,954 bytes, SHA-256
+  `4fb2071189c9956f22604d47a2b82e0778b69eeeee460bb7da2cba6c31a0e237`),
+  whose 273 members equal the 2.1.0 build's except `README.md`;
+  `multilingual_hardware_inputs_2026-10.zip` (3,494,333 bytes, SHA-256
+  `e5fdecc54ecaa9f85d16c2250afe1f9bf0772b1352466b73162afeb1a7e21db0`),
+  built by `tools/build_arc_inputs_deposit.py`; and the sanitised
+  `decoder_source_6f9bf56.zip` (8,584,027 bytes, SHA-256
+  `c042aa8580cb8afeefbe425fbd177b8c12d328c3db3cad4a42dbb638c63cdd46`),
+  built by `tools/build_decoder_source_deposit.py` from the `git archive`
+  of 6f9bf56 (`b66a5119…`). The software record takes one ZIP, the `git
+  archive` of the public snapshot of this tree, whose digest a detached
+  manifest records. The reserved DOIs are unchanged.
+

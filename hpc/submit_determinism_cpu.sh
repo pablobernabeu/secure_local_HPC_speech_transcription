@@ -25,7 +25,7 @@
 # Usage (submit from the repository root on ARC):
 #
 #   ( set -a; . hpc/runs/determinism_cpu.env || exit 1; set +a
-#     sbatch --account=educ-intract hpc/submit_determinism_cpu.sh )
+#     sbatch --account='<your-project>' hpc/submit_determinism_cpu.sh )
 #
 # Overrides (set before sbatch): DET_SUITE (ami), MODEL
 # (openai/whisper-large-v3), DET_LIMIT (200), DET_SEEDS ("0 1"), DET_REPEATS

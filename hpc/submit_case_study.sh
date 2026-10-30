@@ -67,7 +67,7 @@
 #   OVERWRITE=1
 #
 # Submit from the repository root:
-#   sbatch --account=educ-intract hpc/submit_case_study.sh
+#   sbatch --account='<your-project>' hpc/submit_case_study.sh
 # =============================================================================
 
 #SBATCH --job-name=case_study

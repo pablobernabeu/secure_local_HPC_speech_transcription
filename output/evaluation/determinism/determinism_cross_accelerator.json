@@ -533,7 +533,7 @@
     }
   },
   "meta": {
-    "description": "What each run compared in determinism_cross_accelerator.json was, where its inputs were copied from, and how each fact is known. Written by hand from the job logs, the runs' own outputs and environment records, Slurm's accounting and node features, the ARC clones' git reflogs, the Hugging Face cache, the environment's package records and the cluster's CUDA modulefiles, all read on ARC on 2026-10-04; evaluation.determinism_cross copies it into the comparison unchanged. DATA is /data/educ-lift/educ1242.",
+    "description": "What each run compared in determinism_cross_accelerator.json was, where its inputs were copied from, and how each fact is known. Written by hand from the job logs, the runs' own outputs and environment records, Slurm's accounting and node features, the ARC clones' git reflogs, the Hugging Face cache, the environment's package records and the cluster's CUDA modulefiles, all read on ARC on 2026-10-04; evaluation.determinism_cross copies it into the comparison unchanged. DATA is $DATA.",
     "comparison": "Five runs of one decode in four hardware configurations, three with a GPU and one without. A configuration with a GPU is a GPU model together with its node: the host processor and the software beneath the Python environment (driver and CUDA module), which only the two V100 runs recorded. Those two, the condition sweep's V100 pass (v100) and the V100 run of the check itself (v100_seed0), ran on the same node, htc-g004, with the same driver and CUDA module, so their pair holds the configuration fixed while the seed, the code commit, the process and the cores allocated change; which of the node's two cards each was given is not recorded. In the fourth configuration, the CPU run, the model ran on the node's processor in float32, where the GPUs decoded in the checkpoint's float16, so that configuration changes the hardware and the precision together. The runs also differ in seed, code commit and process, and the differences list sets out each difference with what is known of it. They share the model and corpus snapshots, the installed Python packages, the batching and the generation settings. The H100, L40S, CPU and v100_seed0 runs decoded their 200 utterances repeatedly, so whether each repeats itself was measured; the sweep's V100 pass decoded each utterance once, and the second decode its preflight made covers only the first 10. The CPU, L40S and both V100 runs kept their hypotheses and are compared word for word. The H100 run's hypotheses were lost, so it enters through the per-utterance error rates its log printed, which can show that its words differ but never that they agree. A difference between runs in two configurations therefore shows that the text changed from one hardware configuration to another. The v100_seed0 run shares the L40S run's seed and process, so their pair sets the configuration apart from those two but not from the code commit, and no pair isolates the GPU model from its node or the processor from the precision.",
     "runs": {
       "h100": {
@@ -633,7 +633,7 @@
         "job": "8978759",
         "date": "2026-10-04",
         "node": "htc-c074",
-        "identified_by": "the environment record the job wrote beside its results, environment/determinism_cpu_8978759.txt, reads host htc-c074, Slurm job 8978759, job name determinism_cpu and account educ-intract; the log, ~/paper_speech_transcription_audit_w2b/logs/determinism_cpu_8978759.out, reads 'Job: 8978759   Node: htc-c074' and names the output directory below; sacct gives 8978759 as determinism_cpu, COMPLETED with exit code 0:0, on htc-c074 from 04:51:19 to 06:08:35 BST with 16 cores and 32 GB",
+        "identified_by": "the environment record the job wrote beside its results, environment/determinism_cpu_8978759.txt, reads host htc-c074, Slurm job 8978759, job name determinism_cpu and account <project-b>; the log, ~/paper_speech_transcription_audit_w2b/logs/determinism_cpu_8978759.out, reads 'Job: 8978759   Node: htc-c074' and names the output directory below; sacct gives 8978759 as determinism_cpu, COMPLETED with exit code 0:0, on htc-c074 from 04:51:19 to 06:08:35 BST with 16 cores and 32 GB",
         "accelerator": "none: the model ran on the processor",
         "accelerator_source": "benchmark.decode in the run's three WER summaries, wer_seed0_run1.json, wer_seed0_run2.json and wer_seed1_run1.json, which stay on ARC in the directory of its inputs below and are not committed (device cpu, gpu null), and its environment record (cuda_available False, nvidia-smi not available). The job asked Slurm for no GPU, Slurm's record of htc-c074 lists none (Gres=(null)), and the job script empties CUDA_VISIBLE_DEVICES and passes --device cpu",
         "host_processor": "AMD EPYC 9634 84-Core Processor (Genoa)",
@@ -667,7 +667,7 @@
         "job": "8978760",
         "date": "2026-10-04",
         "node": "htc-g004",
-        "identified_by": "the environment record the job wrote beside its results, environment/determinism_8978760.txt, reads host htc-g004, Slurm job 8978760, job name determinism and account educ-intract; the log, ~/paper_speech_transcription_audit_w2b/logs/determinism_8978760.out, reads 'Job: 8978760   Node: htc-g004' and names the output directory below; sacct gives 8978760 as determinism, COMPLETED with exit code 0:0, on htc-g004 from 11:22:53 to 11:38:34 BST with 8 cores, 48 GB and one V100 (gres/gpu:v100=1)",
+        "identified_by": "the environment record the job wrote beside its results, environment/determinism_8978760.txt, reads host htc-g004, Slurm job 8978760, job name determinism and account <project-b>; the log, ~/paper_speech_transcription_audit_w2b/logs/determinism_8978760.out, reads 'Job: 8978760   Node: htc-g004' and names the output directory below; sacct gives 8978760 as determinism, COMPLETED with exit code 0:0, on htc-g004 from 11:22:53 to 11:38:34 BST with 8 cores, 48 GB and one V100 (gres/gpu:v100=1)",
         "accelerator": "Tesla V100-PCIE-32GB",
         "accelerator_source": "the gpu.txt the job wrote, committed as output/evaluation/determinism/v100_8978760/gpu.txt; benchmark.decode.gpu in its three WER summaries, wer_seed0_run1.json, wer_seed0_run2.json and wer_seed1_run1.json, which stay on ARC in the directory of its inputs below and are not committed; the GPU line of its environment record; and sacct's gres/gpu:v100=1, which hpc/runs/determinism_v100.env asked for through SBATCH_GRES. htc-g004 holds two V100 cards (Gres=gpu:v100:2 in Slurm's node record), and which of them the job was given is not recorded",
         "host_processor": "Intel Xeon Platinum 8268 (Cascade Lake)",
@@ -729,7 +729,7 @@
   },
   "meta_file": {
     "file": "determinism_cross_accelerator_runs.json",
-    "sha256_lf": "7f157a00760113f5c919689be6636e8ca80ee89fe205c201001a2438d5182e54"
+    "sha256_lf": "c39f18cff8a1729fa26667a6996ef005e6ece0c052ac1bc352e639e259e7f34a"
   },
   "run_metadata": {
     "git_commit": "203d3ba86eca6cc4e6db7e93d40cfc62efc71899",

@@ -20,13 +20,14 @@
 #
 # Usage (submit from the repository root on ARC):
 #
-# Account: either project account is valid; the examples use educ-intract.
-# Choose by current load, which changes: see the BALANCE note in .hpc-plan.yaml.
+# Account: pass your own project account with --account. With more than
+# one, choose by current load, which changes: see the BALANCE note in
+# .hpc-plan.yaml.
 #
-#   sbatch --account=educ-intract hpc/submit_disfluency.sh
+#   sbatch --account='<your-project>' hpc/submit_disfluency.sh
 #
 #   # A quick pilot over the first 200 utterances
-#   WER_LIMIT=200 sbatch --account=educ-intract hpc/submit_disfluency.sh
+#   WER_LIMIT=200 sbatch --account='<your-project>' hpc/submit_disfluency.sh
 #
 # Overrides (set before sbatch): WER_LIMIT (unset = full split), MODEL
 # (openai/whisper-large-v3), REPORT_DIR (default

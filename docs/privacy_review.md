@@ -135,17 +135,15 @@ inventory before a publication decision. This licence review is not a
 review of their individual rows.
 
 The remaining author decisions are to retain or omit the public podcast
-original-name logs and document-editor metadata in the next release, to
-review the additional historical log token, and to decide whether exposing
-deployment accounts/local paths in new archives is necessary. Public
-podcast names can be retained as explicitly documented historical examples
-if the author accepts that disclosure; deployment identifiers have a
-different provenance purpose and should be considered separately. A
-sanitised release copy, if chosen, needs documented transformations and
-new digests while preserving the audited originals. Publication of any
-new hypothesis archive also awaits its content and attribution inventory.
-These decisions are unresolved; the review supports a partly resolved G6,
-not a claim that the repository or its history is free of personal data.
+original-name logs and document-editor metadata in the next release, and
+to review the additional historical log token. Public podcast names can be
+retained as explicitly documented historical examples if the author
+accepts that disclosure. Publication of any new hypothesis archive also
+awaits its content and attribution inventory. These decisions are
+unresolved, and the review supports a partly resolved G6, not a claim that
+the repository or its history is free of personal data. The decision on
+deployment identifiers was taken on 30 October 2026, and
+[the last section](#deployment-identifiers-in-release-211) records it.
 
 An incremental Gitleaks scan of `309f1d0..41fe712` on 6 October 2026
 returned no findings. It covered the submission and archive follow-up
@@ -206,3 +204,88 @@ link or PAX metadata. The transformation changes the archive hash, not
 the source-input hashes. The detached review inventory records both
 archives and this derivation. It remains a candidate pending the rights,
 attribution and retention decisions above.
+
+## Deployment identifiers in release 2.1.1
+
+On 30 October 2026 the author decided to sanitise deployment identifiers
+in release 2.1.1 and its deposits: the Oxford ARC user name, the two ARC
+project account codes, the absolute ARC paths that contain them, and the
+names of other projects' jobs on the shared account. They point to a
+person and to projects, and no result needs them to be read. The names of
+the cluster (`htc`), its nodes, its login node, its partitions and its QoS
+stay, because they identify the public cluster that the paper names.
+
+Each change is a plain string replacement, made in this order. The
+originals are described, not quoted, since quoting them here would undo
+the change:
+
+| Original | Replacement |
+| --- | --- |
+| The user's data directory under either project account, `/data/<account>/<user>` | `$DATA` |
+| The user's home directory, `/home/<user>` | `$HOME` |
+| The ARC user name anywhere else | `<user>` |
+| The first project account, where a record states which account ran a job | `<project-a>` |
+| The second project account, likewise | `<project-b>` |
+| The account in a usage or reproduction command, `--account=<account>` | `--account='<your-project>'` |
+| The name of another study's job | A made-up name of the same shape, such as `other_fit` or `other_render` |
+
+ARC sets `$DATA` to the user's project data directory, which the scripts
+already assumed. The command placeholder is quoted because bash reads an
+unquoted `<` and `>` as redirections: a command pasted unchanged then
+fails at sbatch, which rejects the account, and the tests that run the
+records' commands still run them. The lines that said either project
+account was valid, and named the one the examples used, now tell the
+reader to pass their own. Generic job names of other projects (`render`,
+`docchecks`, `cat` and the like) identify no study and stay as they ran,
+in the tests and in the comments of `evaluation/footprint.py`.
+
+The release tree changed in these files:
+
+- Scripts and documentation: `.hpc-plan.yaml`, which now describes the
+  other projects on the shared account without their job names,
+  `docs/next_control.md`, `hpc/README.md`, the seventeen run records in
+  `hpc/runs/`, the headers of nine job scripts in `hpc/`,
+  `manuscript/README.md` and `output/case_study/README.md`.
+- Tests: `tests/test_audit_shell_review_fixes.py`,
+  `tests/test_footprint_job_scope.py` and `tests/test_s1_misc_footprint.py`.
+  Their sacct rows keep every field the tests read, and the row copied
+  from another project's job is now a made-up job, `other_render`.
+- Result files, in a provenance-only edit that the author authorised and
+  that changes no other byte: `output/evaluation/sweep_aggregate_prefix.json`
+  and `.csv`, `determinism/determinism_cross_accelerator.json` and
+  `determinism/determinism_cross_accelerator_runs.json`,
+  `fleurs_es419_v100_control.json`, `der_sweep_selection.json`,
+  `der_sweep2_selection.json`, `reconstruction_audit_test.json` and
+  `reconstruction_audit_validation.json` in `output/evaluation/`, and
+  `output/case_study/codex_mentis_ep05_manifest.json`. Two recorded
+  digests follow the change, so that each record stays true. The LF
+  SHA-256 of the runs file that `determinism_cross_accelerator.json`
+  gives under `meta_file` is now
+  `c39f18cff8a1729fa26667a6996ef005e6ece0c052ac1bc352e639e259e7f34a`, and
+  the case-study manifest's own `manifest_sha256` is now
+  `a56282e1c81d399f1cbb9015fd61a2e3a85b44895ed24e05fa6dc3f5a91dc598`. No
+  other tracked file records the digest of a file changed here. A result
+  file rebuilt on ARC from its original inputs would carry the original
+  strings again, and differ from the committed copy in those strings only.
+- The same table applies to `manuscript/manuscript.qmd`, `CHANGELOG.md`,
+  `ISSUES.md`, `requirements-lock.txt` and `tests/test_fleurs_control.py`
+  in the same release.
+
+The data record's `decoder_source_6f9bf56.zip` is replaced by a sanitised
+copy under the same name, which `tools/build_decoder_source_deposit.py`
+writes from the `git archive` of `6f9bf56`. That archive, taken in
+memory, matched the deposited original byte for byte (8,589,655 bytes,
+SHA-256 `b66a511905b7e648987ef2f577105cd5b95e7d6556aa4ce398dda605875c5ccb`).
+The table changed 24 of its 387 files, in 551 replacements, and no binary
+member holds an identifier. `SANITISED.md` at the copy's root gives the
+table and, for each changed file, its path and the git blob id of its
+original content, and the ZIP comment is still the commit identifier. The
+copy has 8,584,027 bytes and SHA-256
+`c042aa8580cb8afeefbe425fbd177b8c12d328c3db3cad4a42dbb638c63cdd46`, the
+same in two builds with Python 3.13.7 and zlib 1.3.1, and a scan of every
+member, inside its Word documents too, finds no identifier.
+
+The sanitisation does not reach what was published before it. The
+earlier public snapshots on GitHub, release 2.0.0 at `fe579c6` and
+release 2.1.0 at `7bb5ff8`, and the development repository's history
+still contain the originals.

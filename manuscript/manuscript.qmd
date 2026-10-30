@@ -233,6 +233,10 @@ manifest <- c(
   # the skipped utterance quotes, and such a run needs that description,
   # those fields and the refusal changed together.
   ts_skipped        = "timestamp_skipped.csv",
+  # The sweep's per-utterance AMI report for the same model under
+  # Whisper's normaliser, whose deletion counts say whether the clips with
+  # a gross end error lost words.
+  ts_ami_wer        = "sweep_reports_postfix_ami/wer_report_ami_whisper-large-v3_whisper_norm.csv",
   ms                = "masking_summary.json",
   msci              = "masking_summary_caseinsensitive.json",
   msner             = "masking_summary_ner.json",
@@ -618,8 +622,10 @@ big <- function(x) format(one(x), big.mark = ",")
 # APA 7 asks; vectorised, for table columns as well as inline figures.
 minus <- function(s) sub("^-", "\u2212", s)
 # A signed difference in percentage points, as the prose and the tables
-# of paired intervals print it.
-sgn2 <- function(x) minus(sprintf("%+.2f", x))
+# of paired intervals print it. An exact zero takes no sign, as APA 7
+# prints it; a nonzero difference that rounds to zero keeps its sign.
+sgn2 <- function(x) ifelse(x == 0, sprintf("%.2f", abs(x)),
+                           minus(sprintf("%+.2f", x)))
 # A correlation, which cannot exceed 1 in absolute value, printed as APA 7
 # asks: two decimals, no leading zero, and a true minus sign.
 r_apa <- function(x) minus(sub("^(-?)0\\.", "\\1.", sprintf("%.2f", one(x))))
@@ -1830,7 +1836,12 @@ cell's summary is committed. Every decode of the sweep and of the
 multilingual wave ran on a GPU. Two benchmarks depart from this
 configuration. The timestamp benchmark needs segment boundaries and
 therefore decodes in `r ts_summary$whisper$chunk_length_s` s chunks
-with a `r ts_summary$whisper$stride_length_s` s stride, while the
+with a `r ts_summary$whisper$stride_length_s` s stride. It scores the
+segment boundaries that Whisper's own timestamp tokens give, whereas
+the workflow asks for word-level timestamps whenever it writes
+timestamps or speaker labels and builds its segments from those, so
+the benchmark measures the model's segment timing, not the word timings
+in the workflow's own outputs. The
 voice anonymisation benchmark transcribes short single-utterance clips
 without chunking. Both decode in `r ts_precision` on the GPU, as
 Whisper Large v3 does in the sweep, but neither forces a language, so
@@ -1876,6 +1887,17 @@ condition sweep's aggregate records the code the sweep ran,
 `r sweep_version`, and the diarisation summaries record the code of
 their runs, `r der_commit`, together with the package versions,
 `pyannote.audio` `r der_summary$pyannote_audio_version` among them.
+These and the other commits named here are those of the development
+repository, which is not public. The public repository holds each
+release as a single snapshot commit, and the data record holds the
+source of the sweep's decoder commit
+[@bernabeuRecoveredInputsEnglish2026]. In the release, the
+diarisation scoring code differs from `r der_commit` only in comments,
+documentation and the point at which it reads its run metadata. The
+segmentation and speaker-embedding models that the diarisation pipeline
+loads by name were not pinned to a revision: their summaries list the
+snapshots the cluster's model cache held, which the load did not
+enforce.
 
 The manuscript is a Quarto document. Its figures, tables and quoted
 results are generated at render time from the committed JSON and
@@ -2031,9 +2053,9 @@ The diarisation benchmark scores `pyannote/speaker-diarization-3.1` on
 the `r num_word(der_summary$n_meetings)` meetings of the AMI test
 split, reconstructed on their true timeline from the utterance-level
 release. It applies a collar of `r der_collar` s in total,
-`r der_collar / 2` s either side of each reference boundary. Its two
-tuning parameters, the clustering threshold and the minimum pause,
-were chosen on the `r num_word(der_dev_meetings)` meetings of the AMI
+`r der_collar / 2` s either side of each reference boundary. Two of
+its three tuning parameters, the clustering threshold and the minimum
+pause, were chosen on the `r num_word(der_dev_meetings)` meetings of the AMI
 development split, which the dataset calls `validation`, so that no
 hyperparameter was selected on the split it is reported on. The
 search was a `r num_word(der_scan_n)`-point scan followed by a
@@ -3859,10 +3881,31 @@ stopifnot(round(der_share[["missed"]], 1) == 0.5,
           recon_test$summary$n_best_shift_zero == recon_test$summary$n_meetings,
           recon_val$summary$n_best_shift_zero == recon_val$summary$n_meetings)
 #
-# Per-utterance timestamp records give the coverage of the worst
-# truncation and the distribution plotted below.
+# Per-utterance timestamp records give the coverage of the clip with the
+# earliest end and the distribution plotted below.
 ts_cov <- (ts_report$pred_end_s - ts_report$pred_start_s) /
   ts_report$ref_duration_s
+# Whether the clips with a gross end error lost words. The sweep scored
+# every one of them for the same model, under Whisper's normaliser, so its
+# deletion counts say how many of the reference words that model
+# transcribed. The sweep decoded without timestamps, so this is the same
+# model's reading of the same audio, not the timestamp run's own text,
+# and the text says so. The clip with the earliest end, which the text
+# quotes, has a one-word reference that the sweep transcribed exactly.
+ts_join <- dplyr::inner_join(ts_report, ts_ami_wer,
+                             by = c("audio_id" = "name"))
+ts_gross_rows <- ts_join[ts_join$end_error_s > 0.5, ]
+ts_worst <- ts_join[ts_join$audio_id ==
+                      ts_report$audio_id[which.min(ts_cov)], ]
+stopifnot(nrow(ts_gross_rows) == sum(ts_report$end_error_s > 0.5),
+          nrow(ts_gross_rows) ==
+            round(ts_summary$gross_end_error_rate * ts_summary$n),
+          nrow(ts_worst) == 1, ts_worst$reference_words == 1,
+          ts_worst$hits == 1)
+ts_gross_n      <- nrow(ts_gross_rows)
+ts_gross_nodel  <- sum(ts_gross_rows$deletions == 0)
+ts_gross_oneword <- sum(ts_gross_rows$reference_words == 1)
+stopifnot(ts_gross_nodel > ts_gross_n / 2)
 # Whisper writes its timestamps on a 20 ms step, and every predicted
 # boundary lies on it. No hypothesis ends far past its reference: the
 # largest overrun is about half a step, where a reference ends between
@@ -3872,6 +3915,10 @@ on_ts_step <- function(x) all(abs(x / ts_step - round(x / ts_step)) < 1e-6)
 ts_overrun <- -min(ts_report$end_error_s)
 stopifnot(on_ts_step(ts_report$pred_start_s), on_ts_step(ts_report$pred_end_s),
           ts_overrun > 0, abs(ts_overrun - ts_step / 2) < ts_step / 10)
+# How many ends fall within half a step of the clip end, which is also the
+# end of the audio the model hears; the text calls it most of them.
+ts_at_edge <- mean(abs(ts_report$end_error_s) <= ts_step / 2 + ts_step / 10)
+stopifnot(ts_at_edge > 1 / 2)
 # The paragraphs below also say in words that the mean end error is more
 # than ten times the median, that the errors over half a second make up
 # the large majority (here, over three quarters) of their total, and
@@ -3898,8 +3945,7 @@ der_cap <- paste0(
   "DER = diarisation error rate; IHM = individual headset microphone. ",
   "Speaker diarisation on the held-out AMI IHM test split, reconstructed ",
   "on the original meeting timeline. Components are macro averages. The ",
-  "oracle row is given the true number of speakers in each meeting and is ",
-  "an upper bound on what a known participant count can buy. Collar: ",
+  "oracle row is given the true number of speakers in each meeting. Collar: ",
   der_collar, " s in total, ", der_collar / 2, " s either side of each ",
   "reference boundary.")
 der_meetings_cap <- paste0(
@@ -3912,10 +3958,10 @@ der_meetings_cap <- paste0(
 stopifnot(nrow(der_report) == der_summary$n_meetings)
 ```
 
-The workflow's speaker labels and segment timestamps record who spoke
-when. This section asks how far each can be trusted and, for the
-labels, how much of the measured accuracy the design of the evaluation
-decides. Both are scored against the AMI Meeting Corpus
+The workflow's speaker labels and timestamps record who spoke when.
+This section asks how far the labels and Whisper's segment timing can
+each be trusted and, for the labels, how much of the measured accuracy
+the design of the evaluation decides. Both are scored against the AMI Meeting Corpus
 [@carlettaAMIMeeting2005], which provides manual speaker labels and
 time-aligned reference transcripts for its recorded meetings. The
 individual headset microphone (IHM) release was used throughout, as it
@@ -4150,8 +4196,8 @@ der_recon_effect   <- der_concat$macro_der - der_summary$macro_der
 # every meeting's speaker count was overestimated; the oracle left
 # missed speech and false alarm unchanged to five decimals and more
 # than doubled confusion; tuning lost on the held-out split, by under a
-# tenth of a point (in the Discussion, "indistinguishable from the
-# defaults and fractionally worse"), and gained under a tenth of a point on the
+# tenth of a point of macro DER (in the Discussion, "no better than the
+# defaults in macro DER"), and gained under a tenth of a point on the
 # development split.
 stopifnot(
   all(der_report$hyp_n_speakers > der_report$n_speakers),
@@ -4508,8 +4554,12 @@ reference starts at zero, and the model returns a start of exactly
 zero for the large majority of them. In those cases, the start error
 is zero by construction, so the millisecond-scale mean says little
 about how well the model would locate a boundary inside continuous
-audio. The end boundary, which the model has to locate for itself, is
-where the informative signal lies.
+audio. The end boundary, which the model has to locate for itself,
+carries more information, but it has an edge of its own: the reference
+end is also the end of the clip, and
+`r pct(ts_at_edge)` of the predicted ends fall within half a timestamp
+step of it, so part of the accuracy there may be the model detecting
+where the audio stops.
 
 At the end boundary, the mean absolute error was
 `r round(ts_summary$mae_end * 1000, 0)` ms, but
@@ -4531,16 +4581,29 @@ the few inaccurate ones.
 
 Those failures all run in one direction. The
 error is measured as the reference duration minus the hypothesised
-end, so a positive value means the model stopped before the speech
-did. On this corpus, every gross end error was of that sign: the
-truncation rate,
+end, so a positive value means the model's last segment ended before
+the reference segment did. On this corpus, every gross end error was of
+that sign: the share of ends more than half a second early,
 `r round(ts_summary$truncation_rate * 100, 1)`%,
-equals the gross error rate exactly. In the worst cases, the
+equals the gross error rate exactly. In the extreme case, the
 hypothesis covered
 `r pct(min(ts_cov))`
-of the reference segment. The
-failure is thus early truncation, the model ceasing to transcribe
-part-way through an utterance.
+of the reference segment. An early end is not a loss of words,
+however. The sweep decoded every one of these
+`r num_word(ts_gross_n)` clips with the same model, and
+`r num_word(ts_gross_nodel)` of them lost no reference word there;
+`r num_word(ts_gross_oneword)` have a one-word reference. The extreme
+case is one of these: its reference is a single word, the model wrote
+*`r trimws(ts_worst$hypothesis)`*, and its last timestamp falls at
+`r sprintf("%.2f", ts_worst$pred_end_s)` s of a
+`r sprintf("%.2f", ts_worst$ref_duration_s)` s clip. The sweep decoded
+without timestamps, so its words are the same model's reading of the
+same audio, not the timestamp run's own. What the gross errors measure
+is therefore clips that run on for more than half a second after the
+last word the model timed. The reference end is where the annotator
+closed the segment, which can hold trailing silence, breath or
+laughter, and the benchmark does not establish whether the model's end
+or the annotated one lies nearer the end of the speech.
 
 That the model never runs on past the true boundary is a property of
 the benchmark. Each utterance is scored as an
@@ -4558,15 +4621,17 @@ reference is the single word *yeah*, Whisper wrote *ha*
 `r length(ts_skip_tok)` times and never closed the segment with an end
 timestamp. @fig-timestamps shows the
 distribution directly, as a near-vertical rise at the origin holding
-most of the corpus, then a long right tail and nothing to the left of
-it.
+most of the corpus, then a long right tail and nothing further left
+than that half step.
 
 ```{r timestamp-captions, include=FALSE}
 # Captions for the figure and table below, built from the artefacts:
 # how many utterances were scored, and which meeting and speakers they
 # come from, read from the utterance ids of the per-utterance report.
 stopifnot(nrow(ts_report) == ts_summary$n, length(ts_ami$meetings) == 1,
-          # the text says every gross end error was a truncation
+          # the text says every gross end error was an early end (the
+          # summary's historical key, truncation_rate, counts ends more
+          # than half a second early)
           ts_summary$truncation_rate == ts_summary$gross_end_error_rate)
 ts_fig_cap <- paste0(
   "IHM = individual headset microphone. ",
@@ -4622,13 +4687,12 @@ ggplot(ts_ecdf, aes(x = err, y = cdf)) +
 
 `\noindent`{=latex} *Note.* `r ts_fig_cap`
 
-@tbl-ts-summary collects these quantities, and the direction of the
-failure decides what a workflow can do about it. The repetition repair
-suppresses run-on continuations, the opposite failure, so it is no
-remedy here, and no post-processing can restore words the model never
-emitted. The workflow can only notice the loss, which its review pass
-does by flagging a transcript whose final segment ends well short of
-the recording.
+@tbl-ts-summary collects these quantities. For a workflow, an early
+final end is a prompt to listen, not evidence of lost words: the review
+pass flags a transcript whose final segment ends well short of the
+recording, and the cause may be trailing non-speech as readily as
+speech left untranscribed. The repetition repair suppresses run-on
+continuations, the opposite failure, and has no bearing here.
 
 ```{r echo=FALSE}
 #| label: tbl-ts-summary
@@ -4645,7 +4709,7 @@ tibble::tribble(
   "Median absolute end (ms)",           ts_val("median_abs_end_error"),
   "90th percentile end (ms)",           ts_val("p90_abs_end_error"),
   "Gross end errors > 0.5 s (%)",       ts_val("gross_end_error_rate", 1, 100),
-  "Early truncations (%)",              ts_val("truncation_rate", 1, 100),
+  "Ends > 0.5 s early (%)",             ts_val("truncation_rate", 1, 100),
   "Root-mean-square error, start (ms)", ts_val("rmse_start"),
   "Root-mean-square error, end (ms)",   ts_val("rmse_end"),
   "ASR model",                          ts_summary$model
@@ -4922,8 +4986,8 @@ the transcript that the workflow made in August 2026 of a
 conversational podcast episode about transcription research, whose two
 voices are synthetic (see Ethics). Beyond the dictionary's `r num_word(ner_dict[[1]])`
 redactions, it proposed `r num_word(ner_fp_extra)` more, and every one
-of the `r num_word(ner_fp_extra)` was a false positive: *speaker one*,
-*the researcher*, *the user*, even *we*. Of the dictionary's own
+of the `r num_word(ner_fp_extra)` was a false positive: *speaker*,
+*researcher*, *user*, even *we*. Of the dictionary's own
 `r num_word(ner_dict[[1]])`,
 `r num_word(ner_fp_genuine)` were genuine names and
 `r num_word(ner_dict_fp)` was not: *Jordan*, which a speaker gave as an
@@ -5617,7 +5681,8 @@ was measured and should not be assumed across them.
 # The capture it replaced, of 4 October 2026, lacked the six jobs of 17
 # to 19 October 2026, which this one holds and the scope paragraph names
 # (checked below): ARC 9124828, 9124851 and 9134598, test-suite runs on
-# processor cores, the last of them the release tree's check; 9124852,
+# processor cores, the last of them the check of release 2.0.0's tree
+# (c17367b); 9124852,
 # the case study's re-run on one L40S for 17 min 51 s; and 9124739 and
 # 9124863, the Spanish control's pre-flight and full split, on V100s.
 # The 4 October capture replaced one of June 2026 that held 38 jobs,
@@ -5809,7 +5874,7 @@ had finished. The `r num_word(fp_n_queued)` jobs it leaves out were
 cancelled while still queued and drew no power.
 `r Num_word(nrow(fp_later))` of its jobs followed the main evaluation.
 Three ran the test suite on processor cores alone, the last of them
-checking the release tree. One re-ran the case study, which takes the
+checking the tree of release 2.0.0. One re-ran the case study, which takes the
 podcast episode named under Ethics through the complete workflow, and
 two were the pre-flight and full split of the Spanish control in
 [the multilingual results](#sec-multilingual). The ledger holds the
@@ -6097,8 +6162,8 @@ development meetings gained
 `r sprintf("%.2f", 100 * der_tune_gain_dev)` of a point there over the
 shipped defaults, which sat within a tenth of a point of the optimum of
 the grid. On the held-out split it gained nothing, the selected
-configuration proving indistinguishable from the defaults and
-fractionally worse. A diarisation figure is thus a statement about how
+configuration proving no better than the defaults in macro DER. A
+diarisation figure is thus a statement about how
 the evaluation audio was assembled quite as much as about the system
 that processed it, and a report giving its hyperparameters but not its
 reconstruction has described the less important half. The timestamp
@@ -6220,11 +6285,13 @@ recording with little crosstalk tends to sit below the corpus average
 and a busy discussion above it, so the label stream deserves the same
 spot check as any other measurement taken on unfamiliar material. The
 end-boundary errors in timestamp alignment are concentrated in a small
-proportion of utterances where the model stops transcribing early, and
-no post-processing can repair that, since the words were never emitted.
-The only defence is detection, so the end of a transcript should be
-checked against the duration of its recording before the transcript is
-treated as complete.
+proportion of clips whose last timed word ends well before the
+annotated segment does. Most of those clips lost no words, so the error
+lies in where a segment is said to end, which matters to anyone timing
+speech against other events and less to anyone reading the words. A
+transcript whose last segment ends well short of its recording should
+be checked against the audio before it is treated as complete, since
+the same symptom can also mean speech left untranscribed.
 
 ## Conclusion
 
@@ -6297,10 +6364,15 @@ Not applicable.
 
 The committed results, from the per-utterance reports to the summaries
 behind every figure and table, are archived with the code (see Code
-Availability). The recovered inputs of the English sweep, its
-condition summaries and hypothesis dumps, are deposited at
-<https://doi.org/10.5281/zenodo.23442874>
-[@bernabeuRecoveredInputsEnglish2026]. The speech corpora are
+Availability). The inputs that the repository does not commit are
+deposited at <https://doi.org/10.5281/zenodo.23442874>
+[@bernabeuRecoveredInputsEnglish2026] in two archives. One holds the
+English sweep's condition summaries and hypothesis dumps, beside the
+source of the sweep's decoder commit. The other holds the inputs of
+the multilingual comparison, its Spanish control and the cross-hardware
+comparison. In their job logs and environment records, as in the
+repository, the deployment's paths and account names are replaced by
+placeholders. The speech corpora are
 third-party releases, openly available under their own licences, and
 their audio is not bundled with the repository. The podcast episode
 named under Ethics is publicly available from the podcast's feed,
@@ -6339,9 +6411,21 @@ sensitivity also needs the deposited inputs
 [@bernabeuRecoveredInputsEnglish2026]. The filler figures are scored
 from the hypotheses the sweep wrote for its Whisper Large v3 decoding
 of AMI. These are not committed, so `disfluency_summary.json` records
-the digest of the file it scored. Neither archive holds the corpus
-audio, which is streamed through the Hugging Face `datasets` library at
-evaluation time. The scheduler dump behind the footprint ledger, taken
+the digest of the file it scored. Rebuilding the multilingual summary,
+the Spanish control and the cross-hardware comparison needs the second
+archive of the same record, `multilingual_hardware_inputs_2026-10.zip`.
+It holds the 48 per-language summaries of the four multilingual arms,
+the control's summaries and job environment records, and the hypothesis
+dumps, per-utterance reports and H100 job log of the cross-hardware
+comparison, with the job logs that name the card each task of the
+first three arms ran on. `output/evaluation/arc_inputs_manifest.json`
+gives the digest of each deposited file and of its original. Four of
+the sanitised records are read by the producers, so their digests
+differ from those the committed results record; apart from those
+digests and the run metadata, the three results rebuild from the
+archive exactly. Neither record holds the corpus audio, which is
+streamed through the Hugging Face `datasets` library at evaluation
+time. The scheduler dump behind the footprint ledger, taken
 on `r long_date(fp_ledger_prov$captured)`, is withheld because it lists
 other projects' jobs on the shared account, and the ledger's
 provenance records its digest instead.
@@ -6360,14 +6444,16 @@ that rebuilds each result and, for a cluster job, the record in
 # Open Practices Statement {.unnumbered}
 
 None of the experiments reported here was preregistered. The code, the
-submission scripts, the per-utterance reports behind the figures and
-tables and the source of this manuscript are openly available in the
-repository given above. Every figure and table in the paper is computed
+submission scripts and the source of this manuscript are openly
+available in the repository given above, as are the per-utterance
+reports behind most figures and tables; those behind the English
+sweep, the multilingual comparison, its Spanish control and the
+cross-hardware comparison are deposited with the recovered inputs. Every figure and table in the paper is computed
 at render time from a committed artefact, and none is transcribed by
 hand. The software is archived at <https://doi.org/10.5281/zenodo.23442766>
 [@bernabeuSecureScalableSpeech2026], in the release from which this
-manuscript is rendered, and the recovered inputs of the English sweep
-are deposited at <https://doi.org/10.5281/zenodo.23442874>
+manuscript is rendered, and the recovered inputs are deposited at
+<https://doi.org/10.5281/zenodo.23442874>
 [@bernabeuRecoveredInputsEnglish2026]. Corpus audio is not
 redistributed here. Some committed artefacts retain hypothesis text, and
 the recovered dumps also retain reference text. Each third-party corpus

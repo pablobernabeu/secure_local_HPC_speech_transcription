@@ -151,10 +151,14 @@ def test_review_handles_a_transcript_with_no_segments():
 
 
 class TestTruncationCheck:
-    """Early truncation is the dominant boundary failure the timestamp
-    benchmark found on AMI, and no per-segment flag can see it: each
-    surviving segment looks fine, and the transcript simply stops. The
-    check is therefore against the recording's duration.
+    """A transcript that ends well before its recording is flagged for a listen.
+
+    The timestamp benchmark found that Whisper's last segment can end well
+    before its clip does on AMI, and that most such clips still held every
+    word. On a whole recording the same shortfall can also mean speech left
+    untranscribed, and no per-segment flag can see it: each segment looks
+    fine, and nothing follows the last. The check is therefore against the
+    recording's duration.
     """
 
     def _segments(self, last_end):

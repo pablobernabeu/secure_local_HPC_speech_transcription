@@ -15,19 +15,20 @@
 #
 # Usage (from the repository root on ARC):
 #
-# Account: either project account is valid; the examples use educ-intract.
-# Choose by current load, which changes: see the BALANCE note in .hpc-plan.yaml.
+# Account: pass your own project account with --account. With more than
+# one, choose by current load, which changes: see the BALANCE note in
+# .hpc-plan.yaml.
 #
 #   # Held-out test split at the shipped defaults
-#   sbatch --account=educ-intract hpc/submit_benchmark_der.sh
+#   sbatch --account='<your-project>' hpc/submit_benchmark_der.sh
 #
 #   # A configuration chosen on the development split
 #   CLUSTERING_THRESHOLD=0.60 MIN_DURATION_OFF=0.5 \
 #   REPORT_DIR=$DATA/.../evaluation/der_tuned \
-#     sbatch --account=educ-intract hpc/submit_benchmark_der.sh
+#     sbatch --account='<your-project>' hpc/submit_benchmark_der.sh
 #
 #   # The utterance-concatenation arrangement used before, for comparison
-#   MIX_MODE=concat UTT_PER_MEETING=25 sbatch --account=educ-intract hpc/submit_benchmark_der.sh
+#   MIX_MODE=concat UTT_PER_MEETING=25 sbatch --account='<your-project>' hpc/submit_benchmark_der.sh
 #
 # The committed DER artefacts (der_summary.json and the der_tuned/,
 # der_oracle/ and der_concat/ directories) each came from one invocation;

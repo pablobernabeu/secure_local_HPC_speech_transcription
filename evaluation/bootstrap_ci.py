@@ -378,7 +378,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--compare", nargs=2, type=Path, metavar=("A", "B"),
         help=(
             "Two report CSVs scored on the same utterances; report the "
-            "paired delta in macro-WER (A - B) with its 95% CI."
+            "paired delta in macro-WER (A - B) with its 95%% CI."
         ),
     )
     p.add_argument(

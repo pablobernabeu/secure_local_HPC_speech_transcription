@@ -32,7 +32,7 @@ The jobs ran with these settings:
 | Dataset | `google/fleurs`, revision `70bb2e84b976b7e960aa89f1c648e09c59f894dd`, `es_419`, full `test` split |
 | Model | `openai/whisper-large-v3`, revision `06f233fe06e710322aca913c1bc4249a0d71fce1`, float16 |
 | Decoder and scorer | Language `spanish`, task `transcribe`, native timestamps, seed `42`, condition `raw` |
-| Allocation | Cluster `htc`, partition `short`, account `educ-intract`, QoS `standard`, four CPUs, 32 GB, one `gpu:v100` |
+| Allocation | Cluster `htc`, partition `short`, account `<project-b>`, QoS `standard`, four CPUs, 32 GB, one `gpu:v100` |
 | Site modules | `Anaconda3/2025.06-1`, `CUDA/13.0.2`, driver 580.65.06 |
 | Run stack | Python 3.12.12, torch 2.5.1+cu121, transformers 4.57.1, datasets 4.8.5, jiwer 4.0.0, cuDNN 9.1 |
 | Pre-flight | Job 9124739 (`pf_es419_v100`), five utterances, htc-g003, Tesla V100-PCIE-32GB, 9 min 52 s |

@@ -328,7 +328,7 @@ also maps each job to the files it produced:
 
 ```bash
 ( set -a; . hpc/runs/anonymisation.env || exit 1; set +a
-  sbatch --account=educ-intract --gres=gpu:l40s:1 hpc/submit_anonymisation.sh )
+  sbatch --account='<your-project>' --gres=gpu:l40s:1 hpc/submit_anonymisation.sh )
 ```
 
 - Condition sweep: `hpc/submit_sweep.sh`, once per model, with the
@@ -412,9 +412,14 @@ the author's, supplied on 17 October 2026, and no telephone number is given.
 Confirm the existing competing-interest, consent and ethics statements
 with the author, since formatting checks cannot establish their factual
 completeness.
-The availability statements cite release 2.0.0, archived at
-<https://doi.org/10.5281/zenodo.23442766>, and the recovered inputs of
-the English sweep, deposited at <https://doi.org/10.5281/zenodo.23442874>
+The availability statements cite the release the manuscript is
+rendered from, whose version they read from `CITATION.cff`, archived at
+<https://doi.org/10.5281/zenodo.23442766>, and the recovered inputs,
+deposited at <https://doi.org/10.5281/zenodo.23442874> in two archives:
+the English sweep's (`sweep_inputs_2026-10.zip`, with the decoder
+commit's source) and those of the multilingual comparison, its Spanish
+control and the cross-hardware comparison
+(`multilingual_hardware_inputs_2026-10.zip`)
 ([docs/release_readiness.md](../docs/release_readiness.md) records the
 release). The Declarations give the formal statements on data and code,
 and a short Data and Code Availability section says what each archive

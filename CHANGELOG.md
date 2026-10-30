@@ -5,6 +5,99 @@ All notable changes to this project are recorded here. The format follows
 such as `T1-01` refer to the September 2026 codebase audit; the findings that
 were not resolved in code are listed, with their reasons, in `ISSUES.md`.
 
+## [2.1.1] - 2026-10-30
+
+A pre-publication gate held release 2.1.0's Zenodo records. Eight read-only
+audits of the tagged tree recomputed every result family from its committed
+rows, rebuilt the English sweep's aggregate and the three deposit archives,
+evaluated each of the manuscript's 513 inline values against the committed
+files and reviewed the code. Every number reproduced. They found one claim
+the data contradict, two gaps in what was published and a set of smaller
+corrections, each recorded under "The pre-publication gate of 30 October
+2026" in `ISSUES.md` (PG-01 to PG-31), with PG-32 found while stamping the release. Release 2.1.0 was tagged on GitHub
+but never deposited; 2.1.1 takes its reserved DOI.
+
+No word error rate, diarisation, timestamp, filler, multilingual, masking,
+anonymisation or footprint figure changed. `tools/verify_regeneration.py`
+regenerates all eleven CPU artefacts identically.
+
+### Fixed
+
+- The manuscript explained the 41 timestamp end errors over half a second
+  as early truncation, words the model never emitted. The same model's
+  decoding of those clips in the sweep lost no reference word in 32 of
+  them, the paper's extreme case among them (a one-word reference,
+  "Yeah.", whose last timestamp falls at 0.22 s of a 2.90 s clip). The
+  Results, the Discussion, the table row, the outputs READMEs and the
+  docstrings of the timestamp metrics, the review's truncation check and
+  the review writer now describe early segment ends, computing those
+  counts at render time; the summary key `truncation_rate` keeps its
+  historical name (PG-01).
+- The manuscript now says that the timestamp benchmark scores Whisper's
+  segment timestamps, while the workflow writes word-level ones (PG-04).
+- Of two releases listed in `versions.csv` with the same date, the version
+  lookup returned the older, because it took the later row of a file that
+  lists the newest first; it compares version numbers (PG-32).
+- `python -m evaluation.bootstrap_ci --help` raised ValueError on an
+  unescaped `%`; a new test scans every command-line help string (PG-24).
+- `setup/setup_pyannote.py` installed pyannote.audio without the `<4` cap
+  and installed speechbrain; it now installs the specifiers of
+  `requirements.txt` in one pip call and reports a failed install (PG-25).
+- `evaluation.fleurs_control` compared differing utterances by sentence id,
+  which repeats within a split; it compares positions. The committed
+  comparison is unchanged (PG-19).
+- Wording in the manuscript: the oracle diarisation arm is no longer called
+  an upper bound (it scores worse than the defaults); two of the pipeline's
+  three tuning parameters were swept; the tuned configuration is "no better
+  than the defaults in macro DER"; the last ARC test-suite job checked
+  release 2.0.0's tree; the timestamp distribution has nothing further left
+  than half a timestamp step, and most ends sit at the clip's edge; exact
+  zeros in the paired-interval tables print as 0.00; the NER false
+  positives are quoted as the note lists them (PG-05, PG-10, PG-11, PG-14,
+  PG-15, PG-28, PG-29).
+
+### Added
+
+- `multilingual_hardware_inputs_2026-10.zip` in the data record
+  (10.5281/zenodo.23442874), built by `tools/build_arc_inputs_deposit.py`
+  with its receipt `output/evaluation/arc_inputs_manifest.json`: the inputs
+  of the multilingual table, the Spanish V100 control and the cross-hardware
+  comparison, which had been held only on the cluster. Each of the three
+  results rebuilds from it (PG-02).
+- `tools/build_decoder_source_deposit.py`, which builds the decoder
+  commit's source archive with the deployment identifiers replaced and a
+  `SANITISED.md` listing every changed member with its original blob; the
+  data record's `decoder_source_6f9bf56.zip` is that archive (PG-03).
+
+### Changed
+
+- Deployment identifiers are sanitised throughout the tree, on the author's
+  decision of 30 October 2026: the ARC user name, the two project accounts
+  and the paths holding them are replaced by `$DATA`, `$HOME`, `<user>`,
+  `<project-a>` and `<project-b>`, and other projects' jobs in tests and the
+  cluster plan take synthetic names. In ten result files only those
+  provenance strings changed, and the two digests the change touched are
+  updated: the cross-hardware comparison's record of its runs file and the
+  case-study manifest's own. `docs/privacy_review.md` records the table
+  (PG-03).
+- The manuscript's availability statements describe both archives of the
+  data record, its provenance paragraph says that the cited commits are the
+  development repository's and that the diarisation sub-models were not
+  pinned, and README.md no longer says every model is pinned (PG-02, PG-09,
+  PG-13).
+- `evaluation/footprint.py` cites the Green Algorithms table for the 12 W
+  per-core CPU figure and states the CPU term's share, 14.6% of the energy;
+  `requirements-lock.txt` says it records the results' environment, not a
+  hardened install, and which locally made artefacts it does not cover
+  (PG-06, PG-26).
+- The input deposit's README describes the sanitised decoder source and
+  says the DOI it gives is the release's, and `sweep_inputs_2026-10.zip`
+  is rebuilt with it; its 270 inputs are unchanged. The data record's
+  reference takes its new title and its publication date (PG-07, PG-31).
+- Stale statuses in `ISSUES.md` (EWER-10, G2, CR-06, OUTPUTS-12, DEPS-04,
+  DOCS-15) and two bullets of the 2.1.0 entry below are corrected (PG-16,
+  PG-20 to PG-22, PG-27).
+
 ## [2.1.0] - 2026-10-30
 
 Two passes after release 2.0.0. The first, on 20 and 21 October 2026, was
@@ -140,12 +233,13 @@ regenerates all eleven CPU artefacts identically from the committed inputs.
   19.86).
 - The four masking arms were regenerated from a clean tree after the
   honorific fixes: in each report the 66 title-by-possessive rows read
-  "[TITLE] [NAME]'s", and 136 lower-case title rows of the two
-  case-insensitive arms change; every summary field outside `run_metadata`
+  "[TITLE] [NAME]'s" or "[TITLE] [SURNAME]'s", and 136 lower-case title
+  rows of the two case-insensitive arms change; every summary field
+  outside `run_metadata`
   is unchanged, and the NER arms record 1,940 calls and 0 failures.
 - `artefact_audit.csv` and `.json` scan the three example review files,
-  which are clean, and carry the new completeness fields; every count is
-  unchanged.
+  which are clean, and carry the new completeness fields; every leak
+  count is unchanged, and the three files now count as review files.
 - `scorer_sensitivity.json` and `sweep_decode_provenance.json` were
   regenerated after SC-19's edits to the files whose digests they record:
   only those digests and the recorded commit changed.

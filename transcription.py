@@ -624,6 +624,11 @@ _ABBREVIATED_TITLE_END_RE = re.compile(
 def _is_title_token(token, clean_word):
     """Return whether *token* is an honorific the title rule may mask.
 
+    The rule then masks it only when the next word is a dictionary name,
+    so a name found by the NER stage alone keeps its title
+    ("Dr Yusuf" becomes "Dr [NAME]"; 40 title-position held-out rows of
+    the committed NER arm, 92 of its case-insensitive variant).
+
     *clean_word* is the token lower-cased with its punctuation and any
     possessive clitic removed, as the masker computes it. Most honorifics
     count in any case. Two are ordinary words in another spelling: "miss"
@@ -1292,9 +1297,11 @@ def detect_and_fix_repetitions(text, max_repetitions=5):
 #: workflow's Whisper output before any history was kept. No transcript or
 #: hypothesis committed under output/ or example_output/ contains it.
 #:
-#: The manuscript describes the pattern as ``\bundefin\w*``. That is not
-#: used, because it would also rewrite ordinary words such as
-#: "undefinable" into "[undefined]". The earlier implementation matched
+#: The manuscript lists the same four spellings, each marked as a whole
+#: word unless already bracketed, and says an ordinary word that begins
+#: with those letters, such as "undefinable", is left alone. A prefix
+#: pattern such as ``\bundefin\w*``, which an earlier draft gave, would
+#: rewrite that word into "[undefined]". The earlier implementation matched
 #: the same four words but only between two runs of whitespace, so it
 #: missed an occurrence at the start or end of the text, one before
 #: punctuation ("the value was undefin.") and the second of two in a row
@@ -2889,10 +2896,12 @@ _DIST_NAME = "speech-transcription-system"
 def _latest_release(versions_file=None):
     """Return the newest release listed in versions.csv, or ``None``.
 
-    Rows are ordered by their ISO ``date``; of two rows with the same date
-    the later one in the file wins, since a release appended on the same
-    day as another is the newer of the two (a plain reverse sort kept the
-    earlier row). ``None`` when the file is absent, empty or unreadable.
+    Rows are ordered by their ISO ``date``. Of two rows with the same date
+    the higher version number wins, whichever comes first in the file:
+    versions.csv lists the newest release first, so its row order cannot
+    break the tie (2.1.0 and 2.1.1 share a date, and the row below won
+    before). Only versions without a number fall back on the later row.
+    ``None`` when the file is absent, empty or unreadable.
     """
     path = Path(versions_file) if versions_file else Path(__file__).parent / "versions.csv"
     try:
@@ -2903,7 +2912,11 @@ def _latest_release(versions_file=None):
     rows = [r for r in rows if (r.get('version') or '').strip()]
     if not rows:
         return None
-    newest = max(enumerate(rows), key=lambda item: ((item[1].get('date') or ''), item[0]))
+    def _number(version):
+        return tuple(int(part) for part in re.findall(r'\d+', version))
+
+    newest = max(enumerate(rows), key=lambda item: (
+        (item[1].get('date') or ''), _number(item[1]['version']), item[0]))
     return newest[1]['version'].strip()
 
 
@@ -4096,9 +4109,13 @@ def write_review_file(segments, review_path, audio_duration_s=None,
     Args:
         segments: the raw (unmasked) timestamped segments.
         review_path: where the JSON report is written.
-        audio_duration_s: recording length, which lets the review catch
-            early truncation, the dominant boundary failure the timestamp
-            benchmark found and one no per-segment check can see.
+        audio_duration_s: recording length, which lets the review flag a
+            transcript ending well before the audio does, something no
+            per-segment check can see. The timestamp benchmark found that
+            Whisper's last segment can end well before its clip, mostly
+            with every word transcribed; on a whole recording such a
+            shortfall can also mean speech left untranscribed, so the
+            review flags it for a listen.
         mask_fn: the run's name masker, or ``None`` when masking is off.
         review_options: optional checks passed to
             :func:`confidence.review_transcript` (``flag_zero_duration``,

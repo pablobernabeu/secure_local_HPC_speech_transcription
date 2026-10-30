@@ -15,6 +15,7 @@ Run this ONCE during initial setup to ensure speaker attribution works.
 """
 
 import os
+import re
 import sys
 import tempfile
 from pathlib import Path
@@ -25,8 +26,53 @@ from pathlib import Path
 # which nothing else reads (audit finding CORE-12).
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 TOKEN_FILE = _REPO_ROOT / 'hf_token.txt'
+REQUIREMENTS_FILE = _REPO_ROOT / 'requirements.txt'
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
+
+# The packages this wizard installs. Their version specifiers are read from
+# requirements.txt, not written here: the wizard's own list once let pip
+# install pyannote.audio 4, whose API the diarisation code does not target
+# (requirements.txt caps it below 4, DEPS-10), and added speechbrain, which
+# DEPS-11 removed because pyannote.audio installs what it needs itself.
+PYANNOTE_PACKAGES = ("torch", "torchaudio", "pyannote.audio")
+_REQUIREMENT_NAME = re.compile(r"^([A-Za-z0-9][A-Za-z0-9._-]*)")
+
+
+def _canonical(name):
+    """The distribution name as pip compares it (PEP 503 normalisation)."""
+    return re.sub(r"[-_.]+", "-", name).lower()
+
+
+def pyannote_requirements(path=REQUIREMENTS_FILE, packages=PYANNOTE_PACKAGES):
+    """The requirement lines of *packages* in *path*, in the order of *packages*.
+
+    Raises ValueError naming any package *path* does not list, so the wizard
+    never falls back to an unbounded install.
+    """
+    lines = {}
+    for raw in Path(path).read_text(encoding='utf-8').splitlines():
+        line = raw.split('#', 1)[0].strip()
+        match = _REQUIREMENT_NAME.match(line)
+        if match:
+            lines.setdefault(_canonical(match.group(1)), line)
+    missing = [name for name in packages if _canonical(name) not in lines]
+    if missing:
+        raise ValueError(f"{path} does not list {', '.join(missing)}")
+    return [lines[_canonical(name)] for name in packages]
+
+
+def _pip_install_command(requirements):
+    """The command a user can paste to install *requirements* by hand."""
+    return "pip install " + " ".join(f'"{spec}"' for spec in requirements)
+
+
+def _manual_install_hint():
+    """The pip command for the pinned packages, or the whole requirements file."""
+    try:
+        return _pip_install_command(pyannote_requirements())
+    except (OSError, ValueError):
+        return "pip install -r requirements.txt"
 
 
 def _load_pipeline(Pipeline, model_id, token):
@@ -73,7 +119,11 @@ def check_pyannote_installed():
 
 
 def install_pyannote():
-    """Install pyannote.audio and dependencies."""
+    """Install torch, torchaudio and pyannote.audio as requirements.txt pins them.
+
+    Returns True when pip succeeded. Side effect: runs one ``pip install``
+    in the active environment.
+    """
     print("\nInstalling pyannote.audio and required dependencies...")
     print("This may take a few minutes...\n")
 
@@ -90,28 +140,31 @@ def install_pyannote():
 
     import subprocess
 
-    packages = [
-        "pyannote.audio>=3.1.0",
-        "torch>=2.0.0",
-        "torchaudio>=2.0.0",
-        "speechbrain>=0.5.14",
-    ]
+    try:
+        requirements = pyannote_requirements()
+    except (OSError, ValueError) as e:
+        print(f"❌ Cannot read the pinned requirements: {e}")
+        print("Install from the repository root instead: pip install -r requirements.txt")
+        return False
 
     try:
-        for package in packages:
-            print(f"Installing {package}...")
-            # Use python -m pip to ensure it installs into the active environment
-            # NOT using --user flag to avoid personal space on HPC
-            result = subprocess.run(
-                [sys.executable, "-m", "pip", "install", package],
-                capture_output=True,
-                text=True
-            )
-            if result.returncode != 0:
-                print(f"⚠️  Warning: {package} installation had issues")
-                print(result.stderr[:500])  # Show first 500 chars of error
-            else:
-                print(f"✅ {package} installed successfully")
+        print(f"Installing {' '.join(requirements)}...")
+        # One pip call, so the resolver chooses torch and torchaudio together
+        # and pyannote.audio within requirements.txt's cap; separate calls
+        # could leave mismatched torch and torchaudio builds. python -m pip
+        # installs into the active environment, and no --user flag keeps the
+        # packages out of the personal space on HPC.
+        result = subprocess.run(
+            [sys.executable, "-m", "pip", "install", *requirements],
+            capture_output=True,
+            text=True
+        )
+        if result.returncode != 0:
+            print("❌ Installation failed:")
+            print(result.stderr[:500])  # Show first 500 chars of error
+            print("\nTry manual installation:")
+            print(f"  {_pip_install_command(requirements)}")
+            return False
 
         print("\n✅ All packages installed!")
 
@@ -132,7 +185,7 @@ def install_pyannote():
     except Exception as e:
         print(f"\n❌ Installation failed: {e}")
         print("\nTry manual installation:")
-        print("  pip install pyannote.audio torch torchaudio speechbrain")
+        print(f"  {_pip_install_command(requirements)}")
         return False
 
 
@@ -411,7 +464,7 @@ def print_summary(results):
             print("  3. Run this script again: python setup/setup_pyannote.py")
         else:
             print("  • Check error messages above for specific issues")
-            print("  • Try running: pip install --upgrade pyannote.audio")
+            print(f"  • Try running: {_manual_install_hint()}")
 
     print("=" * 70)
 
@@ -443,7 +496,7 @@ def main():
 
     if not is_installed:
         print("\n❌ Cannot proceed without pyannote.audio")
-        print("Install it manually: pip install pyannote.audio")
+        print(f"Install it manually: {_manual_install_hint()}")
         print_summary(results)
         return
 

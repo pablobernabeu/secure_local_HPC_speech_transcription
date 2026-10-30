@@ -1,0 +1,1359 @@
+{
+  "schema_version": 1,
+  "title": "Inputs of the multilingual and cross-hardware results",
+  "source": "Oxford ARC: the workflow's evaluation directory, $DATA/speech_transcription_env/output/evaluation/, and the job logs in $HOME/paper_speech_transcription/logs/",
+  "recovered_and_verified_on": "2026-10-30",
+  "release": "2.1.1",
+  "availability": "Deposited as multilingual_hardware_inputs_2026-10.zip in the data record https://doi.org/10.5281/zenodo.23442874, beside the English sweep's inputs (sweep_inputs_2026-10.zip, whose receipt is sweep_input_manifest.json).",
+  "files_deposited": 84,
+  "total_bytes": 56697392,
+  "digest_policy": "bytes and sha256 are of each file as deposited. original_sha256 is what sha256sum printed for the original on ARC on the recovery date, which the copy was checked against. For a file deposited byte for byte the two digests are equal, and they are the digests the committed results record. A sanitised file also gives original_bytes and its substitution counts; where a committed result records its digest, that is original_sha256, because the producer read the original.",
+  "layout": {
+    "evaluation/": "$DATA/speech_transcription_env/output/evaluation/ on ARC, at the same relative paths. The multilingual comparison's third arm wrote into that directory itself, so its summaries sit at the top of evaluation/.",
+    "clone/logs/": "$HOME/paper_speech_transcription/logs/ on ARC, the logs of the jobs run from that clone."
+  },
+  "sanitisation": {
+    "applies_to": "the 22 files marked sanitised: the 18 job logs of the multilingual comparison's first three arms, the three environment records the Spanish control reads and the H100 run's job log that the cross-hardware comparison reads",
+    "table": [
+      {
+        "on_arc": "`/data/<project>/<user>`, the account's directory on the project data storage",
+        "placeholder": "$DATA"
+      },
+      {
+        "on_arc": "`/home/<user>`, the account's home directory",
+        "placeholder": "$HOME"
+      },
+      {
+        "on_arc": "the account's user name, elsewhere",
+        "placeholder": "<user>"
+      },
+      {
+        "on_arc": "the first of the account's two project codes",
+        "placeholder": "<project-a>"
+      },
+      {
+        "on_arc": "the second project code",
+        "placeholder": "<project-b>"
+      }
+    ],
+    "readme": "Twenty-two files are sanitised copies: the deployment's paths, user name and project codes in them are replaced by placeholders, as the table below gives. They are the 18 job logs under `inputs/clone/logs/wer_fleurs_ml_*`, which no program reads and which are deposited for the card each task names on the line after `GPU:`; the three environment records under `environment/` that `evaluation.fleurs_control` reads; and `inputs/clone/logs/determinism_8554985.out`, the H100 run's log that `evaluation.determinism_cross` reads. The committed control and cross-hardware comparison record the digests of the four originals their producers read, and the manifest gives each of them as the `original_sha256` of its sanitised copy. The other 62 files are deposited byte for byte."
+  },
+  "artefacts": {
+    "output/evaluation/fleurs_multilingual_summary.json": {
+      "description": "Six non-English FLEURS test splits (Polish, Spanish, French, German, Italian and Dutch) scored with Whisper Large v3, raw and through the full post-processing (pipeline_full), in four arms: before the Unicode repair (ARC jobs 8166513 and 8166514, code 9ae40a2), after it (8174224 and 8174225, 812552b), with the language gate (8245204 and 8245205, c0f58c5) and the re-run at the audited code (8917984, 6f9bf56). The 48 summaries are what evaluation.fleurs_multilingual reads. The 18 job logs name the card each task of the first three arms ran on, which their summaries do not record and the module's registry of the arms gives.",
+      "module": "evaluation.fleurs_multilingual",
+      "committed_at": "51e6d47",
+      "built_at": "0f5b13e",
+      "arguments": [
+        "--arm 1_before_fix=@evaluation/prefix_baseline",
+        "--arm 2_after_fix=@evaluation/afterfix_pregate",
+        "--arm 3_after_gate=@evaluation",
+        "--arm 4_after_audit=@evaluation/audit2026/fleurs_ml",
+        "--diacritics output/evaluation/fleurs_diacritic_shares.json",
+        "--carry-from output/evaluation/fleurs_multilingual_summary.json",
+        "--exact --record-inputs",
+        "--out my_check/fleurs_multilingual_summary.json"
+      ],
+      "reproduces": "The rebuilt file matches the committed one value for value and in key order, except `benchmark.assembled_by`, which records the rebuild's own run. Each input's SHA-256 is among the 48 that `benchmark.inputs` records. The diacritic shares are read from the committed `fleurs_diacritic_shares.json`, which `evaluation.fleurs_diacritics` measures on the corpus itself, so this archive is not needed for them, and the prose `finding` block is carried over from the committed file."
+    },
+    "output/evaluation/fleurs_es419_v100_control.json": {
+      "description": "The Spanish control of the fourth arm's drift: Whisper Large v3 on the whole es_419 test split at the fourth arm's code (6f9bf56) on a Tesla V100-PCIE-32GB, ARC jobs 9124739 (pre-flight) and 9124863 (the full split), compared record by record with the four arms' raw Spanish summaries, which are among the multilingual comparison's files.",
+      "module": "evaluation.fleurs_control",
+      "committed_at": "79d1e9c",
+      "built_at": "ce1ca7f",
+      "arguments": [
+        "--control @evaluation/controls/es_419_v100_6f9bf56/wer_summary_fleurs_es_419_whisper-large-v3.json",
+        "--preflight @evaluation/controls/es_419_v100_6f9bf56_preflight/wer_summary_fleurs_es_419_whisper-large-v3.json",
+        "--arm 1_before_fix=@evaluation/prefix_baseline/wer_summary_fleurs_es_419.json",
+        "--arm 2_after_fix=@evaluation/afterfix_pregate/wer_summary_fleurs_es_419.json",
+        "--arm 3_after_gate=@evaluation/wer_summary_fleurs_es_419.json",
+        "--arm 4_after_audit=@evaluation/audit2026/fleurs_ml/wer_summary_fleurs_es_419_whisper-large-v3.json",
+        "--target 3_after_gate",
+        "--environment control=@evaluation/controls/es_419_v100_6f9bf56/environment/ctl_es419_v100_9124863_2.txt",
+        "--environment preflight=@evaluation/controls/es_419_v100_6f9bf56_preflight/environment/pf_es419_v100_9124739_2.txt",
+        "--environment 4_after_audit=@evaluation/audit2026/fleurs_ml/environment/au_ml_8917984_2.txt",
+        "--multilingual output/evaluation/fleurs_multilingual_summary.json",
+        "--out my_check/fleurs_es419_v100_control.json"
+      ],
+      "reproduces": "The rebuilt record matches the committed one except in two places. The three environment records' `sha256` and `sha256_lf` in `inputs` differ: the committed record names the unsanitised originals, and the manifest maps each original's digest (`original_sha256`) to its sanitised copy. `run_metadata` records the rebuild's own run. The rest, the `jobs` block included, comes back identical: the records' `slurm_account` reads `<project-a>` or `<project-b>`, as the committed record gives it. The multilingual summary's `sha256` in `inputs` is that of the checkout's bytes, which git writes with CRLF line endings on a Windows checkout like the one the committed record was made in; its `sha256_lf` is the same on any checkout."
+    },
+    "output/evaluation/determinism/determinism_cross_accelerator.json": {
+      "description": "The first 200 AMI test utterances decoded by Whisper Large v3 in five runs on four hardware configurations: an NVIDIA L40S (ARC job 8781724), a processor without a GPU (8978759), the condition sweep's V100 pass (8917985 task 1, with its preflight 8913987 task 1) and the check's own V100 run (8978760), compared word for word, and an H100 NVL (8554985) through the error rates its log printed. The runs record lists what each run was (determinism_cross_accelerator_runs.json).",
+      "module": "evaluation.determinism_cross",
+      "committed_at": "c813fe5",
+      "built_at": "203d3ba",
+      "arguments": [
+        "--dump cpu=@evaluation/repro/cpu_arm/determinism_cpu/seed0_run1.csv",
+        "--repeat cpu=@evaluation/repro/cpu_arm/determinism_cpu/seed0_run2.csv",
+        "--report cpu=@evaluation/repro/cpu_arm/determinism_cpu/wer_seed0_run1.csv",
+        "--dump l40s=@evaluation/determinism/seed0_run1.csv",
+        "--repeat l40s=@evaluation/determinism/seed0_run2.csv",
+        "--report l40s=@evaluation/determinism/wer_seed0_run1.csv",
+        "--dump v100=@evaluation/audit2026/sweep/wer_hypotheses_ami_whisper-large-v3.csv",
+        "--repeat v100=@evaluation/audit2026/preflight_wer/wer_hypotheses_ami_whisper-large-v3.csv",
+        "--report v100=@evaluation/audit2026/sweep/wer_report_ami_whisper-large-v3.csv",
+        "--dump v100_seed0=@evaluation/repro/v100_arm/determinism/seed0_run1.csv",
+        "--repeat v100_seed0=@evaluation/repro/v100_arm/determinism/seed0_run2.csv",
+        "--report v100_seed0=@evaluation/repro/v100_arm/determinism/wer_seed0_run1.csv",
+        "--log h100=@clone/logs/determinism_8554985.out",
+        "--subset l40s",
+        "--meta output/evaluation/determinism/determinism_cross_accelerator_runs.json",
+        "--json my_check/determinism_cross_accelerator.json"
+      ],
+      "reproduces": "The rebuilt comparison matches the committed one except in two places. The H100 log's `sha256` and `sha256_lf` in `runs.h100.inputs.log` differ: the committed comparison names the unsanitised original, and the manifest maps its digest (`original_sha256`) to the sanitised copy. `run_metadata` records the rebuild's own run."
+    }
+  },
+  "corpus_notices": [
+    {
+      "corpus": "FLEURS",
+      "source": "https://huggingface.co/datasets/google/fleurs",
+      "data_licence": "CC-BY-4.0",
+      "detail": "The test splits of pl_pl, es_419, fr_fr, de_de, it_it and nl_nl; the fourth arm and the control record revision 70bb2e84b976b7e960aa89f1c648e09c59f894dd, and the first three arms predate the revision pin."
+    },
+    {
+      "corpus": "AMI Meeting Corpus",
+      "source": "https://groups.inf.ed.ac.uk/ami/corpus/license.shtml",
+      "data_licence": "CC-BY-4.0",
+      "detail": "edinburghcstr/ami, ihm, test split, revision 46f28f2503e2ec48f8867a84eef356c70476beab; the sweep's dump holds the whole split and its preflight's the first 10 utterances, and the other AMI files hold the first 200, all from meeting EN2002a."
+    }
+  ],
+  "notice": "The AMI hypothesis dumps hold corpus reference text and hypotheses Whisper Large v3 generated, which contain recognition errors. The FLEURS summaries hold per-utterance error rates and alignment counts, not text. Source corpus rights remain in force.",
+  "files": [
+    {
+      "path": "clone/logs/determinism_8554985.out",
+      "bytes": 47403,
+      "sha256": "a25b0a61828192ece498c6fb4801e711e5d399aeb2511725e1e90204657bc1d2",
+      "original_bytes": 47963,
+      "original_sha256": "d9314bf22e89df8d3fde888abbfc352a2808dd55e68aeb0e668ceb7b35b4425c",
+      "sanitised": true,
+      "substitutions": {
+        "$DATA": 29,
+        "$HOME": 1,
+        "<user>": 2,
+        "<project-a>": 2
+      },
+      "backs": [
+        "output/evaluation/determinism/determinism_cross_accelerator.json"
+      ],
+      "job": "8554985",
+      "commit": "754594d",
+      "commit_source": "the ARC clone's reflog",
+      "role": "--log h100: job log of the H100 run, whose per-utterance error rates enter the comparison; its original_sha256 is the digest the committed result records for it in runs.h100.inputs.log"
+    },
+    {
+      "path": "clone/logs/wer_fleurs_ml_8166513_0.out",
+      "bytes": 28734,
+      "sha256": "7673976beaa4858a15a59d21cce54469014079a8414aeeed1e53aa4f309f4ede",
+      "original_bytes": 29009,
+      "original_sha256": "d7553c84bdd80cb2b3c6251e1f28df9ac3b5134096212f0da78d44f5c34e8308",
+      "sanitised": true,
+      "substitutions": {
+        "$DATA": 14,
+        "$HOME": 1
+      },
+      "role": "job log of arm 1_before_fix's French task: the line after 'GPU:' names the card, which benchmark.arms.1_before_fix.gpus.fr_fr gives",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8166513_0",
+      "commit": "9ae40a2",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py"
+    },
+    {
+      "path": "clone/logs/wer_fleurs_ml_8166513_1.out",
+      "bytes": 35993,
+      "sha256": "dc270575d182cb3785fe83a2d4f8149da020c0dc73742e2e85e36dfbef0b6585",
+      "original_bytes": 36268,
+      "original_sha256": "c04e74f70b583909de78d3bab04bae46cb66d9ae9c11b9e3e3275097ab80d11a",
+      "sanitised": true,
+      "substitutions": {
+        "$DATA": 14,
+        "$HOME": 1
+      },
+      "role": "job log of arm 1_before_fix's German task: the line after 'GPU:' names the card, which benchmark.arms.1_before_fix.gpus.de_de gives",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8166513_1",
+      "commit": "9ae40a2",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py"
+    },
+    {
+      "path": "clone/logs/wer_fleurs_ml_8166513_2.out",
+      "bytes": 37797,
+      "sha256": "f34c44003baceb000f0555d7b23bff6b9a2e1534043eae18066016ab444cda33",
+      "original_bytes": 38072,
+      "original_sha256": "15aa1e99a1e7f3ceaf5c2ef574a73e45e9da634d8fc93855e0ddedaad947f519",
+      "sanitised": true,
+      "substitutions": {
+        "$DATA": 14,
+        "$HOME": 1
+      },
+      "role": "job log of arm 1_before_fix's Spanish task: the line after 'GPU:' names the card, which benchmark.arms.1_before_fix.gpus.es_419 gives",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json",
+        "output/evaluation/fleurs_es419_v100_control.json"
+      ],
+      "job": "8166513_2",
+      "commit": "9ae40a2",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py"
+    },
+    {
+      "path": "clone/logs/wer_fleurs_ml_8166514_3.out",
+      "bytes": 36108,
+      "sha256": "5dd632cd4deb1a4fe5fd77612d4928176c64904f65554d249a643dc1f9eb1343",
+      "original_bytes": 36383,
+      "original_sha256": "e033f691566190d1cf046def24f7c075f3ea6aaf5831f2481b61f30864eb7358",
+      "sanitised": true,
+      "substitutions": {
+        "$DATA": 14,
+        "$HOME": 1
+      },
+      "role": "job log of arm 1_before_fix's Italian task: the line after 'GPU:' names the card, which benchmark.arms.1_before_fix.gpus.it_it gives",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8166514_3",
+      "commit": "9ae40a2",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py"
+    },
+    {
+      "path": "clone/logs/wer_fleurs_ml_8166514_4.out",
+      "bytes": 16561,
+      "sha256": "cdeb218ff96f027cf79c6ce8ee8a45ebd52b9969e1b12effc77a5fd9280b23cb",
+      "original_bytes": 16836,
+      "original_sha256": "45f19766f4631474a12b7a6ce002e442e73186ed28016337258ca47a5fa5ca10",
+      "sanitised": true,
+      "substitutions": {
+        "$DATA": 14,
+        "$HOME": 1
+      },
+      "role": "job log of arm 1_before_fix's Dutch task: the line after 'GPU:' names the card, which benchmark.arms.1_before_fix.gpus.nl_nl gives",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8166514_4",
+      "commit": "9ae40a2",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py"
+    },
+    {
+      "path": "clone/logs/wer_fleurs_ml_8166514_5.out",
+      "bytes": 31937,
+      "sha256": "764a5b1fade87d908278b67357f8d50c8790cbd786e6fb378a67c6d41e9c6bac",
+      "original_bytes": 32212,
+      "original_sha256": "3df3e6c76faa438d9aeee5d0193e4e3ee199d1ec5adc2f8d7a1dfa419a3d2fd9",
+      "sanitised": true,
+      "substitutions": {
+        "$DATA": 14,
+        "$HOME": 1
+      },
+      "role": "job log of arm 1_before_fix's Polish task: the line after 'GPU:' names the card, which benchmark.arms.1_before_fix.gpus.pl_pl gives",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8166514_5",
+      "commit": "9ae40a2",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py"
+    },
+    {
+      "path": "clone/logs/wer_fleurs_ml_8174224_0.out",
+      "bytes": 28739,
+      "sha256": "954dbeca31f380fea5ee714943f4731200e74ed5962106ca70066d1006ddb315",
+      "original_bytes": 29014,
+      "original_sha256": "58e48d88a90668c409725289b5c238c91db951d7fee31a446afae9021a8a0471",
+      "sanitised": true,
+      "substitutions": {
+        "$DATA": 14,
+        "$HOME": 1
+      },
+      "role": "job log of arm 2_after_fix's French task: the line after 'GPU:' names the card, which benchmark.arms.2_after_fix.gpus.fr_fr gives",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8174224_0",
+      "commit": "812552b",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py"
+    },
+    {
+      "path": "clone/logs/wer_fleurs_ml_8174224_1.out",
+      "bytes": 35993,
+      "sha256": "c82cdf2f5112714025cb9cce56207c20e64c606bb26940922d81b2a2849212bc",
+      "original_bytes": 36268,
+      "original_sha256": "d1aa46bcc42b66e6718efd88811c5505def29eb438a6e7d18f5b1a1b0d8faa91",
+      "sanitised": true,
+      "substitutions": {
+        "$DATA": 14,
+        "$HOME": 1
+      },
+      "role": "job log of arm 2_after_fix's German task: the line after 'GPU:' names the card, which benchmark.arms.2_after_fix.gpus.de_de gives",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8174224_1",
+      "commit": "812552b",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py"
+    },
+    {
+      "path": "clone/logs/wer_fleurs_ml_8174224_2.out",
+      "bytes": 37797,
+      "sha256": "48a81bb4023c529d70b8a22c46a9fba0464eba8c3fc454db7fe56cfa39947c6e",
+      "original_bytes": 38072,
+      "original_sha256": "d15ff116c4bc4483ade9af12b6119c68582e8103ecdda5b335dd1ad350e697a0",
+      "sanitised": true,
+      "substitutions": {
+        "$DATA": 14,
+        "$HOME": 1
+      },
+      "role": "job log of arm 2_after_fix's Spanish task: the line after 'GPU:' names the card, which benchmark.arms.2_after_fix.gpus.es_419 gives",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json",
+        "output/evaluation/fleurs_es419_v100_control.json"
+      ],
+      "job": "8174224_2",
+      "commit": "812552b",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py"
+    },
+    {
+      "path": "clone/logs/wer_fleurs_ml_8174225_3.out",
+      "bytes": 36113,
+      "sha256": "ad29038551d6f39ffa5051f1268c86b93437d05c665c43d17f4c0a2a37673d11",
+      "original_bytes": 36388,
+      "original_sha256": "eb3dc23f6323742d87c5fc0bd36a8d4622b2807681c7044884cb951db961a553",
+      "sanitised": true,
+      "substitutions": {
+        "$DATA": 14,
+        "$HOME": 1
+      },
+      "role": "job log of arm 2_after_fix's Italian task: the line after 'GPU:' names the card, which benchmark.arms.2_after_fix.gpus.it_it gives",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8174225_3",
+      "commit": "812552b",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py"
+    },
+    {
+      "path": "clone/logs/wer_fleurs_ml_8174225_4.out",
+      "bytes": 16566,
+      "sha256": "a1c7b04f364131f267b3f9b53023ec8ac15d2819cd3f3144d020d33c4f42cf32",
+      "original_bytes": 16841,
+      "original_sha256": "a609e0dfae950a2fd88e4b1480fb0aab27e30c849b5f367b8e15a7b9ee984cd8",
+      "sanitised": true,
+      "substitutions": {
+        "$DATA": 14,
+        "$HOME": 1
+      },
+      "role": "job log of arm 2_after_fix's Dutch task: the line after 'GPU:' names the card, which benchmark.arms.2_after_fix.gpus.nl_nl gives",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8174225_4",
+      "commit": "812552b",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py"
+    },
+    {
+      "path": "clone/logs/wer_fleurs_ml_8174225_5.out",
+      "bytes": 31937,
+      "sha256": "b497ca071b02776df3cd7cb82ec20c03735d8553ebe79c34c5dd48106ffbd6e1",
+      "original_bytes": 32212,
+      "original_sha256": "f51f388ff67bfcb11df176d688a4ea501f85c1a65f5a0ca180230f36d21a2ca3",
+      "sanitised": true,
+      "substitutions": {
+        "$DATA": 14,
+        "$HOME": 1
+      },
+      "role": "job log of arm 2_after_fix's Polish task: the line after 'GPU:' names the card, which benchmark.arms.2_after_fix.gpus.pl_pl gives",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8174225_5",
+      "commit": "812552b",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py"
+    },
+    {
+      "path": "clone/logs/wer_fleurs_ml_8245204_0.out",
+      "bytes": 28739,
+      "sha256": "95f56232278d8ba711479c4ea9a83846c504a936601dcccd99d7c38c975c9ed0",
+      "original_bytes": 29014,
+      "original_sha256": "1340ba66547b14e18d670b2c8b021f3cbc4b1718eb75e24f4e9b87a06093d70b",
+      "sanitised": true,
+      "substitutions": {
+        "$DATA": 14,
+        "$HOME": 1
+      },
+      "role": "job log of arm 3_after_gate's French task: the line after 'GPU:' names the card, which benchmark.arms.3_after_gate.gpus.fr_fr gives",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8245204_0",
+      "commit": "c0f58c5",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py"
+    },
+    {
+      "path": "clone/logs/wer_fleurs_ml_8245204_1.out",
+      "bytes": 35993,
+      "sha256": "f9a86ceff45725025965f4904a5d68923c015993353da44b508f0172e1282bd4",
+      "original_bytes": 36268,
+      "original_sha256": "24a580e76b96fc2e47e2b7f28a95f97e8183856077081b5f096d3da663a7e06d",
+      "sanitised": true,
+      "substitutions": {
+        "$DATA": 14,
+        "$HOME": 1
+      },
+      "role": "job log of arm 3_after_gate's German task: the line after 'GPU:' names the card, which benchmark.arms.3_after_gate.gpus.de_de gives",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8245204_1",
+      "commit": "c0f58c5",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py"
+    },
+    {
+      "path": "clone/logs/wer_fleurs_ml_8245204_2.out",
+      "bytes": 37797,
+      "sha256": "6a0cc572d970930da4cd773a2983da33493e2be14ae3a60e8afc1aa564530810",
+      "original_bytes": 38072,
+      "original_sha256": "b5dd3605be6979ba0ce1e40426c94eb6a777daa87c9cbb4a4aeb6bfacfa00e19",
+      "sanitised": true,
+      "substitutions": {
+        "$DATA": 14,
+        "$HOME": 1
+      },
+      "role": "job log of arm 3_after_gate's Spanish task: the line after 'GPU:' names the card, which benchmark.arms.3_after_gate.gpus.es_419 gives",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json",
+        "output/evaluation/fleurs_es419_v100_control.json"
+      ],
+      "job": "8245204_2",
+      "commit": "c0f58c5",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py"
+    },
+    {
+      "path": "clone/logs/wer_fleurs_ml_8245205_3.out",
+      "bytes": 36113,
+      "sha256": "7d0f39960f2e7bae4fa22537002470d5376dc404ad507130f4833ae3aa0b0ee9",
+      "original_bytes": 36388,
+      "original_sha256": "7c5574b3b803df8970d930504548c051d72bc138692e3d34032f7f8c92b32c94",
+      "sanitised": true,
+      "substitutions": {
+        "$DATA": 14,
+        "$HOME": 1
+      },
+      "role": "job log of arm 3_after_gate's Italian task: the line after 'GPU:' names the card, which benchmark.arms.3_after_gate.gpus.it_it gives",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8245205_3",
+      "commit": "c0f58c5",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py"
+    },
+    {
+      "path": "clone/logs/wer_fleurs_ml_8245205_4.out",
+      "bytes": 16566,
+      "sha256": "d219d673cab43bf35175fe865b34da852707807536d8877b72c7def2347c4ff3",
+      "original_bytes": 16841,
+      "original_sha256": "e86f4bd5aacbc70bc544e1902567f7b9ae935081ed134ad917eb1747211096c4",
+      "sanitised": true,
+      "substitutions": {
+        "$DATA": 14,
+        "$HOME": 1
+      },
+      "role": "job log of arm 3_after_gate's Dutch task: the line after 'GPU:' names the card, which benchmark.arms.3_after_gate.gpus.nl_nl gives",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8245205_4",
+      "commit": "c0f58c5",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py"
+    },
+    {
+      "path": "clone/logs/wer_fleurs_ml_8245205_5.out",
+      "bytes": 31937,
+      "sha256": "c63f42760bf55b6622b4547b7a247147ecc48bd0bface3e46530071b8bf3ab5a",
+      "original_bytes": 32212,
+      "original_sha256": "a396e7d8dffa1482e4137574206e58f11e083d97415767845ece56ce91e67ae4",
+      "sanitised": true,
+      "substitutions": {
+        "$DATA": 14,
+        "$HOME": 1
+      },
+      "role": "job log of arm 3_after_gate's Polish task: the line after 'GPU:' names the card, which benchmark.arms.3_after_gate.gpus.pl_pl gives",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8245205_5",
+      "commit": "c0f58c5",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py"
+    },
+    {
+      "path": "evaluation/afterfix_pregate/wer_summary_fleurs_de_de.json",
+      "bytes": 242685,
+      "sha256": "75f246b6368ff2219eba63fafe811c01da8864903d441e6e97b58b019a590100",
+      "original_sha256": "75f246b6368ff2219eba63fafe811c01da8864903d441e6e97b58b019a590100",
+      "role": "German (de_de) summary, condition raw, arm 2_after_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8174224_1",
+      "commit": "812552b",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/afterfix_pregate/wer_summary_fleurs_de_de_pipeline_full.json",
+      "bytes": 245881,
+      "sha256": "98c50929c7a4a5f0d7fb10854466d1ebde9b55e2e2b86e849c89dc1f2faf4552",
+      "original_sha256": "98c50929c7a4a5f0d7fb10854466d1ebde9b55e2e2b86e849c89dc1f2faf4552",
+      "role": "German (de_de) summary, condition pipeline_full, arm 2_after_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8174224_1",
+      "commit": "812552b",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/afterfix_pregate/wer_summary_fleurs_es_419.json",
+      "bytes": 252540,
+      "sha256": "92d3ba92f5f119b034bc07908713cd3845391605e76eed803f042851cc953aeb",
+      "original_sha256": "92d3ba92f5f119b034bc07908713cd3845391605e76eed803f042851cc953aeb",
+      "role": "Spanish (es_419) summary, condition raw, arm 2_after_fix; also the control's --arm 2_after_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json",
+        "output/evaluation/fleurs_es419_v100_control.json"
+      ],
+      "job": "8174224_2",
+      "commit": "812552b",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/afterfix_pregate/wer_summary_fleurs_es_419_pipeline_full.json",
+      "bytes": 252548,
+      "sha256": "3fde36d76e4620e4909c8a9d1984f46d445bf0ca10f37ddfc1c6f8fe7501d597",
+      "original_sha256": "3fde36d76e4620e4909c8a9d1984f46d445bf0ca10f37ddfc1c6f8fe7501d597",
+      "role": "Spanish (es_419) summary, condition pipeline_full, arm 2_after_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8174224_2",
+      "commit": "812552b",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/afterfix_pregate/wer_summary_fleurs_fr_fr.json",
+      "bytes": 193950,
+      "sha256": "3f1608e40da21fcc927aeabbe442c77f64769db53ba6a7e7b0f4c6f37d9f8470",
+      "original_sha256": "3f1608e40da21fcc927aeabbe442c77f64769db53ba6a7e7b0f4c6f37d9f8470",
+      "role": "French (fr_fr) summary, condition raw, arm 2_after_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8174224_0",
+      "commit": "812552b",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/afterfix_pregate/wer_summary_fleurs_fr_fr_pipeline_full.json",
+      "bytes": 194294,
+      "sha256": "33b576c174a5e7702bbcce95f7aff00452583d77490552569f2e960c0f461a9b",
+      "original_sha256": "33b576c174a5e7702bbcce95f7aff00452583d77490552569f2e960c0f461a9b",
+      "role": "French (fr_fr) summary, condition pipeline_full, arm 2_after_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8174224_0",
+      "commit": "812552b",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/afterfix_pregate/wer_summary_fleurs_it_it.json",
+      "bytes": 236939,
+      "sha256": "256750d4bf5384cfa29835ec326a11f95831155e151b7c722419c72d1a3f6348",
+      "original_sha256": "256750d4bf5384cfa29835ec326a11f95831155e151b7c722419c72d1a3f6348",
+      "role": "Italian (it_it) summary, condition raw, arm 2_after_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8174225_3",
+      "commit": "812552b",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/afterfix_pregate/wer_summary_fleurs_it_it_pipeline_full.json",
+      "bytes": 236949,
+      "sha256": "78a3c21ca21b4846af09d5bb8fead3a11d06fc5209b6f835c0d86baed35e2843",
+      "original_sha256": "78a3c21ca21b4846af09d5bb8fead3a11d06fc5209b6f835c0d86baed35e2843",
+      "role": "Italian (it_it) summary, condition pipeline_full, arm 2_after_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8174225_3",
+      "commit": "812552b",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/afterfix_pregate/wer_summary_fleurs_nl_nl.json",
+      "bytes": 106026,
+      "sha256": "377d8b802f1e63d290b1f1bf7e84e97ca26aa3eed8af62277165275854db2e25",
+      "original_sha256": "377d8b802f1e63d290b1f1bf7e84e97ca26aa3eed8af62277165275854db2e25",
+      "role": "Dutch (nl_nl) summary, condition raw, arm 2_after_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8174225_4",
+      "commit": "812552b",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/afterfix_pregate/wer_summary_fleurs_nl_nl_pipeline_full.json",
+      "bytes": 106045,
+      "sha256": "2ec2db80de04b5f015c95466717b32b49e4690dd081ccec711e049a5d31cf2bd",
+      "original_sha256": "2ec2db80de04b5f015c95466717b32b49e4690dd081ccec711e049a5d31cf2bd",
+      "role": "Dutch (nl_nl) summary, condition pipeline_full, arm 2_after_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8174225_4",
+      "commit": "812552b",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/afterfix_pregate/wer_summary_fleurs_pl_pl.json",
+      "bytes": 212833,
+      "sha256": "2a5457bb84a96ae1d84f1250af6f1477f5f23088761fe87c24caf98e5869d6b5",
+      "original_sha256": "2a5457bb84a96ae1d84f1250af6f1477f5f23088761fe87c24caf98e5869d6b5",
+      "role": "Polish (pl_pl) summary, condition raw, arm 2_after_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8174225_5",
+      "commit": "812552b",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/afterfix_pregate/wer_summary_fleurs_pl_pl_pipeline_full.json",
+      "bytes": 213038,
+      "sha256": "7692861a7d386583895f2633bc604362d0d53bc043f2397df82cdf57d0234dbf",
+      "original_sha256": "7692861a7d386583895f2633bc604362d0d53bc043f2397df82cdf57d0234dbf",
+      "role": "Polish (pl_pl) summary, condition pipeline_full, arm 2_after_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8174225_5",
+      "commit": "812552b",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/audit2026/fleurs_ml/environment/au_ml_8917984_2.txt",
+      "bytes": 5721,
+      "sha256": "5bbe2340ebca0970601dbb4f645b9b0a3e9e843691f591354da7ecfdcd0db909",
+      "original_bytes": 5937,
+      "original_sha256": "3c0e52314cee1923892b943dd686b79d8430de342eaf33491cd5b6ccfffa0fef",
+      "sanitised": true,
+      "substitutions": {
+        "$DATA": 11,
+        "$HOME": 1,
+        "<project-a>": 1
+      },
+      "backs": [
+        "output/evaluation/fleurs_es419_v100_control.json"
+      ],
+      "job": "8917984_2",
+      "commit": "6f9bf56",
+      "commit_source": "the record itself",
+      "role": "--environment 4_after_audit: environment record of the fourth arm's Spanish task, read for jobs.4_after_audit; its original_sha256 is the digest the committed result records for it in inputs"
+    },
+    {
+      "path": "evaluation/audit2026/fleurs_ml/wer_summary_fleurs_de_de_whisper-large-v3.json",
+      "bytes": 245362,
+      "sha256": "670938d07d061ead2d0480b1a9094e1707c17d7fb193139473d659794a180679",
+      "original_sha256": "670938d07d061ead2d0480b1a9094e1707c17d7fb193139473d659794a180679",
+      "role": "German (de_de) summary, condition raw, arm 4_after_audit",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8917984_1",
+      "commit": "6f9bf56",
+      "commit_source": "run_metadata in the file"
+    },
+    {
+      "path": "evaluation/audit2026/fleurs_ml/wer_summary_fleurs_de_de_whisper-large-v3_pipeline_full.json",
+      "bytes": 245372,
+      "sha256": "0bc79b870a2bdb44da61bb506ef834ff7dba95e940d3bac449b2865eb34c8315",
+      "original_sha256": "0bc79b870a2bdb44da61bb506ef834ff7dba95e940d3bac449b2865eb34c8315",
+      "role": "German (de_de) summary, condition pipeline_full, arm 4_after_audit",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8917984_1",
+      "commit": "6f9bf56",
+      "commit_source": "run_metadata in the file"
+    },
+    {
+      "path": "evaluation/audit2026/fleurs_ml/wer_summary_fleurs_es_419_whisper-large-v3.json",
+      "bytes": 255370,
+      "sha256": "3c21bba3b288e3b97105fefaada3f1c236bac10268f7c62c5b449f4f9bcd765e",
+      "original_sha256": "3c21bba3b288e3b97105fefaada3f1c236bac10268f7c62c5b449f4f9bcd765e",
+      "role": "Spanish (es_419) summary, condition raw, arm 4_after_audit; also the control's --arm 4_after_audit",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json",
+        "output/evaluation/fleurs_es419_v100_control.json"
+      ],
+      "job": "8917984_2",
+      "commit": "6f9bf56",
+      "commit_source": "run_metadata in the file"
+    },
+    {
+      "path": "evaluation/audit2026/fleurs_ml/wer_summary_fleurs_es_419_whisper-large-v3_pipeline_full.json",
+      "bytes": 255380,
+      "sha256": "655517bd35d543e5c8d1ee6e240aed9cb692e2a8da4027e5d2f0b62ee966f916",
+      "original_sha256": "655517bd35d543e5c8d1ee6e240aed9cb692e2a8da4027e5d2f0b62ee966f916",
+      "role": "Spanish (es_419) summary, condition pipeline_full, arm 4_after_audit",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8917984_2",
+      "commit": "6f9bf56",
+      "commit_source": "run_metadata in the file"
+    },
+    {
+      "path": "evaluation/audit2026/fleurs_ml/wer_summary_fleurs_fr_fr_whisper-large-v3.json",
+      "bytes": 196214,
+      "sha256": "d47d9d0452029f1cc14e24ad4344650f52861ddfc4d3fc6bcc254a8ce61bee25",
+      "original_sha256": "d47d9d0452029f1cc14e24ad4344650f52861ddfc4d3fc6bcc254a8ce61bee25",
+      "role": "French (fr_fr) summary, condition raw, arm 4_after_audit",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8917984_0",
+      "commit": "6f9bf56",
+      "commit_source": "run_metadata in the file"
+    },
+    {
+      "path": "evaluation/audit2026/fleurs_ml/wer_summary_fleurs_fr_fr_whisper-large-v3_pipeline_full.json",
+      "bytes": 196224,
+      "sha256": "1baacce9cae82480ec8c8d0eef6f36c940570b256868cfa0443d41166b04f15e",
+      "original_sha256": "1baacce9cae82480ec8c8d0eef6f36c940570b256868cfa0443d41166b04f15e",
+      "role": "French (fr_fr) summary, condition pipeline_full, arm 4_after_audit",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8917984_0",
+      "commit": "6f9bf56",
+      "commit_source": "run_metadata in the file"
+    },
+    {
+      "path": "evaluation/audit2026/fleurs_ml/wer_summary_fleurs_it_it_whisper-large-v3.json",
+      "bytes": 239695,
+      "sha256": "80f3626a5f96e6ee07bff47978d4aace3baaa3d1b92be3b8ca0dcd1210318fde",
+      "original_sha256": "80f3626a5f96e6ee07bff47978d4aace3baaa3d1b92be3b8ca0dcd1210318fde",
+      "role": "Italian (it_it) summary, condition raw, arm 4_after_audit",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8917984_3",
+      "commit": "6f9bf56",
+      "commit_source": "run_metadata in the file"
+    },
+    {
+      "path": "evaluation/audit2026/fleurs_ml/wer_summary_fleurs_it_it_whisper-large-v3_pipeline_full.json",
+      "bytes": 239705,
+      "sha256": "15f8fb90fe915573b6e25d357fc994b01cc81dfa1a7f828cd61cc6180f086876",
+      "original_sha256": "15f8fb90fe915573b6e25d357fc994b01cc81dfa1a7f828cd61cc6180f086876",
+      "role": "Italian (it_it) summary, condition pipeline_full, arm 4_after_audit",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8917984_3",
+      "commit": "6f9bf56",
+      "commit_source": "run_metadata in the file"
+    },
+    {
+      "path": "evaluation/audit2026/fleurs_ml/wer_summary_fleurs_nl_nl_whisper-large-v3.json",
+      "bytes": 107519,
+      "sha256": "95dfa8bf6ed35a5f2ec4429fb4cff8ef5830a5b0dc3dc77e021903c5809ae049",
+      "original_sha256": "95dfa8bf6ed35a5f2ec4429fb4cff8ef5830a5b0dc3dc77e021903c5809ae049",
+      "role": "Dutch (nl_nl) summary, condition raw, arm 4_after_audit",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8917984_4",
+      "commit": "6f9bf56",
+      "commit_source": "run_metadata in the file"
+    },
+    {
+      "path": "evaluation/audit2026/fleurs_ml/wer_summary_fleurs_nl_nl_whisper-large-v3_pipeline_full.json",
+      "bytes": 107529,
+      "sha256": "68a4a2bc18b80a0f51b690f7719e9b7d0d7fbea09712b6ee204aa0e75f8a75f0",
+      "original_sha256": "68a4a2bc18b80a0f51b690f7719e9b7d0d7fbea09712b6ee204aa0e75f8a75f0",
+      "role": "Dutch (nl_nl) summary, condition pipeline_full, arm 4_after_audit",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8917984_4",
+      "commit": "6f9bf56",
+      "commit_source": "run_metadata in the file"
+    },
+    {
+      "path": "evaluation/audit2026/fleurs_ml/wer_summary_fleurs_pl_pl_whisper-large-v3.json",
+      "bytes": 215336,
+      "sha256": "ae618553049c094d0153788b933470a33edd12b9d23adf404bf664f292237efe",
+      "original_sha256": "ae618553049c094d0153788b933470a33edd12b9d23adf404bf664f292237efe",
+      "role": "Polish (pl_pl) summary, condition raw, arm 4_after_audit",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8917984_5",
+      "commit": "6f9bf56",
+      "commit_source": "run_metadata in the file"
+    },
+    {
+      "path": "evaluation/audit2026/fleurs_ml/wer_summary_fleurs_pl_pl_whisper-large-v3_pipeline_full.json",
+      "bytes": 215346,
+      "sha256": "4c6546f6321797faa868e4f4ddafc7aa6ce772f10dc84a6dcdf5cfd962aae61f",
+      "original_sha256": "4c6546f6321797faa868e4f4ddafc7aa6ce772f10dc84a6dcdf5cfd962aae61f",
+      "role": "Polish (pl_pl) summary, condition pipeline_full, arm 4_after_audit",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8917984_5",
+      "commit": "6f9bf56",
+      "commit_source": "run_metadata in the file"
+    },
+    {
+      "path": "evaluation/audit2026/preflight_wer/wer_hypotheses_ami_whisper-large-v3.csv",
+      "bytes": 21608,
+      "sha256": "631ba63ea553f5059db6cd196d17d833d0ed16a4a8b8a784e0c00cb43f07bcd4",
+      "original_sha256": "631ba63ea553f5059db6cd196d17d833d0ed16a4a8b8a784e0c00cb43f07bcd4",
+      "role": "--repeat v100: the sweep preflight's dump of the first 10 utterances",
+      "backs": [
+        "output/evaluation/determinism/determinism_cross_accelerator.json"
+      ],
+      "job": "8913987_1 (Slurm job 8922107)",
+      "commit": "6f9bf56",
+      "commit_source": "run_metadata in the sweep's summaries"
+    },
+    {
+      "path": "evaluation/audit2026/sweep/wer_hypotheses_ami_whisper-large-v3.csv",
+      "bytes": 44320494,
+      "sha256": "3fa3957260f28a3af42ee0deadcda4445a1fd5142b94ba316127e2e4190716bf",
+      "original_sha256": "3fa3957260f28a3af42ee0deadcda4445a1fd5142b94ba316127e2e4190716bf",
+      "role": "--dump v100: the condition sweep's Whisper Large v3 dump of the whole AMI test split (17 conditions), whose first 200 raw rows the comparison reads; the same bytes as inputs/wer_hypotheses_ami_whisper-large-v3.csv in sweep_inputs_2026-10.zip",
+      "backs": [
+        "output/evaluation/determinism/determinism_cross_accelerator.json"
+      ],
+      "job": "8917985_1 (Slurm job 8923478)",
+      "commit": "6f9bf56",
+      "commit_source": "run_metadata in the sweep's summaries"
+    },
+    {
+      "path": "evaluation/audit2026/sweep/wer_report_ami_whisper-large-v3.csv",
+      "bytes": 1125663,
+      "sha256": "c95a697382354e7bca454f3993f11351f652ab076aaceb7385e6dedb5465b71b",
+      "original_sha256": "c95a697382354e7bca454f3993f11351f652ab076aaceb7385e6dedb5465b71b",
+      "role": "--report v100: the sweep's per-utterance raw WER report for Large v3 on AMI",
+      "backs": [
+        "output/evaluation/determinism/determinism_cross_accelerator.json"
+      ],
+      "job": "8917985_1 (Slurm job 8923478)",
+      "commit": "6f9bf56",
+      "commit_source": "run_metadata in the sweep's summaries"
+    },
+    {
+      "path": "evaluation/controls/es_419_v100_6f9bf56/environment/ctl_es419_v100_9124863_2.txt",
+      "bytes": 5747,
+      "sha256": "ea2fea54bff2836db058fd4620215a3499e47b37bb5552088e53d08fd65f7b32",
+      "original_bytes": 5966,
+      "original_sha256": "0afcac451afd8c82137da06d5e30146f8396453a7851464fd241f6dd993cd5ee",
+      "sanitised": true,
+      "substitutions": {
+        "$DATA": 11,
+        "$HOME": 1,
+        "<project-b>": 1
+      },
+      "backs": [
+        "output/evaluation/fleurs_es419_v100_control.json"
+      ],
+      "job": "9124863_2",
+      "commit": "6f9bf56",
+      "commit_source": "the record itself",
+      "role": "--environment control: environment record of the control's job, read for jobs.control; its original_sha256 is the digest the committed result records for it in inputs"
+    },
+    {
+      "path": "evaluation/controls/es_419_v100_6f9bf56/wer_summary_fleurs_es_419_whisper-large-v3.json",
+      "bytes": 255507,
+      "sha256": "58debbc999de47040a1c0164412bd4f63c2dc6e5b345889e33efb212cb403fcd",
+      "original_sha256": "58debbc999de47040a1c0164412bd4f63c2dc6e5b345889e33efb212cb403fcd",
+      "role": "--control: the control's raw summary of the whole es_419 test split, 908 utterances on a Tesla V100-PCIE-32GB",
+      "backs": [
+        "output/evaluation/fleurs_es419_v100_control.json"
+      ],
+      "job": "9124863_2",
+      "commit": "6f9bf56",
+      "commit_source": "run_metadata in the file"
+    },
+    {
+      "path": "evaluation/controls/es_419_v100_6f9bf56_preflight/environment/pf_es419_v100_9124739_2.txt",
+      "bytes": 5745,
+      "sha256": "cef3359b04ff7361bb9da6422ea7ed3a46c47682023007cfe9d8090ddda3507c",
+      "original_bytes": 5964,
+      "original_sha256": "1529ea90aeadee0ab196b02b37a1fbcbe0abeaefd53fadda970c793275d69ddb",
+      "sanitised": true,
+      "substitutions": {
+        "$DATA": 11,
+        "$HOME": 1,
+        "<project-b>": 1
+      },
+      "backs": [
+        "output/evaluation/fleurs_es419_v100_control.json"
+      ],
+      "job": "9124739_2",
+      "commit": "6f9bf56",
+      "commit_source": "the record itself",
+      "role": "--environment preflight: environment record of the pre-flight's job, read for jobs.preflight; its original_sha256 is the digest the committed result records for it in inputs"
+    },
+    {
+      "path": "evaluation/controls/es_419_v100_6f9bf56_preflight/wer_summary_fleurs_es_419_whisper-large-v3.json",
+      "bytes": 3249,
+      "sha256": "c5d6c9cccf91c817d61f9a8425fd99fbd92507dc9203b8e3af92494625cd660a",
+      "original_sha256": "c5d6c9cccf91c817d61f9a8425fd99fbd92507dc9203b8e3af92494625cd660a",
+      "role": "--preflight: the control's five-utterance pre-flight",
+      "backs": [
+        "output/evaluation/fleurs_es419_v100_control.json"
+      ],
+      "job": "9124739_2",
+      "commit": "6f9bf56",
+      "commit_source": "run_metadata in the file"
+    },
+    {
+      "path": "evaluation/determinism/seed0_run1.csv",
+      "bytes": 29317,
+      "sha256": "11992b8e6554e14947c949e1b7181e032718a09e9586724bef73922407f159f0",
+      "original_sha256": "11992b8e6554e14947c949e1b7181e032718a09e9586724bef73922407f159f0",
+      "role": "--dump l40s: hypothesis dump of the L40S run, seed 0, first decode",
+      "backs": [
+        "output/evaluation/determinism/determinism_cross_accelerator.json"
+      ],
+      "job": "8781724",
+      "commit": "1bb68ba",
+      "commit_source": "the ARC clone's reflog"
+    },
+    {
+      "path": "evaluation/determinism/seed0_run2.csv",
+      "bytes": 29317,
+      "sha256": "11992b8e6554e14947c949e1b7181e032718a09e9586724bef73922407f159f0",
+      "original_sha256": "11992b8e6554e14947c949e1b7181e032718a09e9586724bef73922407f159f0",
+      "role": "--repeat l40s: its second decode under seed 0",
+      "backs": [
+        "output/evaluation/determinism/determinism_cross_accelerator.json"
+      ],
+      "job": "8781724",
+      "commit": "1bb68ba",
+      "commit_source": "the ARC clone's reflog"
+    },
+    {
+      "path": "evaluation/determinism/wer_seed0_run1.csv",
+      "bytes": 17076,
+      "sha256": "c82ce583b08ed6368749e5d36ae87638d921efe5e8de50bce22afb89b693832b",
+      "original_sha256": "c82ce583b08ed6368749e5d36ae87638d921efe5e8de50bce22afb89b693832b",
+      "role": "--report l40s: per-utterance WER report of the first decode; the repository holds a copy with LF line endings",
+      "backs": [
+        "output/evaluation/determinism/determinism_cross_accelerator.json"
+      ],
+      "job": "8781724",
+      "commit": "1bb68ba",
+      "commit_source": "the ARC clone's reflog"
+    },
+    {
+      "path": "evaluation/prefix_baseline/wer_summary_fleurs_de_de.json",
+      "bytes": 242685,
+      "sha256": "75f246b6368ff2219eba63fafe811c01da8864903d441e6e97b58b019a590100",
+      "original_sha256": "75f246b6368ff2219eba63fafe811c01da8864903d441e6e97b58b019a590100",
+      "role": "German (de_de) summary, condition raw, arm 1_before_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8166513_1",
+      "commit": "9ae40a2",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/prefix_baseline/wer_summary_fleurs_de_de_pipeline_full.json",
+      "bytes": 264121,
+      "sha256": "14e34bd1fdb3239abd5fdeb857ce5e1f94f9f38ea7071d38cfd97b502b3e19f3",
+      "original_sha256": "14e34bd1fdb3239abd5fdeb857ce5e1f94f9f38ea7071d38cfd97b502b3e19f3",
+      "role": "German (de_de) summary, condition pipeline_full, arm 1_before_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8166513_1",
+      "commit": "9ae40a2",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/prefix_baseline/wer_summary_fleurs_es_419.json",
+      "bytes": 252665,
+      "sha256": "7311b602f06666adf2b4ee0a9538f4727700becc601e8773f34541202f5c519b",
+      "original_sha256": "7311b602f06666adf2b4ee0a9538f4727700becc601e8773f34541202f5c519b",
+      "role": "Spanish (es_419) summary, condition raw, arm 1_before_fix; also the control's --arm 1_before_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json",
+        "output/evaluation/fleurs_es419_v100_control.json"
+      ],
+      "job": "8166513_2",
+      "commit": "9ae40a2",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/prefix_baseline/wer_summary_fleurs_es_419_pipeline_full.json",
+      "bytes": 279471,
+      "sha256": "45cdea5e63374f3f392e364654f0994f991e98efafc37eb8cb8207d5218ea346",
+      "original_sha256": "45cdea5e63374f3f392e364654f0994f991e98efafc37eb8cb8207d5218ea346",
+      "role": "Spanish (es_419) summary, condition pipeline_full, arm 1_before_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8166513_2",
+      "commit": "9ae40a2",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/prefix_baseline/wer_summary_fleurs_fr_fr.json",
+      "bytes": 193950,
+      "sha256": "3f1608e40da21fcc927aeabbe442c77f64769db53ba6a7e7b0f4c6f37d9f8470",
+      "original_sha256": "3f1608e40da21fcc927aeabbe442c77f64769db53ba6a7e7b0f4c6f37d9f8470",
+      "role": "French (fr_fr) summary, condition raw, arm 1_before_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8166513_0",
+      "commit": "9ae40a2",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/prefix_baseline/wer_summary_fleurs_fr_fr_pipeline_full.json",
+      "bytes": 209099,
+      "sha256": "526006b1cebfdeb8ca3efa4bb43a95ca3b0925c7fc5b104cb48e1c4cad44ce44",
+      "original_sha256": "526006b1cebfdeb8ca3efa4bb43a95ca3b0925c7fc5b104cb48e1c4cad44ce44",
+      "role": "French (fr_fr) summary, condition pipeline_full, arm 1_before_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8166513_0",
+      "commit": "9ae40a2",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/prefix_baseline/wer_summary_fleurs_it_it.json",
+      "bytes": 236784,
+      "sha256": "37a195560e7f3b82fd1e9216b3d6b44100a710750fccbbbd141172a2a6893319",
+      "original_sha256": "37a195560e7f3b82fd1e9216b3d6b44100a710750fccbbbd141172a2a6893319",
+      "role": "Italian (it_it) summary, condition raw, arm 1_before_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8166514_3",
+      "commit": "9ae40a2",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/prefix_baseline/wer_summary_fleurs_it_it_pipeline_full.json",
+      "bytes": 258713,
+      "sha256": "20ec4e9f3b7e9d0f97c1fe9ecabbf4914bace045c47052290fc8b1a2dd60c723",
+      "original_sha256": "20ec4e9f3b7e9d0f97c1fe9ecabbf4914bace045c47052290fc8b1a2dd60c723",
+      "role": "Italian (it_it) summary, condition pipeline_full, arm 1_before_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8166514_3",
+      "commit": "9ae40a2",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/prefix_baseline/wer_summary_fleurs_nl_nl.json",
+      "bytes": 106042,
+      "sha256": "fd1464d4ee660aa5fd386531ac44040cdb3e54f57158fad7f62b1ffd1f3da551",
+      "original_sha256": "fd1464d4ee660aa5fd386531ac44040cdb3e54f57158fad7f62b1ffd1f3da551",
+      "role": "Dutch (nl_nl) summary, condition raw, arm 1_before_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8166514_4",
+      "commit": "9ae40a2",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/prefix_baseline/wer_summary_fleurs_nl_nl_pipeline_full.json",
+      "bytes": 106964,
+      "sha256": "1d9dec0d1ecfbad72ee5b10a1fc8238fce9b0ed551d36467dba19baf0e5fb2ad",
+      "original_sha256": "1d9dec0d1ecfbad72ee5b10a1fc8238fce9b0ed551d36467dba19baf0e5fb2ad",
+      "role": "Dutch (nl_nl) summary, condition pipeline_full, arm 1_before_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8166514_4",
+      "commit": "9ae40a2",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/prefix_baseline/wer_summary_fleurs_pl_pl.json",
+      "bytes": 212834,
+      "sha256": "ddf5e6ce401fe87dd78ead7f8c2185bc6a926d4ea2ce675385abdbb2bf08b242",
+      "original_sha256": "ddf5e6ce401fe87dd78ead7f8c2185bc6a926d4ea2ce675385abdbb2bf08b242",
+      "role": "Polish (pl_pl) summary, condition raw, arm 1_before_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8166514_5",
+      "commit": "9ae40a2",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/prefix_baseline/wer_summary_fleurs_pl_pl_pipeline_full.json",
+      "bytes": 230201,
+      "sha256": "060e8f189c8ab7102d04cfd71e9f7fe90ef95c9e3173d7643935ecb89b5e6ebc",
+      "original_sha256": "060e8f189c8ab7102d04cfd71e9f7fe90ef95c9e3173d7643935ecb89b5e6ebc",
+      "role": "Polish (pl_pl) summary, condition pipeline_full, arm 1_before_fix",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8166514_5",
+      "commit": "9ae40a2",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/repro/cpu_arm/determinism_cpu/seed0_run1.csv",
+      "bytes": 34615,
+      "sha256": "bf04c658c1705170b3eeeb564da9b9127010e6ae3c7327ff59eab144c330bd35",
+      "original_sha256": "bf04c658c1705170b3eeeb564da9b9127010e6ae3c7327ff59eab144c330bd35",
+      "role": "--dump cpu: hypothesis dump of the CPU run, seed 0, first decode",
+      "backs": [
+        "output/evaluation/determinism/determinism_cross_accelerator.json"
+      ],
+      "job": "8978759",
+      "commit": "f2578b8",
+      "commit_source": "run_metadata in its summaries"
+    },
+    {
+      "path": "evaluation/repro/cpu_arm/determinism_cpu/seed0_run2.csv",
+      "bytes": 34615,
+      "sha256": "bf04c658c1705170b3eeeb564da9b9127010e6ae3c7327ff59eab144c330bd35",
+      "original_sha256": "bf04c658c1705170b3eeeb564da9b9127010e6ae3c7327ff59eab144c330bd35",
+      "role": "--repeat cpu: its second decode under seed 0",
+      "backs": [
+        "output/evaluation/determinism/determinism_cross_accelerator.json"
+      ],
+      "job": "8978759",
+      "commit": "f2578b8",
+      "commit_source": "run_metadata in its summaries"
+    },
+    {
+      "path": "evaluation/repro/cpu_arm/determinism_cpu/wer_seed0_run1.csv",
+      "bytes": 17079,
+      "sha256": "f7dabb952e86a61d51db471182e6f0ea8255eb60eb7ed76351df991c7fad08d7",
+      "original_sha256": "f7dabb952e86a61d51db471182e6f0ea8255eb60eb7ed76351df991c7fad08d7",
+      "role": "--report cpu: per-utterance WER report of the first decode; the repository holds a copy with LF line endings",
+      "backs": [
+        "output/evaluation/determinism/determinism_cross_accelerator.json"
+      ],
+      "job": "8978759",
+      "commit": "f2578b8",
+      "commit_source": "run_metadata in its summaries"
+    },
+    {
+      "path": "evaluation/repro/v100_arm/determinism/seed0_run1.csv",
+      "bytes": 34615,
+      "sha256": "bf04c658c1705170b3eeeb564da9b9127010e6ae3c7327ff59eab144c330bd35",
+      "original_sha256": "bf04c658c1705170b3eeeb564da9b9127010e6ae3c7327ff59eab144c330bd35",
+      "role": "--dump v100_seed0: hypothesis dump of the V100 run of the check, seed 0, first decode",
+      "backs": [
+        "output/evaluation/determinism/determinism_cross_accelerator.json"
+      ],
+      "job": "8978760",
+      "commit": "f2578b8",
+      "commit_source": "run_metadata in its summaries"
+    },
+    {
+      "path": "evaluation/repro/v100_arm/determinism/seed0_run2.csv",
+      "bytes": 34615,
+      "sha256": "bf04c658c1705170b3eeeb564da9b9127010e6ae3c7327ff59eab144c330bd35",
+      "original_sha256": "bf04c658c1705170b3eeeb564da9b9127010e6ae3c7327ff59eab144c330bd35",
+      "role": "--repeat v100_seed0: its second decode under seed 0",
+      "backs": [
+        "output/evaluation/determinism/determinism_cross_accelerator.json"
+      ],
+      "job": "8978760",
+      "commit": "f2578b8",
+      "commit_source": "run_metadata in its summaries"
+    },
+    {
+      "path": "evaluation/repro/v100_arm/determinism/wer_seed0_run1.csv",
+      "bytes": 17079,
+      "sha256": "f7dabb952e86a61d51db471182e6f0ea8255eb60eb7ed76351df991c7fad08d7",
+      "original_sha256": "f7dabb952e86a61d51db471182e6f0ea8255eb60eb7ed76351df991c7fad08d7",
+      "role": "--report v100_seed0: per-utterance WER report of the first decode; the repository holds a copy with LF line endings",
+      "backs": [
+        "output/evaluation/determinism/determinism_cross_accelerator.json"
+      ],
+      "job": "8978760",
+      "commit": "f2578b8",
+      "commit_source": "run_metadata in its summaries"
+    },
+    {
+      "path": "evaluation/wer_summary_fleurs_de_de.json",
+      "bytes": 242651,
+      "sha256": "e6be01557beabf5b64f0fa98bbac2e6454ecdea3bde07873413bb82af35dee1a",
+      "original_sha256": "e6be01557beabf5b64f0fa98bbac2e6454ecdea3bde07873413bb82af35dee1a",
+      "role": "German (de_de) summary, condition raw, arm 3_after_gate",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8245204_1",
+      "commit": "c0f58c5",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/wer_summary_fleurs_de_de_pipeline_full.json",
+      "bytes": 242663,
+      "sha256": "0dc5e87146a4be3230dc23c2105a6c562e33b7cd5ffc04ce6d19aff59b2a732c",
+      "original_sha256": "0dc5e87146a4be3230dc23c2105a6c562e33b7cd5ffc04ce6d19aff59b2a732c",
+      "role": "German (de_de) summary, condition pipeline_full, arm 3_after_gate",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8245204_1",
+      "commit": "c0f58c5",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/wer_summary_fleurs_es_419.json",
+      "bytes": 252665,
+      "sha256": "7311b602f06666adf2b4ee0a9538f4727700becc601e8773f34541202f5c519b",
+      "original_sha256": "7311b602f06666adf2b4ee0a9538f4727700becc601e8773f34541202f5c519b",
+      "role": "Spanish (es_419) summary, condition raw, arm 3_after_gate; also the control's --arm 3_after_gate",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json",
+        "output/evaluation/fleurs_es419_v100_control.json"
+      ],
+      "job": "8245204_2",
+      "commit": "c0f58c5",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/wer_summary_fleurs_es_419_pipeline_full.json",
+      "bytes": 252674,
+      "sha256": "ce95642835c44fc3023dde80ae9a5d938785e29175fa39bb83fe450a69c50326",
+      "original_sha256": "ce95642835c44fc3023dde80ae9a5d938785e29175fa39bb83fe450a69c50326",
+      "role": "Spanish (es_419) summary, condition pipeline_full, arm 3_after_gate",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8245204_2",
+      "commit": "c0f58c5",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/wer_summary_fleurs_fr_fr.json",
+      "bytes": 193950,
+      "sha256": "3f1608e40da21fcc927aeabbe442c77f64769db53ba6a7e7b0f4c6f37d9f8470",
+      "original_sha256": "3f1608e40da21fcc927aeabbe442c77f64769db53ba6a7e7b0f4c6f37d9f8470",
+      "role": "French (fr_fr) summary, condition raw, arm 3_after_gate",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8245204_0",
+      "commit": "c0f58c5",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/wer_summary_fleurs_fr_fr_pipeline_full.json",
+      "bytes": 193960,
+      "sha256": "0ae236677f85dc13aa6f44860bd0e4ebf529daeefe004c00005d75e12f5963a7",
+      "original_sha256": "0ae236677f85dc13aa6f44860bd0e4ebf529daeefe004c00005d75e12f5963a7",
+      "role": "French (fr_fr) summary, condition pipeline_full, arm 3_after_gate",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8245204_0",
+      "commit": "c0f58c5",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/wer_summary_fleurs_it_it.json",
+      "bytes": 236939,
+      "sha256": "256750d4bf5384cfa29835ec326a11f95831155e151b7c722419c72d1a3f6348",
+      "original_sha256": "256750d4bf5384cfa29835ec326a11f95831155e151b7c722419c72d1a3f6348",
+      "role": "Italian (it_it) summary, condition raw, arm 3_after_gate",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8245205_3",
+      "commit": "c0f58c5",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/wer_summary_fleurs_it_it_pipeline_full.json",
+      "bytes": 236949,
+      "sha256": "78a3c21ca21b4846af09d5bb8fead3a11d06fc5209b6f835c0d86baed35e2843",
+      "original_sha256": "78a3c21ca21b4846af09d5bb8fead3a11d06fc5209b6f835c0d86baed35e2843",
+      "role": "Italian (it_it) summary, condition pipeline_full, arm 3_after_gate",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8245205_3",
+      "commit": "c0f58c5",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/wer_summary_fleurs_nl_nl.json",
+      "bytes": 106026,
+      "sha256": "377d8b802f1e63d290b1f1bf7e84e97ca26aa3eed8af62277165275854db2e25",
+      "original_sha256": "377d8b802f1e63d290b1f1bf7e84e97ca26aa3eed8af62277165275854db2e25",
+      "role": "Dutch (nl_nl) summary, condition raw, arm 3_after_gate",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8245205_4",
+      "commit": "c0f58c5",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/wer_summary_fleurs_nl_nl_pipeline_full.json",
+      "bytes": 106045,
+      "sha256": "2ec2db80de04b5f015c95466717b32b49e4690dd081ccec711e049a5d31cf2bd",
+      "original_sha256": "2ec2db80de04b5f015c95466717b32b49e4690dd081ccec711e049a5d31cf2bd",
+      "role": "Dutch (nl_nl) summary, condition pipeline_full, arm 3_after_gate",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8245205_4",
+      "commit": "c0f58c5",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/wer_summary_fleurs_pl_pl.json",
+      "bytes": 212833,
+      "sha256": "2a5457bb84a96ae1d84f1250af6f1477f5f23088761fe87c24caf98e5869d6b5",
+      "original_sha256": "2a5457bb84a96ae1d84f1250af6f1477f5f23088761fe87c24caf98e5869d6b5",
+      "role": "Polish (pl_pl) summary, condition raw, arm 3_after_gate",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8245205_5",
+      "commit": "c0f58c5",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    },
+    {
+      "path": "evaluation/wer_summary_fleurs_pl_pl_pipeline_full.json",
+      "bytes": 212843,
+      "sha256": "4710293e0916b47d41a6b2d77e5f75c30ac5dd25caeeb6c782698e2e780e0e32",
+      "original_sha256": "4710293e0916b47d41a6b2d77e5f75c30ac5dd25caeeb6c782698e2e780e0e32",
+      "role": "Polish (pl_pl) summary, condition pipeline_full, arm 3_after_gate",
+      "backs": [
+        "output/evaluation/fleurs_multilingual_summary.json"
+      ],
+      "job": "8245205_5",
+      "commit": "c0f58c5",
+      "commit_source": "the arm's registry in evaluation/fleurs_multilingual.py (the file predates run metadata)"
+    }
+  ]
+}

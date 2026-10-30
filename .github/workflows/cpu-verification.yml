@@ -48,6 +48,7 @@ jobs:
         run: |
           python -m pytest -q \
             tests/test_bootstrap_ci.py \
+            tests/test_cli_help_strings.py \
             tests/test_condition_ci.py \
             tests/test_speaker_cluster_ci.py \
             tests/test_scorer_sensitivity.py \
@@ -63,7 +64,9 @@ jobs:
             tests/test_example_variants.py \
             tests/test_installed_distribution.py \
             tests/test_verify_regeneration.py \
-            tests/test_build_input_deposit.py
+            tests/test_build_input_deposit.py \
+            tests/test_build_arc_inputs_deposit.py \
+            tests/test_build_decoder_source_deposit.py
       - name: Regenerate and compare all eleven CPU artefacts
         run: |
           if python tools/verify_regeneration.py --keep; then

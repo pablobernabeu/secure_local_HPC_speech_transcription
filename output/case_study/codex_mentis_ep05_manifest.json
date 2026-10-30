@@ -126,7 +126,7 @@
     "name": "ep05_beyond-the-cloud-reclaiming-data-sovereignty-in-speech-trans.m4a",
     "bytes": 31357663,
     "sha256": "a1f082338f01ccd36237b3bf5c87418b15f1b83e628049bb20c96f8d9a6a2448",
-    "derivation": "cached output of an earlier run of: /data/educ-lift/educ1242/speech_transcription_env/lib/python3.12/site-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v7.0.2 -nostdin -loglevel error -y -i /data/educ-lift/educ1242/codex_mentis/audio/ep05_beyond-the-cloud-reclaiming-data-sovereignty-in-speech-trans.m4a -ac 1 -ar 16000 -c:a pcm_s16le /data/educ-lift/educ1242/codex_mentis/audio/ep05_beyond-the-cloud-reclaiming-data-sovereignty-in-speech-trans_16k.wav"
+    "derivation": "cached output of an earlier run of: $DATA/speech_transcription_env/lib/python3.12/site-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v7.0.2 -nostdin -loglevel error -y -i $DATA/codex_mentis/audio/ep05_beyond-the-cloud-reclaiming-data-sovereignty-in-speech-trans.m4a -ac 1 -ar 16000 -c:a pcm_s16le $DATA/codex_mentis/audio/ep05_beyond-the-cloud-reclaiming-data-sovereignty-in-speech-trans_16k.wav"
   },
-  "manifest_sha256": "36c1b33bbe59ff49463e6fd8aa36161feaf79f93e526d37d79529fb5d0359392"
+  "manifest_sha256": "a56282e1c81d399f1cbb9015fd61a2e3a85b44895ed24e05fa6dc3f5a91dc598"
 }

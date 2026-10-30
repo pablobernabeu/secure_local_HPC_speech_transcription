@@ -779,8 +779,10 @@ def run_benchmark(
     model_id, segmentation_model:
         Passed to :func:`load_pipeline`.
     oracle_num_speakers:
-        Give the pipeline each meeting's true speaker count (an upper
-        bound, reported separately).
+        Run the pipeline with the true number of speakers in each meeting
+        (reported separately). It is not a bound on the defaults: on the
+        committed AMI meetings this arm scored worse (macro DER 25.0%
+        against 16.6%, worse in 10 of the 16 meetings).
     collar:
         Scoring collar in seconds (``DEFAULT_COLLAR_S`` by default), the
         total width centred on each reference boundary in the
@@ -1041,9 +1043,10 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
                         "as the one finetune_pyannote_segmentation exports. "
                         "It is unpickled, so pass only a trusted file")
     p.add_argument("--oracle-num-speakers", action="store_true",
-                   help="tell the pipeline how many speakers each meeting "
-                        "has.  Reported separately: it is an upper bound "
-                        "that assumes knowledge a real recording lacks.")
+                   help="run the pipeline with the true number of speakers "
+                        "in each meeting, knowledge a real recording may "
+                        "lack.  Reported separately; it is not a bound on "
+                        "the default run, which it can score worse than.")
     p.add_argument("--collar", type=float, default=_COLLAR, metavar="S",
                    help="scoring collar in seconds, the total width centred "
                         "on each reference boundary (pyannote.metrics), so "

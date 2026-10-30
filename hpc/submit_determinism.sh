@@ -16,13 +16,14 @@
 #
 # Usage (submit from the repository root on ARC):
 #
-# Account: either project account is valid; the examples use educ-intract.
-# Choose by current load, which changes: see the BALANCE note in .hpc-plan.yaml.
+# Account: pass your own project account with --account. With more than
+# one, choose by current load, which changes: see the BALANCE note in
+# .hpc-plan.yaml.
 #
-#   sbatch --account=educ-intract hpc/submit_determinism.sh
+#   sbatch --account='<your-project>' hpc/submit_determinism.sh
 #
 #   # Wider or narrower
-#   DET_LIMIT=500 DET_SEEDS="0 1 2" sbatch --account=educ-intract hpc/submit_determinism.sh
+#   DET_LIMIT=500 DET_SEEDS="0 1 2" sbatch --account='<your-project>' hpc/submit_determinism.sh
 #
 # The default DET_SEEDS="0 1 2" does NOT reproduce the committed
 # determinism/*.json, which used seeds 0 and 1. The values that did, with the

@@ -187,6 +187,81 @@ python tools/build_input_deposit.py \
     --decoder-source <directory>/decoder_source_6f9bf56.zip
 ```
 
+## `build_arc_inputs_deposit.py`
+
+Writes the second bundle of that data deposit: the inputs that three
+committed results read on ARC and the repository does not hold, for the
+multilingual comparison (`fleurs_multilingual_summary.json`), the Spanish
+V100 control (`fleurs_es419_v100_control.json`) and the cross-hardware
+comparison (`determinism/determinism_cross_accelerator.json`). Each file
+is checked against `output/evaluation/arc_inputs_manifest.json`, and the
+archive follows the sweep bundle's conventions, whose member helper it
+imports: name order, a fixed timestamp, zlib's default level, a
+`SHA256SUMS` file, a README and a detached JSON record naming the Python
+and zlib versions. The README lists every file with the result it backs
+and gives the command that rebuilds each result from the unpacked archive.
+
+Files are stored byte for byte, except the 22 the manifest marks
+`sanitised`, which name the deployment: the 18 job logs whose `GPU:` lines
+name the cards of the multilingual comparison's first three arms, the
+control's three environment records and the H100 run's log. Those are
+stored with the deployment's paths, user name and project codes replaced
+by placeholders. The manifest gives each one's `sha256` as deposited
+beside `original_sha256`, the digest of the original on ARC, which is the
+one a committed result records where it records one, and counts the
+replacements of each placeholder. `--inputs` may hold either form, so the
+archive can be rebuilt from its own unpacked `inputs/`. An original is
+sanitised only with `--identifiers`, a JSON list of `[private string,
+placeholder]` pairs kept outside the repository because it names the
+deployment, and the result must have the manifest's digest and counts. The
+tool exits with status 2 and the reason on stderr at a file that differs
+from the manifest, one the manifest does not name, or a path it cannot
+use:
+
+```bash
+python tools/build_arc_inputs_deposit.py \
+    --inputs <directory the files were copied into from ARC> \
+    --identifiers <private replacements, outside the repository> \
+    --output <directory outside the repository>/multilingual_hardware_inputs_2026-10.zip
+```
+
+## `build_decoder_source_deposit.py`
+
+Writes the sanitised copy of that `git archive`, which release 2.1.1's
+data record holds under the same name, `decoder_source_6f9bf56.zip`. It
+takes the archive of the commit into memory and, in every text member,
+replaces the deployment's paths, ARC user name and project accounts by
+`$DATA`, `$HOME`, `<user>`, `<project-a>` and `<project-b>`, in that
+order, followed by any `--replace OLD=NEW` (the names of other projects'
+jobs). The table and the reasons for it are in
+[docs/privacy_review.md](../docs/privacy_review.md). The identifiers are
+given on the command line, so that neither the script nor its tests hold
+them. Binary members are left as they are, and the record lists any that
+holds an identifier. The archive's root also holds `SANITISED.md`, which
+gives the substitutions and, for each changed member, its path and the
+git blob id of its original content. Its ZIP comment is the full commit
+identifier, as `git archive` writes it, which `build_input_deposit.py
+--decoder-source` checks. Members are in name order, every timestamp is
+the commit's, and each member carries its git file mode, so the same
+commit and arguments give the same bytes under the same deflate
+implementation. The detached JSON record beside the archive gives its
+size and SHA-256, the commit, the original archive's digest, the number
+of changed members and the versions that built it. The finished archive
+is read back and every member scanned for each original, inside Word
+documents too, and the build stops when a text member still holds one.
+
+```bash
+python tools/build_decoder_source_deposit.py --commit 6f9bf56 \
+    --user <ARC user> --project-a <first account> --project-b <second account> \
+    --replace "<another project's job name>=<neutral name>" \
+    --expect-source <directory>/decoder_source_6f9bf56.zip \
+    --output <deposit directory>/decoder_source_6f9bf56.zip
+```
+
+`--expect-source` checks the archive taken in memory against the
+deposited original, byte for byte. `tests/test_build_decoder_source_deposit.py`
+builds from a throwaway repository with made-up identifiers.
+
 ## `bib_sentencecase.py`
 
 Normalises the capitalisation of `manuscript/references.bib`. It sets

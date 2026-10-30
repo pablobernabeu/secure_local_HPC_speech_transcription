@@ -248,10 +248,13 @@ def test_the_fleurs_recipe_commands_submit_nothing_without_the_recipe(
     assert result.returncode == 0, result.stderr
     out = "/d/speech_transcription_env/output/evaluation/repro/fleurs_ml"
     script = "hpc/submit_benchmark_wer_multilingual.sh"
+    # The record writes the account as a quoted placeholder, which bash
+    # passes to sbatch as one word.
+    account = "--account=<your-project>"
     assert log.read_text().splitlines() == [
-        f"--account=educ-lift --array=0,3 --gres=gpu:h100:1 --constraint=nvlink {script}|{out}|",
-        f"--account=educ-lift --array=1 --gres=gpu:a100:1 {script}|{out}|",
-        f"--account=educ-lift --array=2,4,5 --gres=gpu:l40s:1 {script}|{out}|",
+        f"{account} --array=0,3 --gres=gpu:h100:1 --constraint=nvlink {script}|{out}|",
+        f"{account} --array=1 --gres=gpu:a100:1 {script}|{out}|",
+        f"{account} --array=2,4,5 --gres=gpu:l40s:1 {script}|{out}|",
     ]
 
 

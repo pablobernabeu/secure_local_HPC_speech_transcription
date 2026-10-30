@@ -31,10 +31,11 @@
 #     sbatch --array=0 hpc/submit_benchmark_wer_multilingual.sh
 #
 # Then the full run, throttled to two concurrent tasks to spare capacity.
-# Six tasks is small, so a single account is fine; to share load across
-# both project accounts, split the range (standard QoS, never priority):
-#   sbatch --account=educ-lift    --array=0-2%2 hpc/submit_benchmark_wer_multilingual.sh
-#   sbatch --account=educ-intract --array=3-5%2 hpc/submit_benchmark_wer_multilingual.sh
+# Six tasks is small, so a single account is fine. With two project
+# accounts, the range can be split between them to share the load
+# (standard QoS, never priority):
+#   sbatch --account='<your-project>'  --array=0-2%2 hpc/submit_benchmark_wer_multilingual.sh
+#   sbatch --account='<other-project>' --array=3-5%2 hpc/submit_benchmark_wer_multilingual.sh
 #
 # Overrides (set before sbatch):
 #   WER_ML_MODEL=openai/whisper-large-v3   (default)

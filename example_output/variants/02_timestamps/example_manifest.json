@@ -37,7 +37,7 @@
     },
     "diarization_settings": null,
     "software": {
-      "version": "2.1.0",
+      "version": "2.1.1",
       "packages": {
         "python": "3.12.12",
         "transformers": "4.57.1",
@@ -63,7 +63,7 @@
     {
       "path": "example_transcript.txt",
       "bytes": 2716,
-      "sha256": "44c6ad26acb1b8f19bd7a2692f8cf481db4e15f5d013cc97b210e210c1caa25d"
+      "sha256": "c9777080b4a7c02ac96468d9f681f602f4addc7be1a882865d3df355227532d1"
     },
     {
       "path": "example_transcript.vtt",
@@ -86,5 +86,5 @@
     "bytes": 44,
     "sha256": "ba584a378b11d9e9c98736fd8c256fe1453a84ee4139416d24b07acff424f0fb"
   },
-  "manifest_sha256": "15ab4cb65105f580b36e38f81f106e72ad3c13faf8f8d9e4ff918689b9eff61a"
+  "manifest_sha256": "aeed06cf14ca36d9583194a1c9f583c2bd7c6ef2f9c1442609fb5d0c97e00829"
 }

@@ -4,17 +4,29 @@ Segment-level timestamp alignment benchmark on the AMI Meeting Corpus.
 
 Streams the AMI IHM test split and, for each utterance, runs Whisper Large
 v3 with segment-level ``return_timestamps=True``.  The reference boundaries
-for each utterance are 0.0 s (start) and the audio duration (end), since the
-AMI IHM rows are already trimmed to exactly the spoken segment.  The
-benchmark therefore measures how accurately Whisper's timestamp output
-locates the speech within the clip.
+for each utterance are 0.0 s (start) and the audio duration (end), since
+each AMI IHM row is cut at its annotated segment.  The annotated end can
+include trailing non-speech, so the benchmark measures how far Whisper's
+first and last timestamps lie from the clip's boundaries, not from a
+measured onset and offset of speech.
+
+What it scores is Whisper's segment-level timestamp tokens. The workflow
+asks for word-level timestamps instead whenever timestamps or speaker
+attribution are requested (``effective_timestamps`` in
+``transcription.process_audio_file``), and those word timings are what its JSON,
+WebVTT and review outputs carry, so this benchmark does not measure them.
 
 Metrics reported per utterance and in aggregate:
 
 ``start_error``
-    ``predicted_start - 0.0``.  Positive means Whisper started late.
+    ``predicted_start - 0.0``.  Positive means Whisper's first timestamp
+    is after the clip start.
 ``end_error``
-    ``ref_duration - predicted_end``.  Positive means Whisper stopped early.
+    ``ref_duration - predicted_end``.  Positive means Whisper's last
+    timestamp ends before the clip does, which need not mean words were
+    left out; the summary's ``truncation_rate`` counts the ends more than
+    0.5 s early (see :func:`evaluation.timestamp_metrics.aggregate_boundary_errors`
+    for what that rate measures and why its name is historical).
 ``MAE_start``, ``MAE_end``, ``MAE_total``
     Mean absolute errors in seconds.
 ``RMSE_start``, ``RMSE_end``
@@ -190,9 +202,10 @@ def _refine_end_with_vad(
     Whisper end is returned unchanged (the clip may be near-silence).
 
     The refined end is the later of the VAD endpoint and Whisper's own
-    prediction, so a clip on which Whisper stops early (for example on a soft
-    trailing syllable) is extended to the last voiced frame. The VAD never
-    pulls the end earlier than Whisper already predicted.
+    prediction, so a clip on which Whisper's last timestamp falls before the
+    last voiced frame (for example on a soft trailing syllable) is extended
+    to that frame. The VAD never pulls the end earlier than Whisper already
+    predicted.
 
     Parameters
     ----------
@@ -224,10 +237,9 @@ def _refine_end_with_vad(
 
     vad_end = float(timestamps[-1]["end"])
     # Extend Whisper's end to the last voiced frame when the VAD detects
-    # speech continuing beyond Whisper's final chunk.  AMI IHM utterance
-    # clips are segmented tightly at the last word, so VAD typically finds
-    # the same endpoint as Whisper; on clips where Whisper cuts off early
-    # (e.g., soft trailing syllables), the VAD extension reduces the error.
+    # speech continuing beyond Whisper's final chunk, as on a soft trailing
+    # syllable. Where the clip ends in non-speech after the last word, the
+    # VAD's end is no later than Whisper's and the end is left as it was.
     return max(vad_end, whisper_end)
 
 
@@ -322,17 +334,17 @@ def _predict_boundaries(
     is that of the final chunk. When *vad_model* and
     *get_speech_timestamps* are supplied, the predicted end boundary is
     refined using Silero VAD: the refined end is the later of the VAD's
-    last-voiced-frame end and Whisper's own end, so an end on which Whisper
-    stopped early is extended and none is pulled earlier. *vad_stats* is
-    passed through to :func:`_refine_end_with_vad`.
+    last-voiced-frame end and Whisper's own end, so an end Whisper placed
+    before the last voiced frame is extended and none is pulled earlier.
+    *vad_stats* is passed through to :func:`_refine_end_with_vad`.
 
     A final chunk without an end timestamp is an untimed tail: the
     tokenizer logs "Whisper did not predict an ending timestamp" and still
     returns the chunk, with its text, and an end of ``None``. The end of
     speech is then unknown. Taking the previous chunk's end instead, as
-    this function used to, reported the utterance as stopping early and
-    counted it as a truncation although the model had transcribed the tail
-    (ESTATS-02). Such an utterance is not scored.
+    this function used to, reported the utterance as ending early and
+    counted it in ``truncation_rate`` although the model had transcribed
+    the tail (ESTATS-02). Such an utterance is not scored.
 
     Parameters
     ----------
@@ -674,8 +686,8 @@ def _run_benchmark(
     summary = aggregate_boundary_errors(error_records)
     summary["n_skipped"] = n_skipped
     summary["skip_reasons"] = skip_counts
-    # Named on its own because it is the case that used to be scored as a
-    # truncation (ESTATS-02).
+    # Named on its own because it is the case that used to be counted in
+    # truncation_rate (ESTATS-02).
     summary["n_missing_end_timestamp"] = skip_counts["untimed_tail"]
     summary["dataset"] = f"{_AMI_DATASET}/{_AMI_CONFIG}/{_AMI_SPLIT}"
     summary["model"] = model_id

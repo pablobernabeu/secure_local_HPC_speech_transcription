@@ -10,7 +10,9 @@ count, the directory rule that leaves out a job of one of these names run
 from elsewhere, the WorkDir check that stops a build when a job of this
 project carries a name nothing knows, and the provenance's list of the
 jobs left out, each under its reason. The sacct rows are copied from the
-dumps of 2026-10-04, except where a comment says otherwise.
+dumps of 2026-10-04, except where a comment says otherwise, with the user
+name, the project accounts and the paths that hold them written as
+placeholders (docs/privacy_review.md).
 """
 
 from __future__ import annotations
@@ -97,13 +99,15 @@ _PROJECT_NAMES = {
 
 # Names of other projects' jobs on the same account in that dump, with the
 # near misses: render rendered another project's manuscript from the same
-# account in the same week, diagvocab shares diag_diar's first letters, and
-# ld-surprisal is another project's GPU job.
+# account in the same week, diagother shares diag_diar's first letters, and
+# other-gpu-fit is another project's GPU job. Generic names are given as
+# they ran. A name that would identify another study is replaced by a
+# made-up one of the same shape (docs/privacy_review.md).
 _OTHER_NAMES = [
-    "render", "docchecks", "checkdocs", "wrap", "cat", "diagvocab",
-    "ld-surprisal", "ld-bayes", "claps_databased2", "claps_pooled2",
-    "bfda_sempri", "p1_fit_erp", "p1_diag_fit", "p2_projpred", "lexpower",
-    "lexpower_upper", "lexkr", "fuprod48", "loocmp", "htccheck", "bayes",
+    "render", "docchecks", "checkdocs", "wrap", "cat", "diagother",
+    "other-gpu-fit", "other-bayes", "other_fit2", "other_pooled2",
+    "other_sim", "other_fit_a", "other_diag_fit", "other_fit_b", "other_power",
+    "other_power_upper", "other_kr", "other_job48", "other_cmp", "htccheck", "bayes",
     # The workflow's own jobs before the evaluation, from ~/speech_transcription
     # (August 2025 to January 2026, on htc and arc). Its "transcription" jobs
     # carry the name of hpc/batch_transcription.sh, which _CATEGORY keeps;
@@ -163,18 +167,18 @@ def test_other_names_are_not_guessed(name):
 
 
 @pytest.mark.parametrize("workdir, expected", [
-    ("/home/educ1242/paper_speech_transcription", True),
-    ("/home/educ1242/paper_speech_transcription_audit", True),
-    ("/home/educ1242/paper_speech_transcription_audit_w2/hpc", True),
-    ("/data/educ-lift/educ1242/speech_transcription_env/output", True),
-    ("/home/educ1242", False),
-    ("/home/educ1242/diag_diar", False),
-    ("/home/educ1242/my_paper_speech_transcription", False),
-    ("/data/educ-lift/educ1242/speech_transcription_env_old", False),
-    ("/data/educ-intract/educ1242", False),
+    ("$HOME/paper_speech_transcription", True),
+    ("$HOME/paper_speech_transcription_audit", True),
+    ("$HOME/paper_speech_transcription_audit_w2/hpc", True),
+    ("$DATA/speech_transcription_env/output", True),
+    ("$HOME", False),
+    ("$HOME/diag_diar", False),
+    ("$HOME/my_paper_speech_transcription", False),
+    ("$DATA/speech_transcription_env_old", False),
+    ("$DATA", False),
     # Where the workflow ran before its evaluation.
-    ("/home/educ1242/speech_transcription", False),
-    ("/home/educ1242/speech_transcription/HPC_scripts", False),
+    ("$HOME/speech_transcription", False),
+    ("$HOME/speech_transcription/HPC_scripts", False),
     ("", False),
 ])
 def test_project_directories(workdir, expected):
@@ -183,38 +187,40 @@ def test_project_directories(workdir, expected):
 
 _HEADER = ("JobID|JobName|Account|State|ElapsedRaw|Start|End|Partition|"
            "AllocTRES|NodeList|WorkDir\n")
+# The second row stands for another project's job, under a made-up job ID,
+# name and times (docs/privacy_review.md).
 _ROWS = """\
-7746170|pyannote_probe|educ-intract|COMPLETED|288|2026-05-31T15:01:32|2026-05-31T15:06:20|short|billing=2,cpu=2,gres/gpu=1,mem=16G,node=1|htc-g058|/home/educ1242
-8895714|render|educ-intract|COMPLETED|563|2026-09-25T20:04:14|2026-09-25T20:13:37|short|billing=4,cpu=4,mem=16G,node=1|htc-c065|/data/educ-intract/educ1242
-8913985|pytest_suite|educ-intract|FAILED|707|2026-09-26T23:52:01|2026-09-27T00:03:48|short|billing=2,cpu=2,mem=8G,node=1|htc-c008|/home/educ1242/paper_speech_transcription_audit
-8917982|au_case|educ-intract|CANCELLED by 8707|0|2026-09-27T14:56:31|2026-09-27T14:56:31|\
-short||None assigned|/home/educ1242/paper_speech_transcription_audit
-8918023|au_case|educ-intract|FAILED|963|2026-09-27T18:11:53|2026-09-27T18:27:56|short|billing=4,cpu=4,gres/gpu=1,mem=32G,node=1|htc-g059|/home/educ1242/paper_speech_transcription_audit
-8976270|diag_diar|educ-intract|COMPLETED|293|2026-10-03T23:49:31|2026-10-03T23:54:24|short|billing=2,cpu=2,mem=8G,node=1|htc-c071|/home/educ1242/diag_diar
-8976354|au_der_default|educ-intract|PENDING|0|Unknown|Unknown|short||None assigned|\
-/home/educ1242/paper_speech_transcription_audit_w2
+7746170|pyannote_probe|<project-b>|COMPLETED|288|2026-05-31T15:01:32|2026-05-31T15:06:20|short|billing=2,cpu=2,gres/gpu=1,mem=16G,node=1|htc-g058|$HOME
+8999997|other_render|<project-b>|COMPLETED|563|2026-09-25T20:00:00|2026-09-25T20:09:23|short|billing=4,cpu=4,mem=16G,node=1|htc-c065|$DATA
+8913985|pytest_suite|<project-b>|FAILED|707|2026-09-26T23:52:01|2026-09-27T00:03:48|short|billing=2,cpu=2,mem=8G,node=1|htc-c008|$HOME/paper_speech_transcription_audit
+8917982|au_case|<project-b>|CANCELLED by 8707|0|2026-09-27T14:56:31|2026-09-27T14:56:31|\
+short||None assigned|$HOME/paper_speech_transcription_audit
+8918023|au_case|<project-b>|FAILED|963|2026-09-27T18:11:53|2026-09-27T18:27:56|short|billing=4,cpu=4,gres/gpu=1,mem=32G,node=1|htc-g059|$HOME/paper_speech_transcription_audit
+8976270|diag_diar|<project-b>|COMPLETED|293|2026-10-03T23:49:31|2026-10-03T23:54:24|short|billing=2,cpu=2,mem=8G,node=1|htc-c071|$HOME/diag_diar
+8976354|au_der_default|<project-b>|PENDING|0|Unknown|Unknown|short||None assigned|\
+$HOME/paper_speech_transcription_audit_w2
 """
 # A finished job of this project under a name no rule knows (made up).
-_UNKNOWN = ("8999999|new_benchmark|educ-intract|COMPLETED|600|2026-10-05T10:00:00|"
+_UNKNOWN = ("8999999|new_benchmark|<project-b>|COMPLETED|600|2026-10-05T10:00:00|"
             "2026-10-05T10:10:00|short|billing=4,cpu=4,gres/gpu=1,mem=32G,node=1|"
-            "htc-g064|/home/educ1242/paper_speech_transcription_audit\n")
+            "htc-g064|$HOME/paper_speech_transcription_audit\n")
 # The WER benchmark's first runs, before the June ledger's window and inside
 # the committed one's: a CPU job cancelled while it ran, a GPU job stopped at
 # its time limit, and a job of a name no rule knows, cancelled while pending.
 _FIRST_RUNS = """\
-7663576|benchmark_wer_cpu_full|educ-lift|CANCELLED by 8707|442|2026-05-16T22:45:54|\
-2026-05-16T22:53:16|medium|billing=8,cpu=8,mem=32G,node=1|htc-c059|/home/educ1242/paper_speech_transcription
-7663579|benchmark_wer_gpu|educ-lift|TIMEOUT|43222|2026-05-16T22:47:42|2026-05-17T10:48:04|short|billing=4,cpu=4,gres/gpu=1,mem=32G,node=1|htc-g033|/home/educ1242/paper_speech_transcription
-7670830|wer_postproc|educ-lift|CANCELLED by 8707|0|2026-05-17T23:13:53|2026-05-17T23:13:53|\
-short||None assigned|/home/educ1242/paper_speech_transcription
+7663576|benchmark_wer_cpu_full|<project-a>|CANCELLED by 8707|442|2026-05-16T22:45:54|\
+2026-05-16T22:53:16|medium|billing=8,cpu=8,mem=32G,node=1|htc-c059|$HOME/paper_speech_transcription
+7663579|benchmark_wer_gpu|<project-a>|TIMEOUT|43222|2026-05-16T22:47:42|2026-05-17T10:48:04|short|billing=4,cpu=4,gres/gpu=1,mem=32G,node=1|htc-g033|$HOME/paper_speech_transcription
+7670830|wer_postproc|<project-a>|CANCELLED by 8707|0|2026-05-17T23:13:53|2026-05-17T23:13:53|\
+short||None assigned|$HOME/paper_speech_transcription
 """
 # Jobs under this project's names that ran from other directories: one of
 # the workflow's transcription jobs before its evaluation, copied from the
 # htc dump of 2025-01-01 to 2026-05-20, and an audit-wave name run from
 # another project's directory (made up: none has run).
 _ELSEWHERE = """\
-6163646_1|transcription|educ-lift|FAILED|7184|2025-10-21T20:12:46|2025-10-21T22:12:30|short|billing=4,cpu=4,gres/gpu=1,mem=32G,node=1|htc-g054|/home/educ1242/speech_transcription
-8999998|au_wer|educ-intract|COMPLETED|900|2026-10-05T09:00:00|2026-10-05T09:15:00|short|billing=4,cpu=4,gres/gpu=1,mem=32G,node=1|htc-g064|/home/educ1242/other_project_audit
+6163646_1|transcription|<project-a>|FAILED|7184|2025-10-21T20:12:46|2025-10-21T22:12:30|short|billing=4,cpu=4,gres/gpu=1,mem=32G,node=1|htc-g054|$HOME/speech_transcription
+8999998|au_wer|<project-b>|COMPLETED|900|2026-10-05T09:00:00|2026-10-05T09:15:00|short|billing=4,cpu=4,gres/gpu=1,mem=32G,node=1|htc-g064|$HOME/other_project_audit
 """
 
 
@@ -222,8 +228,8 @@ _ELSEWHERE = """\
 # of 2026-10-30: named outside the audit wave's stages, run from a clone of
 # their own, on the V100 PCIe cards of htc-g003 and htc-g004.
 _CONTROL_ROWS = """\
-9124739_2|pf_es419_v100|educ-intract|COMPLETED|592|2026-10-19T11:26:54|2026-10-19T11:36:46|short|billing=4,cpu=4,gres/gpu:v100=1,gres/gpu=1,mem=32G,node=1|htc-g003|/home/educ1242/paper_speech_transcription_ctl_es419
-9124863_2|ctl_es419_v100|educ-intract|COMPLETED|3146|2026-10-19T11:28:03|2026-10-19T12:20:29|short|billing=4,cpu=4,gres/gpu:v100=1,gres/gpu=1,mem=32G,node=1|htc-g004|/home/educ1242/paper_speech_transcription_ctl_es419
+9124739_2|pf_es419_v100|<project-b>|COMPLETED|592|2026-10-19T11:26:54|2026-10-19T11:36:46|short|billing=4,cpu=4,gres/gpu:v100=1,gres/gpu=1,mem=32G,node=1|htc-g003|$HOME/paper_speech_transcription_ctl_es419
+9124863_2|ctl_es419_v100|<project-b>|COMPLETED|3146|2026-10-19T11:28:03|2026-10-19T12:20:29|short|billing=4,cpu=4,gres/gpu:v100=1,gres/gpu=1,mem=32G,node=1|htc-g004|$HOME/paper_speech_transcription_ctl_es419
 """
 
 
@@ -267,8 +273,8 @@ def test_a_job_of_the_projects_directories_under_an_unknown_name_stops_the_build
 
 @pytest.mark.parametrize("change", [
     # Run from another project's directory: not this project's job.
-    lambda t: t.replace("/home/educ1242/paper_speech_transcription_audit\n",
-                        "/home/educ1242/new_LESS\n"),
+    lambda t: t.replace("$HOME/paper_speech_transcription_audit\n",
+                        "$HOME/other_project\n"),
     # Still running: it will be judged once it has finished.
     lambda t: t.replace("|COMPLETED|600|", "|RUNNING|600|").replace(
         "2026-10-05T10:10:00", "Unknown"),
@@ -357,9 +363,9 @@ def test_jobs_that_never_ran_or_had_not_finished_are_listed(tmp_path):
     assert fp.left_out_never_allocated(bare) == ["8917982"]
     assert fp.left_out_unfinished(bare) == ["8976354"]
     # Another project's jobs are not listed, whatever their state.
-    other = _HEADER + _ROWS.replace("/home/educ1242/paper_speech_transcription_audit_w2",
-                                    "/home/educ1242/new_LESS").replace(
-        "au_der_default", "p1_decoding")
+    other = _HEADER + _ROWS.replace("$HOME/paper_speech_transcription_audit_w2",
+                                    "$HOME/other_project").replace(
+        "au_der_default", "other_decoding")
     assert fp.left_out_unfinished(fp.read_sacct(_dump(tmp_path, other))) == []
 
 

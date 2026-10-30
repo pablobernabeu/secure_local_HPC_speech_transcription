@@ -464,25 +464,28 @@ def summarise(segments, flagged) -> dict:
 
 
 # A transcript whose last segment ends this far short of the recording,
-# as a fraction of its duration, has almost certainly stopped early rather
-# than merely ended on a pause.
+# as a fraction of its duration, is flagged for a listen: a tail that long
+# may hold speech left untranscribed, not only a closing pause.
 _TRUNCATION_SHORTFALL = 0.10
 
 
 def truncation_check(segments, audio_duration_s=None) -> dict:
     """Report whether the transcript stops well before the recording does.
 
-    The timestamp benchmark identified early truncation as the dominant
-    boundary failure on AMI: every gross end-boundary error was the model
-    ceasing to transcribe part-way through, in the worst cases after less
-    than a fifth of the segment, and none was a run-on past the true end.
-    Post-processing cannot repair that, because the words were never
-    emitted; what the workflow can do is notice, so that a short
-    transcript is not mistaken for a complete one.
+    The timestamp benchmark found that Whisper's last segment can end well
+    before its clip does: on AMI every gross end-boundary error was in that
+    direction, and none was a run-on past the clip end. Most such clips
+    still held every word (32 of the 41 lost none; see
+    :func:`evaluation.timestamp_metrics.aggregate_boundary_errors`), so on
+    a short clip an early last timestamp is mostly a matter of timing. On a
+    whole recording, though, a transcript ending well short of the audio
+    can also mean speech left untranscribed, which post-processing cannot
+    recover, so the review flags it for a listen and a short transcript is
+    not mistaken for a complete one.
 
     The check is whole-transcript rather than per segment, since that is
-    the scale at which the failure shows: the final cue simply arrives
-    early and nothing follows it. Returns ``checked: False`` when the
+    the scale at which the shortfall shows: the final cue arrives early and
+    nothing follows it. Returns ``checked: False`` when the
     recording's duration is unknown, because a shortfall cannot be
     measured against an unknown total and guessing would be worse than
     declining.
@@ -509,8 +512,8 @@ def review_transcript(transcript: dict, audio_duration_s=None,
     """Flag the segments of a loaded transcript and summarise the result.
 
     When *audio_duration_s* is known the report also carries a
-    whole-transcript truncation check, which catches the failure the
-    per-segment flags cannot see: a transcript that simply stops early.
+    whole-transcript truncation check, which catches what the per-segment
+    flags cannot see: a transcript that ends well before the recording does.
     """
     segments = transcript.get("segments") or []
     flagged = flag_segments(segments, **kwargs)

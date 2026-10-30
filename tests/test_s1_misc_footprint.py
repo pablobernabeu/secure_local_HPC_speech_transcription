@@ -4,7 +4,9 @@ ESTATS-13: no code built arc_job_ledger.csv from sacct. ESTATS-05: an
 H100 was priced as the 700 W SXM5 module whatever its variant, and the
 report did not say what each job was costed at. REGEN-07: a refresh needs
 a reproducible builder. The sacct excerpt below is copied from a
-2026-09-26 dump, with one row of another project's job added.
+2026-09-26 dump, with the user name and project accounts written as
+placeholders (docs/privacy_review.md), and with one row added that
+stands for another project's job, under a made-up ID and name.
 """
 
 from __future__ import annotations
@@ -25,14 +27,14 @@ from evaluation import footprint as fp
 
 _SACCT = """\
 JobID|JobName|Account|State|ElapsedRaw|Start|End|Partition|AllocTRES|NodeList
-7721017|pilot_benchmark_wer|educ-intract|COMPLETED|761|2026-05-25T23:28:32|2026-05-25T23:41:13|short|billing=4,cpu=4,gres/gpu=1,mem=32G,node=1|htc-g053
-7725869_4|wer_sweep|educ-intract|CANCELLED by 8707|26429|2026-05-26T11:50:29|2026-05-26T19:10:58|\
+7721017|pilot_benchmark_wer|<project-b>|COMPLETED|761|2026-05-25T23:28:32|2026-05-25T23:41:13|short|billing=4,cpu=4,gres/gpu=1,mem=32G,node=1|htc-g053
+7725869_4|wer_sweep|<project-b>|CANCELLED by 8707|26429|2026-05-26T11:50:29|2026-05-26T19:10:58|\
 short|billing=4,cpu=4,gres/gpu=1,mem=32G,node=1|htc-g033
-7729883|sweep_aggregate|educ-intract|COMPLETED|16|2026-05-27T06:02:17|2026-05-27T06:02:33|short|billing=2,cpu=2,mem=8G,node=1|htc-c068
-9000001|claps_databased2|educ-intract|COMPLETED|100|2026-05-27T06:02:17|2026-05-27T06:04:17|short|billing=2,cpu=2,mem=8G,node=1|htc-c068
-8554985|determinism|educ-intract|COMPLETED|789|2026-08-12T16:11:55|2026-08-12T16:25:04|short|billing=8,cpu=8,gres/gpu=1,mem=48G,node=1|htc-g058
-8781723|anon_multimeeting|educ-intract|COMPLETED|1659|2026-09-12T09:13:35|2026-09-12T09:41:14|short|billing=8,cpu=8,gres/gpu=1,mem=48G,node=1|htc-g062
-8800000|disfluency|educ-lift|RUNNING|120|2026-09-26T09:00:00|Unknown|short|billing=8,cpu=8,gres/gpu=1,mem=48G,node=1|htc-g070
+7729883|sweep_aggregate|<project-b>|COMPLETED|16|2026-05-27T06:02:17|2026-05-27T06:02:33|short|billing=2,cpu=2,mem=8G,node=1|htc-c068
+9000001|other_fit|<project-b>|COMPLETED|100|2026-05-27T06:02:17|2026-05-27T06:04:17|short|billing=2,cpu=2,mem=8G,node=1|htc-c068
+8554985|determinism|<project-b>|COMPLETED|789|2026-08-12T16:11:55|2026-08-12T16:25:04|short|billing=8,cpu=8,gres/gpu=1,mem=48G,node=1|htc-g058
+8781723|anon_multimeeting|<project-b>|COMPLETED|1659|2026-09-12T09:13:35|2026-09-12T09:41:14|short|billing=8,cpu=8,gres/gpu=1,mem=48G,node=1|htc-g062
+8800000|disfluency|<project-a>|RUNNING|120|2026-09-26T09:00:00|Unknown|short|billing=8,cpu=8,gres/gpu=1,mem=48G,node=1|htc-g070
 """
 
 
@@ -254,9 +256,9 @@ def test_every_gpu_node_of_the_short_partition_is_mapped():
 # Three tasks of the audit's re-run wave, copied from the 2026-10-04 dump.
 _AUDIT_ROWS = """\
 JobID|JobName|Account|State|ElapsedRaw|Start|End|Partition|AllocTRES|NodeList|WorkDir
-8917984_1|au_ml|educ-lift|COMPLETED|2645|2026-09-28T10:01:40|2026-09-28T10:45:45|short|billing=4,cpu=4,gres/gpu=1,mem=32G,node=1|htc-g015|/home/educ1242/paper_speech_transcription_audit
-8917985_0|au_wer_large|educ-intract|COMPLETED|5213|2026-09-28T10:20:55|2026-09-28T11:47:48|short|billing=4,cpu=4,gres/gpu:v100=1,gres/gpu=1,mem=32G,node=1|htc-g003|/home/educ1242/paper_speech_transcription_audit
-8917987_1|au_wer_dis|educ-intract|COMPLETED|1163|2026-09-28T10:02:48|2026-09-28T10:22:11|short|billing=4,cpu=4,gres/gpu:l40s=1,gres/gpu=1,mem=32G,node=1|htc-g066|/home/educ1242/paper_speech_transcription_audit
+8917984_1|au_ml|<project-a>|COMPLETED|2645|2026-09-28T10:01:40|2026-09-28T10:45:45|short|billing=4,cpu=4,gres/gpu=1,mem=32G,node=1|htc-g015|$HOME/paper_speech_transcription_audit
+8917985_0|au_wer_large|<project-b>|COMPLETED|5213|2026-09-28T10:20:55|2026-09-28T11:47:48|short|billing=4,cpu=4,gres/gpu:v100=1,gres/gpu=1,mem=32G,node=1|htc-g003|$HOME/paper_speech_transcription_audit
+8917987_1|au_wer_dis|<project-b>|COMPLETED|1163|2026-09-28T10:02:48|2026-09-28T10:22:11|short|billing=4,cpu=4,gres/gpu:l40s=1,gres/gpu=1,mem=32G,node=1|htc-g066|$HOME/paper_speech_transcription_audit
 """
 _AUDIT_NAMES = {"au_ml", "au_wer_large", "au_wer_dis"}
 

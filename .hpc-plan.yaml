@@ -1,7 +1,7 @@
 # hpc_advance plan for the secure-local-HPC speech-transcription project.
 #
-# This project shares the ARC account with several unrelated projects
-# (claps_*, bfda_*, p1_/p2_* decoding). The name_glob filters below keep
+# This project shares its ARC accounts with several unrelated projects,
+# whose jobs run under their own names. The name_glob filters below keep
 # hpc_advance watching only this project's jobs. fnmatch is exact, so each
 # glob is written for the names the stage's jobs ran under. Where a stage
 # also lists detect.arrays, only those job IDs belong to it: its name_glob
@@ -133,8 +133,8 @@
 # BST, so no job can run on a P100. Judge capacity by node state, not by
 # queue depth alone.
 #
-# The cluster remains heavily loaded by the other projects (claps_*, p1_*,
-# bfda_*), so any later wave should still be sized modestly. GPU work
+# The cluster remains heavily loaded by other projects on the shared
+# accounts, so any later wave should still be sized modestly. GPU work
 # outside the stages below:
 #   - a decoding-configuration arm for whisper-medium on AMI. Still no
 #     script, and still no stated question it would answer. Ask before
@@ -157,20 +157,23 @@
 version: 1
 
 cluster:
+  # The user name and the two project accounts are placeholders
+  # (docs/privacy_review.md): put the deployment's own in their place.
   ssh_alias: arc-agent
-  user: educ1242
+  user: "<user>"
   clusters: htc
-  accounts: [educ-lift, educ-intract]
-  default_account: educ-intract # see BALANCE below
+  accounts: ["<project-a>", "<project-b>"]
+  default_account: "<project-b>" # see BALANCE below
   partition: short              # `htc` is the cluster; `short` is the partition
   qos: standard                 # ALWAYS standard; never --qos=priority
-  # BALANCE: over the 30 days to 2026-08-20 educ-lift carried 982 jobs and
-  # 25,426 wall-hours against educ-intract's 753 and 4,746, about 5.4x the
-  # load, because most submit scripts documented educ-lift as their default.
-  # The default is now educ-intract and the scripts' usage lines were changed
-  # to match. Re-check the split before a large wave rather than assuming
-  # this still holds; `userbalance` is broken on the login node (glsuser and
-  # gbalance are missing), so use sacct wall-hours by account instead.
+  # BALANCE: over the 30 days to 2026-08-20 <project-a> carried 982 jobs and
+  # 25,426 wall-hours against <project-b>'s 753 and 4,746, about 5.4x the
+  # load, because most submit scripts documented <project-a> as their default.
+  # The default is now <project-b>, and the scripts' usage lines leave the
+  # account to the user. Re-check the split before a large wave rather than
+  # assuming this still holds; `userbalance` is broken on the login node
+  # (glsuser and gbalance are missing), so use sacct wall-hours by account
+  # instead.
 
 poll:
   interval_seconds: 1800
@@ -179,8 +182,8 @@ poll:
 autonomy: confirm
 
 # Shorthand for the shared output directory used by the done-conditions.
-# $DATA = /data/educ-lift/educ1242
-_output_dir: &out "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation"
+# $DATA is the project data directory that ARC sets for each user.
+_output_dir: &out "$DATA/speech_transcription_env/output/evaluation"
 
 stages:
   - name: wer_sweep
@@ -197,7 +200,7 @@ stages:
         # The SWEEP_OUTPUT_DIR of the sweep behind the committed matrix.
         # Point this at a new run's directory before a new sweep: a
         # finished directory already satisfies the count.
-        path: "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation/audit2026/sweep"
+        path: "$DATA/speech_transcription_env/output/evaluation/audit2026/sweep"
         # No underscore after "summary", so that the legacy names
         # wer_summary.json and wer_summary_<condition>.json, which the
         # post-fix pass wrote in postfix/, match as well as the suite- and
@@ -223,14 +226,14 @@ stages:
     # SWEEP_OUTPUT_DIR in SWEEP_DIR below and in done_when.path.
     proceed:
       description: "rebuild the committed 255-row sweep aggregate on ARC from audit2026/sweep"
-      run: "ssh arc-agent 'cd $HOME/paper_speech_transcription_audit_w2b && SWEEP_DIR=$DATA/speech_transcription_env/output/evaluation/audit2026/sweep sbatch --account=educ-intract hpc/aggregate_sweep.sh'"
+      run: "ssh arc-agent 'cd $HOME/paper_speech_transcription_audit_w2b && SWEEP_DIR=$DATA/speech_transcription_env/output/evaluation/audit2026/sweep sbatch --account=\"<project-b>\" hpc/aggregate_sweep.sh'"
       autonomy: confirm
     notes: >
       submit_sweep.sh, array 0-4 (one suite each), one model per submission
       via SWEEP_MODEL. COMPLETE: the audit's re-run on 2026-09-28 at
-      6f9bf56, 8917985 (Large v3, educ-intract, Tesla V100-PCIE-32GB),
-      8917986 (Whisper Medium, educ-lift, NVIDIA L40S) and 8917987
-      (distil-large-v3, educ-intract, NVIDIA L40S), each after a
+      6f9bf56, 8917985 (Large v3, <project-b>, Tesla V100-PCIE-32GB),
+      8917986 (Whisper Medium, <project-a>, NVIDIA L40S) and 8917987
+      (distil-large-v3, <project-b>, NVIDIA L40S), each after a
       SWEEP_LIMIT=10 pre-flight (8913987 to 8913989), with
       DUMP_HYPOTHESES=1; recipe hpc/runs/sweep.env. Committed in
       output/evaluation/: 2e36bf9 (the 255-row matrix and
@@ -285,7 +288,7 @@ stages:
         # reconstruction_audit_{test,validation}.json (942d2c1), one record
         # per split. submit_ami_cache.sh writes the same files to its
         # REPORT_DIR after building the cache.
-        path: "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation/audit2026/reconstruction_audit"
+        path: "$DATA/speech_transcription_env/output/evaluation/audit2026/reconstruction_audit"
         glob: "reconstruction_audit_*.json"
         min_count: 2
     on_failure: report
@@ -374,16 +377,16 @@ stages:
     done_when:
       queue_empty: true
       outputs:
-        path: "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation/audit2026/der"
+        path: "$DATA/speech_transcription_env/output/evaluation/audit2026/der"
         glob: "*/der_summary.json"
         min_count: 4
     on_failure: report
     notes: >-
       submit_benchmark_der.sh, re-runs of the four August test-split jobs
       (hpc/runs/der_default.env, der_tuned.env, der_oracle.env,
-      der_concat.env): au_der_default 8976354 (educ-intract), au_der_oracle
-      8976355 (educ-lift), au_der_tuned 8976356 (educ-intract) and
-      au_der_concat 8976357 (educ-lift). COMPLETE: all four COMPLETED 0:0
+      der_concat.env): au_der_default 8976354 (<project-b>), au_der_oracle
+      8976355 (<project-a>), au_der_tuned 8976356 (<project-b>) and
+      au_der_concat 8976357 (<project-a>). COMPLETE: all four COMPLETED 0:0
       on 2026-10-04 between 09:45:36 and 10:31:51 by sacct, on NVIDIA L40S
       cards (htc-g070 for the default and oracle runs, htc-g066 for the
       tuned and concatenation runs), from the clean clone at 9cb43e3.
@@ -401,7 +404,7 @@ stages:
     done_when:
       queue_empty: true
       outputs:
-        path: "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation/audit2026/der"
+        path: "$DATA/speech_transcription_env/output/evaluation/audit2026/der"
         # der_sweep_selection.json, or der_sweep2_selection.json from a run
         # that set OUTPUT_PREFIX=der_sweep2, as hpc/runs/der_sweep2.env does.
         glob: "*/der_sweep*_selection.json"
@@ -410,7 +413,7 @@ stages:
     notes: >-
       submit_der_sweep.sh on the validation split, re-runs of the two
       August sweeps (hpc/runs/der_sweep.env, der_sweep2.env): au_der_sweep
-      8976358 (educ-intract) and au_der_sweep2 8976362 (educ-lift).
+      8976358 (<project-b>) and au_der_sweep2 8976362 (<project-a>).
       COMPLETE: both COMPLETED 0:0 on 2026-10-04, from 09:56:56 to 10:33:32
       and from 10:30:24 to 11:27:47 by sacct, on L40S cards (htc-g070,
       htc-g066), from the clean clone at 9cb43e3. Committed in 70933b4
@@ -430,13 +433,13 @@ stages:
     done_when:
       queue_empty: true
       outputs:
-        path: "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation/audit2026/timestamps"
+        path: "$DATA/speech_transcription_env/output/evaluation/audit2026/timestamps"
         glob: "timestamp_summary.json"
         min_count: 1
     notes: >-
       submit_benchmark_timestamps.sh, AMI IHM, large-v3. COMPLETE: 8917980
-      (au_ts, educ-lift) and 8917981 (au_ts_vad, --vad-refine,
-      educ-intract, outputs in audit2026/timestamps_vad/), 2026-09-27 at
+      (au_ts, <project-a>) and 8917981 (au_ts_vad, --vad-refine,
+      <project-b>, outputs in audit2026/timestamps_vad/), 2026-09-27 at
       6f9bf56 on an NVIDIA H100 80GB HBM3 (htc-g059), after the pre-flights
       8913990 and 8913991; committed in 567cfd9, with corrections in
       d7b7df9, into output/evaluation/ and output/evaluation_vad_refine/.
@@ -454,7 +457,7 @@ stages:
     done_when:
       queue_empty: true
       outputs:
-        path: "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation/audit2026/fleurs_ml"
+        path: "$DATA/speech_transcription_env/output/evaluation/audit2026/fleurs_ml"
         # Two letters and an underscore after "fleurs_" (fr_fr, es_419, ...)
         # keeps out the English sweep's wer_summary_fleurs_<model>_*.json.
         glob: "wer_summary_fleurs_[a-z][a-z]_*.json"
@@ -463,11 +466,11 @@ stages:
     notes: >
       COMPLETE as of 2026-09-28, over four arms on the same six splits
       (fr/de/es/it/nl/pl, large-v3, raw + pipeline_full). The first three
-      ran as --array=0-2%1 on educ-lift and 3-5%1 on educ-intract:
+      ran as --array=0-2%1 on <project-a> and 3-5%1 on <project-b>:
         1. 8166513/8166514 at 9ae40a2: before the diacritics fix
         2. 8174224/8174225 at 812552b: after it, before the language gate
         3. 8245204/8245205 at c0f58c5: after both
-        4. 8917984 at 6f9bf56: the audit's re-run, array 0-5 on educ-lift,
+        4. 8917984 at 6f9bf56: the audit's re-run, array 0-5 on <project-a>,
            job name au_ml, after the pre-flight 8917983 (pf_ml), outputs in
            audit2026/fleurs_ml/ (recipe hpc/runs/fleurs_ml.env)
       The composite went from inflating non-English WER by up to 8.10x to
@@ -519,7 +522,7 @@ stages:
         # 8781724 used the default REPORT_DIR, so this ARC directory holds
         # its files, which overwrote the August run's; the committed
         # top-level copies are the August run's.
-        path: "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation/determinism"
+        path: "$DATA/speech_transcription_env/output/evaluation/determinism"
         glob: "determinism_*.json"
         min_count: 2
     on_failure: report
@@ -552,7 +555,7 @@ stages:
     done_when:
       queue_empty: true
       outputs:
-        path: "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation/repro/cpu_arm/determinism_cpu"
+        path: "$DATA/speech_transcription_env/output/evaluation/repro/cpu_arm/determinism_cpu"
         glob: "determinism_*.json"
         min_count: 2           # determinism_repeat.json, determinism_seeds.json
     on_failure: report
@@ -560,7 +563,7 @@ stages:
       hpc/submit_determinism_cpu.sh with hpc/runs/determinism_cpu.env
       (float32, 16 cores, no GPU): the desktop half of the determinism
       check, the same 200 utterances decoded on a processor. COMPLETE:
-      8978759 (educ-intract) COMPLETED 0:0 on 2026-10-04, 04:51:19 to
+      8978759 (<project-b>) COMPLETED 0:0 on 2026-10-04, 04:51:19 to
       06:08:35 BST by sacct, on htc-c074 (an AMD EPYC 9634, by its cpu.txt
       and the node's Slurm features), from a clean checkout of f2578b8 by
       its environment record. The job took 1 h 17 min of its 12 h limit for
@@ -587,7 +590,7 @@ stages:
     done_when:
       queue_empty: true
       outputs:
-        path: "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation/repro/v100_arm/determinism"
+        path: "$DATA/speech_transcription_env/output/evaluation/repro/v100_arm/determinism"
         glob: "determinism_*.json"
         min_count: 2
     on_failure: report
@@ -596,7 +599,7 @@ stages:
       (SBATCH_GRES=gpu:v100:1): the check at seed 0 on a V100, so that its
       comparison with the L40S's seed-0 decode no longer mixes the card
       with the seed, and a V100 repeat covers the 2 utterances on which the
-      L40S and the V100 differ. COMPLETE: 8978760 (educ-intract) COMPLETED
+      L40S and the V100 differ. COMPLETE: 8978760 (<project-b>) COMPLETED
       0:0 on 2026-10-04, 11:22:53 to 11:38:34 BST by sacct, on a Tesla
       V100-PCIE-32GB of htc-g004, the node of the sweep's V100 pass, from a
       clean checkout of f2578b8, into repro/v100_arm/determinism/. Its
@@ -627,7 +630,7 @@ stages:
         # The committed multi-meeting run's REPORT_DIR. Point this at a new
         # directory for each new run, since a finished one already
         # satisfies the count.
-        path: "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation/audit2026/anon_multi"
+        path: "$DATA/speech_transcription_env/output/evaluation/audit2026/anon_multi"
         glob: "anonymisation_summary.json"
         min_count: 1
     on_failure: report
@@ -660,13 +663,13 @@ stages:
         # The re-run's CASE_REPORT_DIR. The job refuses to start over a
         # finished result (exit 6), so give each new run a directory that
         # holds no podcast_eval_summary.json and point this path at it.
-        path: "/data/educ-lift/educ1242/speech_transcription_env/output/evaluation/audit2026/case_study_l40s"
+        path: "$DATA/speech_transcription_env/output/evaluation/audit2026/case_study_l40s"
         glob: "podcast_eval_summary.json"
         min_count: 1
     on_failure: report
     notes: >-
       submit_case_study.sh, Codex Mentis episode 5 through the full deployed
-      pipeline. COMPLETE: wave 2c's 8983112 (educ-intract, afterany on test
+      pipeline. COMPLETE: wave 2c's 8983112 (<project-b>, afterany on test
       job 8983111) COMPLETED 0:0 on 2026-10-04 on htc-g052, an NVIDIA RTX
       A6000, from the clone ~/paper_speech_transcription_audit_w2c at
       c4c7b38 with a clean tree, into audit2026/case_study_w2c. ca75ced and
@@ -686,7 +689,7 @@ stages:
       audit wave's attempts at 6f9bf56 failed: 8917982 (au_case) was
       cancelled before it started, and 8918023 (au_case, 2026-09-27) ran
       without speaker attribution because the cached pipeline config had
-      been overwritten (NEW-INC-01). Re-run 8978758 (educ-lift, 2026-10-04
+      been overwritten (NEW-INC-01). Re-run 8978758 (<project-a>, 2026-10-04
       04:57 to 05:15, htc-g050, an NVIDIA RTX A6000) FAILED with exit 5:
       diarisation loaded and found 2 speakers in 243 segments and
       provenance verification passed, but the structural evaluation stopped
@@ -705,12 +708,12 @@ stages:
     done_when:
       queue_empty: true
       outputs:
-        path: "/home/educ1242/paper_speech_transcription_audit_w2c/logs"
+        path: "$HOME/paper_speech_transcription_audit_w2c/logs"
         glob: "pytest_8983111.out"
         min_count: 1
     on_failure: report
     notes: >-
-      hpc/run_tests.sh. COMPLETE: wave 2c's 8983111 (educ-lift) COMPLETED
+      hpc/run_tests.sh. COMPLETE: wave 2c's 8983111 (<project-a>) COMPLETED
       0:0 on 2026-10-04, 10:07:32 to 10:12:24 by sacct, on htc-c031, from the
       clone ~/paper_speech_transcription_audit_w2c at c4c7b38, ahead of the
       case-study re-run 8983112, as in wave 2b: 2058 passed, 1 skipped
@@ -718,7 +721,7 @@ stages:
       1 xfailed, by the summary line of logs/pytest_8983111.out. It was the
       first ARC run of the preflight blob check (463340a) and its symlink
       tests, which passed. The previous run, 8978757, COMPLETED 2026-10-04
-      04:51 to 04:56 on htc-c074 (educ-lift), from a clean checkout of
+      04:51 to 04:56 on htc-c074 (<project-a>), from a clean checkout of
       f2578b8 (logs/environment/pytest_suite_8978757.txt): 2032 passed,
       1 skipped (the same test), 1 xfailed. It was the first run on ARC of
       the seven tests in tests/test_test_isolation.py and

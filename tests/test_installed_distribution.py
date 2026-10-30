@@ -12,6 +12,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
@@ -105,8 +106,13 @@ def test_installed_default_masker_and_version_from_unrelated_directory(distribut
           "--no-compile", "--target", str(installed), str(wheel)], unrelated)
     with (ROOT / "versions.csv").open(encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle))
-    expected_release = max(enumerate(rows),
-                           key=lambda item: (item[1]["date"], item[0]))[1]["version"]
+    # The newest release as transcription._latest_release finds it: by
+    # date, then by version number, since versions.csv lists the newest
+    # first and two releases can share a date (PG-32).
+    expected_release = max(enumerate(rows), key=lambda item: (
+        item[1]["date"],
+        tuple(int(part) for part in re.findall(r"\d+", item[1]["version"])),
+        item[0]))[1]["version"]
     # -I ignores PYTHONPATH and the current directory; -S excludes the
     # machine's site-packages. Only the wheel target is added. An empty
     # PATH prevents the optional ffmpeg import from creating a shim.

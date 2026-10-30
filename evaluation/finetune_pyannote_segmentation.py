@@ -679,7 +679,7 @@ def _finetune(
     except ImportError as exc:
         raise SystemExit(
             "pyannote.audio is required.  "
-            "Install with:  pip install 'pyannote.audio>=3.1'"
+            "Install with:  pip install 'pyannote.audio>=3.1,<4'"
         ) from exc
 
     try:

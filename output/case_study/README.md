@@ -20,7 +20,7 @@ diarisation a speaker count to be scored against without a reference
 transcript. The episode is about this workflow's own subject.
 
 Job 9124852 ran from 00:09 to 00:27 BST on an NVIDIA L40S (node htc-g075,
-account `educ-lift`), from a clean clone at fc652ab, with Python 3.12.12,
+account `<project-a>`), from a clean clone at fc652ab, with Python 3.12.12,
 torch 2.5.1+cu121, transformers 4.57.1 and pyannote.audio 3.4.0. It used
 Whisper Large v3 (Hub revision 06f233fe) and pyannote
 speaker-diarization-3.1 (revision 84fd2591), with the language stated as
@@ -269,9 +269,9 @@ optional checks.
 ## Earlier runs
 
 Six runs of the job are on record. Job 8400094 (2026-08-02,
-`educ-intract`) measured the pipeline as first shipped: four monotonicity
+`<project-b>`) measured the pipeline as first shipped: four monotonicity
 violations and five overlapping cues. Job 8441879 (2026-08-05,
-`educ-lift`, a Tesla P100 on htc-g032, commit 25c2582) ran after the
+`<project-a>`, a Tesla P100 on htc-g032, commit 25c2582) ran after the
 first timeline repair and the preflight gate, and measured none of
 either. Its text remains as `ep05_raw_text.txt`. Job 8918023 (2026-09-27)
 could not load the diarisation pipeline, which failed with
@@ -284,7 +284,7 @@ exist on ARC and refused to go on without it (NEW-06), so the job failed.
 Commits ca75ced and c4c7b38 made the job read the repository's own
 manifest when there is no other, and check it before transcribing. Job
 8983112 (2026-10-04, commit c4c7b38, an RTX A6000 on htc-g052,
-`educ-intract`) then completed, and its transcript JSON matched 8978758's
+`<project-b>`) then completed, and its transcript JSON matched 8978758's
 in every field but the time it was written. Its summary, review and
 manifest were committed here until this run replaced them.
 

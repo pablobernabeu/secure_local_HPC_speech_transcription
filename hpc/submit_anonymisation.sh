@@ -10,8 +10,9 @@
 # each utterance twice, once before and once after.
 #
 # Usage (submit from the repository root on ARC).
-# Account: either project account is valid; the examples use educ-intract.
-# Choose by current load, which changes: see the BALANCE note in .hpc-plan.yaml.
+# Account: pass your own project account with --account. With more than
+# one, choose by current load, which changes: see the BALANCE note in
+# .hpc-plan.yaml.
 #
 # The two published configurations, one command each. ANON_PRESET fixes the
 # utterance count, the coefficients and the per-meeting cap, and REPORT_DIR
@@ -27,7 +28,7 @@
 #
 #     ANON_PRESET=multi-meeting \
 #     REPORT_DIR="$DATA/speech_transcription_env/output/evaluation/repro/anonymisation" \
-#       sbatch --account=educ-intract hpc/submit_anonymisation.sh
+#       sbatch --account='<your-project>' hpc/submit_anonymisation.sh
 #
 #   Single meeting, the configuration of the committed
 #   output/evaluation/anonymisation_single_meeting/, job 8917988
@@ -36,7 +37,7 @@
 #
 #     ANON_PRESET=single-meeting \
 #     REPORT_DIR="$DATA/speech_transcription_env/output/evaluation/repro/anonymisation_single_meeting" \
-#       sbatch --account=educ-intract hpc/submit_anonymisation.sh
+#       sbatch --account='<your-project>' hpc/submit_anonymisation.sh
 #
 # Both committed runs used these presets at code 6f9bf56. Earlier runs of the
 # same configurations predate the fixes to the transform's overlap-add, the

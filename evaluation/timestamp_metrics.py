@@ -17,19 +17,20 @@ aggregate_boundary_errors(records)
 
 Notes on interpretation
 -----------------------
-The AMI IHM audio rows are already trimmed to exactly the spoken utterance,
-so the ideal Whisper output would begin at 0.0 s and end at the audio
-duration.  The start-boundary MAE therefore captures how much silence (or
-overshoot) Whisper predicts before the first word; the end-boundary MAE
-captures how early or late Whisper terminates the transcript relative to
-the actual end of speech.
+Each AMI IHM audio row is cut at its annotated segment, so the reference
+boundaries are 0.0 s and the clip's duration. The annotated end can include
+trailing non-speech, so the reference end is the end of the clip, not a
+measured end of speech. The start-boundary MAE therefore captures how far
+Whisper's first timestamp lies from the clip start, and the end-boundary MAE
+how far its last timestamp lies from the clip end.
 
-A positive start error means Whisper started too late; a negative start
-error means it started before 0.0 (which cannot happen physically and
-indicates a clipping artefact in the audio or a timestamp-offset bug).
-A positive end error means Whisper stopped early; a negative end error
-means Whisper extended beyond the audio duration (also a clipping or
-hallucination indicator).
+A positive start error means Whisper's first timestamp is after 0.0; a
+negative start error means it is before 0.0 (which cannot happen physically
+and indicates a clipping artefact in the audio or a timestamp-offset bug).
+A positive end error means Whisper's last timestamp ends before the clip
+does, which need not mean that words were left out (see
+:func:`aggregate_boundary_errors`); a negative end error means it extends
+beyond the audio duration (a clipping or hallucination indicator).
 """
 
 from __future__ import annotations
@@ -38,10 +39,12 @@ import math
 from collections.abc import Iterable
 
 
-# A boundary error beyond this is not a calibration difference but a
-# failure to transcribe the segment: at half a second the hypothesis has
-# missed or invented a substantial span of speech. Used for the tail rate
-# and for the truncation rate that names its direction.
+# A boundary error beyond this is counted as gross: half a second is far
+# more than a calibration difference between Whisper's timestamp tokens and
+# the annotation. It is a statement about where the timestamp falls, not
+# about the words: most clips with a gross end error on the committed run
+# lost none (see aggregate_boundary_errors). Used for the tail rate and for
+# the truncation rate that names its direction.
 GROSS_ERROR_S = 0.5
 
 #: The metrics :func:`aggregate_boundary_errors` reports beside ``n``.
@@ -102,11 +105,12 @@ def boundary_error(
     dict
         Keys:
         ``'start_error'`` — ``hyp_start - 0.0`` (positive = late start).
-        ``'end_error'``   — ``ref_duration - hyp_end`` (positive = early stop).
+        ``'end_error'``   — ``ref_duration - hyp_end`` (positive = the last
+        timestamp ends before the clip does).
         ``'abs_start_error'``, ``'abs_end_error'``, ``'abs_total_error'``.
     """
     start_error = float(hyp_start)           # ref_start is always 0.0
-    end_error = float(ref_duration - hyp_end)  # positive if Whisper stopped early
+    end_error = float(ref_duration - hyp_end)  # positive if it ends before the clip
     return {
         "start_error": start_error,
         "end_error": end_error,
@@ -136,19 +140,29 @@ def aggregate_boundary_errors(records: Iterable[dict]) -> dict:
 
     Why both.  On the AMI IHM split the end-boundary error is not a
     systematic offset that a constant correction could remove; it is a
-    small number of gross failures dragging an otherwise excellent mean.
+    small number of gross errors dragging an otherwise excellent mean.
     Half the utterances land within a few milliseconds of the reference
     while roughly one in twelve is out by more than half a second, and
     those few contribute the large majority of the mean absolute error.
     Reporting only a mean therefore describes neither the typical
-    utterance nor the failure, so the median and the tail rate are
-    reported next to it.
+    utterance nor the tail, so the median and the tail rate are reported
+    next to it.
 
-    ``'truncation_rate'`` names the failure's direction.  ``end_error`` is
-    positive when the hypothesis stops before the reference, so a large
-    positive error means the model emitted only part of the segment.  That
-    is what the gross failures on this corpus are, and it is the opposite
-    of a run-on continuation past the true boundary.
+    ``'truncation_rate'`` is the share of utterances whose ``end_error``
+    exceeds :data:`GROSS_ERROR_S`: Whisper's last predicted timestamp ends
+    more than half a second before the clip does. It separates the gross
+    end errors in that direction from a run-on past the clip end. The
+    reference end is the annotated segment end, which can include trailing
+    non-speech, so the rate measures where the last timestamp falls and not
+    how many words were lost: most such clips contain every reference word.
+    On the committed 499-utterance run, 41 utterances are counted. Joined on
+    their ids to the whisper_norm WER report of the same model
+    (``sweep_reports_postfix_ami``), which scores all 41, 32 of them have no
+    deleted reference word, among them all 18 with a one-word reference.
+    The name is historical: it was chosen when these errors were read as
+    early truncation, the model ceasing to transcribe part-way, and it is
+    kept because the committed ``timestamp_summary.json`` and the tests and
+    tables that read it use it.
 
     With no records every metric is ``None`` (JSON ``null``) beside
     ``n = 0``: an error or a rate over no utterances is undefined, and a

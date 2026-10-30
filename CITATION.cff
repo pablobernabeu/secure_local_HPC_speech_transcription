@@ -6,7 +6,7 @@ authors:
     family-names: "Bernabeu"
     affiliation: "Department of Education, University of Oxford"
 date-released: "2026-10-30"
-version: "2.1.0"
+version: "2.1.1"
 # The software is MIT. The manuscript, docs/, output/ and example_output/
 # are CC BY 4.0 (LICENSE-docs.md); CFF reads a list of licences as a
 # choice between them, so only the software's is given here.

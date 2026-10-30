@@ -54,8 +54,9 @@ PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q \
   tests/test_wer_normalisation.py tests/test_wer_aggregate.py \
   tests/test_confidence.py tests/test_review_repeated_passages.py \
   tests/test_provenance.py tests/test_example_variants.py \
-  tests/test_installed_distribution.py \
-  tests/test_verify_regeneration.py tests/test_build_input_deposit.py
+  tests/test_installed_distribution.py tests/test_cli_help_strings.py \
+  tests/test_verify_regeneration.py tests/test_build_input_deposit.py \
+  tests/test_build_arc_inputs_deposit.py tests/test_build_decoder_source_deposit.py
 python tools/verify_regeneration.py --keep
 ```
 

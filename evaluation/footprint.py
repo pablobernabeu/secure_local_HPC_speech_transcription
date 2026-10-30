@@ -524,12 +524,19 @@ class FootprintParams:
     gpu_tdp_w:
         Mapping of GPU model to board TDP in watts (see :data:`GPU_TDP_W`).
     cpu_power_w_per_core:
-        Per-core power draw in watts.  ``12.0`` is a representative
-        server-CPU TDP-per-core; the CPU term is small relative to the GPU
-        term, so the exact value has little leverage on the total.
-        TODO: justify (source unknown).  An audit noted that the value
-        matches the Green Algorithms calculator's generic-CPU figure;
-        confirm that against the calculator's constants before citing it.
+        Per-core power draw in watts.  ``12.0`` is the Green Algorithms
+        calculator's figure for an unspecified CPU: the row of model
+        ``Any`` (``TDP_per_core`` 12.0) in ``v2.2/CPUs.csv`` of the
+        calculator's data repository,
+        github.com/Cambridge-Sustainable-Computing-Lab/Green-Algorithms-data,
+        read at commit 0a1d169 (the file last changed in f301f0c,
+        2025-08-07); github.com/GreenAlgorithms/green-algorithms-tool
+        holds that repository as its ``Green-Algorithms-data`` submodule
+        at the same commit. The v3.1 table has no ``Any`` row, and the
+        paper (Lannelongue et al., 2021) gives no generic per-core value.
+        The term is not negligible: on the committed ledger it is
+        14.17 of the 96.71 kWh (14.6%; the GPUs 79.25, memory 3.30), so
+        each watt per core moves the total by about 1.2%.
     mem_power_w_per_gb:
         Power per gigabyte of allocated memory, ``0.3725`` W/GB after
         Green Algorithms (Lannelongue et al., 2021).

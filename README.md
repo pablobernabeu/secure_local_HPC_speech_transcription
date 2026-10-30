@@ -22,7 +22,7 @@ Example outputs are in [example_output](/example_output). The four variants unde
 
 The workflow needs Python 3.11 or later, a floor that `setup.py` and `python -m preflight` enforce. The ARC environment that produced the published results runs Python 3.12. A CUDA-capable GPU speeds transcription up but is not required, and the HPC transcription jobs themselves run on CPU. SLURM is needed only for the HPC scripts.
 
-`requirements.txt` states the lowest versions the code supports. `requirements-lock.txt` is a `pip freeze` of the ARC environment the result jobs run in, taken on 2026-09-26 (Python 3.12.12, torch 2.5.1+cu121, transformers 4.57.1, pyannote.audio 3.4.0), for rebuilding that environment and checking another against it. It does not say what produced a given result. The environment was changed in place during the project, so the lock shows it as it stood that day, which is not necessarily what every past job ran, as its header says. Each result records its own versions instead. The summaries the evaluation modules write carry a `run_metadata` block (`run` in the timestamp summary). It holds the code commit, whether the working tree was clean, the Python version and the versions of the packages that can move a number. `evaluation/revisions.py` pins the commit of every Hugging Face model and dataset the committed runs loaded, and the WER, diarisation, timestamp and anonymisation summaries record the revisions they used. Each HPC job that writes results also records its Python stack, loaded modules, GPU and git commit in an `environment/` subdirectory beside its outputs. The diarisation summaries record `pyannote_audio_version`, 3.4.0 for the committed runs, and pyannote.audio 4.x is not supported. `requirements-dev.txt` holds the development tools: pytest, pytest-cov and the linter ruff.
+`requirements.txt` states the lowest versions the code supports. `requirements-lock.txt` is a `pip freeze` of the ARC environment the result jobs run in, taken on 2026-09-26 (Python 3.12.12, torch 2.5.1+cu121, transformers 4.57.1, pyannote.audio 3.4.0), for rebuilding that environment and checking another against it. It does not say what produced a given result. The environment was changed in place during the project, so the lock shows it as it stood that day, which is not necessarily what every past job ran, as its header says. Each result records its own versions instead. The summaries the evaluation modules write carry a `run_metadata` block (`run` in the timestamp summary). It holds the code commit, whether the working tree was clean, the Python version and the versions of the packages that can move a number. `evaluation/revisions.py` pins the commit of every Hugging Face model and dataset the committed runs loaded, except the segmentation and speaker-embedding models that the diarisation pipeline loads by name, which take no revision and are listed under `revisions_not_enforced`; the WER, diarisation, timestamp and anonymisation summaries record the revisions they used. Each HPC job that writes results also records its Python stack, loaded modules, GPU and git commit in an `environment/` subdirectory beside its outputs. The diarisation summaries record `pyannote_audio_version`, 3.4.0 for the committed runs, and pyannote.audio 4.x is not supported. `requirements-dev.txt` holds the development tools: pytest, pytest-cov and the linter ruff.
 
 See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for known issues.
 
@@ -405,7 +405,7 @@ This project was developed by Dr Pablo Bernabeu at the Department of Education a
 
 If you use this workflow in your research, please cite:
 
-> Bernabeu, P. (2026). *Secure and scalable speech transcription for local and HPC* (Version 2.1.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23442766
+> Bernabeu, P. (2026). *Secure and scalable speech transcription for local and HPC* (Version 2.1.1) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23442766
 
 The inputs behind the paper's English condition sweep, with the source of the commit that decoded them, are deposited separately at https://doi.org/10.5281/zenodo.23442874.
 
@@ -417,7 +417,7 @@ The recommended BibTeX entry is:
   title     = {Secure and scalable speech transcription for local and {HPC}},
   year      = {2026},
   publisher = {Zenodo},
-  version   = {2.1.0},
+  version   = {2.1.1},
   doi       = {10.5281/zenodo.23442766},
   url       = {https://doi.org/10.5281/zenodo.23442766}
 }

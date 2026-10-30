@@ -2,7 +2,7 @@
 #
 # Taken on 2026-09-26, read-only, the way every job script sets it up: by
 # sourcing activate_project_env_arc.sh and running `python -m pip freeze`.
-# That is the conda environment /data/educ-lift/educ1242/
+# That is the conda environment $DATA/
 # speech_transcription_env, Python 3.12.12, with PYTHONUSERBASE pointed at
 # the environment's own .python_user directory.
 #
@@ -25,12 +25,37 @@
 # `--extra-index-url https://download.pytorch.org/whl/cu121` for the
 # +cu121 builds.
 #
-# gliner, the optional NER stage, is not in this environment. Re-running the
-# NER masking arms locally with gliner 0.2.28 and the model revision pinned
-# in ner_masking.py reproduces the committed report CSVs byte for byte and
-# every number in the summary JSONs; the summaries gain a `ner` block
-# (model, revision, threshold, labels, gliner version, call counts). Where
-# the committed NER results were first made is not recorded (ISSUES.md).
+# This file records the environment the cluster results were produced in,
+# and is not a hardened install: OSV lists security advisories for several of its
+# pins (October 2026), among them torch 2.5.1 (GHSA-53q9-r3pm-6pq6, fixed in
+# 2.6.0), transformers 4.57.1, urllib3 2.5.0, pillow 11.3.0, aiohttp 3.13.1
+# and setuptools 70.2.0. Use it to reproduce or check that environment; for
+# general use, install from requirements.txt.
+#
+# Some committed artefacts were made on the author's workstation, not on
+# ARC, and their run_metadata records that environment, which this file
+# does not cover: Windows 11, Python 3.13.7, numpy 2.3.2, scipy 1.17.1,
+# torch 2.12.1, transformers 5.13.1, datasets 5.1.0 and huggingface-hub
+# 1.22.0 or 1.33.0, each artefact listing only the packages it imports.
+# They are, under output/evaluation/, the four masking summaries
+# (masking_summary*.json), disfluency_summary.json, the FLEURS assembly
+# (fleurs_multilingual_summary.json, under benchmark.assembled_by),
+# sweep_aggregate.json, the three interval sidecars
+# (wer_ci_provenance.json, condition_ci_postfix_provenance.json and
+# normaliser_gain_ami_provenance.json),
+# determinism/determinism_cross_accelerator.json, scorer_sensitivity.json
+# (which records numpy 2.3.3 and jiwer 4.0.0) and
+# fleurs_es419_v100_control.json (the comparison; the control decode it
+# reads ran on ARC), and output/case_study/ner_label_phrasings.json.
+#
+# gliner, the optional NER stage, is not in this environment. The
+# committed NER arms (masking_summary_ner.json and
+# masking_summary_caseinsensitive_ner.json) record where they were made:
+# their run_metadata gives the workstation above, and their `ner` block the
+# model, its revision (the one pinned in ner_masking.py), the threshold,
+# labels, gliner 0.2.28 and the call counts. Re-running them with that
+# gliner and revision reproduces the report CSVs byte for byte and every
+# number in the summaries.
 
 accelerate==1.11.0
 aiohappyeyeballs==2.6.1

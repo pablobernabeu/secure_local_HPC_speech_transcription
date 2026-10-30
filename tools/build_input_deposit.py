@@ -132,16 +132,17 @@ DECODER_SOURCE = """\
 ## Historical decoder source
 
 `{file}`, deposited beside this archive, is the workflow's source tree at
-decoder commit `{commit}`, as `git archive` wrote it. Its ZIP comment is
-that commit identifier, and its SHA-256 is `{sha256}`. It is the code that
-wrote these files, kept here because the public repository holds the
-releases, not this commit. It predates later repairs, among them the
-isolation of its tests from shared model caches, so do not run its tests
-against a shared model cache; check or rebuild the results with release
-2.0.0 or later. Like the release, its run records name the ARC project
-paths and account that the jobs used, which the files in this archive do
-not. It is licensed as release 2.0.0 is: the code under MIT,
-and `manuscript/`, `docs/`, `output/` and `example_output/` under CC BY 4.0.
+decoder commit `{commit}`, as `git archive` wrote it, with the
+deployment's user name, project accounts and the paths holding them
+replaced by placeholders, as its `SANITISED.md` lists member by member
+with each original blob. Its ZIP comment is that commit identifier, and
+its SHA-256 is `{sha256}`. It is the code that wrote these files, kept
+here because the public repository holds the releases, not this commit.
+It predates later repairs, among them the isolation of its tests from
+shared model caches, so do not run its tests against a shared model
+cache; check or rebuild the results with release 2.0.0 or later. It is
+licensed as the workflow's releases are: the code under MIT, and
+`manuscript/`, `docs/`, `output/` and `example_output/` under CC BY 4.0.
 
 """
 
@@ -224,7 +225,10 @@ def build(inputs: Path, output: Path, manifest_path: Path = MANIFEST,
         n_dumps=manifest["hypothesis_dumps"],
         jobs=manifest["source"].split("jobs ", 1)[-1],
         commit=manifest["decoder_commit"],
-        software=(f", archived as https://doi.org/{software_doi}"
+        # The DOI is the release's, not the decoder commit's, which no
+        # release holds; the sentence says so.
+        software=(f"; the release of the workflow this deposit accompanies is "
+                  f"archived as https://doi.org/{software_doi}"
                   if software_doi else ""),
         recovered=manifest["recovered_and_verified_on"], total=manifest["total_bytes"],
         suites=", ".join(grid["suites"]), models=", ".join(grid["models"]),

@@ -58,8 +58,9 @@ python setup/setup_pyannote.py
 
 The interactive wizard for speaker attribution, which
 [PYANNOTE_SETUP_GUIDE.md](../PYANNOTE_SETUP_GUIDE.md) describes. It
-checks that pyannote.audio is installed, and offers to install it if not.
-It asks for a HuggingFace token and saves it to `hf_token.txt` in the
+checks that pyannote.audio is installed, and offers to install it if not,
+with torch and torchaudio in one pip call at the specifiers
+`requirements.txt` gives them (pyannote.audio below 4). It asks for a HuggingFace token and saves it to `hf_token.txt` in the
 repository root, checks that the token can reach
 `pyannote/speaker-diarization-3.1`, downloads and caches the pipeline,
 and runs it on a short test signal.

@@ -54,10 +54,11 @@ Output
 A JSON record: the control's job, card, decode and run metadata; per arm,
 the utterances compared and those whose record differs, field by field;
 whether the target differs from each other arm on the same utterances as
-the control does; the fields of the decode and run metadata in which the
-control and an arm that records them differ; whether the jobs' package
-lists agree; the outcome under the rule above; each input by file name and
-digest, never by path; and this module's own run metadata.
+the control does, utterances matched by position and id; the fields of
+the decode and run metadata in which the control and an arm that records
+them differ; whether the jobs' package lists agree; the outcome under the
+rule above; each input by file name and digest, never by path; and this
+module's own run metadata.
 
 The control behind the committed record, ``fleurs_es419_v100_control.json``,
 is ARC jobs 9124739 (pre-flight) and 9124863 (the full split), whose
@@ -319,14 +320,18 @@ def build(control_path: Path, arms: dict, target: str, multilingual: dict,
         }
     # The control reproduces the target where their records agree; against
     # every other arm it should then differ exactly where the target does.
+    # Utterances are matched by position as well as id: FLEURS holds several
+    # recordings of one sentence under one id (560 of the 908 es_419 records
+    # repeat an earlier record's id), so equal sets of ids could hide
+    # different recordings.
     target_records = summaries[target]["per_file"]
     for arm, payload in summaries.items():
         if arm == target:
             continue
         theirs = compare_records(target_records, payload["per_file"])
-        ours = {d["uid"] for d in comparisons[arm]["differing_utterances"]}
+        ours = {(d["position"], d["uid"]) for d in comparisons[arm]["differing_utterances"]}
         comparisons[arm]["target_differs_on_the_same_utterances"] = (
-            {d["uid"] for d in theirs["differing_utterances"]} == ours)
+            {(d["position"], d["uid"]) for d in theirs["differing_utterances"]} == ours)
 
     preflight = None
     if preflight_path is not None:

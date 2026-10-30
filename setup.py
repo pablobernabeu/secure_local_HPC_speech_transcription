@@ -55,7 +55,7 @@ _REPO_URL = "https://github.com/pablobernabeu/secure_local_HPC_speech_transcript
 setup(
     name="speech-transcription-system",
     # Kept by hand in step with CITATION.cff and versions.csv (CORE-17).
-    version="2.1.0",
+    version="2.1.1",
     author="Pablo Bernabeu",
     description="Local speech transcription with audio enhancement and speaker attribution",
     long_description=long_description,

@@ -53,6 +53,11 @@ nine of them and CR-06 in code, as each Status records, together with NEW-05 and
 LINT-01 above. `CHANGELOG.md` summarises both passes; line numbers are those of the
 commit each entry names.
 
+The pre-publication gate of 30 October 2026 has the last section before the
+observations from ARC. Its eight read-only audits of the release 2.1.0 tag found
+31 entries, PG-01 to PG-31, and the release found a 32nd, PG-32; release 2.1.1 resolves them apart from the three
+whose Status says Open; `CHANGELOG.md` summarises them.
+
 ## Blocking (37)
 
 ### T1-02: Unicode strip still deletes whole scripts (CJK, kana, Hangul, Arabic presentation forms) and typographic apostrophes, contradicting its docstring and the manuscript
@@ -343,7 +348,7 @@ commit each entry names.
 
 `evaluation/benchmark_wer.py:267` · BLOCKING · HIGH-RISK · touches end product · verified confirmed, panel upheld
 
-**Status.** Partly resolved. evaluation/revisions.py (fa6bf45) records the single snapshot of each model and dataset that the ARC cache held, which the evaluation loaders pass as revision= (66be1de, a36b1d4, 37f4e46, 6f9bf56), and GLiNER loads at a pinned revision offline (ad6b74c). The segmentation and embedding models that the diarisation pipeline loads by name take no revision and resolve to the cache's main, so the summaries list them as revisions_not_enforced, and f064a8a tests that every Hub id the code names is pinned or listed with its reason. Benchmark summaries now record their revisions and run_metadata, among them the four DER summaries of the October re-runs (70933b4), and transcription manifests record the Whisper and diarisation snapshots they loaded (486783b, 365af36), as the committed case-study manifest of job 8983112 does (ac08cdc). The two DER sweep selections record only the git commit and the pyannote.audio version, and the proposed check of refs/convert/parquet was not made.
+**Status.** Partly resolved. evaluation/revisions.py (fa6bf45) records the single snapshot of each model and dataset that the ARC cache held, which the evaluation loaders pass as revision= (66be1de, a36b1d4, 37f4e46, 6f9bf56), and GLiNER loads at a pinned revision offline (ad6b74c). The segmentation and embedding models that the diarisation pipeline loads by name take no revision and resolve to the cache's main, so the summaries list them as revisions_not_enforced, and f064a8a tests that every Hub id the code names is pinned or listed with its reason. Benchmark summaries now record their revisions and run_metadata, among them the four DER summaries of the October re-runs (70933b4), and transcription manifests record the Whisper and diarisation snapshots they loaded (486783b, 365af36), as the committed case-study manifest does, that of job 9124852 since the re-run of 18 October 2026 (ac08cdc had committed job 8983112's). Since release 2.1.1 the manuscript's software paragraph and README.md say that the diarisation sub-models were not pinned. The two DER sweep selections record only the git commit and the pyannote.audio version, and the proposed check of refs/convert/parquet was not made.
 
 **Why deferred.** Fixing it would change a committed number or an end product, so it waits for a deliberate re-run under the sign-off policy.
 
@@ -705,7 +710,7 @@ Run the required tests, gate and renders, then freeze the final source commit an
 
 `evaluation/benchmark_wer.py:267` · MAJOR · HIGH-RISK · changes numbers · verified confirmed
 
-**Status.** Partly resolved. fa6bf45 and 66be1de pin the dataset and model revisions at load (evaluation/revisions.py) and make every summary record them with the decode device, dtype, GPU, CUDA and cuDNN versions, the model commit transformers resolved and the package versions, and 0897495 corrected requirements-lock.txt to the job environment. tests/test_s1_wer_benchmark.py checks the pins. The drift between the committed raw decodes is now attributed: the May and sweep decodes of Large v3 test-clean differ in nothing recorded but the card, an L40S against a V100 (c713055). On FLEURS the six pairs among the first three arms that ran a language on the same GPU architecture wrote byte-identical raw summaries, while their pairs on different architectures differ on 0 to 4 utterances (56ce519). The 6 October 2026 recovery and output/evaluation/sweep_decode_provenance.json close the missing public environment-record gap: every extracted field and type agrees with all 255 hash-verified summaries. The complete text inputs still need a deposit (REGEN-05). FLEURS arm 4's raw drift remains unisolated, since P100 nodes are drained; the proposed Spanish V100 comparison and its preflight in docs/next_control.md require approval (NEW-05). The recorded card difference alone does not establish a causal hardware effect.
+**Status.** Partly resolved. fa6bf45 and 66be1de pin the dataset and model revisions at load (evaluation/revisions.py) and make every summary record them with the decode device, dtype, GPU, CUDA and cuDNN versions, the model commit transformers resolved and the package versions, and 0897495 corrected requirements-lock.txt to the job environment. tests/test_s1_wer_benchmark.py checks the pins. The drift between the committed raw decodes is now attributed: the May and sweep decodes of Large v3 test-clean differ in nothing recorded but the card, an L40S against a V100 (c713055). On FLEURS the six pairs among the first three arms that ran a language on the same GPU architecture wrote byte-identical raw summaries, while their pairs on different architectures differ on 0 to 4 utterances (56ce519). The 6 October 2026 recovery and output/evaluation/sweep_decode_provenance.json close the missing public environment-record gap: every extracted field and type agrees with all 255 hash-verified summaries. The complete text inputs are deposited at 10.5281/zenodo.23442874 (REGEN-05). FLEURS arm 4's raw Spanish drift is now isolated: the V100 control of 19 October 2026 (NEW-05, output/evaluation/fleurs_es419_v100_control.json) matched the third arm on all 908 utterances, so the card, with its node, accounts for it in Spanish; the other five languages were not re-decoded. The recorded card difference alone does not establish a causal hardware effect in general.
 
 **Why deferred.** Fixing it would change a committed number or an end product, so it waits for a deliberate re-run under the sign-off policy.
 
@@ -1125,7 +1130,7 @@ Run the required tests, gate and renders, then freeze the final source commit an
 
 `CITATION.cff:14` · MAJOR · touches end product · verified confirmed
 
-**Status.** Resolved. d0edd03 removed the BibTeX preferred-citation, which the CFF 1.2.0 schema rejects, and added repository-code with the URL setup.py gives. cffconvert's validator (Citation.validate) accepts the file at HEAD and rejects the one at 10981d4. setup.py (f5943b2), README.md (c3a3041), hpc/HPC_SETUP_GUIDE.md (8c0665c) and the manuscript's Data availability section (cd8578b) now give that one URL, https://github.com/pablobernabeu/paper_secure_local_HPC_speech_transcription, and no tracked file names another. The tests in tests/test_citation_metadata.py check that any preferred-citation is a reference object and that repository-code matches setup.py.
+**Status.** Resolved. d0edd03 removed the BibTeX preferred-citation, which the CFF 1.2.0 schema rejects, and added repository-code with the URL setup.py gives. cffconvert's validator (Citation.validate) accepts the file at HEAD and rejects the one at 10981d4. setup.py (f5943b2), README.md (c3a3041), hpc/HPC_SETUP_GUIDE.md (8c0665c) and the manuscript's Data availability section (cd8578b) gave that one URL. Since release 2.0.0 every tracked file names the public repository, https://github.com/pablobernabeu/secure_local_HPC_speech_transcription, and none names the development repository. The tests in tests/test_citation_metadata.py check that any preferred-citation is a reference object and that repository-code matches setup.py.
 
 **Why deferred.** Fixing it would change a committed number or an end product, so it waits for a deliberate re-run under the sign-off policy.
 
@@ -1385,7 +1390,7 @@ Run the required tests, gate and renders, then freeze the final source commit an
 
 `evaluation/sweep_aggregate.py:253` · MAJOR · HIGH-RISK · verified confirmed
 
-**Status.** Partly resolved. fa6bf45 adds provenance.run_metadata() (git commit, dirty flag, Python and package versions), now recorded in wer_summary.json, sweep_aggregate.json, the timestamp, anonymisation, disfluency, FLEURS, reconstruction-audit and masking summaries, the four DER summaries of the re-runs at 9cb43e3 (70933b4), the cross-hardware determinism comparison and each interval table's provenance sidecar (5a85147). ce2f1ff, 2ed5f28, ef7da7c, 1119a5c and c597599 read the git state before the first output and leave a writer's own outputs out of the dirty check, fleurs_diacritics included since c597599, which tests/test_provenance_in_place.py and tests/test_provenance_in_place_writers.py check. Two writers can still count their own output as a change, fleurs_multilingual on purpose and evaluation.sweep under --legacy-primary-paths from its second suite on (1119a5c), and sweep_der.py records only the commit and the pyannote.audio version. determinism.py, footprint.py, audit_artefacts.py and benchmark_podcast.py record neither, though the case study's two runs can now be told apart, since its committed run manifest records commit c4c7b38, a clean tree and the package versions (ac08cdc). The torch 2.8.0+cpu and transformers 4.56.2 named in the failure scenario below are the account's ~/.local packages (DEPS-02), and the re-run wave's environment records show torch 2.5.1+cu121 and transformers 4.57.1.
+**Status.** Partly resolved. fa6bf45 adds provenance.run_metadata() (git commit, dirty flag, Python and package versions), now recorded in wer_summary.json, sweep_aggregate.json, the timestamp, anonymisation, disfluency, FLEURS, reconstruction-audit and masking summaries, the four DER summaries of the re-runs at 9cb43e3 (70933b4), the cross-hardware determinism comparison and each interval table's provenance sidecar (5a85147). ce2f1ff, 2ed5f28, ef7da7c, 1119a5c and c597599 read the git state before the first output and leave a writer's own outputs out of the dirty check, fleurs_diacritics included since c597599, which tests/test_provenance_in_place.py and tests/test_provenance_in_place_writers.py check. Two writers can still count their own output as a change, fleurs_multilingual on purpose and evaluation.sweep under --legacy-primary-paths from its second suite on (1119a5c), and sweep_der.py records only the commit and the pyannote.audio version. determinism.py, footprint.py, audit_artefacts.py and benchmark_podcast.py record neither, though the case study's runs can now be told apart, since its committed run manifest records the commit, a clean tree and the package versions: c4c7b38 for job 8983112 (ac08cdc), and fc652ab for job 9124852, whose manifest replaced it on 18 October 2026. The torch 2.8.0+cpu and transformers 4.56.2 named in the failure scenario below are the account's ~/.local packages (DEPS-02), and the re-run wave's environment records show torch 2.5.1+cu121 and transformers 4.57.1.
 
 **Why deferred.** The complete fix would change a committed number or artefact. Adding a code-version and package-version record to each artefact changes the bytes of every regenerated summary, so it waits for the next re-run. Jobs now write an environment/ record beside their results (hpc/common/arc_common.sh), and the transcription manifest records the git commit and package versions.
 
@@ -2192,7 +2197,7 @@ In the manuscript the rule would move these figures, re-derived on 2026-10-04 fr
 
 **Status.** Resolved. Found on 2026-10-04 in the log of the case-study re-run, ARC job 8978758 at f2578b8. ca75ced and c4c7b38 make the job take CASE_MANIFEST when it is set, then `$DATA/codex_mentis/manifest.json` when that exists, then the committed `data/codex_mentis/manifest.json`, and stop before transcribing when the manifest it chose is missing or gives no durations, with tests in tests/test_audit_shell_job_exit_status.py and tests/test_s1_misc_podcast.py. Re-run 8983112 (wave 2c, from a clean clone at c4c7b38) ended with exit status 0 for the structural evaluation and the provenance verification, after test job 8983111 had passed 2,058 tests, and ac08cdc commits its results. hpc/runs/case_study.env records the run with CASE_MANIFEST written out, so that a later $DATA manifest cannot change a reproduction, and c787742 corrects hpc/README.md's job table, which still said the job needs a manifest in $DATA.
 
-**Failure scenario.** The job (line 192 at f2578b8) passes `--manifest "${DATA}/codex_mentis/manifest.json"` to `evaluation.benchmark_podcast`, but `$DATA/codex_mentis/` on ARC holds only `audio/`; the fetch manifest is the committed `data/codex_mentis/manifest.json`. Until 4b22326 a missing manifest was ignored without a word, which is why the August summary has no coverage figures, and since then `benchmark_podcast` refuses it with exit 2 (EPRIV-23). Job 8978758 therefore transcribed the episode with speaker attribution (two speakers, 243 segments), and its structural evaluation then stopped with "Error: manifest not found: /data/educ-lift/educ1242/codex_mentis/manifest.json" (exit status 2). The provenance check that runs after it, `python -m provenance verify`, passed over nine artefacts, and the job ended with exit 5, leaving only the environment record in its report directory (`audit2026/case_study_w2b`). The job's tests run the script with a stand-in `python`, so none of them could notice the path.
+**Failure scenario.** The job (line 192 at f2578b8) passes `--manifest "${DATA}/codex_mentis/manifest.json"` to `evaluation.benchmark_podcast`, but `$DATA/codex_mentis/` on ARC holds only `audio/`; the fetch manifest is the committed `data/codex_mentis/manifest.json`. Until 4b22326 a missing manifest was ignored without a word, which is why the August summary has no coverage figures, and since then `benchmark_podcast` refuses it with exit 2 (EPRIV-23). Job 8978758 therefore transcribed the episode with speaker attribution (two speakers, 243 segments), and its structural evaluation then stopped with "Error: manifest not found: $DATA/codex_mentis/manifest.json" (exit status 2). The provenance check that runs after it, `python -m provenance verify`, passed over nine artefacts, and the job ended with exit 5, leaving only the environment record in its report directory (`audit2026/case_study_w2b`). The job's tests run the script with a stand-in `python`, so none of them could notice the path.
 
 **Proposed fix.** Pass the committed manifest, `"$REPO_DIR/data/codex_mentis/manifest.json"`, which records episode 5's duration (1,938 s), unless a `$DATA` copy exists, and add a test that the job names a manifest present in a fresh clone. Then either run the structural evaluation alone on job 8978758's transcript JSON, which is still in the ARC clone's `output/transcripts/`, or re-run the job into a new `CASE_REPORT_DIR`.
 
@@ -2264,7 +2269,7 @@ In the manuscript the rule would move these figures, re-derived on 2026-10-04 fr
 
 `transcription.py:838-841` (at bd37445) · MINOR · high-risk · touches end product · verified observed in the correctness review of 20 October 2026
 
-**Status.** Resolved. 808307f strips the possessive clitic in the honorific rule's look-ahead as proposed; tests in tests/test_masker_abbreviated_titles.py ("Dr. Smith's", "Dr Smith's", curly apostrophe) fail without it. d6a5746 regenerates the four masking arms (seed 42; NER arms with gliner 0.2.28 and revision 4e091416): the 66 title-by-possessive rows of each report now read "[TITLE] [NAME]'s", and 136 lower-case title rows of the two case-insensitive arms change through 47540a5, which lets case_insensitive relax the gate on the name after a title. Every summary field outside run_metadata is unchanged, and tools/verify_regeneration.py passes.
+**Status.** Resolved. 808307f strips the possessive clitic in the honorific rule's look-ahead as proposed; tests in tests/test_masker_abbreviated_titles.py ("Dr. Smith's", "Dr Smith's", curly apostrophe) fail without it. d6a5746 regenerates the four masking arms (seed 42; NER arms with gliner 0.2.28 and revision 4e091416): the 66 title-by-possessive rows of each report now read "[TITLE] [NAME]'s" or "[TITLE] [SURNAME]'s", and 136 lower-case title rows of the two case-insensitive arms change through 47540a5, which lets case_insensitive relax the gate on the name after a title. Every summary field outside run_metadata is unchanged, and tools/verify_regeneration.py passes.
 
 **Why deferred.** The fix rewrites the `masked` column of 66 rows in each committed `masking_report*.csv`, which the regeneration gate compares, so it waits for the author's sign-off and a re-run of the masking benchmark.
 
@@ -2287,7 +2292,7 @@ with the test case `("It was Dr. Smith's idea.", "It was [TITLE] [SURNAME]'s ide
 
 `tools/build_input_deposit.py:98-100` (at bd37445) · MINOR · touches end product · verified observed in the correctness review of 20 October 2026
 
-**Status.** Resolved in code. 7323b64 makes the README template give `--sweep-dir`, `--out` and `--out-json`, and say that the manifest's `availability` field predates the deposit; the command reproduces the committed sweep_aggregate.csv byte for byte. Whether the deposited archive is rebuilt with it is recorded under DOCS-14 and in docs/release_readiness.md.
+**Status.** Resolved in code. 7323b64 makes the README template give `--sweep-dir`, `--out` and `--out-json`, and say that the manifest's `availability` field predates the deposit; the command reproduces the committed sweep_aggregate.csv once line endings are normalised (the csv writer ends rows with CRLF on every platform, and the committed copy is LF), which is byte for byte only on a Windows checkout. Whether the deposited archive is rebuilt with it is recorded under DOCS-14 and in docs/release_readiness.md.
 
 **Why deferred.** Any fix changes the bytes of the deposit archive and so its SHA-256 (`6474ba29…`), which docs/release_readiness.md records. The Zenodo record is still an unpublished draft, so rebuilding and re-uploading it is cheap now, but whether to do so is the author's decision.
 
@@ -2436,6 +2441,223 @@ Then re-run the four NER masking arms on a processor (`python -m evaluation.benc
 
 **Committed results affected.** None. No GPU fine-tuning result is committed.
 
+## The pre-publication gate of 30 October 2026 (32)
+
+Before the Zenodo records of release 2.1.0 were published, eight read-only
+audits checked the tagged tree (ea50965) against its own data: diarisation,
+timestamps, the English sweep and its deposit, the multilingual results with
+the Spanish control and the hardware comparison, masking with fillers and
+anonymisation, the footprint with the three deposit archives, the
+manuscript as a whole, and the codebase. Every reported number reproduced,
+and every rebuild matched. The findings below are what they found instead,
+with PG-01 the reason the records were held and release 2.1.1 cut. The
+author decided on 30 October 2026 to deposit the inputs PG-02 names and to
+sanitise the identifiers PG-03 names. Line numbers are those of ea50965.
+
+### PG-01: The manuscript explains the gross timestamp end errors as words the model never emitted, which the committed data contradict
+
+`manuscript/manuscript.qmd:4532-4543, 4625-4631, 4648, 6222-6224`, `evaluation/timestamp_metrics.py:147-151`, `confidence.py:472-480` · BLOCKING · touches end product · verified by recomputation
+
+**Status.** Resolved. 8bb2d5b rewrites the section, the table row and the Discussion, computing at render time from the sweep's AMI report that 32 of the 41 clips with an end error over half a second lost no reference word in the same model's decoding (all 18 with a one-word reference among them), and that 85% of ends fall within half a timestamp step of the clip end; the outputs READMEs say the same. a77f755 corrects the docstrings of timestamp_metrics, benchmark_timestamps, confidence.truncation_check and the review writer. No number and no key changed; `truncation_rate` is described as a historical name for ends more than half a second early.
+
+**Failure scenario.** The paper's worst case, "covered 7.6%", is the one-word reference "yeah", transcribed "Yeah." with its last timestamp at 0.22 s of a 2.90 s clip. A reader told that the model stopped transcribing would distrust complete transcripts and misread the review's truncation flag.
+
+**Committed results affected.** None.
+
+### PG-02: The Open Practices statement says the per-utterance reports behind every table are in the repository, but three results rest on inputs held only on ARC
+
+`manuscript/manuscript.qmd:6334-6339, 6362-6365` · MAJOR · touches end product · verified against the tree and ARC
+
+**Status.** Resolved. On the author's decision, 8dd3d1d, d2416a5, 6123b8c, 93fd67b, 2c39081 and 89477e7 add tools/build_arc_inputs_deposit.py, its tests and the receipt output/evaluation/arc_inputs_manifest.json, and multilingual_hardware_inputs_2026-10.zip joins the data record: the 48 per-language summaries of the multilingual arms, the Spanish control's summaries and environment records, the cross-hardware comparison's dumps and reports, and the job logs that name the first three arms' cards, the files with deployment paths sanitised (PG-03) and both digests recorded. All three committed results rebuild from the bundle, apart from the digests of the four records the producers read before sanitisation. e79e30f makes the availability statements describe both archives, and the data record's description does the same.
+
+**Committed results affected.** None.
+
+### PG-03: Deployment identifiers and other projects' job names are in the archived tree, and the privacy records disagree on whether that was decided
+
+`.hpc-plan.yaml`, `hpc/`, `tests/test_footprint_job_scope.py`, provenance fields of ten result files, `decoder_source_6f9bf56.zip` · MAJOR · touches end product · verified by `git grep`
+
+**Status.** Resolved. On 30 October 2026 the author decided to sanitise them. 49cac3f, a8afadf and cdeeefa replace the ARC user name, both project codes and the paths holding them by a documented table, gives other projects' jobs synthetic names, updates the two recorded digests that the change touched (the cross-hardware comparison's record of its runs file and the case-study manifest's own), f64afdb adds tools/build_decoder_source_deposit.py for a sanitised decoder-source archive whose SANITISED.md lists every changed member with its original blob. docs/privacy_review.md records the decision and the table, G6 refers to it, and 5b46974 applies the table to the three files the pass left. The public snapshots of 2.0.0 and 2.1.0 on GitHub and the development history still hold the originals.
+
+**Committed results affected.** Provenance strings only; no number.
+
+### PG-04: The timestamp benchmark scores Whisper's segment timestamps, while the workflow writes word-level ones
+
+`evaluation/benchmark_timestamps.py:296`, `transcription.py:4308`, `manuscript/manuscript.qmd:1829-1833, 3915-3917` · MAJOR · verified in code
+
+**Status.** Resolved. 8bb2d5b says so in the Methods and the section's opening, and a77f755 in benchmark_timestamps' docstring.
+
+**Committed results affected.** None.
+
+### PG-05: A test-suite job is said to have checked "the release tree", which reads as 2.1.0's
+
+`manuscript/manuscript.qmd:5810-5812, ~5619` · MINOR · verified against hpc/README.md
+
+**Status.** Resolved. 8bb2d5b: job 9134598 checked release 2.0.0's tree, c17367b.
+
+### PG-06: The footprint's per-core CPU power had no source, and its share of the total was understated
+
+`evaluation/footprint.py:527-532` · MINOR · verified against the Green Algorithms data
+
+**Status.** Resolved. 78beb7b cites the 12 W "Any" row of Green Algorithms' v2.2 CPU table (Green-Algorithms-data at 0a1d169b) and states the CPU term's share, 14.17 of 96.71 kWh. The footprint artefacts are unchanged.
+
+### PG-07: The data record's reference carries the date of the 2.0.0 build and describes one of its archives
+
+`manuscript/references.bib:31-38`, `manuscript/manuscript.qmd:6300-6303` · MINOR
+
+**Status.** Resolved. e79e30f dates the record as published, gives it the title of its two archives and names them in the availability statements.
+
+### PG-08: Committed files still say the English inputs await a deposit
+
+`output/evaluation/README.md:236-240, 284-285`, `output/evaluation/sweep_input_manifest.json` (`availability`) · MINOR
+
+**Status.** Resolved for the README in 8bb2d5b. The manifest's field is left as CR-06 decided: its digest is recorded by sweep_decode_provenance.json and scorer_sensitivity.json, and the deposit's README says the field predates the deposit.
+
+### PG-09: The manuscript cites development commits that no reader can check out
+
+`manuscript/manuscript.qmd` (provenance paragraph), `output/evaluation/README.md:89-94` · MINOR · verified with `git diff 9cb43e3 v2.1.0`
+
+**Status.** Resolved. 8bb2d5b says the commits are the development repository's, that the data record holds the decoder commit's source, and that the release's diarisation scoring code differs from 9cb43e3 only in comments, documentation and when it reads run metadata.
+
+### PG-10: The oracle speaker-count arm is called an upper bound, but it scores worse than the defaults
+
+`manuscript/manuscript.qmd:3901-3902`, `evaluation/benchmark_der.py:783, 1045` · MINOR · verified (macro DER 25.0% against 16.6%)
+
+**Status.** Resolved in 8bb2d5b and f49edab.
+
+### PG-11: The Methods give the diarisation pipeline two tuning parameters; it has three
+
+`manuscript/manuscript.qmd:~2034` · MINOR
+
+**Status.** Resolved. 8bb2d5b: two of its three were swept, the minimum cluster size held at its default.
+
+### PG-12: Micro DER cannot be recomputed from the committed per-meeting rows
+
+`evaluation/benchmark_der.py:741-746`, `evaluation/sweep_der.py:90-94` · MINOR · verified (macro recomputes exactly)
+
+**Status.** Open. The rows carry rates, not each meeting's scored reference time. Adding that column changes the reports, so it waits for the next diarisation re-run; an estimate from the committed counts agrees with the recorded micro DER to the fourth decimal.
+
+### PG-13: README.md says every Hugging Face model the runs loaded is pinned
+
+`README.md:25` · MINOR
+
+**Status.** Resolved in dc4124a, with DEPS-04's Status.
+
+### PG-14: "Indistinguishable from the defaults and fractionally worse" holds only for macro DER
+
+`manuscript/manuscript.qmd:~6100` · MINOR
+
+**Status.** Resolved in 8bb2d5b.
+
+### PG-15: The timestamp distribution is said to have nothing left of the origin, and the end boundary's edge goes unmentioned
+
+`manuscript/manuscript.qmd:4511-4512, 4561-4562` · MINOR · verified (173 ends at −10 ms; 85% within half a step of the clip end)
+
+**Status.** Resolved in 8bb2d5b.
+
+### PG-16: EWER-10's Status still says the Spanish control awaits approval
+
+`ISSUES.md:708` · MINOR
+
+**Status.** Resolved in dc4124a.
+
+### PG-17: The multilingual summary says raw is stable "to within 0.0003" without "at four decimals"
+
+`output/evaluation/fleurs_multilingual_summary.json:77` (`ratio_definition`) · MINOR · verified (exact spread 0.000308)
+
+**Status.** Open. The field is prose carried in a committed artefact; the manuscript computes 0.0004 from the exact rates. The producer's wording can change at the next assembly.
+
+### PG-18: The outputs README attributes the Spanish drift to the card and drops its node
+
+`output/evaluation/README.md:88` · MINOR
+
+**Status.** Resolved in 8bb2d5b.
+
+### PG-19: The Spanish control compares differing utterances by sentence id, which repeats
+
+`evaluation/fleurs_control.py:322-329` · MINOR · latent
+
+**Status.** Resolved. c0c4467 compares (position, id) pairs; the committed comparison is unchanged, since the control equals the third arm at every position.
+
+### PG-20: CR-06 claims a byte-for-byte rebuild that holds only on Windows
+
+`ISSUES.md` (CR-06) · MINOR · verified (CRLF rows against an LF checkout)
+
+**Status.** Resolved in dc4124a.
+
+### PG-21: G2's Status still reports dirty working trees
+
+`ISSUES.md` (G2) · MINOR
+
+**Status.** Resolved in dc4124a.
+
+### PG-22: Two bullets of the 2.1.0 changelog are loosely worded
+
+`CHANGELOG.md:141-148` · MINOR
+
+**Status.** Resolved in dc4124a ("[TITLE] [SURNAME]'s"; every leak count unchanged).
+
+### PG-23: A name found by NER alone keeps a preceding title
+
+`transcription.py` (`_is_title_token`) · MINOR · verified (40 held-out rows in the NER arm, 92 in the case-insensitive NER arm)
+
+**Status.** Resolved in documentation, d6f415f. The rule is unchanged, so no masking figure moves.
+
+### PG-24: `python -m evaluation.bootstrap_ci --help` raises ValueError
+
+`evaluation/bootstrap_ci.py:381` · MINOR · verified
+
+**Status.** Resolved. 18e3c20 escapes the %, and tests/test_cli_help_strings.py scans every help string.
+
+### PG-25: setup_pyannote.py installs pyannote.audio without the <4 cap and installs speechbrain
+
+`setup/setup_pyannote.py:93-98` · MINOR
+
+**Status.** Resolved in 42fb22b, which installs the specifiers of requirements.txt in one pip call.
+
+### PG-26: The lock's header does not say it is unhardened or which artefacts it does not cover
+
+`requirements-lock.txt:1-33` · MINOR
+
+**Status.** Resolved in 86d005c (comments only; 178 pins, Python 3.12.12 still parsed).
+
+### PG-27: OUTPUTS-12, DEPS-04 and DOCS-15 name a superseded manifest or the wrong repository
+
+`ISSUES.md` · MINOR
+
+**Status.** Resolved in dc4124a.
+
+### PG-28: Exact zeros in the paired-interval tables print as +0.00
+
+`manuscript/manuscript.qmd:626` (`sgn2`) · MINOR
+
+**Status.** Resolved in 8bb2d5b.
+
+### PG-29: The NER false positives are quoted with articles the note does not give, and a code comment cites an old wording of the manuscript
+
+`manuscript/manuscript.qmd:4925-4926`, `transcription.py:1295` · MINOR
+
+**Status.** Resolved in 8bb2d5b and 46357ed.
+
+### PG-30: The full test suite has not run on ARC for this release
+
+`docs/release_readiness.md` · MINOR
+
+**Status.** Open. Submitting the job needs the author's approval; the CPU selection passed on GitHub's runner and locally, and the eleven-artefact gate passed.
+
+### PG-31: The input deposit's README misdescribes the decoder source once it is sanitised, and puts the release's DOI after the decoder commit
+
+`tools/build_input_deposit.py:88-146, 227-229` · MINOR · touches end product (the deposit's README)
+
+**Status.** Resolved. 2ba6fe3 says the decoder source replaces the deployment identifiers as its SANITISED.md lists, that it is licensed as the releases are, and that the DOI given is the release's. `sweep_inputs_2026-10.zip` is rebuilt with it; its 270 inputs are unchanged.
+
+### PG-32: Of two releases with the same date, the version lookup returns the older
+
+`transcription.py:2896-2914` (`_latest_release`) · MINOR · found while stamping release 2.1.1
+
+**Status.** Resolved. The tie went to the later row of versions.csv, which lists the newest release first, so with 2.1.1 and 2.1.0 both dated 2026-10-30 every transcript, manifest and stamp would have named 2.1.0. The tie now goes to the higher version number, and tests/test_s1_txt_version.py checks the newest-first order; tests/test_installed_distribution.py, which had copied the old rule to compute the release it expects, follows the new one.
+
+**Committed results affected.** None; the example variants are restamped with the release.
+
 ## Observations from ARC
 
 Read-only checks on the cluster during the audit and its re-run wave turned up three
@@ -2541,7 +2763,7 @@ No auditor rendered the manuscript. MS said explicitly 'no quarto render' and 'a
 
 The NER masking numbers the manuscript reports (for example case-insensitive+NER 0.907) have no known producer. DEPS could not find where they were produced (gliner is absent from the ARC env). REGEN skipped them on the claim that 'gliner [is] not installed', but gliner 0.2.28 IS installed locally (verified with pip show). The files entered the repo only via an auto-sync commit (50314de, 2026-08-10) with no command recorded, and masking_summary_ner.json records no gliner version or model revision. EPRIV-08 (threshold passed positionally into flat_ner) and EPRIV-12 (a NER model that raises silently degrades to dictionary-only) mean these committed numbers may not measure what they claim to measure.
 
-**Status.** Partly resolved. The threshold and silent-degradation defects stay fixed (EPRIV-08, EPRIV-12), and a08265c's local regeneration of all four masking arms at seed 42 moved overall recall from 0.456 to 0.474 with NER and from 0.907 to 0.937 with case folding and NER. Each NER summary now names its producer: run metadata (gliner 0.2.28) and an `ner` block giving the model (urchade/gliner_small-v2.1 at the pinned revision 4e091416), the threshold (0.6), 1,940 calls and no failures. Three of the four summaries record a dirty working tree, at 2e5e852, 41cb9ae and eaef44a (commits that differ only in tests), which 1119a5c traces to another arm's outputs left uncommitted in a shared checkout until a08265c committed all eight files. run_metadata records no path, so the records cannot confirm that account, and a repeated run of one arm over its own outputs, which 1119a5c's ignore lists now prevent, or an uncommitted test edit would fit them as well. tools/verify_regeneration.py rebuilds only the dictionary arm, so the NER arms stay outside the gate (G5).
+**Status.** Partly resolved. The threshold and silent-degradation defects stay fixed (EPRIV-08, EPRIV-12), and a08265c's local regeneration of all four masking arms at seed 42 moved overall recall from 0.456 to 0.474 with NER and from 0.907 to 0.937 with case folding and NER. Each NER summary now names its producer: run metadata (gliner 0.2.28) and an `ner` block giving the model (urchade/gliner_small-v2.1 at the pinned revision 4e091416), the threshold (0.6), 1,940 calls and no failures. The dirty working trees that three of the a08265c summaries recorded are gone: d6a5746 regenerated all four arms from a clean tree after the honorific fixes of the 2.1.0 pass, and every summary now records `git_dirty: false` (three at 9b43b5a, the case-insensitive NER arm at 1d2f2ac; only lint commits touch the masker since). The pre-publication gate of 30 October 2026 re-ran three arms at ea50965 and matched them apart from run metadata and line endings. tools/verify_regeneration.py still rebuilds only the dictionary arm, so the NER arms stay outside the gate (G5).
 
 ### G3: data/curated_names.csv (and its consumers transcription.create_multilingual_curated_names and evaluation/benchmark_masking.py); manuscript.qmd ~488 and the masking section ~2290
 
@@ -2565,4 +2787,4 @@ No auditor owned the /strong-codebase style and standardisation dimension. Sever
 
 The repository is public and archived on Zenodo, and the paper's subject is privacy, yet no auditor inspected git history or the committed replacement logs as a privacy surface. OUTPUTS-07 covers .gitignore and CORE-05 covers the manifest, but none of the 16 coverage notes mentions reading example_output/name_masking_logs/*.csv, which commit original names next to full context sentences (verified: 'Pablo' and 'Bernabeu,' with the sentence). History contains three deleted example transcript and replacement-log files (verified with git log --diff-filter=D). A quick grep found no hf_ token in history, but no systematic secret, PII or account-name scan was done, and the .docx example transcripts were never opened (OUTPUTS: only the .txt twins were read).
 
-**Status.** Resolved. The 6 October 2026 review is recorded in docs/privacy_review.md. It inventoried 839 locally reachable commits and 2,021 distinct blobs, checked identifier categories in the text versions, inspected all four current and two historical Word documents, and read deleted example files and name logs. Gitleaks 8.30.1 scanned ordinary and merge diffs; all eight merge-inclusive findings were bibliography keys, with no confirmed credential among the reported matches. The current Word bodies match their text twins after whitespace normalisation; one retains the public author's editor identifier. A deleted older masking log includes an additional first-name token whose identity is unestablished. The unsupported README infographic was moved unchanged to docs/historical/ with a contextual note. Historical logs, transcript originals and Git history remain intact. On 17 October 2026 the author decided not to rewrite the history and to keep the historical Word files' editor metadata, the author's own name. The public repository, github.com/pablobernabeu/secure_local_HPC_speech_transcription, which has held the software since release 1.0.0, receives each release as a single snapshot commit and so carries none of this repository's history, and the recovered inputs go to a separate data deposit, whose bundle a scan found free of deployment paths, account names, email addresses and tokens. The bounded review does not establish that every personal identifier is absent.
+**Status.** Resolved. The 6 October 2026 review is recorded in docs/privacy_review.md. It inventoried 839 locally reachable commits and 2,021 distinct blobs, checked identifier categories in the text versions, inspected all four current and two historical Word documents, and read deleted example files and name logs. Gitleaks 8.30.1 scanned ordinary and merge diffs; all eight merge-inclusive findings were bibliography keys, with no confirmed credential among the reported matches. The current Word bodies match their text twins after whitespace normalisation; one retains the public author's editor identifier. A deleted older masking log includes an additional first-name token whose identity is unestablished. The unsupported README infographic was moved unchanged to docs/historical/ with a contextual note. Historical logs, transcript originals and Git history remain intact. On 17 October 2026 the author decided not to rewrite the history and to keep the historical Word files' editor metadata, the author's own name. The public repository, github.com/pablobernabeu/secure_local_HPC_speech_transcription, which has held the software since release 1.0.0, receives each release as a single snapshot commit and so carries none of this repository's history, and the recovered inputs go to a separate data deposit, whose bundle a scan found free of deployment paths, account names, email addresses and tokens. The bounded review does not establish that every personal identifier is absent. On 30 October 2026 the author decided to sanitise the deployment identifiers in release 2.1.1 and its deposits, which docs/privacy_review.md records with its substitution table (PG-03); the public snapshots of 2.0.0 and 2.1.0 on GitHub keep the originals.

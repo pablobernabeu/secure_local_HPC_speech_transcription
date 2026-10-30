@@ -80,6 +80,19 @@ def test_latest_release_resolves_same_day_ties_to_the_later_row(
     assert transcription_module._latest_release(tmp_path / "absent.csv") is None
 
 
+def test_latest_release_resolves_same_day_ties_by_version_in_newest_first_order(
+        transcription_module, tmp_path):
+    # versions.csv lists the newest release first, as 2.1.1 and 2.1.0
+    # (both 2026-10-30) stand in it, so row order cannot break the tie.
+    csv_path = tmp_path / "versions.csv"
+    csv_path.write_text(
+        "version,date,summary,details\n"
+        "2.1.1,2026-10-30,a,b\n"
+        "2.1.0,2026-10-30,c,d\n"
+        "2.0.0,2026-10-18,e,f\n", encoding="utf-8")
+    assert transcription_module._latest_release(csv_path) == "2.1.1"
+
+
 def test_header_and_manifest_carry_the_same_version(run, transcription_module):
     version = transcription_module.get_latest_version()
     ok, log, out = run(_result(duration=3.0), timestamps=True)

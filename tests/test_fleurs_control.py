@@ -67,12 +67,12 @@ def _write(tmp_path, name, payload):
     return path
 
 
-def _setup(tmp_path, control=_CONTROL):
+def _setup(tmp_path, control=_CONTROL, arm4=_ARM4):
     paths = {
         "control": _write(tmp_path, "ctl.json", _summary(control, "Tesla V100-PCIE-32GB", _RUN)),
         "3_after_gate": _write(tmp_path, "wer_summary_fleurs_es_419.json", _summary(_ARM3)),
         "4_after_audit": _write(tmp_path, "wer_summary_fleurs_es_419_whisper-large-v3.json",
-                                _summary(_ARM4, "NVIDIA L40S", _RUN)),
+                                _summary(arm4, "NVIDIA L40S", _RUN)),
     }
     multilingual = {
         "benchmark": {
@@ -110,6 +110,27 @@ def test_a_control_with_the_targets_records_reproduces_it(tmp_path):
     assert result["finding"]["transcripts_compared"] is False
 
 
+def test_recordings_that_share_a_sentence_id_are_told_apart(tmp_path):
+    """Positions 1 and 2 are two recordings of sentence 1701.
+
+    The fourth arm departs from the target on the second recording and from
+    the control on the first, so the two sets of differing ids are both
+    {"1701"} while the recordings differ; compared by position the check
+    fails, as it should.
+    """
+    arm4 = copy.deepcopy(_ARM3)
+    arm4[2] = _record("1701", 26, 1, 0.02)
+    control = copy.deepcopy(arm4)
+    control[1] = _record("1701", 29, 1, 0.01)
+    control[2]["name"] = "1701__2"
+    control_path, arms, ml = _setup(tmp_path, control=control, arm4=arm4)
+    result = fc.build(control_path, arms, "3_after_gate", ml, run_meta={})
+    fourth = result["comparisons"]["4_after_audit"]
+    assert [(d["position"], d["uid"]) for d in fourth["differing_utterances"]] == [(1, "1701")]
+    assert fourth["target_differs_on_the_same_utterances"] is False
+    assert result["finding"]["differs_from_others_where_target_does"] is False
+
+
 def test_a_control_that_differs_leaves_the_attribution_open(tmp_path):
     control, arms, ml = _setup(tmp_path, control=_ARM4)
     result = fc.build(control, arms, "3_after_gate", ml, run_meta={})
@@ -144,7 +165,7 @@ def test_the_environment_record_is_read(tmp_path):
     record = (
         "# Environment record written by hpc/common/arc_common.sh\n"
         "date:            2026-10-19T11:31:49+0100\nhost:            htc-g004\n"
-        "slurm_job_id:    9124863\nslurm_account:   educ-intract\n"
+        "slurm_job_id:    9124863\nslurm_account:   <project-b>\n"
         "git_commit:      6f9bf56a0d5839920537f23d73a166dc0f1e478b\n"
         "git_modified_tracked_files: 0\n\n## Loaded modules\n\n"
         "Currently Loaded Modules:\n  1) Anaconda3/2025.06-1   2) CUDA/13.0.2\n\n"
@@ -182,6 +203,12 @@ def test_the_committed_control_record_is_consistent():
     for cmp in record["comparisons"].values():
         assert cmp["identical"] + cmp["differing"] == cmp["utterances_compared"]
         assert cmp["differing"] == len(cmp["differing_utterances"])
+    # A control equal to the target at every position differs from each
+    # other arm at the positions the target does, so the check by position
+    # (release 2.1.1) cannot reverse the committed record's by-id result.
+    if target["differing"] == 0:
+        assert all(cmp["target_differs_on_the_same_utterances"]
+                   for arm, cmp in record["comparisons"].items() if arm != record["target"])
     ml = json.loads((path.parent / "fleurs_multilingual_summary.json").read_text(
         encoding="utf-8"))
     recorded = {(i["arm"], i["file"]): i["sha256"] for i in ml["benchmark"]["inputs"]}

@@ -18,8 +18,9 @@
 # When VAD_REFINE=1 is set, Silero VAD is loaded alongside Whisper and used
 # to refine each utterance’s predicted end boundary.  The VAD locates the last
 # voiced frame in the clip, and the predicted end becomes the later of the
-# VAD end and Whisper's own (max, since bb32915): Whisper's gross errors are
-# early truncations, so only a later VAD end can correct one.  Silero VAD
+# VAD end and Whisper's own (max, since bb32915): Whisper's gross end errors
+# are last timestamps well before the clip end, so only a later VAD end can
+# correct one.  Silero VAD
 # (the tag snakers4/silero-vad:v6.2.1) is downloaded once to the torch hub
 # cache, as the tag's whole repository (about 35 MB unpacked, for a 2.3 MB
 # model); later runs use the cached copy.

@@ -930,7 +930,7 @@ def check_diarisation(diarisation_required: bool = False) -> CheckResult:
     except ImportError:
         return CheckResult(
             "diarisation", degraded, "pyannote.audio not installed",
-            "pip install pyannote.audio  (transcription works without it; "
+            "pip install \"pyannote.audio>=3.1,<4\"  (transcription works without it; "
             "there is just no speaker attribution)")
     except Exception as exc:
         return CheckResult(

@@ -4,9 +4,12 @@ This directory holds the SLURM job scripts. They were written for the
 University of Oxford's ARC service: every script targets the `htc`
 cluster (`--clusters=htc`) and its `short` partition, whose limit is
 12 hours. ARC users with more than one project choose which to charge with
-`--account`. The evaluation scripts' usage lines use
-`--account=educ-intract`, and either project account works. To run the
-scripts elsewhere, see [HPC_SETUP_GUIDE.md](HPC_SETUP_GUIDE.md).
+`--account`. The commands on this page, in the scripts' headers and in
+the run records write it as `--account='<your-project>'`: put your own
+project account in its place. The quotes stop bash from reading the
+angle brackets as redirections, so a command pasted unchanged fails at
+sbatch, which rejects the account. To run the scripts elsewhere, see
+[HPC_SETUP_GUIDE.md](HPC_SETUP_GUIDE.md).
 
 Submit every script from the repository root. The scripts take the
 repository path from `SLURM_SUBMIT_DIR` and write their logs to
@@ -258,7 +261,7 @@ Each file is sourced before submission, for example:
 
 ```bash
 ( set -a; . hpc/runs/anonymisation.env || exit 1; set +a
-  sbatch --account=educ-intract --gres=gpu:l40s:1 hpc/submit_anonymisation.sh )
+  sbatch --account='<your-project>' --gres=gpu:l40s:1 hpc/submit_anonymisation.sh )
 ```
 
 The `|| exit 1` stops the subshell when the record cannot be read. Bash
@@ -361,8 +364,9 @@ Recorded runs, each from a clean checkout of the commit named:
 | 8983111 | c4c7b38 | 2058 passed, 1 skipped, 1 xfailed |
 | 9124851 | fc652ab | 2355 passed, 1 skipped, 1 xfailed, 1 failed |
 | 9134598 | c17367b | 2367 passed, 1 skipped, 1 xfailed |
+| 9217052 | 155d240 | 2503 passed, 1 skipped, 1 xfailed, 1 failed |
 
-Job 9134598 checked the release 2.0.0 tree on 18 October 2026. The
+Job 9134598 checked the release 2.0.0 tree on 18 October 2026. Job 9217052 checked the code of release 2.1.1 on 30 October 2026. Its one failure was `tests/test_installed_distribution.py`, which computed the release it expects with a copy of the version lookup's old same-date rule and so expected 2.1.0 (PG-32 in ISSUES.md); 4404c12 corrects that test alone, and it passes locally. The
 failure in 9124851 was expected. `tests/test_audit_priv_podcast.py` runs
 the masker over the case study's committed text and compares its count
 with the committed summary. That summary still held the three redactions
@@ -383,7 +387,7 @@ Until the audit's runs of September 2026, the last run had been on
 From the repository root on ARC:
 
 ```bash
-sbatch --account=educ-intract hpc/run_tests.sh
+sbatch --account='<your-project>' hpc/run_tests.sh
 ```
 
 The job stops with exit 2, before pytest, if any installed version differs
@@ -431,7 +435,7 @@ itself asks for a GPU, so this is submitted as its own short CPU job,
 from the repository root on ARC:
 
 ```bash
-sbatch --account=educ-intract <<'EOF'
+sbatch --account='<your-project>' <<'EOF'
 #!/bin/bash
 #SBATCH --job-name=finetune_smoke
 #SBATCH --clusters=htc

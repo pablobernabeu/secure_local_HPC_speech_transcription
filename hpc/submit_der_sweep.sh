@@ -12,15 +12,16 @@
 #
 # Usage (from the repository root on ARC):
 #
-# Account: either project account is valid; the examples use educ-intract.
-# Choose by current load, which changes: see the BALANCE note in .hpc-plan.yaml.
+# Account: pass your own project account with --account. With more than
+# one, choose by current load, which changes: see the BALANCE note in
+# .hpc-plan.yaml.
 #
-#   sbatch --account=educ-intract hpc/submit_der_sweep.sh
+#   sbatch --account='<your-project>' hpc/submit_der_sweep.sh
 #
 #   # Custom grid
 #   THRESHOLDS="0.5 0.6 0.7 0.8" \
 #   MIN_DURATIONS_OFF="0.0 0.5" \
-#     sbatch --account=educ-intract hpc/submit_der_sweep.sh
+#     sbatch --account='<your-project>' hpc/submit_der_sweep.sh
 #
 # The default grid reproduces neither committed sweep. The two grids that
 # produced der_sweep_* and der_sweep2_*, with job IDs, are in

@@ -31,10 +31,14 @@ hypothesis is identical. Mean absolute end error falls from 127 to 64 ms
 and the 90th percentile from 150 to 90 ms, while the median stays at
 10 ms. Ends more than half a second early fall from 41 to 21, which the
 summary gives as a `truncation_rate` of 4.2 per cent against the plain
-run's 8.2. The VAD changes no word, so that figure does not count
-truncated transcripts as the plain run's does. On an utterance whose end
-was extended, the words Whisper did not emit are still missing, and only
-the timestamp now reaches the end of the speech.
+run's 8.2; the key's name is historical, and it counts ends more than
+half a second early. The VAD changes no word, so the fall is in where
+segments end, not in what they hold. Nor were most of the plain run's
+early ends missing words: the condition sweep's decoding of the same 41
+clips by the same model lost no reference word in 32 of them
+(`output/evaluation/sweep_reports_postfix_ami/`, under Whisper's
+normaliser). On a clip whose end the VAD extended, the timestamp now
+reaches the end of the speech the detector found.
 
 The utterance in `timestamp_skipped.csv` is the plain run's: a 3.17 s
 clip whose reference transcript is the single word "yeah", which Whisper
